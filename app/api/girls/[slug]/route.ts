@@ -33,6 +33,11 @@ export async function GET(
           bookings_count,
           services,
           bio,
+          tattoo_percentage,
+          tattoo_description,
+          piercing,
+          piercing_description,
+          languages,
           created_at,
           updated_at
         FROM girls
@@ -56,7 +61,8 @@ export async function GET(
         ...girl,
         services: girl.services ? JSON.parse(girl.services as string) : [],
         verified: Boolean(girl.verified),
-        online: Boolean(girl.online)
+        online: Boolean(girl.online),
+        piercing: Boolean(girl.piercing)
       }
     });
   } catch (error) {

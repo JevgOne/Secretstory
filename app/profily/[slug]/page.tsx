@@ -38,6 +38,21 @@ const RussianFlag = () => (
   </svg>
 );
 
+const UkrainianFlag = () => (
+  <svg viewBox="0 0 32 24">
+    <rect fill="#005BBB" width="32" height="12"/>
+    <rect fill="#FFD500" y="12" width="32" height="12"/>
+  </svg>
+);
+
+const GermanFlag = () => (
+  <svg viewBox="0 0 32 24">
+    <rect fill="#000" width="32" height="8"/>
+    <rect fill="#D00" y="8" width="32" height="8"/>
+    <rect fill="#FFCE00" y="16" width="32" height="8"/>
+  </svg>
+);
+
 // WhatsApp Icon
 const WhatsAppIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor">
@@ -69,6 +84,11 @@ interface Girl {
   reviews_count: number;
   services: string[];
   bio: string;
+  tattoo_percentage?: number;
+  tattoo_description?: string;
+  piercing?: boolean;
+  piercing_description?: string;
+  languages?: string; // JSON array: ["cs", "en", "de", "uk"]
 }
 
 export default function ProfileDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -135,6 +155,30 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
       return '1';
     }
     return profile.bust;
+  };
+
+  const getLanguages = (): Array<{ code: string; name: string; flag: React.ReactNode }> => {
+    const languageMap: Record<string, { name: string; flag: React.ReactNode }> = {
+      'cs': { name: 'Čeština', flag: <CzechFlag /> },
+      'en': { name: 'English', flag: <UKFlag /> },
+      'de': { name: 'Deutsch', flag: <GermanFlag /> },
+      'uk': { name: 'Українська', flag: <UkrainianFlag /> },
+      'ru': { name: 'Русский', flag: <RussianFlag /> }
+    };
+
+    if (!profile.languages) {
+      // Default to Czech if no languages specified
+      return [{ code: 'cs', name: 'Čeština', flag: <CzechFlag /> }];
+    }
+
+    try {
+      const codes: string[] = JSON.parse(profile.languages);
+      return codes
+        .filter(code => languageMap[code])
+        .map(code => ({ code, ...languageMap[code] }));
+    } catch {
+      return [{ code: 'cs', name: 'Čeština', flag: <CzechFlag /> }];
+    }
   };
 
   const includedServices = [
@@ -274,18 +318,12 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
               <div className="languages-row">
                 <span className="lang-label">Mluvím</span>
                 <div className="lang-flags">
-                  <div className="lang-flag" title="Čeština">
-                    <CzechFlag />
-                    <span>CZ</span>
-                  </div>
-                  <div className="lang-flag" title="English">
-                    <UKFlag />
-                    <span>EN</span>
-                  </div>
-                  <div className="lang-flag" title="Русский">
-                    <RussianFlag />
-                    <span>RU</span>
-                  </div>
+                  {getLanguages().map((lang) => (
+                    <div key={lang.code} className="lang-flag" title={lang.name}>
+                      {lang.flag}
+                      <span>{lang.code.toUpperCase()}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -321,6 +359,39 @@ Ráda vytvářím atmosféru, kde se budete cítit uvolněně a výjimečně. Ka
 Mluvím plynule česky a anglicky. Těším se na vás.`}
               </p>
             </div>
+
+            {/* Tattoo & Piercing Section */}
+            {(profile.tattoo_percentage && profile.tattoo_percentage > 0) || profile.piercing ? (
+              <div className="profile-section">
+                <h3 className="section-title">Tetování & Piercing</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {profile.tattoo_percentage && profile.tattoo_percentage > 0 && (
+                    <div>
+                      <div style={{ fontSize: '14px', color: '#9a8a8e', marginBottom: '4px' }}>
+                        Tetování: <strong style={{ color: '#fff' }}>{profile.tattoo_percentage}% těla</strong>
+                      </div>
+                      {profile.tattoo_description && (
+                        <div style={{ fontSize: '14px', color: '#c9b8bd', lineHeight: '1.5' }}>
+                          {profile.tattoo_description}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {profile.piercing && (
+                    <div>
+                      <div style={{ fontSize: '14px', color: '#9a8a8e', marginBottom: '4px' }}>
+                        Piercing: <strong style={{ color: '#fff' }}>Ano</strong>
+                      </div>
+                      {profile.piercing_description && (
+                        <div style={{ fontSize: '14px', color: '#c9b8bd', lineHeight: '1.5' }}>
+                          {profile.piercing_description}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : null}
 
             {/* Services - Included */}
             <div className="profile-section">

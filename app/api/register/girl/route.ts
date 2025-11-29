@@ -47,6 +47,11 @@ export async function POST(request: NextRequest) {
       bio,
       location,
       availableDays,
+      tattoo_percentage,
+      tattoo_description,
+      piercing,
+      piercing_description,
+      languages,
       agreeTerms,
       agreePrivacy
     } = body;
@@ -154,8 +159,9 @@ export async function POST(request: NextRequest) {
         sql: `
           INSERT INTO girls (
             name, slug, email, phone, age, height, weight, bust,
-            color, status, bio, verified, online
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, 0, 0)
+            color, status, bio, verified, online,
+            tattoo_percentage, tattoo_description, piercing, piercing_description, languages
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, 0, 0, ?, ?, ?, ?, ?)
         `,
         args: [
           name,
@@ -167,7 +173,12 @@ export async function POST(request: NextRequest) {
           weight ? parseInt(weight) : null,
           measurements || null,
           color,
-          fullBio || null
+          fullBio || null,
+          tattoo_percentage || 0,
+          tattoo_description || null,
+          piercing ? 1 : 0,
+          piercing_description || null,
+          languages && languages.length > 0 ? JSON.stringify(languages) : null
         ]
       });
 

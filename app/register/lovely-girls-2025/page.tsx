@@ -22,6 +22,13 @@ export default function SecretRegistrationPage() {
     waist: '',
     hips: '',
 
+    // Tetování & Piercing
+    tattoo_percentage: 0,
+    tattoo_description: '',
+    piercing: false,
+    piercing_description: '',
+    languages: [] as string[],
+
     // Pracovní údaje
     bio: '',
     location: 'Praha',
@@ -71,6 +78,15 @@ export default function SecretRegistrationPage() {
       availableDays: prev.availableDays.includes(day)
         ? prev.availableDays.filter(d => d !== day)
         : [...prev.availableDays, day]
+    }));
+  };
+
+  const toggleLanguage = (lang: string) => {
+    setFormData(prev => ({
+      ...prev,
+      languages: prev.languages.includes(lang)
+        ? prev.languages.filter(l => l !== lang)
+        : [...prev.languages, lang]
     }));
   };
 
@@ -467,7 +483,7 @@ export default function SecretRegistrationPage() {
               </div>
             </div>
 
-            <div style={{ marginBottom: '24px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
                 fontSize: '0.85rem',
@@ -495,6 +511,149 @@ export default function SecretRegistrationPage() {
                   resize: 'vertical'
                 }}
               />
+            </div>
+
+            {/* Languages */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.85rem',
+                color: '#9a8a8e',
+                marginBottom: '12px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}>
+                Jazyky *
+              </label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                {[
+                  { code: 'cs', label: 'Čeština' },
+                  { code: 'en', label: 'English' },
+                  { code: 'de', label: 'Deutsch' },
+                  { code: 'uk', label: 'Українська' },
+                  { code: 'ru', label: 'Русский' }
+                ].map(lang => (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => toggleLanguage(lang.code)}
+                    style={{
+                      padding: '10px 18px',
+                      background: formData.languages.includes(lang.code) ? 'var(--wine)' : 'rgba(255,255,255,0.05)',
+                      border: `1px solid ${formData.languages.includes(lang.code) ? 'var(--wine)' : 'rgba(255,255,255,0.1)'}`,
+                      borderRadius: '8px',
+                      color: formData.languages.includes(lang.code) ? 'white' : '#e8e8e8',
+                      fontSize: '0.9rem',
+                      fontWeight: formData.languages.includes(lang.code) ? '600' : '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Tattoo */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.85rem',
+                color: '#9a8a8e',
+                marginBottom: '8px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}>
+                Tetování (% těla)
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={formData.tattoo_percentage}
+                onChange={(e) => setFormData({ ...formData, tattoo_percentage: parseInt(e.target.value) })}
+                style={{
+                  width: '100%',
+                  marginBottom: '8px'
+                }}
+              />
+              <div style={{ fontSize: '1.1rem', color: '#ec4899', fontWeight: '600', marginBottom: '12px' }}>
+                {formData.tattoo_percentage}%
+              </div>
+              {formData.tattoo_percentage > 0 && (
+                <textarea
+                  value={formData.tattoo_description}
+                  onChange={(e) => setFormData({ ...formData, tattoo_description: e.target.value })}
+                  placeholder="Popis tetování (např. 'Rukou rukáv s květy, malé tetování na kotníku')"
+                  rows={2}
+                  style={{
+                    width: '100%',
+                    padding: '12px 14px',
+                    background: '#1a1416',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '8px',
+                    color: '#e8e8e8',
+                    fontSize: '0.9rem',
+                    fontFamily: 'inherit',
+                    resize: 'vertical'
+                  }}
+                />
+              )}
+            </div>
+
+            {/* Piercing */}
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                cursor: 'pointer',
+                padding: '16px',
+                background: formData.piercing ? 'rgba(236, 72, 153, 0.1)' : 'rgba(255,255,255,0.03)',
+                border: `1px solid ${formData.piercing ? 'var(--wine)' : 'rgba(255,255,255,0.1)'}`,
+                borderRadius: '10px',
+                transition: 'all 0.2s'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={formData.piercing}
+                  onChange={(e) => setFormData({ ...formData, piercing: e.target.checked })}
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    cursor: 'pointer'
+                  }}
+                />
+                <span style={{
+                  fontSize: '0.95rem',
+                  color: '#e8e8e8',
+                  fontWeight: '500'
+                }}>
+                  Mám piercing
+                </span>
+              </label>
+              {formData.piercing && (
+                <textarea
+                  value={formData.piercing_description}
+                  onChange={(e) => setFormData({ ...formData, piercing_description: e.target.value })}
+                  placeholder="Popis piercingu (např. 'Nos, pupík, jazyk')"
+                  rows={2}
+                  style={{
+                    width: '100%',
+                    padding: '12px 14px',
+                    background: '#1a1416',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '8px',
+                    color: '#e8e8e8',
+                    fontSize: '0.9rem',
+                    fontFamily: 'inherit',
+                    resize: 'vertical',
+                    marginTop: '12px'
+                  }}
+                />
+              )}
             </div>
 
             <div style={{ display: 'flex', gap: '12px' }}>
