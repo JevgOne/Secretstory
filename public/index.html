@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LovelyGirls Prague | Escort & Erotic Massage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #1a1216;
+            --bg: #231a1e;
+            --white: #ffffff;
+            --gray: #9a8a8e;
+            --gray-light: #ccc;
+            --gray-dark: #4a3a3e;
+            --cream: #f8f6f3;
+            --accent: #d4a054;
+            --wine: #8b2942;
+            --wine-light: #a33352;
+            --wine-dark: #5c1c2e;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 4%;
+            background: rgba(26, 18, 22, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        /* Santa čepice na L */
+        .logo-L {
+            position: relative;
+            display: inline-block;
+        }
+
+        .santa-hat {
+            position: absolute;
+            top: -8px;
+            left: 0px;
+            width: 14px;
+            height: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            font-size: 0.85rem;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--white); }
+
+        .nav-contact {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.7rem 1.4rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 6px;
+        }
+
+        .btn:hover {
+            background: var(--wine);
+            border-color: var(--wine);
+        }
+
+        .btn-fill {
+            background: var(--wine);
+            color: var(--white);
+            border-color: var(--wine);
+        }
+
+        .btn-fill:hover {
+            background: var(--wine-light);
+            border-color: var(--wine-light);
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 4% 80px;
+        }
+
+        .hero-inner {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-text h1 {
+            font-family: 'Cormorant', serif;
+            font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .hero-text h1 em {
+            font-style: italic;
+            color: var(--wine-light);
+        }
+
+        /* Nová dívka card */
+        .hero-new {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .new-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--wine-light);
+        }
+
+        .new-girl-card {
+            background: var(--bg);
+            border-radius: 12px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .new-girl-img {
+            aspect-ratio: 3/4;
+            background: var(--wine-dark);
+            position: relative;
+        }
+
+        .new-girl-img .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+        }
+
+        .new-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: var(--wine);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        .new-girl-info {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .new-girl-name {
+            font-family: 'Cormorant', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .new-girl-meta {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.75rem;
+        }
+
+        .new-girl-desc {
+            font-size: 0.85rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        .hero-text p {
+            font-size: 1rem;
+            color: var(--gray);
+            max-width: 400px;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* SECTION */
+        section {
+            padding: 100px 4%;
+        }
+
+        .section-title {
+            font-family: 'Cormorant', serif;
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 300;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 3rem;
+        }
+
+        /* PROFILES GRID */
+        .profiles {
+            background: var(--black);
+        }
+
+        .profiles-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background: var(--bg);
+            cursor: pointer;
+            transition: transform 0.3s;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .profile-img {
+            aspect-ratio: 3/4;
+            background: var(--wine-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-img .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+        }
+
+        .profile-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: var(--wine);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .profile-badge.new {
+            background: var(--wine-light);
+        }
+
+        .profile-badge.top {
+            background: #f59e0b;
+        }
+
+        .profile-badge.asian {
+            background: #ec4899;
+        }
+
+        .profile-info {
+            padding: 1rem;
+        }
+
+        .profile-name-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+            box-shadow: 0 0 6px #22c55e;
+            flex-shrink: 0;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .profile-name {
+            font-family: 'Cormorant', serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        .profile-time {
+            margin-left: auto;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #22c55e;
+            font-size: 0.65rem;
+            font-weight: 500;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--gray);
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-stat {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .profile-stat-value {
+            color: #fff;
+        }
+
+        .profile-location {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .profile-location svg {
+            width: 12px;
+            height: 12px;
+            color: var(--wine-light);
+        }
+
+        /* INFO STRIP */
+        .info-strip {
+            background: var(--bg);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .info-strip-inner {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .info-item {
+            padding: 3rem 2rem;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .info-item:last-child { border-right: none; }
+
+        .info-icon {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .info-title {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-text {
+            font-size: 0.8rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* LOCATIONS */
+        .locations {
+            background: var(--black);
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .location-card {
+            background: var(--bg);
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .location-img {
+            background: var(--wine-dark);
+        }
+
+        .location-content {
+            padding: 1.5rem;
+        }
+
+        .location-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--wine-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .location-name {
+            font-family: 'Cormorant', serif;
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 0.35rem;
+            letter-spacing: 0.02em;
+        }
+
+        .location-address {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .location-time {
+            font-size: 0.75rem;
+            color: var(--gray-light);
+        }
+
+        /* BOOKING */
+        .booking {
+            background: var(--bg);
+        }
+
+        .booking-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .booking-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step-num {
+            font-family: 'Cormorant', serif;
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--wine-light);
+            margin-bottom: 1rem;
+        }
+
+        .step-title {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-text {
+            font-size: 0.8rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* CTA */
+        .cta {
+            background: var(--black);
+            text-align: center;
+            padding: 80px 4%;
+        }
+
+        .cta-title {
+            font-family: 'Cormorant', serif;
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .cta-text {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.9rem 1.5rem;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: var(--white);
+            transition: all 0.3s;
+        }
+
+        .cta-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .cta-btn:hover {
+            background: var(--white);
+            color: var(--black);
+            border-color: var(--white);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 2rem 4%;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a:hover { color: var(--white); }
+
+        /* AGE MODAL */
+        .age-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(10,10,10,0.98);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .age-modal.hidden {
+            display: none;
+        }
+
+        .age-box {
+            text-align: center;
+            max-width: 380px;
+            padding: 3rem;
+            background: var(--bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }
+
+        .age-box h2 {
+            font-family: 'Cormorant', serif;
+            font-size: 1.75rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        .age-box p {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .age-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .age-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid;
+        }
+
+        .age-btn.yes {
+            background: var(--wine);
+            color: var(--white);
+            border-color: var(--wine);
+            border-radius: 6px;
+        }
+
+        .age-btn.yes:hover {
+            background: var(--wine-light);
+            border-color: var(--wine-light);
+        }
+
+        .age-btn.no {
+            background: transparent;
+            color: var(--gray);
+            border-color: rgba(255,255,255,0.2);
+            border-radius: 6px;
+        }
+
+        .age-btn.no:hover {
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        /* MOBILE MENU */
+        .mobile-menu {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu span {
+            display: block;
+            width: 20px;
+            height: 1px;
+            background: var(--white);
+            margin: 5px 0;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .hero-inner { grid-template-columns: 1fr; text-align: center; }
+            .hero-text p { margin-left: auto; margin-right: auto; }
+            .hero-text h1 { font-size: 2.5rem; }
+            .hero-buttons { justify-content: center; }
+            .hero-new { 
+                max-width: 400px; 
+                margin: 2rem auto 0;
+            }
+            .new-girl-card {
+                grid-template-columns: 140px 1fr;
+            }
+            .profiles-grid { grid-template-columns: repeat(3, 1fr); }
+            .info-strip-inner { grid-template-columns: repeat(2, 1fr); }
+            .info-item:nth-child(2) { border-right: none; }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 4%; }
+            .nav-links { display: none; }
+            .mobile-menu { display: block; }
+            section { padding: 60px 4%; }
+            .profiles-grid { grid-template-columns: repeat(2, 1fr); }
+            .locations-grid { grid-template-columns: 1fr; }
+            .location-card { grid-template-columns: 100px 1fr; }
+            .booking-steps { grid-template-columns: 1fr; gap: 2.5rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+        }
+
+        @media (max-width: 480px) {
+            .profiles-grid { grid-template-columns: 1fr; }
+            .info-strip-inner { grid-template-columns: 1fr; }
+            .info-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+            .info-item:last-child { border-bottom: none; }
+            footer { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- AGE MODAL -->
+<div class="age-modal" id="ageModal">
+    <div class="age-box">
+        <h2>18+</h2>
+        <p>Tento web je určen pouze pro dospělé. Vstupem potvrzujete, že vám je 18 let nebo více.</p>
+        <div class="age-buttons">
+            <button class="age-btn yes" onclick="confirmAge()">Vstoupit</button>
+            <button class="age-btn no" onclick="denyAge()">Odejít</button>
+        </div>
+    </div>
+</div>
+
+<!-- NAV -->
+<nav>
+    <a href="#" class="logo">
+        <span class="logo-L">
+            <svg class="santa-hat" viewBox="0 0 16 14" fill="none">
+                <path d="M2 12C4 11 6 7 9 5C8 3 9 1.5 10 1" stroke="#c41e3a" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="10" cy="1.5" r="1.5" fill="#fff"/>
+                <path d="M1 12C3 11.5 6 11 9 11" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            L
+        </span>ovely Girls
+    </a>
+    <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#profiles">Dívky</a>
+        <a href="#">Ceník</a>
+        <a href="#">Schedule</a>
+        <a href="#">Discounts</a>
+        <a href="#">FAQ</a>
+    </div>
+    <div class="nav-contact">
+        <a href="tel:+420734332131" class="btn">+420 734 332 131</a>
+        <a href="https://wa.me/420734332131" class="btn btn-fill">WhatsApp</a>
+    </div>
+    <button class="mobile-menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-text">
+            <h1>Luxusní <em>escort</em><br>v Praze</h1>
+            <p>Diskrétní společnice na nejvyšší úrovni. Ověřené profily, rychlá rezervace.</p>
+            <div class="hero-buttons">
+                <a href="#profiles" class="btn btn-fill">Zobrazit dívky</a>
+                <a href="#booking" class="btn">Jak rezervovat</a>
+            </div>
+        </div>
+        <div class="hero-new">
+            <div class="new-label">✦ Nově na webu</div>
+            <div class="new-girl-card">
+                <div class="new-girl-img">
+                    <div class="placeholder">FOTO</div>
+                    <span class="new-badge">NEW</span>
+                </div>
+                <div class="new-girl-info">
+                    <div class="new-girl-name">Kristýna</div>
+                    <div class="new-girl-meta">23 let • 172 cm</div>
+                    <div class="new-girl-desc">Nová společnice právě přidána do našeho týmu</div>
+                    <a href="#" class="btn btn-fill" style="margin-top: 1rem; width: 100%; justify-content: center;">Zobrazit profil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROFILES -->
+<section class="profiles" id="profiles">
+    <div class="profiles-header">
+        <div>
+            <h2 class="section-title">Naše dívky</h2>
+            <p class="section-subtitle">Vyberte si a kontaktujte nás pro rezervaci</p>
+        </div>
+        <a href="#" class="btn">Zobrazit všechny</a>
+    </div>
+    <div class="profiles-grid">
+        <div class="profile-card">
+            <div class="profile-img">
+                <div class="placeholder">FOTO</div>
+                <div class="profile-badge new">Nová</div>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name-row">
+                    <span class="online-dot"></span>
+                    <span class="profile-name">Natalie</span>
+                    <span class="profile-time">10:00 - 18:00</span>
+                </div>
+                <div class="profile-stats">
+                    <div class="profile-stat"><span class="profile-stat-value">24</span> let</div>
+                    <div class="profile-stat">Prsa <span class="profile-stat-value">3</span></div>
+                    <div class="profile-stat"><span class="profile-stat-value">170</span> cm</div>
+                    <div class="profile-stat"><span class="profile-stat-value">52</span> kg</div>
+                </div>
+                <div class="profile-location">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Praha 2
+                </div>
+            </div>
+        </div>
+        <div class="profile-card">
+            <div class="profile-img">
+                <div class="placeholder">FOTO</div>
+                <div class="profile-badge top">Top recenze</div>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name-row">
+                    <span class="online-dot"></span>
+                    <span class="profile-name">Victoria</span>
+                    <span class="profile-time">12:00 - 20:00</span>
+                </div>
+                <div class="profile-stats">
+                    <div class="profile-stat"><span class="profile-stat-value">26</span> let</div>
+                    <div class="profile-stat">Prsa <span class="profile-stat-value">2</span></div>
+                    <div class="profile-stat"><span class="profile-stat-value">175</span> cm</div>
+                    <div class="profile-stat"><span class="profile-stat-value">58</span> kg</div>
+                </div>
+                <div class="profile-location">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Praha 3
+                </div>
+            </div>
+        </div>
+        <div class="profile-card">
+            <div class="profile-img">
+                <div class="placeholder">FOTO</div>
+                <div class="profile-badge asian">Asiatka</div>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name-row">
+                    <span class="online-dot"></span>
+                    <span class="profile-name">Isabella</span>
+                    <span class="profile-time">14:00 - 22:00</span>
+                </div>
+                <div class="profile-stats">
+                    <div class="profile-stat"><span class="profile-stat-value">23</span> let</div>
+                    <div class="profile-stat">Prsa <span class="profile-stat-value">2</span></div>
+                    <div class="profile-stat"><span class="profile-stat-value">168</span> cm</div>
+                    <div class="profile-stat"><span class="profile-stat-value">50</span> kg</div>
+                </div>
+                <div class="profile-location">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Praha 2
+                </div>
+            </div>
+        </div>
+        <div class="profile-card">
+            <div class="profile-img">
+                <div class="placeholder">FOTO</div>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name-row">
+                    <span class="online-dot"></span>
+                    <span class="profile-name">Sophie</span>
+                    <span class="profile-time">10:00 - 16:00</span>
+                </div>
+                <div class="profile-stats">
+                    <div class="profile-stat"><span class="profile-stat-value">25</span> let</div>
+                    <div class="profile-stat">Prsa <span class="profile-stat-value">3</span></div>
+                    <div class="profile-stat"><span class="profile-stat-value">172</span> cm</div>
+                    <div class="profile-stat"><span class="profile-stat-value">55</span> kg</div>
+                </div>
+                <div class="profile-location">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Praha 2
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INFO STRIP -->
+<section class="info-strip">
+    <div class="info-strip-inner">
+        <div class="info-item">
+            <div class="info-icon">✓</div>
+            <div class="info-title">Ověřené profily</div>
+            <div class="info-text">Aktuální fotky a video u každé dívky</div>
+        </div>
+        <div class="info-item">
+            <div class="info-icon">⚡</div>
+            <div class="info-title">Rychlá rezervace</div>
+            <div class="info-text">Potvrzení do 5 minut přes WhatsApp</div>
+        </div>
+        <div class="info-item">
+            <div class="info-icon">🔒</div>
+            <div class="info-title">Diskrétnost</div>
+            <div class="info-text">Soukromé apartmány, bez evidence</div>
+        </div>
+        <div class="info-item">
+            <div class="info-icon">💎</div>
+            <div class="info-title">Slevy pro stálé</div>
+            <div class="info-text">Věrnostní program a výhodné balíčky</div>
+        </div>
+    </div>
+</section>
+
+<!-- LOCATIONS -->
+<section class="locations" id="locations">
+    <div style="text-align:center; margin-bottom: 3rem;">
+        <h2 class="section-title">Lokace</h2>
+        <p class="section-subtitle">Diskrétní apartmány v centru Prahy</p>
+    </div>
+    <div class="locations-grid">
+        <div class="location-card">
+            <div class="location-img"></div>
+            <div class="location-content">
+                <div class="location-label">Hlavní</div>
+                <div class="location-name">Praha 2 — Nové Město</div>
+                <div class="location-address">5 min od Václavského náměstí</div>
+                <div class="location-time">10:00 — 22:00</div>
+            </div>
+        </div>
+        <div class="location-card">
+            <div class="location-img"></div>
+            <div class="location-content">
+                <div class="location-label">Nové</div>
+                <div class="location-name">Praha 3 — Žižkov</div>
+                <div class="location-address">Klidná lokalita, parkování</div>
+                <div class="location-time">12:00 — 20:00</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking" id="booking">
+    <div class="booking-inner">
+        <h2 class="section-title">Jak rezervovat</h2>
+        <p class="section-subtitle">Jednoduchý proces bez komplikací</p>
+        <div class="booking-steps">
+            <div class="step">
+                <div class="step-num">01</div>
+                <div class="step-title">Vyberte dívku</div>
+                <div class="step-text">Prohlédněte si profily a zjistěte dostupnost</div>
+            </div>
+            <div class="step">
+                <div class="step-num">02</div>
+                <div class="step-title">Kontaktujte nás</div>
+                <div class="step-text">WhatsApp, Telegram nebo telefon</div>
+            </div>
+            <div class="step">
+                <div class="step-num">03</div>
+                <div class="step-title">Užijte si</div>
+                <div class="step-text">Obdržíte adresu a přijďte</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <h2 class="cta-title">Rezervujte nyní</h2>
+    <p class="cta-text">Kontaktujte nás pro okamžité potvrzení</p>
+    <div class="cta-buttons">
+        <a href="https://wa.me/420734332131" class="cta-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+        </a>
+        <a href="https://t.me/lovelygirls_prague" class="cta-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            Telegram
+        </a>
+        <a href="tel:+420734332131" class="cta-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Zavolat
+        </a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
+    <div class="footer-links">
+        <a href="#">Podmínky</a>
+        <a href="#">Soukromí</a>
+    </div>
+</footer>
+
+<script>
+    function confirmAge() {
+        document.getElementById('ageModal').classList.add('hidden');
+        localStorage.setItem('age', '1');
+    }
+    function denyAge() {
+        window.location.href = 'https://google.com';
+    }
+    if (localStorage.getItem('age')) {
+        document.getElementById('ageModal').classList.add('hidden');
+    }
+</script>
+
+</body>
+</html>
