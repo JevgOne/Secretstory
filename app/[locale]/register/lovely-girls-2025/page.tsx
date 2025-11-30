@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function SecretRegistrationPage() {
   const router = useRouter();
+  const t = useTranslations();
+  const locale = useLocale();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     // Osobní údaje
@@ -28,6 +31,7 @@ export default function SecretRegistrationPage() {
     piercing: false,
     piercing_description: '',
     languages: [] as string[],
+    services: [] as string[],
 
     // Pracovní údaje
     bio: '',
@@ -89,6 +93,41 @@ export default function SecretRegistrationPage() {
         : [...prev.languages, lang]
     }));
   };
+
+  const toggleService = (service: string) => {
+    setFormData(prev => ({
+      ...prev,
+      services: prev.services.includes(service)
+        ? prev.services.filter(s => s !== service)
+        : [...prev.services, service]
+    }));
+  };
+
+  const availableServices = [
+    'classic_massage',
+    'erotic_massage',
+    'tantra_massage',
+    'nuru_massage',
+    'body_to_body',
+    'shared_shower',
+    'kissing',
+    'striptease',
+    'french_kissing',
+    'girlfriend_experience',
+    'roleplay',
+    'light_domination',
+    'duo',
+    'anal',
+    'oral_without',
+    'deepthroat',
+    'cum_on_body',
+    'cum_in_mouth',
+    'extraball',
+    'golden_shower_give',
+    'golden_shower_receive',
+    'foot_fetish',
+    'toys'
+  ];
 
   return (
     <div style={{
@@ -552,6 +591,67 @@ export default function SecretRegistrationPage() {
                     {lang.label}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Services */}
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.85rem',
+                color: '#9a8a8e',
+                marginBottom: '12px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}>
+                {t('register.select_services')} *
+              </label>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gap: '10px',
+                maxHeight: '300px',
+                overflowY: 'auto',
+                padding: '12px',
+                background: 'rgba(255,255,255,0.02)',
+                borderRadius: '10px',
+                border: '1px solid rgba(255,255,255,0.05)'
+              }}>
+                {availableServices.map(service => (
+                  <label
+                    key={service}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '10px 12px',
+                      background: formData.services.includes(service) ? 'rgba(236, 72, 153, 0.15)' : 'rgba(255,255,255,0.03)',
+                      border: `1px solid ${formData.services.includes(service) ? 'var(--wine)' : 'rgba(255,255,255,0.1)'}`,
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      fontSize: '0.85rem'
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData.services.includes(service)}
+                      onChange={() => toggleService(service)}
+                      style={{
+                        width: '16px',
+                        height: '16px',
+                        cursor: 'pointer',
+                        accentColor: 'var(--wine)'
+                      }}
+                    />
+                    <span style={{ color: '#e8e8e8', fontSize: '0.9rem' }}>
+                      {t(`services.${service}`)}
+                    </span>
+                  </label>
+                ))}
+              </div>
+              <div style={{ fontSize: '0.75rem', color: '#9a8a8e', marginTop: '8px' }}>
+                {formData.services.length} {formData.services.length === 1 ? 'služba' : formData.services.length < 5 ? 'služby' : 'služeb'} vybráno
               </div>
             </div>
 

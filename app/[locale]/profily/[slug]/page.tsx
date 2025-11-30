@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations, useLocale } from 'next-intl';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import {
   Clock,
   MapPin,
@@ -91,8 +93,10 @@ interface Girl {
   languages?: string; // JSON array: ["cs", "en", "de", "uk"]
 }
 
-export default function ProfileDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default function ProfileDetailPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const router = useRouter();
+  const t = useTranslations();
+  const locale = useLocale();
   const [activeGalleryMode, setActiveGalleryMode] = useState<"photo" | "video">("photo");
   const [activeThumb, setActiveThumb] = useState(0);
   const [profile, setProfile] = useState<Girl | null>(null);
@@ -112,11 +116,11 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
       if (data.success) {
         setProfile(data.girl);
       } else {
-        setError(data.error || 'Profil nenalezen');
+        setError(data.error || t('detail.not_found'));
       }
     } catch (err) {
       console.error('Error fetching profile:', err);
-      setError('Chyba při načítání profilu');
+      setError(t('detail.error'));
     } finally {
       setLoading(false);
     }
@@ -125,7 +129,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9a8a8e' }}>
-        Načítání profilu...
+        {t('detail.loading')}
       </div>
     );
   }
@@ -133,8 +137,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
   if (error || !profile) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
-        <div style={{ color: '#ef4444', fontSize: '1.2rem' }}>{error || 'Profil nenalezen'}</div>
-        <Link href="/divky" className="btn btn-fill">Zpět na přehled</Link>
+        <div style={{ color: '#ef4444', fontSize: '1.2rem' }}>{error || t('detail.not_found')}</div>
+        <Link href={`/${locale}/divky`} className="btn btn-fill">{t('detail.back_to_list')}</Link>
       </div>
     );
   }
@@ -182,26 +186,25 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
   };
 
   const includedServices = [
-    { name: "Klasická masáž" },
-    { name: "Erotická masáž" },
-    { name: "Body to body" },
-    { name: "Společná sprcha" },
-    { name: "Líbání" },
-    { name: "Striptýz" }
+    { code: "classic_massage" },
+    { code: "erotic_massage" },
+    { code: "body_to_body" },
+    { code: "shared_shower" },
+    { code: "kissing" },
+    { code: "striptease" }
   ];
 
   const extraServices = [
-    { name: "Nuru masáž", price: "+500 Kč" },
-    { name: "Tantra masáž", price: "+800 Kč" },
-    { name: "Masáž ve dvou", price: "+1500 Kč" },
-    { name: "Prodloužení 30 min", price: "+1000 Kč" }
+    { code: "nuru_massage", price: "+500 Kč" },
+    { code: "tantra_massage", price: "+800 Kč" },
+    { code: "duo", price: "+1500 Kč" }
   ];
 
   return (
     <>
       {/* Navigation */}
       <nav>
-        <Link href="/" className="logo">
+        <Link href={`/${locale}`} className="logo">
           <span className="logo-L">
             <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
               <path d="M2 12C4 11 6 7 9 5C8 3 9 1.5 10 1" stroke="#c41e3a" strokeWidth="2" strokeLinecap="round"/>
@@ -213,16 +216,17 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
           ovely Girls
         </Link>
         <div className="nav-links">
-          <Link href="/">Home</Link>
-          <Link href="/divky">Dívky</Link>
-          <Link href="/cenik">Ceník</Link>
-          <Link href="/schedule">Schedule</Link>
-          <Link href="/discounts">Discounts</Link>
-          <Link href="/faq">FAQ</Link>
+          <Link href={`/${locale}`}>{t('nav.home')}</Link>
+          <Link href={`/${locale}/divky`}>{t('nav.girls')}</Link>
+          <Link href={`/${locale}/cenik`}>{t('nav.pricing')}</Link>
+          <Link href={`/${locale}/schedule`}>{t('nav.schedule')}</Link>
+          <Link href={`/${locale}/discounts`}>{t('nav.discounts')}</Link>
+          <Link href={`/${locale}/faq`}>{t('nav.faq')}</Link>
         </div>
         <div className="nav-contact">
-          <a href="tel:+420734332131" className="btn">+420 734 332 131</a>
-          <a href="https://wa.me/420734332131" className="btn btn-fill">WhatsApp</a>
+          <LanguageSwitcher />
+          <a href="tel:+420734332131" className="btn">{t('nav.phone')}</a>
+          <a href="https://wa.me/420734332131" className="btn btn-fill">{t('nav.whatsapp')}</a>
         </div>
         <button className="mobile-menu">
           <span></span>
@@ -233,9 +237,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
 
       {/* Breadcrumb */}
       <div className="breadcrumb">
-        <Link href="/">Home</Link>
+        <Link href={`/${locale}`}>{t('breadcrumb.home')}</Link>
         <span>›</span>
-        <Link href="/divky">Dívky</Link>
+        <Link href={`/${locale}/divky`}>{t('breadcrumb.girls')}</Link>
         <span>›</span>
         {profile.name}
       </div>
@@ -246,7 +250,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
           {/* Gallery - Sticky */}
           <div className="gallery">
             <div className="gallery-main">
-              {profile.verified && <span className="gallery-badge">Ověřená</span>}
+              {profile.verified && <span className="gallery-badge">{t('girls.verified')}</span>}
               HLAVNÍ FOTO / VIDEO
               <div className="gallery-toggle">
                 <button
@@ -254,14 +258,14 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
                   onClick={() => setActiveGalleryMode("photo")}
                 >
                   <ImageIcon size={14} />
-                  Foto
+                  {t('detail.photo')}
                 </button>
                 <button
                   className={`toggle-btn ${activeGalleryMode === "video" ? "active" : ""}`}
                   onClick={() => setActiveGalleryMode("video")}
                 >
                   <Play size={14} />
-                  Video
+                  {t('detail.video')}
                 </button>
               </div>
             </div>
@@ -281,7 +285,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
               <div className="profile-top-row">
                 <div className="profile-status">
                   {profile.online && <span className="online-dot"></span>}
-                  <span className="status-text">{profile.online ? 'Online' : 'Offline'}</span>
+                  <span className="status-text">{profile.online ? t('girls.online') : t('girls.offline')}</span>
                 </div>
                 <div className="profile-time">
                   <Clock size={14} />
@@ -289,7 +293,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
                 </div>
               </div>
               <h1 className="profile-name">{profile.name}</h1>
-              <p className="profile-tagline">Elegantní společnice pro náročné gentlemany</p>
+              <p className="profile-tagline">{t('detail.tagline')}</p>
             </div>
 
             {/* Stats + Languages */}
@@ -297,26 +301,26 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
               <div className="stats-row">
                 <div className="stat-item">
                   <div className="stat-value">{profile.age}</div>
-                  <div className="stat-label">let</div>
+                  <div className="stat-label">{t('girls.age_years')}</div>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
                   <div className="stat-value">{profile.height}</div>
-                  <div className="stat-label">cm</div>
+                  <div className="stat-label">{t('girls.height_cm')}</div>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
                   <div className="stat-value">{profile.weight}</div>
-                  <div className="stat-label">kg</div>
+                  <div className="stat-label">{t('girls.weight_kg')}</div>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
                   <div className="stat-value">{getBreastSize()}</div>
-                  <div className="stat-label">prsa</div>
+                  <div className="stat-label">{t('girls.bust')}</div>
                 </div>
               </div>
               <div className="languages-row">
-                <span className="lang-label">Mluvím</span>
+                <span className="lang-label">{t('girls.languages_spoken')}</span>
                 <div className="lang-flags">
                   {getLanguages().map((lang) => (
                     <div key={lang.code} className="lang-flag" title={lang.name}>
@@ -343,14 +347,14 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ slug: 
                 <MapPin size={18} />
               </div>
               <div className="location-text">
-                <div className="location-name">Praha 2 — Nové Město</div>
-                <div className="location-address">5 min od metra Můstek • Diskrétní apartmán</div>
+                <div className="location-name">{t('detail.location_prague')}</div>
+                <div className="location-address">{t('detail.location_details')}</div>
               </div>
             </div>
 
             {/* Description */}
             <div className="profile-section">
-              <h3 className="section-title">O mně</h3>
+              <h3 className="section-title">{t('profile.about_me')}</h3>
               <p className="profile-description" style={{ whiteSpace: "pre-line" }}>
                 {profile.bio || `Vítejte na mém profilu. Jsem ${profile.name} — ${profile.age}letá společnice, která věří, že pravý luxus spočívá v detailech a autentickém prožitku.
 
@@ -363,12 +367,12 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
             {/* Tattoo & Piercing Section */}
             {(profile.tattoo_percentage && profile.tattoo_percentage > 0) || profile.piercing ? (
               <div className="profile-section">
-                <h3 className="section-title">Tetování & Piercing</h3>
+                <h3 className="section-title">{t('profile.tattoo_piercing')}</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {profile.tattoo_percentage && profile.tattoo_percentage > 0 && (
                     <div>
                       <div style={{ fontSize: '14px', color: '#9a8a8e', marginBottom: '4px' }}>
-                        Tetování: <strong style={{ color: '#fff' }}>{profile.tattoo_percentage}% těla</strong>
+                        {t('profile.tattoo')}: <strong style={{ color: '#fff' }}>{profile.tattoo_percentage}{t('profile.tattoo_percentage')}</strong>
                       </div>
                       {profile.tattoo_description && (
                         <div style={{ fontSize: '14px', color: '#c9b8bd', lineHeight: '1.5' }}>
@@ -380,7 +384,7 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
                   {profile.piercing && (
                     <div>
                       <div style={{ fontSize: '14px', color: '#9a8a8e', marginBottom: '4px' }}>
-                        Piercing: <strong style={{ color: '#fff' }}>Ano</strong>
+                        {t('profile.piercing')}: <strong style={{ color: '#fff' }}>{t('profile.yes')}</strong>
                       </div>
                       {profile.piercing_description && (
                         <div style={{ fontSize: '14px', color: '#c9b8bd', lineHeight: '1.5' }}>
@@ -395,15 +399,15 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
 
             {/* Services - Included */}
             <div className="profile-section">
-              <h3 className="section-title">V ceně</h3>
+              <h3 className="section-title">{t('profile.included')}</h3>
               <div className="services-grid">
                 {includedServices.map((service, i) => (
                   <div key={i} className="service-item">
                     <div className="service-name">
                       <div className="service-icon">✓</div>
-                      {service.name}
+                      {t(`services.${service.code}`)}
                     </div>
-                    <span className="service-price included">Zahrnuto</span>
+                    <span className="service-price included">{t('profile.included')}</span>
                   </div>
                 ))}
               </div>
@@ -411,13 +415,13 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
 
             {/* Services - Extra */}
             <div className="profile-section">
-              <h3 className="section-title">Extra služby</h3>
+              <h3 className="section-title">{t('profile.extra_services')}</h3>
               <div className="services-grid">
                 {extraServices.map((service, i) => (
                   <div key={i} className="service-item extra">
                     <div className="service-name">
                       <div className="service-icon">+</div>
-                      {service.name}
+                      {t(`services.${service.code}`)}
                     </div>
                     <span className="service-price extra">{service.price}</span>
                   </div>
@@ -437,7 +441,7 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
               </a>
               <a href="tel:+420734332131" className="cta-btn phone">
                 <PhoneIcon size={24} />
-                Zavolat
+                {t('profile.call')}
               </a>
             </div>
           </div>
@@ -446,10 +450,10 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
 
       {/* Footer */}
       <footer>
-        <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
+        <div>{t('common.brand')} Prague © 2025 — {t('common.adults_only')}</div>
         <div className="footer-links">
-          <Link href="/podminky">Podmínky</Link>
-          <Link href="/soukromi">Soukromí</Link>
+          <Link href={`/${locale}/podminky`}>{t('footer.terms')}</Link>
+          <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
         </div>
       </footer>
     </>

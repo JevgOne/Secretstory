@@ -6,6 +6,24 @@
     "error": "Error",
     "success": "Success"
   },
+  "home": {
+    "age_modal_title": "18+",
+    "age_modal_text": "This website is for adults only. By entering you confirm that you are 18 years or older.",
+    "age_enter": "Enter",
+    "age_leave": "Leave",
+    "hero_title": "Premium Companions in Prague",
+    "hero_subtitle": "Discreet meetings with verified girls. Professional services in luxury environment.",
+    "hero_cta": "Choose a Girl",
+    "featured_girls": "Featured Girls",
+    "view_all_girls": "View All Girls",
+    "why_choose_us": "Why Choose Us",
+    "verified_profiles": "Verified Profiles",
+    "verified_desc": "All girls are carefully verified and their photos are 100% genuine",
+    "discrete_safe": "Discreet & Safe",
+    "discrete_desc": "Your privacy is our priority. Discreet apartments in Prague city center",
+    "professional": "Professional Approach",
+    "professional_desc": "High level of service and professional behavior of our girls"
+  },
   "nav": {
     "home": "Home",
     "girls": "Girls",
@@ -114,5 +132,20 @@
     "copyright": "LovelyGirls Prague © 2025",
     "terms": "Terms",
     "privacy": "Privacy"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "girls": "Girls"
+  },
+  "detail": {
+    "loading": "Loading profile...",
+    "error": "Error loading profile",
+    "not_found": "Profile not found",
+    "back_to_list": "Back to list",
+    "photo": "Photo",
+    "video": "Video",
+    "tagline": "Elegant companion for discerning gentlemen",
+    "location_prague": "Prague 2 — New Town",
+    "location_details": "5 min from Můstek metro • Discreet apartment"
   }
 }

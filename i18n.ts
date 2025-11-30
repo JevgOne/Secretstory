@@ -1,13 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getRequestConfig } from 'next-intl/server';
 
-// Supported locales
 export const locales = ['cs', 'en', 'de', 'uk'] as const;
 export type Locale = (typeof locales)[number];
-
 export const defaultLocale: Locale = 'cs';
 
-// Locale names for display
 export const localeNames: Record<Locale, string> = {
   cs: 'Čeština',
   en: 'English',
@@ -15,17 +12,28 @@ export const localeNames: Record<Locale, string> = {
   uk: 'Українська',
 };
 
+// Import all messages statically to avoid dynamic import issues in Edge Runtime
+import csMessages from './messages/cs.json';
+import enMessages from './messages/en.json';
+import deMessages from './messages/de.json';
+import ukMessages from './messages/uk.json';
+
+const messages = {
+  cs: csMessages,
+  en: enMessages,
+  de: deMessages,
+  uk: ukMessages,
+};
+
 export default getRequestConfig(async ({ requestLocale }) => {
-  // This typically corresponds to the `[locale]` segment
   let locale = await requestLocale;
 
-  // Validate that the incoming `locale` parameter is valid
   if (!locale || !locales.includes(locale as Locale)) {
     locale = defaultLocale;
   }
 
   return {
     locale,
-    messages: (await import(`./messages/${locale}.json`)).default,
+    messages: messages[locale as Locale],
   };
 });

@@ -6,6 +6,24 @@
     "error": "Fehler",
     "success": "Erfolg"
   },
+  "home": {
+    "age_modal_title": "18+",
+    "age_modal_text": "Diese Website ist nur für Erwachsene. Mit dem Betreten bestätigen Sie, dass Sie 18 Jahre oder älter sind.",
+    "age_enter": "Eintreten",
+    "age_leave": "Verlassen",
+    "hero_title": "Premium-Begleiterinnen in Prag",
+    "hero_subtitle": "Diskrete Treffen mit verifizierten Mädchen. Professionelle Dienstleistungen in luxuriöser Umgebung.",
+    "hero_cta": "Mädchen wählen",
+    "featured_girls": "Empfohlene Mädchen",
+    "view_all_girls": "Alle Mädchen anzeigen",
+    "why_choose_us": "Warum uns wählen",
+    "verified_profiles": "Verifizierte Profile",
+    "verified_desc": "Alle Mädchen sind sorgfältig verifiziert und ihre Fotos sind 100% echt",
+    "discrete_safe": "Diskret & Sicher",
+    "discrete_desc": "Ihre Privatsphäre ist unsere Priorität. Diskrete Wohnungen im Prager Stadtzentrum",
+    "professional": "Professioneller Ansatz",
+    "professional_desc": "Hoher Service-Level und professionelles Verhalten unserer Mädchen"
+  },
   "nav": {
     "home": "Home",
     "girls": "Mädchen",
@@ -114,5 +132,20 @@
     "copyright": "LovelyGirls Prag © 2025",
     "terms": "Bedingungen",
     "privacy": "Datenschutz"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "girls": "Mädchen"
+  },
+  "detail": {
+    "loading": "Profil wird geladen...",
+    "error": "Fehler beim Laden des Profils",
+    "not_found": "Profil nicht gefunden",
+    "back_to_list": "Zurück zur Liste",
+    "photo": "Foto",
+    "video": "Video",
+    "tagline": "Elegante Begleiterin für anspruchsvolle Gentlemen",
+    "location_prague": "Prag 2 — Neustadt",
+    "location_details": "5 Min. von der Metro Můstek • Diskrete Wohnung"
   }
 }
