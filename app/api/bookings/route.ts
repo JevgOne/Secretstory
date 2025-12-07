@@ -85,6 +85,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check for time conflicts with existing bookings
+    const conflictCheck = await db.execute({
+      sql: `
+        SELECT id FROM bookings
+        WHERE girl_id = ?
+          AND date = ?
+          AND status NOT IN ('cancelled', 'rejected')
+          AND (
+            (start_time < ? AND end_time > ?) OR
+            (start_time < ? AND end_time > ?) OR
+            (start_time >= ? AND end_time <= ?)
+          )
+      `,
+      args: [
+        girl_id, date,
+        end_time, start_time,
+        end_time, end_time,
+        start_time, end_time
+      ]
+    });
+
+    if (conflictCheck.rows.length > 0) {
+      return NextResponse.json(
+        { error: 'Časový konflikt s existující rezervací' },
+        { status: 409 }
+      );
+    }
+
     // Insert booking
     const result = await db.execute({
       sql: `
@@ -113,8 +141,27 @@ export async function POST(request: NextRequest) {
       ]
     });
 
-    // TODO: Create notification for the girl
-    // await createNotification(girl_id, 'booking_created', ...)
+    // Create notification for the girl
+    try {
+      await db.execute({
+        sql: `
+          INSERT INTO notifications (user_id, type, title, message, link, created_at)
+          SELECT
+            u.id,
+            'booking_created',
+            'Nová rezervace',
+            'Máte novou rezervaci na ' || ? || ' v ' || ?,
+            '/girl/dashboard',
+            CURRENT_TIMESTAMP
+          FROM users u
+          WHERE u.girl_id = ? AND u.role = 'girl'
+        `,
+        args: [date, start_time, girl_id]
+      });
+    } catch (notifError) {
+      console.error('Failed to create notification:', notifError);
+      // Don't fail the booking if notification fails
+    }
 
     return NextResponse.json({
       success: true,
