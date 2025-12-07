@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
       piercing,
       piercing_description,
       languages,
+      services,
       agreeTerms,
       agreePrivacy
     } = body;
@@ -160,8 +161,8 @@ export async function POST(request: NextRequest) {
           INSERT INTO girls (
             name, slug, email, phone, age, height, weight, bust,
             color, status, bio, verified, online,
-            tattoo_percentage, tattoo_description, piercing, piercing_description, languages
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, 0, 0, ?, ?, ?, ?, ?)
+            tattoo_percentage, tattoo_description, piercing, piercing_description, languages, services
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, 0, 0, ?, ?, ?, ?, ?, ?)
         `,
         args: [
           name,
@@ -178,7 +179,8 @@ export async function POST(request: NextRequest) {
           tattoo_description || null,
           piercing ? 1 : 0,
           piercing_description || null,
-          languages && languages.length > 0 ? JSON.stringify(languages) : null
+          languages && languages.length > 0 ? JSON.stringify(languages) : null,
+          services && services.length > 0 ? JSON.stringify(services) : null
         ]
       });
 

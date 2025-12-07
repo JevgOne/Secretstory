@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { createNotification } from '@/lib/notifications';
 
 // GET /api/reviews - Get all reviews (with filters)
 export async function GET(request: NextRequest) {
@@ -95,8 +96,22 @@ export async function POST(request: NextRequest) {
       ]
     });
 
-    // TODO: Create notification for admin
-    // await createNotification(admin_user_id, 'review_new', ...)
+    // Create notification for all admin users
+    const adminUsers = await db.execute({
+      sql: 'SELECT id FROM users WHERE role = ?',
+      args: ['admin']
+    });
+
+    // Create notification for each admin
+    for (const admin of adminUsers.rows) {
+      await createNotification({
+        userId: (admin as any).id,
+        type: 'review_new',
+        title: 'Nová recenze čeká na schválení',
+        message: `Nová recenze od ${author_name} čeká na schválení.`,
+        link: `/admin/reviews`
+      });
+    }
 
     return NextResponse.json({
       success: true,

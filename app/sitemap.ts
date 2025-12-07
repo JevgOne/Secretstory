@@ -14,6 +14,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     girls = result.rows as any[]
   } catch (error) {
     console.error('Error fetching girls for sitemap:', error)
+    console.error('Database connection failed - continuing with static pages only')
+    // Return empty array to continue build without database
+    girls = []
   }
 
   // Static pages for each locale

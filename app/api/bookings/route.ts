@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requireAuth } from '@/lib/auth-helpers';
 
 // GET /api/bookings - Get all bookings (with filters)
 export async function GET(request: NextRequest) {
+  // Require authentication - admin, manager, or girl
+  const user = await requireAuth(['admin', 'manager', 'girl']);
+  if (user instanceof NextResponse) return user;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const girlId = searchParams.get('girl_id');
@@ -20,7 +25,12 @@ export async function GET(request: NextRequest) {
     `;
     const args: any[] = [];
 
-    if (girlId) {
+    // Role-based filtering: Girls can only see their own bookings
+    if (user.role === 'girl' && user.girlId) {
+      sql += ' AND b.girl_id = ?';
+      args.push(user.girlId);
+    } else if (girlId) {
+      // Admin/Manager can filter by girl_id
       sql += ' AND b.girl_id = ?';
       args.push(parseInt(girlId));
     }
@@ -57,6 +67,10 @@ export async function GET(request: NextRequest) {
 
 // POST /api/bookings - Create new booking
 export async function POST(request: NextRequest) {
+  // Require authentication - admin or manager only
+  const user = await requireAuth(['admin', 'manager']);
+  if (user instanceof NextResponse) return user;
+
   try {
     const body = await request.json();
     const {

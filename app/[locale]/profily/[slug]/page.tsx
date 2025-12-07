@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { PersonSchema, BreadcrumbSchema } from '@/components/StructuredData';
 import {
   Clock,
   MapPin,
@@ -200,8 +201,17 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
     { code: "duo", price: "+1500 Kč" }
   ];
 
+  const breadcrumbItems = [
+    { name: t('breadcrumb.home'), url: `https://lovelygirls.cz/${locale}` },
+    { name: t('breadcrumb.girls'), url: `https://lovelygirls.cz/${locale}/divky` },
+    { name: profile.name, url: `https://lovelygirls.cz/${locale}/profily/${profile.slug}` }
+  ];
+
   return (
     <>
+      <PersonSchema girl={profile} locale={locale} />
+      <BreadcrumbSchema items={breadcrumbItems} />
+
       {/* Navigation */}
       <nav>
         <Link href={`/${locale}`} className="logo">

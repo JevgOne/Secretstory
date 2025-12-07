@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requireAuth } from '@/lib/auth-helpers';
 
 // GET /api/reviews/:id - Get single review
 export async function GET(
@@ -46,6 +47,10 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Only admin can update reviews
+  const user = await requireAuth(['admin']);
+  if (user instanceof NextResponse) return user;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -98,6 +103,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Only admin can delete reviews
+  const user = await requireAuth(['admin']);
+  if (user instanceof NextResponse) return user;
+
   try {
     const { id } = await params;
     await db.execute({

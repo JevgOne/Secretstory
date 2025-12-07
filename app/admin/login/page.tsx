@@ -42,10 +42,7 @@ export default function AdminLoginPage() {
         return;
       }
 
-      // Store user in localStorage
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      // Redirect based on role
+      // Redirect based on role (using NextAuth session)
       if (data.user.role === 'girl') {
         router.push('/girl/dashboard');
       } else if (data.user.role === 'manager') {

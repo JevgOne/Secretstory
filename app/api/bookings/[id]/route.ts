@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requireAuth } from '@/lib/auth-helpers';
 
 // GET /api/bookings/:id - Get single booking
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Require authentication
+  const user = await requireAuth(['admin', 'manager', 'girl']);
+  if (user instanceof NextResponse) return user;
+
   try {
     const { id } = await params;
     const result = await db.execute({
@@ -30,6 +35,14 @@ export async function GET(
 
     const booking = result.rows[0];
 
+    // Girls can only see their own bookings
+    if (user.role === 'girl' && booking.girl_id !== user.girlId) {
+      return NextResponse.json(
+        { error: 'Nemáte oprávnění k této rezervaci' },
+        { status: 403 }
+      );
+    }
+
     return NextResponse.json({
       success: true,
       booking: {
@@ -51,6 +64,10 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Only admin and manager can update bookings
+  const user = await requireAuth(['admin', 'manager']);
+  if (user instanceof NextResponse) return user;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -109,6 +126,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Only admin can delete bookings
+  const user = await requireAuth(['admin']);
+  if (user instanceof NextResponse) return user;
+
   try {
     const { id } = await params;
     await db.execute({
