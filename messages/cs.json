@@ -145,6 +145,33 @@
     "title": "Ceník služeb",
     "packages": "Balíčky"
   },
+  "schedule": {
+    "title": "Rozvrh",
+    "subtitle": "Podívejte se, které dívky jsou dnes k dispozici a v jakých hodinách",
+    "loading": "Načítání rozvrhu...",
+    "error": "Chyba při načítání rozvrhu",
+    "no_girls": "Dnes nejsou k dispozici žádné dívky",
+    "today": "Dnes",
+    "status": {
+      "online": "Online",
+      "available_from": "Od {time}",
+      "not_available": "Volno"
+    },
+    "days": {
+      "today_short": "Dnes",
+      "monday": "Pondělí",
+      "tuesday": "Úterý",
+      "wednesday": "Středa",
+      "thursday": "Čtvrtek",
+      "friday": "Pátek",
+      "saturday": "Sobota",
+      "sunday": "Neděle"
+    },
+    "legend": {
+      "available": "Právě k dispozici",
+      "later": "Později / Volno"
+    }
+  },
   "footer": {
     "copyright": "LovelyGirls Prague © 2025",
     "terms": "Podmínky",

@@ -32,6 +32,12 @@ CREATE TABLE IF NOT EXISTS girls (
   bookings_count INTEGER DEFAULT 0,
   services TEXT,
   bio TEXT,
+  schedule TEXT,
+  description_cs TEXT,
+  description_en TEXT,
+  description_de TEXT,
+  description_uk TEXT,
+  location TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -91,4 +97,32 @@ CREATE TABLE IF NOT EXISTS notifications (
   read BOOLEAN DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Services table (multilingual)
+CREATE TABLE IF NOT EXISTS services (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name_cs TEXT NOT NULL,
+  name_en TEXT NOT NULL,
+  name_de TEXT NOT NULL,
+  name_uk TEXT NOT NULL,
+  category TEXT CHECK(category IN ('basic', 'oral', 'anal', 'extra', 'duo')),
+  duration INTEGER,
+  is_active BOOLEAN DEFAULT 1,
+  display_order INTEGER DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Girl-Services junction table
+CREATE TABLE IF NOT EXISTS girl_services (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  girl_id INTEGER NOT NULL,
+  service_id INTEGER NOT NULL,
+  is_included BOOLEAN DEFAULT 1,
+  extra_price INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (girl_id) REFERENCES girls(id) ON DELETE CASCADE,
+  FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
+  UNIQUE(girl_id, service_id)
 );

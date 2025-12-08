@@ -128,6 +128,33 @@
     "title": "Preisliste",
     "packages": "Pakete"
   },
+  "schedule": {
+    "title": "Zeitplan",
+    "subtitle": "Sehen Sie, welche Mädchen heute verfügbar sind und ihre Arbeitszeiten",
+    "loading": "Zeitplan wird geladen...",
+    "error": "Fehler beim Laden des Zeitplans",
+    "no_girls": "Heute sind keine Mädchen verfügbar",
+    "today": "Heute",
+    "status": {
+      "online": "Online",
+      "available_from": "Ab {time}",
+      "not_available": "Frei"
+    },
+    "days": {
+      "today_short": "Heute",
+      "monday": "Montag",
+      "tuesday": "Dienstag",
+      "wednesday": "Mittwoch",
+      "thursday": "Donnerstag",
+      "friday": "Freitag",
+      "saturday": "Samstag",
+      "sunday": "Sonntag"
+    },
+    "legend": {
+      "available": "Jetzt verfügbar",
+      "later": "Später / Frei"
+    }
+  },
   "footer": {
     "copyright": "LovelyGirls Prag © 2025",
     "terms": "Bedingungen",

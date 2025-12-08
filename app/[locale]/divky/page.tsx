@@ -2,8 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import MobileMenu from '@/components/MobileMenu';
+import BottomCTA from '@/components/BottomCTA';
+import GirlCard from '@/components/GirlCard';
+import SkeletonCard from '@/components/SkeletonCard';
 
 interface Girl {
   id: number;
@@ -22,6 +27,7 @@ interface Girl {
 export default function GirlsPage() {
   const t = useTranslations();
   const locale = useLocale();
+  const pathname = usePathname();
   const [girls, setGirls] = useState<Girl[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -106,11 +112,7 @@ export default function GirlsPage() {
           <a href="tel:+420734332131" className="btn">{t('nav.phone')}</a>
           <a href="https://wa.me/420734332131" className="btn btn-fill">{t('nav.whatsapp')}</a>
         </div>
-        <button className="mobile-menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        <MobileMenu currentPath={pathname} />
       </nav>
 
       {/* Page Header */}
@@ -123,60 +125,35 @@ export default function GirlsPage() {
       <section className="profiles">
         <div className="profiles-grid">
           {loading ? (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
-              {t('girls.loading_profiles')}
-            </div>
+            <>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </>
           ) : girls.length === 0 ? (
             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
               {t('girls.no_girls')}
             </div>
           ) : (
             girls.map((girl) => (
-              <Link key={girl.id} href={`/${locale}/profily/${girl.slug}`} className="profile-card">
-                <div className="profile-img">
-                  <div className="placeholder">FOTO</div>
-                  {girl.id <= 3 && (
-                    <div className={`profile-badge ${girl.id === 1 ? 'new' : girl.id === 2 ? 'top' : 'asian'}`}>
-                      {girl.id === 1 && t('girls.new')}
-                      {girl.id === 2 && t('girls.top_reviews')}
-                      {girl.id === 3 && t('girls.recommended')}
-                    </div>
-                  )}
-                </div>
-                <div className="profile-info">
-                  <div className="profile-name-row">
-                    {girl.online && <span className="online-dot"></span>}
-                    <span className="profile-name">{girl.name}</span>
-                    <span className="profile-time">{getTimeRange()}</span>
-                  </div>
-                  <div className="profile-stats">
-                    <div className="profile-stat">
-                      <span className="profile-stat-value">{girl.age}</span> {t('girls.age_years')}
-                    </div>
-                    <div className="profile-stat">
-                      {t('girls.bust')} <span className="profile-stat-value">{getBreastSize(girl.bust)}</span>
-                    </div>
-                    <div className="profile-stat">
-                      <span className="profile-stat-value">{girl.height}</span> {t('girls.height_cm')}
-                    </div>
-                    <div className="profile-stat">
-                      <span className="profile-stat-value">{girl.weight}</span> {t('girls.weight_kg')}
-                    </div>
-                  </div>
-                  {girl.languages && (
-                    <div className="profile-languages" style={{ fontSize: '0.75rem', color: '#9a8a8e', marginTop: '8px' }}>
-                      {t('girls.languages_spoken')}: {JSON.parse(girl.languages).map((code: string) => getLanguageName(code)).join(', ')}
-                    </div>
-                  )}
-                  <div className="profile-location">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
-                    {getLocation()}
-                  </div>
-                </div>
-              </Link>
+              <GirlCard
+                key={girl.id}
+                girl={girl}
+                badge={girl.id <= 3 ? (girl.id === 1 ? 'new' : girl.id === 2 ? 'top' : 'recommended') : null}
+                badgeText={{
+                  new: t('girls.new'),
+                  top: t('girls.top_reviews'),
+                  recommended: t('girls.recommended')
+                }}
+                translations={{
+                  age_years: t('girls.age_years'),
+                  bust: t('girls.bust'),
+                  height_cm: t('girls.height_cm'),
+                  weight_kg: t('girls.weight_kg'),
+                  languages_spoken: t('girls.languages_spoken')
+                }}
+                showQuickActions={true}
+              />
             ))
           )}
         </div>
@@ -190,6 +167,15 @@ export default function GirlsPage() {
           <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
         </div>
       </footer>
+
+      {/* MOBILE BOTTOM CTA */}
+      <BottomCTA
+        translations={{
+          browse_girls: t('nav.girls'),
+          whatsapp: t('nav.whatsapp'),
+          call: t('nav.phone')
+        }}
+      />
     </>
   );
 }

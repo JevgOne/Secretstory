@@ -12,7 +12,9 @@ export async function POST(request: NextRequest) {
     const {
       name, age, email, phone, nationality, bio, height, weight,
       bust, waist, hips, hair_color, eye_color, services, hourly_rate,
-      tattoo_percentage, tattoo_description, piercing, piercing_description, languages
+      tattoo_percentage, tattoo_description, piercing, piercing_description, languages,
+      schedule, description_cs, description_en, description_de, description_uk, location,
+      service_ids
     } = body
 
     // Validate required fields
@@ -52,8 +54,9 @@ export async function POST(request: NextRequest) {
         name, slug, age, email, phone, nationality, bio, height, weight,
         bust, waist, hips, hair_color, eye_color, services, hourly_rate,
         color, status, tattoo_percentage, tattoo_description, piercing,
-        piercing_description, languages, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+        piercing_description, languages, schedule, description_cs, description_en,
+        description_de, description_uk, location, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
       args: [
         name, slug, age, email, phone || null, nationality || null, bio || null,
         height || null, weight || null, bust || null, waist || null, hips || null,
@@ -62,13 +65,34 @@ export async function POST(request: NextRequest) {
         hourly_rate || null, color, 'pending',
         tattoo_percentage || null, tattoo_description || null,
         piercing || null, piercing_description || null,
-        languages ? JSON.stringify(languages) : null
+        languages ? JSON.stringify(languages) : null,
+        schedule ? JSON.stringify(schedule) : null,
+        description_cs || null, description_en || null,
+        description_de || null, description_uk || null,
+        location || null
       ]
     })
 
+    const girlId = result.lastInsertRowid
+
+    // Insert services if provided
+    if (service_ids && Array.isArray(service_ids) && service_ids.length > 0) {
+      for (const serviceId of service_ids) {
+        try {
+          await db.execute({
+            sql: `INSERT INTO girl_services (girl_id, service_id) VALUES (?, ?)`,
+            args: [girlId, serviceId]
+          })
+        } catch (error) {
+          console.error(`Failed to insert service ${serviceId} for girl ${girlId}:`, error)
+          // Continue with other services even if one fails
+        }
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      girl_id: result.lastInsertRowid,
+      girl_id: girlId,
       slug,
       message: 'Girl profile created successfully'
     })

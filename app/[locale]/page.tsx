@@ -2,15 +2,20 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import MobileMenu from '@/components/MobileMenu';
+import BottomCTA from '@/components/BottomCTA';
+import GirlCard from '@/components/GirlCard';
 
 const girls = [
   {
     id: 1,
     name: "Natalie",
+    slug: "natalie",
     age: 24,
-    breast: 3,
+    bust: "95-C",
     height: 170,
     weight: 52,
     location: "Praha 2",
@@ -21,8 +26,9 @@ const girls = [
   {
     id: 2,
     name: "Victoria",
+    slug: "victoria",
     age: 26,
-    breast: 2,
+    bust: "85-B",
     height: 175,
     weight: 58,
     location: "Praha 3",
@@ -33,8 +39,9 @@ const girls = [
   {
     id: 3,
     name: "Isabella",
+    slug: "isabella",
     age: 23,
-    breast: 2,
+    bust: "85-B",
     height: 168,
     weight: 50,
     location: "Praha 2",
@@ -45,8 +52,9 @@ const girls = [
   {
     id: 4,
     name: "Sophie",
+    slug: "sophie",
     age: 25,
-    breast: 3,
+    bust: "95-C",
     height: 172,
     weight: 55,
     location: "Praha 2",
@@ -58,6 +66,7 @@ const girls = [
 export default function Home() {
   const t = useTranslations();
   const locale = useLocale();
+  const pathname = usePathname();
   const [showAgeModal, setShowAgeModal] = useState(true);
 
   useEffect(() => {
@@ -128,11 +137,7 @@ export default function Home() {
           <a href="tel:+420734332131" className="btn">{t('nav.phone')}</a>
           <a href="https://wa.me/420734332131" className="btn btn-fill">{t('nav.whatsapp')}</a>
         </div>
-        <button className="mobile-menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        <MobileMenu currentPath={pathname} />
       </nav>
 
       {/* HERO */}
@@ -149,46 +154,24 @@ export default function Home() {
         <h2 className="section-title">{t('home.featured_girls')}</h2>
         <div className="profiles-grid">
           {girls.map((girl) => (
-            <Link key={girl.id} href={`/${locale}/divky`} className="profile-card">
-              <div className="profile-img">
-                <div className="placeholder">FOTO</div>
-                {girl.badge && (
-                  <div className={`profile-badge ${girl.badge}`}>
-                    {girl.badge === 'new' && t('girls.new')}
-                    {girl.badge === 'top' && t('girls.top_reviews')}
-                    {girl.badge === 'asian' && t('girls.recommended')}
-                  </div>
-                )}
-              </div>
-              <div className="profile-info">
-                <div className="profile-name-row">
-                  {girl.online && <span className="online-dot"></span>}
-                  <span className="profile-name">{girl.name}</span>
-                  <span className="profile-time">{girl.time}</span>
-                </div>
-                <div className="profile-stats">
-                  <div className="profile-stat">
-                    <span className="profile-stat-value">{girl.age}</span> {t('girls.age_years')}
-                  </div>
-                  <div className="profile-stat">
-                    {t('girls.bust')} <span className="profile-stat-value">{girl.breast}</span>
-                  </div>
-                  <div className="profile-stat">
-                    <span className="profile-stat-value">{girl.height}</span> {t('girls.height_cm')}
-                  </div>
-                  <div className="profile-stat">
-                    <span className="profile-stat-value">{girl.weight}</span> {t('girls.weight_kg')}
-                  </div>
-                </div>
-                <div className="profile-location">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  {girl.location}
-                </div>
-              </div>
-            </Link>
+            <GirlCard
+              key={girl.id}
+              girl={girl}
+              badge={girl.badge as 'new' | 'top' | 'recommended' | null}
+              badgeText={{
+                new: t('girls.new'),
+                top: t('girls.top_reviews'),
+                recommended: t('girls.recommended')
+              }}
+              translations={{
+                age_years: t('girls.age_years'),
+                bust: t('girls.bust'),
+                height_cm: t('girls.height_cm'),
+                weight_kg: t('girls.weight_kg'),
+                languages_spoken: t('girls.languages_spoken')
+              }}
+              showQuickActions={true}
+            />
           ))}
         </div>
         <div className="text-center" style={{ marginTop: '40px' }}>
@@ -228,6 +211,15 @@ export default function Home() {
           <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
         </div>
       </footer>
+
+      {/* MOBILE BOTTOM CTA */}
+      <BottomCTA
+        translations={{
+          browse_girls: t('nav.girls'),
+          whatsapp: t('nav.whatsapp'),
+          call: t('nav.phone')
+        }}
+      />
     </>
   );
 }

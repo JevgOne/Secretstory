@@ -128,6 +128,33 @@
     "title": "Прайс-лист",
     "packages": "Пакети"
   },
+  "schedule": {
+    "title": "Розклад",
+    "subtitle": "Подивіться, які дівчата доступні сьогодні та їх робочі години",
+    "loading": "Завантаження розкладу...",
+    "error": "Помилка завантаження розкладу",
+    "no_girls": "Сьогодні немає доступних дівчат",
+    "today": "Сьогодні",
+    "status": {
+      "online": "Онлайн",
+      "available_from": "Від {time}",
+      "not_available": "Вихідний"
+    },
+    "days": {
+      "today_short": "Сьогодні",
+      "monday": "Понеділок",
+      "tuesday": "Вівторок",
+      "wednesday": "Середа",
+      "thursday": "Четвер",
+      "friday": "П'ятниця",
+      "saturday": "Субота",
+      "sunday": "Неділя"
+    },
+    "legend": {
+      "available": "Доступна зараз",
+      "later": "Пізніше / Вихідний"
+    }
+  },
   "footer": {
     "copyright": "LovelyGirls Прага © 2025",
     "terms": "Умови",

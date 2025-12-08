@@ -1,32 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-export default function SchedulePage() {
+interface Girl {
+  id: number;
+  name: string;
+  slug: string;
+  status: "working" | "later";
+  shift: {
+    from: string;
+    to: string;
+  };
+  location: string;
+  photos: string[];
+  age: number;
+  description: string;
+  online: boolean;
+}
+
+interface ScheduleResponse {
+  success: boolean;
+  current_time: string;
+  day: string;
+  timezone: string;
+  girls: Girl[];
+}
+
+export default function SchedulePage({ params }: { params: { locale: string } }) {
+  const t = useTranslations('schedule');
+  const [girls, setGirls] = useState<Girl[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [currentTime, setCurrentTime] = useState("");
   const [activeDate, setActiveDate] = useState(0);
 
   const dates = [
-    { day: "Dnes", num: 29, today: true },
-    { day: "So", num: 30 },
-    { day: "Ne", num: 1 },
-    { day: "Po", num: 2 },
-    { day: "Út", num: 3 },
-    { day: "St", num: 4 },
-    { day: "Čt", num: 5 }
+    { day: t('days.today_short'), num: new Date().getDate(), today: true }
   ];
 
-  const girls = [
-    { id: 1, name: "Natalie", time: "10:00 - 18:00", location: "Praha 2", online: true },
-    { id: 2, name: "Victoria", time: "12:00 - 20:00", location: "Praha 3", online: true },
-    { id: 3, name: "Isabella", time: "14:00 - 22:00", location: "Praha 2", online: true },
-    { id: 4, name: "Sophie", time: "16:00 - 22:00", location: "Praha 2", online: false, status: "Od 16:00" },
-    { id: 5, name: "Emma", time: "10:00 - 16:00", location: "Praha 2", online: true },
-    { id: 6, name: "Mia", time: "—", location: "Praha 3", online: false, status: "Volno" },
-    { id: 7, name: "Kristýna", time: "11:00 - 19:00", location: "Praha 2", online: true },
-    { id: 8, name: "Laura", time: "13:00 - 21:00", location: "Praha 3", online: true }
-  ];
+  useEffect(() => {
+    fetch(`/api/schedule?lang=${params.locale}`)
+      .then(res => res.json())
+      .then((data: ScheduleResponse) => {
+        if (data.success) {
+          setGirls(data.girls);
+          setCurrentTime(data.current_time);
+        } else {
+          setError(true);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch schedule:", err);
+        setError(true);
+        setLoading(false);
+      });
+  }, [params.locale]);
 
   return (
     <>
@@ -64,8 +96,8 @@ export default function SchedulePage() {
 
       {/* Page Header */}
       <section className="page-header">
-        <h1 className="page-title">Schedule</h1>
-        <p className="page-subtitle">Podívejte se, které dívky jsou dnes k dispozici a v jakých hodinách.</p>
+        <h1 className="page-title">{t('title')}</h1>
+        <p className="page-subtitle">{t('subtitle')}</p>
       </section>
 
       {/* Date Selector */}
@@ -86,40 +118,71 @@ export default function SchedulePage() {
 
       {/* Schedule Grid */}
       <section className="schedule">
-        <div className="schedule-grid">
-          {girls.map((girl) => (
-            <div
-              key={girl.id}
-              className={`schedule-card ${!girl.online ? "unavailable" : ""}`}
-            >
-              <div className="schedule-img">
-                <div className="schedule-status">
-                  <span className={`status-dot ${girl.online ? "online" : "offline"}`}></span>
-                  {girl.online ? "Online" : girl.status}
-                </div>
-              </div>
-              <div className="schedule-info">
-                <div className="schedule-name">{girl.name}</div>
-                <div className="schedule-time">{girl.time}</div>
-                <div className="schedule-location">
-                  <MapPin size={12} />
-                  {girl.location}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {loading && (
+          <div className="text-center py-8">
+            <p>{t('loading')}</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="text-center py-8">
+            <p className="text-red-500">{t('error')}</p>
+          </div>
+        )}
+
+        {!loading && !error && girls.length === 0 && (
+          <div className="text-center py-8">
+            <p>{t('no_girls')}</p>
+          </div>
+        )}
+
+        {!loading && !error && girls.length > 0 && (
+          <div className="schedule-grid">
+            {girls.map((girl) => {
+              const isWorking = girl.status === 'working';
+              const statusText = isWorking
+                ? t('status.online')
+                : t('status.available_from', { time: girl.shift.from });
+
+              return (
+                <Link
+                  key={girl.id}
+                  href={`/${params.locale}/divky/${girl.slug}`}
+                  className={`schedule-card ${!isWorking ? "unavailable" : ""}`}
+                >
+                  <div className="schedule-img">
+                    {girl.photos && girl.photos[0] && (
+                      <img src={girl.photos[0]} alt={girl.name} />
+                    )}
+                    <div className="schedule-status">
+                      <span className={`status-dot ${isWorking ? "online" : "offline"}`}></span>
+                      {statusText}
+                    </div>
+                  </div>
+                  <div className="schedule-info">
+                    <div className="schedule-name">{girl.name}</div>
+                    <div className="schedule-time">{girl.shift.from} - {girl.shift.to}</div>
+                    <div className="schedule-location">
+                      <MapPin size={12} />
+                      {girl.location}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* Legend */}
       <section className="legend">
         <div className="legend-item">
           <span className="legend-dot online"></span>
-          Právě k dispozici
+          {t('legend.available')}
         </div>
         <div className="legend-item">
           <span className="legend-dot offline"></span>
-          Později / Volno
+          {t('legend.later')}
         </div>
       </section>
 

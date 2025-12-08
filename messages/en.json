@@ -128,6 +128,33 @@
     "title": "Service Pricing",
     "packages": "Packages"
   },
+  "schedule": {
+    "title": "Schedule",
+    "subtitle": "See which girls are available today and their working hours",
+    "loading": "Loading schedule...",
+    "error": "Error loading schedule",
+    "no_girls": "No girls available today",
+    "today": "Today",
+    "status": {
+      "online": "Online",
+      "available_from": "From {time}",
+      "not_available": "Off"
+    },
+    "days": {
+      "today_short": "Today",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "legend": {
+      "available": "Available now",
+      "later": "Later / Off"
+    }
+  },
   "footer": {
     "copyright": "LovelyGirls Prague © 2025",
     "terms": "Terms",
