@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS girls (
   description_de TEXT,
   description_uk TEXT,
   location TEXT,
+  photos TEXT, -- JSON array of photo URLs
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
