@@ -71,7 +71,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
           </Link>
         </div>
 
-        <div className="mobile-menu-nav">
+        <nav className="mobile-menu-nav">
           <Link
             href={`/${locale}`}
             className={`mobile-menu-link ${currentPath === `/${locale}` ? 'active' : ''}`}
