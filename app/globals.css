@@ -936,11 +936,11 @@ footer {
 
 /* Desktop - Override mobile styles */
 @media (min-width: 769px) {
-    .logo { display: flex !important; }
-    .nav-links { display: flex !important; }
-    .nav-contact { display: flex !important; }
-    .mobile-menu { display: none !important; }
-    .mobile-menu-btn { display: none !important; }
+    nav .logo { display: flex !important; visibility: visible !important; opacity: 1 !important; }
+    nav .nav-links { display: flex !important; visibility: visible !important; opacity: 1 !important; }
+    nav .nav-contact { display: flex !important; visibility: visible !important; opacity: 1 !important; }
+    nav .mobile-menu { display: none !important; }
+    nav .mobile-menu-btn { display: none !important; }
 }
 
 @media (max-width: 480px) {
