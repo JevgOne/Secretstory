@@ -182,7 +182,12 @@ export default function PricingPage() {
                   <li key={j}>{feature}</li>
                 ))}
               </ul>
-              <button className="pricing-btn">{tPricing('reserve')}</button>
+              <button
+                className="pricing-btn"
+                onClick={() => window.open(`https://wa.me/420734332131?text=${encodeURIComponent(`Zajímá mě: ${plan.title}`)}`, '_blank')}
+              >
+                {tPricing('reserve')}
+              </button>
             </div>
           ))}
         </div>

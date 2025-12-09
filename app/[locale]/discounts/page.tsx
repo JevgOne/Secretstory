@@ -127,7 +127,10 @@ export default function DiscountsPage() {
               <span className="featured-old">{tDiscounts('featured_old_price')}</span>
               <span className="featured-new">{tDiscounts('featured_new_price')}</span>
             </div>
-            <button className="featured-btn">
+            <button
+              className="featured-btn"
+              onClick={() => window.open('https://wa.me/420734332131?text=' + encodeURIComponent('Zajímá mě speciální nabídka'), '_blank')}
+            >
               {tDiscounts('featured_btn')}
               <ChevronRight size={20} />
             </button>
