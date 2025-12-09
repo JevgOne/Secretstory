@@ -303,6 +303,15 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
           background: #1ea84d;
         }
 
+        /* Hide mobile menu elements on desktop */
+        @media (min-width: 769px) {
+          .mobile-menu-btn,
+          .mobile-menu-panel,
+          .mobile-menu-backdrop {
+            display: none !important;
+          }
+        }
+
         @media (max-width: 768px) {
           .mobile-menu-btn {
             display: flex;
