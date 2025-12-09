@@ -100,22 +100,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for time conflicts with existing bookings
+    // Overlap occurs if: NOT (existing ends before new starts OR existing starts after new ends)
     const conflictCheck = await db.execute({
       sql: `
         SELECT id FROM bookings
         WHERE girl_id = ?
           AND date = ?
           AND status NOT IN ('cancelled', 'rejected')
-          AND (
-            (start_time < ? AND end_time > ?) OR
-            (start_time < ? AND end_time > ?) OR
-            (start_time >= ? AND end_time <= ?)
-          )
+          AND NOT (end_time <= ? OR start_time >= ?)
       `,
       args: [
         girl_id, date,
-        end_time, start_time,
-        end_time, end_time,
         start_time, end_time
       ]
     });

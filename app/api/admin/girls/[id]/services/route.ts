@@ -40,15 +40,33 @@ export async function POST(
       args: [parseInt(id)]
     });
 
-    // Insert new services
+    // Insert new services using parameterized queries
     if (serviceIds.length > 0) {
-      const values = serviceIds.map(serviceId =>
-        `(${parseInt(id)}, ${parseInt(serviceId)})`
-      ).join(', ');
+      // Validate all serviceIds are numbers
+      const validServiceIds = serviceIds
+        .map(id => parseInt(id))
+        .filter(id => !isNaN(id));
+
+      if (validServiceIds.length === 0) {
+        return NextResponse.json(
+          { error: 'Žádné platné služby k přiřazení' },
+          { status: 400 }
+        );
+      }
+
+      // Create placeholders for batch insert: (?, ?), (?, ?), ...
+      const placeholders = validServiceIds.map(() => '(?, ?)').join(', ');
+
+      // Create flat array of arguments: [girlId, serviceId1, girlId, serviceId2, ...]
+      const args: number[] = [];
+      const girlId = parseInt(id);
+      validServiceIds.forEach(serviceId => {
+        args.push(girlId, serviceId);
+      });
 
       await db.execute({
-        sql: `INSERT INTO girl_services (girl_id, service_id) VALUES ${values}`,
-        args: []
+        sql: `INSERT INTO girl_services (girl_id, service_id) VALUES ${placeholders}`,
+        args
       });
     }
 
