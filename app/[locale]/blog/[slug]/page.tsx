@@ -238,7 +238,9 @@ export default function BlogArticlePage() {
       {/* Footer */}
       <footer>
         <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
+        <div className="footer-disclaimer">Všechny modely jsou plnoleté. Pouze pro osoby 18+.</div>
         <div className="footer-links">
+          <Link href="/blog">Blog</Link>
           <Link href="/podminky">Podmínky</Link>
           <Link href="/soukromi">Soukromí</Link>
         </div>

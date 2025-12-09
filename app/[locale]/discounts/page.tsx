@@ -180,7 +180,9 @@ export default function DiscountsPage() {
       {/* Footer */}
       <footer>
         <div>{tFooter('copyright')} — {tCommon('adults_only')}</div>
+        <div className="footer-disclaimer">{tFooter('disclaimer')}</div>
         <div className="footer-links">
+          <Link href={`/${locale}/blog`}>{tFooter('blog')}</Link>
           <Link href={`/${locale}/podminky`}>{tFooter('terms')}</Link>
           <Link href={`/${locale}/soukromi`}>{tFooter('privacy')}</Link>
         </div>

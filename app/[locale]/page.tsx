@@ -345,10 +345,12 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer>
-        <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
+        <div>{t('footer.copyright')} — {t('common.adults_only')}</div>
+        <div className="footer-disclaimer">{t('footer.disclaimer')}</div>
         <div className="footer-links">
-          <Link href={`/${locale}/podminky`}>Podmínky</Link>
-          <Link href={`/${locale}/soukromi`}>Soukromí</Link>
+          <Link href={`/${locale}/blog`}>{t('footer.blog')}</Link>
+          <Link href={`/${locale}/podminky`}>{t('footer.terms')}</Link>
+          <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
         </div>
       </footer>
 

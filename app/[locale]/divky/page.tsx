@@ -227,8 +227,10 @@ export default function GirlsPage() {
 
         {/* Footer */}
         <footer>
-          <div>{t('common.brand')} Prague © 2025 — {t('common.adults_only')}</div>
+          <div>{t('footer.copyright')} — {t('common.adults_only')}</div>
+          <div className="footer-disclaimer">{t('footer.disclaimer')}</div>
           <div className="footer-links">
+            <Link href={`/${locale}/blog`}>{t('footer.blog')}</Link>
             <Link href={`/${locale}/podminky`}>{t('footer.terms')}</Link>
             <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
           </div>

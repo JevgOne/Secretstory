@@ -293,8 +293,10 @@
   },
   "footer": {
     "copyright": "LovelyGirls Prague © 2025",
+    "blog": "Blog",
     "terms": "Podmínky",
-    "privacy": "Soukromí"
+    "privacy": "Soukromí",
+    "disclaimer": "Veškeré informace umístěné na těchto webových stránkách jsou zveřejňovány pro reklamní účely poskytovatelů služeb. Provozovatel této webové stránky neodpovídá za správnost a aktuálnost zveřejněných informací ani za poskytované služby. Podmínkou inzerátu je pronájem pokoje."
   },
   "breadcrumb": {
     "home": "Home",

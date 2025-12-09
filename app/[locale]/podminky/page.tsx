@@ -165,7 +165,9 @@ export default function TermsPage() {
       {/* Footer */}
       <footer>
         <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
+        <div className="footer-disclaimer">Všechny modely jsou plnoleté. Pouze pro osoby 18+.</div>
         <div className="footer-links">
+          <Link href={`/${locale}/blog`}>Blog</Link>
           <Link href={`/${locale}/podminky`} className="active">Podmínky</Link>
           <Link href={`/${locale}/soukromi`}>Soukromí</Link>
         </div>

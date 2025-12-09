@@ -293,8 +293,10 @@
   },
   "footer": {
     "copyright": "LovelyGirls Prag © 2025",
+    "blog": "Blog",
     "terms": "Bedingungen",
-    "privacy": "Datenschutz"
+    "privacy": "Datenschutz",
+    "disclaimer": "Alle auf dieser Website veröffentlichten Informationen dienen Werbezwecken der Dienstleister. Der Betreiber dieser Website übernimmt keine Verantwortung für die Richtigkeit und Aktualität der veröffentlichten Informationen oder für die erbrachten Dienstleistungen. Bedingung der Anzeige ist die Zimmervermietung."
   },
   "breadcrumb": {
     "home": "Home",

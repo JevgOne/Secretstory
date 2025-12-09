@@ -230,7 +230,9 @@ export default function PrivacyPage() {
       {/* Footer */}
       <footer>
         <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
+        <div className="footer-disclaimer">Všechny modely jsou plnoleté. Pouze pro osoby 18+.</div>
         <div className="footer-links">
+          <Link href={`/${locale}/blog`}>Blog</Link>
           <Link href={`/${locale}/podminky`}>Podmínky</Link>
           <Link href={`/${locale}/soukromi`} className="active">Soukromí</Link>
         </div>

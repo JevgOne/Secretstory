@@ -293,8 +293,10 @@
   },
   "footer": {
     "copyright": "LovelyGirls Prague © 2025",
+    "blog": "Blog",
     "terms": "Terms",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "disclaimer": "All information published on this website is for advertising purposes of service providers. The operator of this website is not responsible for the accuracy and timeliness of published information or for the services provided. A condition of advertisement is room rental."
   },
   "breadcrumb": {
     "home": "Home",
