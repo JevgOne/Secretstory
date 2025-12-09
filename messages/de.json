@@ -11,18 +11,60 @@
     "age_modal_text": "Diese Website ist nur für Erwachsene. Mit dem Betreten bestätigen Sie, dass Sie 18 Jahre oder älter sind.",
     "age_enter": "Eintreten",
     "age_leave": "Verlassen",
-    "hero_title": "Premium-Begleiterinnen in Prag",
-    "hero_subtitle": "Diskrete Treffen mit verifizierten Mädchen. Professionelle Dienstleistungen in luxuriöser Umgebung.",
-    "hero_cta": "Mädchen wählen",
-    "featured_girls": "Empfohlene Mädchen",
-    "view_all_girls": "Alle Mädchen anzeigen",
-    "why_choose_us": "Warum uns wählen",
-    "verified_profiles": "Verifizierte Profile",
-    "verified_desc": "Alle Mädchen sind sorgfältig verifiziert und ihre Fotos sind 100% echt",
-    "discrete_safe": "Diskret & Sicher",
-    "discrete_desc": "Ihre Privatsphäre ist unsere Priorität. Diskrete Wohnungen im Prager Stadtzentrum",
-    "professional": "Professioneller Ansatz",
-    "professional_desc": "Hoher Service-Level und professionelles Verhalten unserer Mädchen"
+    "hero_title": "Luxus-Escort in Prag",
+    "hero_subtitle": "Diskrete Begleiterinnen auf höchstem Niveau. Verifizierte Profile, schnelle Buchung.",
+    "hero_cta_primary": "Mädchen anzeigen",
+    "hero_cta_secondary": "Wie buchen",
+    "new_label": "Neu auf der Website",
+    "new_badge": "NEU",
+    "new_girl_name": "Kristýna",
+    "new_girl_meta": "23 Jahre • 172 cm",
+    "new_girl_desc": "Neue Begleiterin gerade zu unserem Team hinzugefügt",
+    "view_profile": "Profil anzeigen",
+    "profiles_title": "Unsere Mädchen",
+    "profiles_subtitle": "Wählen Sie aus und kontaktieren Sie uns für eine Buchung",
+    "view_all": "Alle anzeigen",
+    "badge_new": "Neu",
+    "badge_top": "Top Bewertungen",
+    "badge_asian": "Asiatin",
+    "stat_years": "Jahre",
+    "stat_cm": "cm",
+    "stat_kg": "kg",
+    "stat_bust": "Oberweite",
+    "info_verified_title": "Verifizierte Profile",
+    "info_verified_text": "Aktuelle Fotos und Videos bei jedem Mädchen",
+    "info_fast_title": "Schnelle Buchung",
+    "info_fast_text": "Bestätigung innerhalb von 5 Minuten per WhatsApp",
+    "info_discrete_title": "Diskretion",
+    "info_discrete_text": "Private Apartments, keine Aufzeichnungen",
+    "info_discounts_title": "Rabatte für Stammkunden",
+    "info_discounts_text": "Treueprogramm und vorteilhafte Pakete",
+    "locations_title": "Standorte",
+    "locations_subtitle": "Diskrete Apartments im Zentrum von Prag",
+    "location_main_label": "Hauptstandort",
+    "location_main_name": "Prag 2 — Neustadt",
+    "location_main_address": "5 Min. vom Wenzelsplatz",
+    "location_main_hours": "10:00 — 22:00",
+    "location_new_label": "Neu",
+    "location_new_name": "Prag 3 — Žižkov",
+    "location_new_address": "Ruhige Lage, Parkplätze",
+    "location_new_hours": "12:00 — 20:00",
+    "booking_title": "Wie buchen",
+    "booking_subtitle": "Einfacher Prozess ohne Komplikationen",
+    "booking_step1_num": "01",
+    "booking_step1_title": "Mädchen wählen",
+    "booking_step1_text": "Durchsuchen Sie Profile und prüfen Sie Verfügbarkeit",
+    "booking_step2_num": "02",
+    "booking_step2_title": "Kontaktieren Sie uns",
+    "booking_step2_text": "WhatsApp, Telegram oder Telefon",
+    "booking_step3_num": "03",
+    "booking_step3_title": "Genießen Sie",
+    "booking_step3_text": "Sie erhalten die Adresse und kommen vorbei",
+    "cta_title": "Jetzt buchen",
+    "cta_text": "Kontaktieren Sie uns für sofortige Bestätigung",
+    "cta_whatsapp": "WhatsApp",
+    "cta_telegram": "Telegram",
+    "cta_call": "Anrufen"
   },
   "nav": {
     "home": "Home",
@@ -93,44 +135,138 @@
     "back_to_list": "Zurück zur Liste"
   },
   "register": {
-    "title": "Als neues Mädchen registrieren",
+    "title": "Registrierung eines neuen Mädchens",
     "step_of": "Schritt {step} von {total}",
     "personal_info": "Persönliche Informationen",
     "profile_info": "Profilinformationen",
     "completion": "Registrierung abschließen",
     "name": "Name / Künstlername",
+    "name_placeholder": "z.B. Katy",
     "email": "E-Mail",
+    "email_placeholder": "ihre@email.de",
     "phone": "Telefon",
+    "phone_placeholder": "+420 XXX XXX XXX",
     "password": "Passwort",
+    "password_placeholder": "Mindestens 8 Zeichen",
     "confirm_password": "Passwort bestätigen",
+    "confirm_password_placeholder": "Passwort erneut eingeben",
     "age": "Alter",
+    "age_placeholder": "21",
     "height": "Größe (cm)",
+    "height_placeholder": "170",
     "weight": "Gewicht (kg)",
     "bust": "Oberweite",
+    "bust_placeholder": "90",
     "waist": "Taille",
+    "waist_placeholder": "60",
     "hips": "Hüfte",
+    "hips_placeholder": "90",
     "bio": "Über mich",
+    "bio_placeholder": "Schreiben Sie etwas über sich...",
     "languages": "Sprachen",
-    "tattoo_slider": "Tattoo (% des Körpers)",
-    "tattoo_description": "Tattoo-Beschreibung",
-    "has_piercing": "Ich habe Piercings",
-    "piercing_description": "Piercing-Beschreibung",
     "select_services": "Services auswählen",
+    "tattoo_slider": "Tattoo (% des Körpers)",
+    "tattoo_description_placeholder": "Tattoo-Beschreibung (z.B. 'Ärmel mit Blumen am Arm, kleines Tattoo am Knöchel')",
+    "has_piercing": "Ich habe Piercings",
+    "piercing_description_placeholder": "Piercing-Beschreibung (z.B. 'Nase, Bauchnabel, Zunge')",
+    "available_days": "Verfügbare Tage",
     "agree_terms": "Ich stimme den Bedingungen zu",
-    "agree_privacy": "Ich stimme der Datenverarbeitung zu",
+    "agree_terms_html": "Ich stimme den Geschäftsbedingungen zu und verpflichte mich, die Regeln von LovelyGirls.cz einzuhalten",
+    "agree_privacy_html": "Ich stimme der Verarbeitung personenbezogener Daten gemäß DSGVO zu",
+    "admin_approval": "Nach Absenden der Registrierung wartet Ihr Profil auf die Genehmigung durch den Administrator. Wir benachrichtigen Sie per E-Mail, sobald Ihr Profil aktiviert wurde.",
     "continue": "Weiter",
     "back": "Zurück",
-    "submit": "Registrierung absenden",
-    "success_message": "Registrierung erfolgreich! Ihr Profil wartet auf Admin-Genehmigung.",
-    "required": "Pflichtfeld"
+    "submit": "Registrierung abschließen",
+    "passwords_mismatch": "Passwörter stimmen nicht überein!",
+    "must_agree": "Sie müssen den Bedingungen zustimmen!",
+    "success": "Registrierung erfolgreich! Ihr Profil wartet auf die Genehmigung durch den Administrator.",
+    "error_prefix": "Fehler:",
+    "error_generic": "Fehler bei der Registrierung. Bitte versuchen Sie es erneut."
   },
   "pricing": {
     "title": "Preisliste",
-    "packages": "Pakete"
+    "subtitle": "Transparente Preise ohne versteckte Gebühren. Wählen Sie das Programm, das zu Ihnen passt.",
+    "duration": "Minuten",
+    "most_popular": "Beliebteste",
+    "reserve": "Buchen",
+    "extras_title": "Extra-Services",
+    "note_title": "Zahlung",
+    "note_text": "Wir akzeptieren Bargeld und Kreditkarten. Die Zahlung erfolgt immer im Voraus zu Beginn des Besuchs. Die Preise sind endgültig und enthalten alles, was in der Programmbeschreibung aufgeführt ist.",
+    "currency": "CZK",
+    "plans": {
+      "quick_relax": {
+        "duration": "30",
+        "title": "Quick Relax",
+        "price": "1 500",
+        "features": [
+          "Erotische Massage",
+          "Gemeinsame Dusche",
+          "Entspannung am Ende"
+        ]
+      },
+      "classic_experience": {
+        "duration": "60",
+        "title": "Classic Experience",
+        "price": "2 500",
+        "features": [
+          "Klassische + erotische Massage",
+          "Body to body",
+          "Gemeinsame Dusche",
+          "Küssen",
+          "Unbegrenztes Happy End"
+        ]
+      },
+      "premium_pleasure": {
+        "duration": "90",
+        "title": "Premium Pleasure",
+        "price": "3 500",
+        "features": [
+          "Alles aus Classic Experience",
+          "Tantra-Elemente",
+          "Längere Entspannung",
+          "Glas Sekt",
+          "Ohne Eile"
+        ]
+      }
+    },
+    "extras": {
+      "nuru_massage": {
+        "name": "Nuru-Massage",
+        "price": "+500 CZK"
+      },
+      "tantra_massage": {
+        "name": "Tantra-Massage",
+        "price": "+800 CZK"
+      },
+      "duo_massage": {
+        "name": "Massage zu zweit",
+        "price": "+1 500 CZK"
+      },
+      "extension_30min": {
+        "name": "Verlängerung 30 Min.",
+        "price": "+1 000 CZK"
+      },
+      "prostate_massage": {
+        "name": "Prostatamassage",
+        "price": "+500 CZK"
+      },
+      "roleplay": {
+        "name": "Rollenspiel",
+        "price": "+500 CZK"
+      },
+      "dominance_light": {
+        "name": "Leichte Dominanz",
+        "price": "+800 CZK"
+      },
+      "foot_fetish": {
+        "name": "Fußfetisch",
+        "price": "+300 CZK"
+      }
+    }
   },
   "schedule": {
     "title": "Zeitplan",
-    "subtitle": "Sehen Sie, welche Mädchen heute verfügbar sind und ihre Arbeitszeiten",
+    "subtitle": "Sehen Sie, welche Mädchen heute verfügbar sind und zu welchen Zeiten",
     "loading": "Zeitplan wird geladen...",
     "error": "Fehler beim Laden des Zeitplans",
     "no_girls": "Heute sind keine Mädchen verfügbar",
@@ -174,5 +310,145 @@
     "tagline": "Elegante Begleiterin für anspruchsvolle Gentlemen",
     "location_prague": "Prag 2 — Neustadt",
     "location_details": "5 Min. von der Metro Můstek • Diskrete Wohnung"
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Antworten auf die häufigsten Fragen. Haben Sie nicht gefunden, wonach Sie suchen? Kontaktieren Sie uns.",
+    "category_all": "Alle",
+    "category_booking": "Buchung",
+    "category_services": "Services",
+    "category_payment": "Zahlung",
+    "category_discretion": "Diskretion",
+    "contact_title": "Haben Sie weitere Fragen?",
+    "contact_subtitle": "Zögern Sie nicht, uns zu kontaktieren. Wir antworten innerhalb weniger Minuten.",
+    "items": {
+      "booking_how": {
+        "question": "Wie kann ich einen Termin buchen?",
+        "answer": "Sie können über WhatsApp, Telegram oder telefonisch buchen. Schreiben Sie uns einfach den Namen des gewünschten Mädchens, Datum, Uhrzeit und Programmdauer. Sie erhalten innerhalb von 5 Minuten eine Bestätigung.",
+        "category": "booking"
+      },
+      "booking_advance": {
+        "question": "Muss ich im Voraus buchen?",
+        "answer": "Wir empfehlen, mindestens 1-2 Stunden im Voraus zu buchen, um die Verfügbarkeit Ihres bevorzugten Mädchens sicherzustellen. Bei freien Kapazitäten nehmen wir auch Walk-in-Besuche an.",
+        "category": "booking"
+      },
+      "payment_methods": {
+        "question": "Welche Zahlungsmethoden akzeptieren Sie?",
+        "answer": "Wir akzeptieren Bargeld und Kreditkarten (Visa, Mastercard). Die Zahlung erfolgt immer zu Beginn des Besuchs. Auf Wunsch stellen wir eine Quittung aus.",
+        "category": "payment"
+      },
+      "discretion_how": {
+        "question": "Wie wird Diskretion gewährleistet?",
+        "answer": "Unsere Apartments befinden sich in normalen Wohngebäuden ohne jegliche Kennzeichnung. Wir führen keine Aufzeichnungen über Kunden. Auf dem Kontoauszug erscheint ein neutraler Name.",
+        "category": "discretion"
+      },
+      "services_included": {
+        "question": "Was ist im Preis enthalten?",
+        "answer": "Der Grundpreis umfasst erotische Massage, Body to Body, gemeinsame Dusche und Happy End. Eine detaillierte Aufschlüsselung der Services finden Sie in der Preisliste oder im Profil jedes Mädchens.",
+        "category": "services"
+      },
+      "booking_cancel": {
+        "question": "Kann ich eine Buchung stornieren?",
+        "answer": "Ja, die Buchung kann bis spätestens 2 Stunden vor dem Termin kostenlos storniert werden. Bei späterer Stornierung oder Nichterscheinen kann eine Stornogebühr erhoben werden.",
+        "category": "booking"
+      },
+      "discretion_location": {
+        "question": "Wo befinden sich die Apartments?",
+        "answer": "Wir haben zwei Standorte im Zentrum von Prag — Prag 2 (Neustadt) und Prag 3 (Žižkov). Die genaue Adresse erhalten Sie nach Bestätigung der Buchung.",
+        "category": "discretion"
+      },
+      "services_couples": {
+        "question": "Bieten Sie auch Services für Paare an?",
+        "answer": "Ja, wir bieten Programme für Paare an. Sie können eine Massage für beide Partner gleichzeitig oder individuelle Programme wählen. Kontaktieren Sie uns für weitere Informationen.",
+        "category": "services"
+      }
+    }
+  },
+  "discounts": {
+    "title": "Rabatte",
+    "subtitle": "Spezielle Angebote und Rabatte für unsere Kunden. Sparen Sie bei jedem Besuch.",
+    "featured_badge": "Weihnachtsaktion",
+    "featured_title": "Christmas Special",
+    "featured_desc": "Genießen Sie die Weihnachtsatmosphäre mit unserem speziellen Angebot. 90 Minuten Entspannung inklusive Sekt und Weihnachtsüberraschung.",
+    "featured_old_price": "4 500 CZK",
+    "featured_new_price": "3 200 CZK",
+    "featured_btn": "Buchen",
+    "current_title": "Aktuelle Rabatte",
+    "first_time_name": "First Time",
+    "first_time_value": "-200 CZK",
+    "first_time_desc": "Rabatt für neue Kunden beim ersten Besuch. Gilt für alle Programme.",
+    "double_delight_name": "Double Delight",
+    "double_delight_value": "-800 CZK",
+    "double_delight_desc": "Genießen Sie ein Erlebnis mit zwei Mädchen zum Vorteilspreis.",
+    "birthday_name": "Birthday Treat",
+    "birthday_value": "-500 CZK",
+    "birthday_desc": "Feiern Sie Ihren Geburtstag mit uns. Zeigen Sie Ihren Ausweis und erhalten Sie einen Rabatt.",
+    "come_back_name": "Come Back",
+    "come_back_value": "-300 CZK",
+    "come_back_desc": "Rabatt auf den zweiten Besuch innerhalb von 14 Tagen nach dem ersten.",
+    "early_bird_name": "Early Bird",
+    "early_bird_value": "-200 CZK",
+    "early_bird_desc": "Der frühe Vogel fängt den Wurm. Rabatt auf Besuche vor 12:00 Uhr.",
+    "midweek_name": "Midweek",
+    "midweek_value": "-150 CZK",
+    "midweek_desc": "Rabatt auf Besuche dienstags und mittwochs.",
+    "loyalty_title": "Treueprogramm",
+    "loyalty_subtitle": "Je öfter Sie uns besuchen, desto mehr sparen Sie",
+    "loyalty_bronze_num": "3",
+    "loyalty_bronze_title": "Bronzekarte",
+    "loyalty_bronze_desc": "-5% bei jedem Besuch",
+    "loyalty_silver_num": "5",
+    "loyalty_silver_title": "Silberkarte",
+    "loyalty_silver_desc": "-10% bei jedem Besuch",
+    "loyalty_gold_num": "10",
+    "loyalty_gold_title": "Goldkarte",
+    "loyalty_gold_desc": "-15% bei jedem Besuch",
+    "loyalty_vip_num": "20",
+    "loyalty_vip_title": "VIP-Karte",
+    "loyalty_vip_desc": "-20% + Priority Booking",
+    "note": "Rabatte können nicht mit anderen Aktionen kombiniert werden. Um den Rabatt zu erhalten, informieren Sie den Operator bei der Buchung."
+  },
+  "blog": {
+    "title": "Blog",
+    "hero_label": "Geschichten & Tipps aus Prag",
+    "hero_title": "Verführerische Geschichten & Geheimnisse von innen",
+    "hero_subtitle": "Intime Begegnungen, Momente hinter den Kulissen und alles, was Sie über luxuriöse Escort-Erlebnisse in Prag wissen müssen.",
+    "category_all": "Alle",
+    "category_erotic_stories": "Erotische Geschichten",
+    "category_girl_spotlights": "Mädchen-Portraits",
+    "category_prague_tips": "Tipps für Prag",
+    "category_guides": "Ratgeber",
+    "latest_story": "Neueste Geschichte",
+    "view_all_stories": "Alle Geschichten anzeigen",
+    "view_all": "Alle anzeigen",
+    "erotic_stories": "Erotische Geschichten",
+    "guides_tips": "Ratgeber & Tipps",
+    "view_all_guides": "Alle Ratgeber anzeigen",
+    "newsletter_title": "Exklusive News erhalten",
+    "newsletter_subtitle": "Neue Mädchen, spezielle Angebote und Geschichten. Kein Spam, nur Vergnügen.",
+    "newsletter_placeholder": "Ihre E-Mail",
+    "newsletter_btn": "Abonnieren",
+    "tags_label": "Beliebte Themen",
+    "new_story": "Neue Geschichte",
+    "featured_category": "Erotische Geschichte",
+    "article": {
+      "breadcrumb_blog": "Blog",
+      "breadcrumb_story": "Geschichte",
+      "story_features": "In dieser Geschichte vorgestellt",
+      "view_profile": "Profil anzeigen",
+      "the_end": "Ende",
+      "share_text": "Hat Ihnen die Geschichte gefallen? Teilen Sie sie:",
+      "featured_in": "In dieser Geschichte vorgestellt",
+      "meet": "Treffen Sie",
+      "more_stories": "Weitere Geschichten",
+      "read_time": "Min. Lesezeit",
+      "date_format": "DD. MMMM YYYY"
+    }
+  },
+  "legal": {
+    "terms_title": "Geschäftsbedingungen",
+    "terms_subtitle": "Nutzungsbedingungen der Dienste von LovelyGirls Prag",
+    "privacy_title": "Datenschutz",
+    "privacy_subtitle": "Grundsätze der Verarbeitung personenbezogener Daten gemäß DSGVO"
   }
 }

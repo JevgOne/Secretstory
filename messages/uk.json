@@ -11,18 +11,60 @@
     "age_modal_text": "Цей сайт призначений лише для дорослих. Входячи, ви підтверджуєте, що вам 18 років або більше.",
     "age_enter": "Увійти",
     "age_leave": "Вийти",
-    "hero_title": "Преміум супутниці в Празі",
-    "hero_subtitle": "Дискретні зустрічі з верифікованими дівчатами. Професійні послуги в люксовому середовищі.",
-    "hero_cta": "Обрати дівчину",
-    "featured_girls": "Рекомендовані дівчата",
-    "view_all_girls": "Переглянути всіх дівчат",
-    "why_choose_us": "Чому обирають нас",
-    "verified_profiles": "Перевірені профілі",
-    "verified_desc": "Всі дівчата ретельно перевірені, а їхні фото 100% справжні",
-    "discrete_safe": "Дискретно і безпечно",
-    "discrete_desc": "Ваша конфіденційність є нашим пріоритетом. Дискретні апартаменти в центрі Праги",
-    "professional": "Професійний підхід",
-    "professional_desc": "Високий рівень сервісу та професійна поведінка наших дівчат"
+    "hero_title": "Люксовий ескорт у Празі",
+    "hero_subtitle": "Дискретні супутниці на найвищому рівні. Перевірені профілі, швидке бронювання.",
+    "hero_cta_primary": "Переглянути дівчат",
+    "hero_cta_secondary": "Як забронювати",
+    "new_label": "Нова на сайті",
+    "new_badge": "NEW",
+    "new_girl_name": "Крістіна",
+    "new_girl_meta": "23 роки • 172 см",
+    "new_girl_desc": "Нова супутниця щойно доєдналася до нашої команди",
+    "view_profile": "Переглянути профіль",
+    "profiles_title": "Наші дівчата",
+    "profiles_subtitle": "Оберіть і зв'яжіться з нами для бронювання",
+    "view_all": "Переглянути всіх",
+    "badge_new": "Нова",
+    "badge_top": "Топ відгуки",
+    "badge_asian": "Азіатка",
+    "stat_years": "років",
+    "stat_cm": "см",
+    "stat_kg": "кг",
+    "stat_bust": "Груди",
+    "info_verified_title": "Перевірені профілі",
+    "info_verified_text": "Актуальні фото та відео кожної дівчини",
+    "info_fast_title": "Швидке бронювання",
+    "info_fast_text": "Підтвердження протягом 5 хвилин через WhatsApp",
+    "info_discrete_title": "Дискретність",
+    "info_discrete_text": "Приватні апартаменти, без реєстрації",
+    "info_discounts_title": "Знижки для постійних",
+    "info_discounts_text": "Програма лояльності та вигідні пакети",
+    "locations_title": "Локації",
+    "locations_subtitle": "Дискретні апартаменти в центрі Праги",
+    "location_main_label": "Головна",
+    "location_main_name": "Прага 2 — Нове Місто",
+    "location_main_address": "5 хв від Вацлавської площі",
+    "location_main_hours": "10:00 — 22:00",
+    "location_new_label": "Нова",
+    "location_new_name": "Прага 3 — Жижков",
+    "location_new_address": "Спокійний район, парковка",
+    "location_new_hours": "12:00 — 20:00",
+    "booking_title": "Як забронювати",
+    "booking_subtitle": "Простий процес без ускладнень",
+    "booking_step1_num": "01",
+    "booking_step1_title": "Оберіть дівчину",
+    "booking_step1_text": "Перегляньте профілі та дізнайтеся про доступність",
+    "booking_step2_num": "02",
+    "booking_step2_title": "Зв'яжіться з нами",
+    "booking_step2_text": "WhatsApp, Telegram або телефон",
+    "booking_step3_num": "03",
+    "booking_step3_title": "Насолоджуйтеся",
+    "booking_step3_text": "Отримайте адресу та приходьте",
+    "cta_title": "Забронюйте зараз",
+    "cta_text": "Зв'яжіться з нами для миттєвого підтвердження",
+    "cta_whatsapp": "WhatsApp",
+    "cta_telegram": "Telegram",
+    "cta_call": "Подзвонити"
   },
   "nav": {
     "home": "Головна",
@@ -84,9 +126,9 @@
     "piercing": "Пірсинг",
     "yes": "Так",
     "no": "Ні",
-    "included": "Включено",
+    "included": "У вартості",
     "extra_services": "Додаткові послуги",
-    "location": "Місцезнаходження",
+    "location": "Місце",
     "discrete_apartment": "Дискретна квартира",
     "call": "Подзвонити",
     "not_found": "Профіль не знайдено",
@@ -95,42 +137,136 @@
   "register": {
     "title": "Реєстрація нової дівчини",
     "step_of": "Крок {step} з {total}",
-    "personal_info": "Особиста інформація",
-    "profile_info": "Інформація профілю",
+    "personal_info": "Особисті дані",
+    "profile_info": "Дані профілю",
     "completion": "Завершення реєстрації",
     "name": "Ім'я / Сценічне ім'я",
+    "name_placeholder": "Напр. Кеті",
     "email": "Електронна пошта",
+    "email_placeholder": "tvij@email.ua",
     "phone": "Телефон",
+    "phone_placeholder": "+420 XXX XXX XXX",
     "password": "Пароль",
-    "confirm_password": "Підтвердити пароль",
+    "password_placeholder": "Мінімум 8 символів",
+    "confirm_password": "Підтвердження пароля",
+    "confirm_password_placeholder": "Введіть пароль знову",
     "age": "Вік",
+    "age_placeholder": "21",
     "height": "Зріст (см)",
+    "height_placeholder": "170",
     "weight": "Вага (кг)",
     "bust": "Груди",
+    "bust_placeholder": "90",
     "waist": "Талія",
+    "waist_placeholder": "60",
     "hips": "Стегна",
+    "hips_placeholder": "90",
     "bio": "Про мене",
+    "bio_placeholder": "Напишіть щось про себе...",
     "languages": "Мови",
-    "tattoo_slider": "Татуювання (% тіла)",
-    "tattoo_description": "Опис татуювання",
-    "has_piercing": "У мене є пірсинг",
-    "piercing_description": "Опис пірсингу",
     "select_services": "Оберіть послуги",
-    "agree_terms": "Я погоджуюсь з умовами",
-    "agree_privacy": "Я погоджуюсь на обробку даних",
+    "tattoo_slider": "Татуювання (% тіла)",
+    "tattoo_description_placeholder": "Опис татуювання (напр. 'Рукав з квітами на руці, мале татуювання на щиколотці')",
+    "has_piercing": "Маю пірсинг",
+    "piercing_description_placeholder": "Опис пірсингу (напр. 'Ніс, пупок, язик')",
+    "available_days": "Доступні дні",
+    "agree_terms": "Погоджуюсь з умовами",
+    "agree_terms_html": "Я погоджуюсь з умовами використання та зобов'язуюсь дотримуватися правил LovelyGirls.cz",
+    "agree_privacy_html": "Я погоджуюсь на обробку персональних даних відповідно до GDPR",
+    "admin_approval": "Після відправлення реєстрації ваш профіль чекатиме на затвердження адміністратора. Ми повідомимо вас електронною поштою, як тільки профіль буде активовано.",
     "continue": "Продовжити",
     "back": "Назад",
-    "submit": "Надіслати реєстрацію",
-    "success_message": "Реєстрація успішна! Ваш профіль очікує на схвалення адміністратора.",
-    "required": "Обов'язкове поле"
+    "submit": "Завершити реєстрацію",
+    "passwords_mismatch": "Паролі не збігаються!",
+    "must_agree": "Ви повинні погодитися з умовами!",
+    "success": "Реєстрація успішна! Ваш профіль очікує на затвердження адміністратора.",
+    "error_prefix": "Помилка:",
+    "error_generic": "Помилка при реєстрації. Будь ласка, спробуйте ще раз."
   },
   "pricing": {
     "title": "Прайс-лист",
-    "packages": "Пакети"
+    "subtitle": "Прозорі ціни без прихованих платежів. Оберіть програму, яка вам підходить.",
+    "duration": "хвилин",
+    "most_popular": "Найпопулярніше",
+    "reserve": "Забронювати",
+    "extras_title": "Додаткові послуги",
+    "note_title": "Оплата",
+    "note_text": "Ми приймаємо готівку та платіжні картки. Оплата завжди відбувається заздалегідь на початку візиту. Ціни остаточні та включають все, що вказано в описі програми.",
+    "currency": "Кч",
+    "plans": {
+      "quick_relax": {
+        "duration": "30",
+        "title": "Quick Relax",
+        "price": "1 500",
+        "features": [
+          "Еротичний масаж",
+          "Спільний душ",
+          "Розслаблення на завершення"
+        ]
+      },
+      "classic_experience": {
+        "duration": "60",
+        "title": "Classic Experience",
+        "price": "2 500",
+        "features": [
+          "Класичний + еротичний масаж",
+          "Body to body",
+          "Спільний душ",
+          "Поцілунки",
+          "Необмежений happy end"
+        ]
+      },
+      "premium_pleasure": {
+        "duration": "90",
+        "title": "Premium Pleasure",
+        "price": "3 500",
+        "features": [
+          "Все з Classic Experience",
+          "Елементи тантри",
+          "Тривала релаксація",
+          "Келих шампанського",
+          "Без поспіху"
+        ]
+      }
+    },
+    "extras": {
+      "nuru_massage": {
+        "name": "Нуру масаж",
+        "price": "+500 Кч"
+      },
+      "tantra_massage": {
+        "name": "Тантра масаж",
+        "price": "+800 Кч"
+      },
+      "duo_massage": {
+        "name": "Масаж вдвох",
+        "price": "+1 500 Кч"
+      },
+      "extension_30min": {
+        "name": "Продовження 30 хв",
+        "price": "+1 000 Кч"
+      },
+      "prostate_massage": {
+        "name": "Масаж простати",
+        "price": "+500 Кч"
+      },
+      "roleplay": {
+        "name": "Рольові ігри",
+        "price": "+500 Кч"
+      },
+      "dominance_light": {
+        "name": "Легке домінування",
+        "price": "+800 Кч"
+      },
+      "foot_fetish": {
+        "name": "Фут фетиш",
+        "price": "+300 Кч"
+      }
+    }
   },
   "schedule": {
     "title": "Розклад",
-    "subtitle": "Подивіться, які дівчата доступні сьогодні та їх робочі години",
+    "subtitle": "Подивіться, які дівчата доступні сьогодні та в які години",
     "loading": "Завантаження розкладу...",
     "error": "Помилка завантаження розкладу",
     "no_girls": "Сьогодні немає доступних дівчат",
@@ -174,5 +310,145 @@
     "tagline": "Елегантна супутниця для вибагливих джентльменів",
     "location_prague": "Прага 2 — Нове Місто",
     "location_details": "5 хв від метро Můstek • Дискретна квартира"
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Відповіді на найчастіші питання. Не знайшли те, що шукаєте? Зв'яжіться з нами.",
+    "category_all": "Все",
+    "category_booking": "Бронювання",
+    "category_services": "Послуги",
+    "category_payment": "Оплата",
+    "category_discretion": "Дискретність",
+    "contact_title": "Маєте інші питання?",
+    "contact_subtitle": "Не соромтеся зв'язатися з нами. Відповімо протягом кількох хвилин.",
+    "items": {
+      "booking_how": {
+        "question": "Як я можу забронювати час?",
+        "answer": "Бронювання можна здійснити через WhatsApp, Telegram або телефоном. Просто напишіть нам ім'я бажаної дівчини, дату, час та тривалість програми. Підтвердження отримаєте протягом 5 хвилин.",
+        "category": "booking"
+      },
+      "booking_advance": {
+        "question": "Чи потрібно бронювати заздалегідь?",
+        "answer": "Рекомендуємо бронювати принаймні за 1-2 години, щоб гарантувати доступність вашої улюбленої дівчини. У разі вільної місткості приймаємо також візити без попереднього запису.",
+        "category": "booking"
+      },
+      "payment_methods": {
+        "question": "Які способи оплати ви приймаєте?",
+        "answer": "Ми приймаємо готівку та платіжні картки (Visa, Mastercard). Оплата завжди відбувається на початку візиту. За запитом видаємо квитанцію.",
+        "category": "payment"
+      },
+      "discretion_how": {
+        "question": "Як забезпечується дискретність?",
+        "answer": "Наші апартаменти розташовані у звичайних житлових будинках без будь-яких позначень. Ми не ведемо жодної реєстрації клієнтів. У виписці з картки відображається нейтральна назва.",
+        "category": "discretion"
+      },
+      "services_included": {
+        "question": "Що включено у вартість?",
+        "answer": "Базова ціна включає еротичний масаж, body to body, спільний душ та happy end. Детальний розпис послуг знайдете у прайс-листі або в профілі кожної дівчини.",
+        "category": "services"
+      },
+      "booking_cancel": {
+        "question": "Чи можу я скасувати бронювання?",
+        "answer": "Так, бронювання можна скасувати без оплати не пізніше ніж за 2 години до призначеного часу. У разі пізнішого скасування або неявки може бути стягнуто штраф за скасування.",
+        "category": "booking"
+      },
+      "discretion_location": {
+        "question": "Де розташовані апартаменти?",
+        "answer": "Ми маємо дві локації в центрі Праги — Прага 2 (Нове Місто) та Прага 3 (Жижков). Точну адресу отримаєте після підтвердження бронювання.",
+        "category": "discretion"
+      },
+      "services_couples": {
+        "question": "Ви надаєте послуги для пар?",
+        "answer": "Так, ми пропонуємо програми для пар. Ви можете обрати масаж для обох партнерів одночасно або індивідуальні програми. Зв'яжіться з нами для отримання додаткової інформації.",
+        "category": "services"
+      }
+    }
+  },
+  "discounts": {
+    "title": "Знижки",
+    "subtitle": "Спеціальні пропозиції та знижки для наших клієнтів. Заощаджуйте при кожному візиті.",
+    "featured_badge": "Різдвяна акція",
+    "featured_title": "Christmas Special",
+    "featured_desc": "Насолоджуйтесь різдвяною атмосферою з нашою спеціальною пропозицією. 90 хвилин релаксації включно з шампанським та різдвяним сюрпризом.",
+    "featured_old_price": "4 500 Кч",
+    "featured_new_price": "3 200 Кч",
+    "featured_btn": "Забронювати",
+    "current_title": "Поточні знижки",
+    "first_time_name": "First Time",
+    "first_time_value": "-200 Кч",
+    "first_time_desc": "Знижка для нових клієнтів на перший візит. Діє на всі програми.",
+    "double_delight_name": "Double Delight",
+    "double_delight_value": "-800 Кч",
+    "double_delight_desc": "Насолоджуйтесь досвідом з двома дівчатами за вигідною ціною.",
+    "birthday_name": "Birthday Treat",
+    "birthday_value": "-500 Кч",
+    "birthday_desc": "Відсвяткуйте день народження з нами. Покажіть паспорт і отримайте знижку.",
+    "come_back_name": "Come Back",
+    "come_back_value": "-300 Кч",
+    "come_back_desc": "Знижка на другий візит протягом 14 днів після першого.",
+    "early_bird_name": "Early Bird",
+    "early_bird_value": "-200 Кч",
+    "early_bird_desc": "Рання пташка. Знижка на візити до 12:00.",
+    "midweek_name": "Midweek",
+    "midweek_value": "-150 Кч",
+    "midweek_desc": "Знижка на візити у вівторок та середу.",
+    "loyalty_title": "Програма лояльності",
+    "loyalty_subtitle": "Чим більше ви нас відвідуєте, тим більше заощаджуєте",
+    "loyalty_bronze_num": "3",
+    "loyalty_bronze_title": "Бронзова картка",
+    "loyalty_bronze_desc": "-5% на кожен візит",
+    "loyalty_silver_num": "5",
+    "loyalty_silver_title": "Срібна картка",
+    "loyalty_silver_desc": "-10% на кожен візит",
+    "loyalty_gold_num": "10",
+    "loyalty_gold_title": "Золота картка",
+    "loyalty_gold_desc": "-15% на кожен візит",
+    "loyalty_vip_num": "20",
+    "loyalty_vip_title": "VIP картка",
+    "loyalty_vip_desc": "-20% + пріоритетне бронювання",
+    "note": "Знижки не можна комбінувати з іншими акціями. Для застосування знижки повідомте оператора при бронюванні."
+  },
+  "blog": {
+    "title": "Блог",
+    "hero_label": "Історії та поради з Праги",
+    "hero_title": "Спокусливі історії та таємниці зсередини",
+    "hero_subtitle": "Інтимні зустрічі, закуліссні моменти та все, що потрібно знати про люксові ескорт-враження в Празі.",
+    "category_all": "Все",
+    "category_erotic_stories": "Еротичні історії",
+    "category_girl_spotlights": "Представлення дівчат",
+    "category_prague_tips": "Поради для Праги",
+    "category_guides": "Путівники",
+    "latest_story": "Остання історія",
+    "view_all_stories": "Переглянути всі історії",
+    "view_all": "Переглянути все",
+    "erotic_stories": "Еротичні історії",
+    "guides_tips": "Путівники та поради",
+    "view_all_guides": "Переглянути всі путівники",
+    "newsletter_title": "Отримуйте ексклюзивні новини",
+    "newsletter_subtitle": "Нові дівчата, спеціальні пропозиції та історії. Без спаму, тільки задоволення.",
+    "newsletter_placeholder": "Ваша електронна пошта",
+    "newsletter_btn": "Підписатися",
+    "tags_label": "Популярні теми",
+    "new_story": "Нова історія",
+    "featured_category": "Еротична історія",
+    "article": {
+      "breadcrumb_blog": "Блог",
+      "breadcrumb_story": "Історія",
+      "story_features": "В цій історії бере участь",
+      "view_profile": "Переглянути профіль",
+      "the_end": "Кінець",
+      "share_text": "Вам сподобалася історія? Поділіться нею:",
+      "featured_in": "В цій історії бере участь",
+      "meet": "Познайомтеся з",
+      "more_stories": "Інші історії",
+      "read_time": "хв читання",
+      "date_format": "DD. MMMM YYYY"
+    }
+  },
+  "legal": {
+    "terms_title": "Умови використання",
+    "terms_subtitle": "Умови використання послуг LovelyGirls Prague",
+    "privacy_title": "Захист персональних даних",
+    "privacy_subtitle": "Політика обробки персональних даних відповідно до GDPR"
   }
 }
