@@ -49,18 +49,7 @@ nav {
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* Force desktop nav elements to be visible */
-nav > .logo,
-nav > .nav-links,
-nav > .nav-contact {
-    display: flex !important;
-}
-
-nav > .mobile-menu,
-nav > .mobile-menu-btn {
-    display: none !important;
-}
-
+/* Logo styles */
 .logo {
     display: flex;
     align-items: center;
@@ -88,7 +77,7 @@ nav > .mobile-menu-btn {
 }
 
 .nav-links {
-    display: flex !important;
+    display: flex;
     gap: 2.5rem;
 }
 
@@ -102,7 +91,7 @@ nav > .mobile-menu-btn {
 .nav-links a.active { color: var(--white); }
 
 .nav-contact {
-    display: flex !important;
+    display: flex;
     gap: 1rem;
     align-items: center;
 }
