@@ -915,17 +915,9 @@ footer {
 
 @media (max-width: 768px) {
     nav { padding: 1rem 4%; }
-    .logo { display: flex !important; }
     .nav-links { display: none !important; }
-    .nav-contact { display: none !important; }
     .mobile-menu { display: block !important; }
     .mobile-menu-btn { display: flex !important; }
-    .language-switcher .code {
-        display: none;
-    }
-    .lang-btn {
-        padding: 6px;
-    }
     section { padding: 60px 4%; }
     .profiles-grid { grid-template-columns: repeat(2, 1fr); }
     .locations-grid { grid-template-columns: 1fr; }
