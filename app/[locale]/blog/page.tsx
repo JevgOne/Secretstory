@@ -9,11 +9,20 @@ import MobileMenu from '@/components/MobileMenu';
 
 export default function BlogPage() {
   const tNav = useTranslations('nav');
+  const tBlog = useTranslations('blog');
+  const tCommon = useTranslations('common');
+  const tFooter = useTranslations('footer');
   const locale = useLocale();
   const pathname = usePathname();
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const categories = ["All", "Erotic Stories", "Girl Spotlights", "Prague Tips", "Guides"];
+  const categories = [
+    { key: "all", label: tBlog('category_all') },
+    { key: "erotic_stories", label: tBlog('category_erotic_stories') },
+    { key: "girl_spotlights", label: tBlog('category_girl_spotlights') },
+    { key: "prague_tips", label: tBlog('category_prague_tips') },
+    { key: "guides", label: tBlog('category_guides') }
+  ];
 
   const stories = [
     {
@@ -125,9 +134,9 @@ export default function BlogPage() {
       <header className="blog-hero">
         <div className="hero-pattern"></div>
         <div className="hero-content">
-          <div className="hero-label">✨ Stories & Tips from Prague</div>
-          <h1 className="hero-title">Seductive Stories & <em>Insider Secrets</em></h1>
-          <p className="hero-subtitle">Intimate encounters, behind-the-scenes moments, and everything you need to know about luxury escort experiences in Prague.</p>
+          <div className="hero-label">✨ {tBlog('hero_label')}</div>
+          <h1 className="hero-title">{tBlog('hero_title').split('&')[0]} & <em>{tBlog('hero_title').split('&')[1]}</em></h1>
+          <p className="hero-subtitle">{tBlog('hero_subtitle')}</p>
         </div>
       </header>
 
@@ -135,11 +144,11 @@ export default function BlogPage() {
       <div className="categories-bar">
         {categories.map((cat) => (
           <button
-            key={cat}
-            className={`cat-btn ${activeCategory === cat ? "active" : ""}`}
-            onClick={() => setActiveCategory(cat)}
+            key={cat.key}
+            className={`cat-btn ${activeCategory === (cat.key === "all" ? "All" : cat.label) ? "active" : ""}`}
+            onClick={() => setActiveCategory(cat.key === "all" ? "All" : cat.label)}
           >
-            {cat}
+            {cat.label}
           </button>
         ))}
       </div>
@@ -147,23 +156,23 @@ export default function BlogPage() {
       {/* Featured Story */}
       <section className="featured-section">
         <div className="section-header">
-          <h2 className="section-title"><span>🔥</span> Latest Story</h2>
+          <h2 className="section-title"><span>🔥</span> {tBlog('latest_story')}</h2>
           <a href="#stories" className="view-all">
-            View all stories
+            {tBlog('view_all_stories')}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </a>
         </div>
 
-        <Link href="/blog/extra-hour-old-town-square" className="featured-story">
+        <Link href={`/${locale}/blog/extra-hour-old-town-square`} className="featured-story">
           <div className="featured-image">
             <div className="featured-image-placeholder">FEATURED IMAGE</div>
-            <span className="featured-badge">New Story</span>
+            <span className="featured-badge">{tBlog('new_story')}</span>
           </div>
           <div className="featured-content">
             <div className="featured-meta">
-              <span className="featured-category">Erotic Story</span>
+              <span className="featured-category">{tBlog('featured_category')}</span>
               <span className="featured-date">November 28, 2025</span>
             </div>
             <h3 className="featured-title">The Extra Hour by Old Town Square</h3>
@@ -184,9 +193,9 @@ export default function BlogPage() {
       {/* Stories Grid */}
       <section id="stories" className="stories-section">
         <div className="section-header">
-          <h2 className="section-title"><span>💋</span> Erotic Stories</h2>
+          <h2 className="section-title"><span>💋</span> {tBlog('erotic_stories')}</h2>
           <a href="#" className="view-all">
-            View all
+            {tBlog('view_all')}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -196,7 +205,7 @@ export default function BlogPage() {
         <div className="stories-grid">
           {stories.map((story, i) => (
             <article key={i} className="story-card">
-              <Link href={`/blog/${story.slug}`} className="story-image">
+              <Link href={`/${locale}/blog/${story.slug}`} className="story-image">
                 <div className="story-image-placeholder">STORY IMAGE</div>
                 <span className="story-category-badge">{story.category}</span>
                 <div className="story-overlay">
@@ -215,9 +224,9 @@ export default function BlogPage() {
       {/* Guides Section */}
       <section id="guides" className="guides-section">
         <div className="section-header">
-          <h2 className="section-title"><span>📖</span> Guides & Tips</h2>
+          <h2 className="section-title"><span>📖</span> {tBlog('guides_tips')}</h2>
           <a href="#" className="view-all">
-            View all guides
+            {tBlog('view_all_guides')}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -226,7 +235,7 @@ export default function BlogPage() {
 
         <div className="guides-grid">
           {guides.map((guide, i) => (
-            <Link href="/blog/first-time-guide" key={i} className="guide-card">
+            <Link href={`/${locale}/blog/first-time-guide`} key={i} className="guide-card">
               <div className="guide-image">
                 <div className="guide-image-placeholder">GUIDE</div>
               </div>
@@ -260,11 +269,11 @@ export default function BlogPage() {
       <section className="newsletter-section">
         <div className="newsletter-box">
           <div className="newsletter-icon">💌</div>
-          <h2 className="newsletter-title">Get Exclusive Updates</h2>
-          <p className="newsletter-subtitle">New girls, special offers, and stories. No spam, just pleasure.</p>
+          <h2 className="newsletter-title">{tBlog('newsletter_title')}</h2>
+          <p className="newsletter-subtitle">{tBlog('newsletter_subtitle')}</p>
           <form className="newsletter-form">
-            <input type="email" className="newsletter-input" placeholder="Your email" required />
-            <button type="submit" className="newsletter-btn">Subscribe</button>
+            <input type="email" className="newsletter-input" placeholder={tBlog('newsletter_placeholder')} required />
+            <button type="submit" className="newsletter-btn">{tBlog('newsletter_btn')}</button>
           </form>
         </div>
       </section>
@@ -272,7 +281,7 @@ export default function BlogPage() {
       {/* Tags */}
       <section className="tags-section">
         <div className="tags-inner">
-          <div className="tags-label">Popular Topics</div>
+          <div className="tags-label">{tBlog('tags_label')}</div>
           <div className="tags-cloud">
             {tags.map((tag, i) => (
               <a href="#" key={i} className="tag">{tag}</a>
@@ -283,10 +292,10 @@ export default function BlogPage() {
 
       {/* Footer */}
       <footer>
-        <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
+        <div>{tCommon('brand')} Prague © 2025 — {tCommon('adults_only')}</div>
         <div className="footer-links">
-          <Link href={`/${locale}/podminky`}>Podmínky</Link>
-          <Link href={`/${locale}/soukromi`}>Soukromí</Link>
+          <Link href={`/${locale}/podminky`}>{tFooter('terms')}</Link>
+          <Link href={`/${locale}/soukromi`}>{tFooter('privacy')}</Link>
         </div>
       </footer>
     </>
