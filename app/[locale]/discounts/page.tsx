@@ -2,59 +2,88 @@
 
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from 'next-intl';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import MobileMenu from '@/components/MobileMenu';
 
 export default function DiscountsPage() {
+  const tNav = useTranslations('nav');
+  const tCommon = useTranslations('common');
+  const tFooter = useTranslations('footer');
+  const tDiscounts = useTranslations('discounts');
+  const locale = useLocale();
+  const pathname = usePathname();
+
+  // Generate discounts array from translations
   const discounts = [
     {
       icon: "🌟",
-      name: "First Time",
-      value: "-200 Kč",
-      desc: "Sleva pro nové klienty na první návštěvu. Platí na všechny programy."
+      name: tDiscounts('first_time_name'),
+      value: tDiscounts('first_time_value'),
+      desc: tDiscounts('first_time_desc')
     },
     {
       icon: "👯",
-      name: "Double Delight",
-      value: "-800 Kč",
-      desc: "Užijte si zážitek se dvěma dívkami za zvýhodněnou cenu."
+      name: tDiscounts('double_delight_name'),
+      value: tDiscounts('double_delight_value'),
+      desc: tDiscounts('double_delight_desc')
     },
     {
       icon: "💝",
-      name: "Birthday Treat",
-      value: "-500 Kč",
-      desc: "Oslavte narozeniny s námi. Ukažte občanku a získejte slevu."
+      name: tDiscounts('birthday_name'),
+      value: tDiscounts('birthday_value'),
+      desc: tDiscounts('birthday_desc')
     },
     {
       icon: "🔄",
-      name: "Come Back",
-      value: "-300 Kč",
-      desc: "Sleva na druhou návštěvu do 14 dnů od první."
+      name: tDiscounts('come_back_name'),
+      value: tDiscounts('come_back_value'),
+      desc: tDiscounts('come_back_desc')
     },
     {
       icon: "☀️",
-      name: "Early Bird",
-      value: "-200 Kč",
-      desc: "Ranní ptáče. Sleva na návštěvy před 12:00."
+      name: tDiscounts('early_bird_name'),
+      value: tDiscounts('early_bird_value'),
+      desc: tDiscounts('early_bird_desc')
     },
     {
       icon: "📅",
-      name: "Midweek",
-      value: "-150 Kč",
-      desc: "Sleva na návštěvy v úterý a ve středu."
+      name: tDiscounts('midweek_name'),
+      value: tDiscounts('midweek_value'),
+      desc: tDiscounts('midweek_desc')
     }
   ];
 
+  // Generate loyalty steps array from translations
   const loyaltySteps = [
-    { num: 3, title: "Bronzová karta", desc: "-5% na každou návštěvu" },
-    { num: 5, title: "Stříbrná karta", desc: "-10% na každou návštěvu" },
-    { num: 10, title: "Zlatá karta", desc: "-15% na každou návštěvu" },
-    { num: 20, title: "VIP karta", desc: "-20% + priority booking" }
+    {
+      num: tDiscounts('loyalty_bronze_num'),
+      title: tDiscounts('loyalty_bronze_title'),
+      desc: tDiscounts('loyalty_bronze_desc')
+    },
+    {
+      num: tDiscounts('loyalty_silver_num'),
+      title: tDiscounts('loyalty_silver_title'),
+      desc: tDiscounts('loyalty_silver_desc')
+    },
+    {
+      num: tDiscounts('loyalty_gold_num'),
+      title: tDiscounts('loyalty_gold_title'),
+      desc: tDiscounts('loyalty_gold_desc')
+    },
+    {
+      num: tDiscounts('loyalty_vip_num'),
+      title: tDiscounts('loyalty_vip_title'),
+      desc: tDiscounts('loyalty_vip_desc')
+    }
   ];
 
   return (
     <>
       {/* Navigation */}
       <nav>
-        <Link href="/" className="logo">
+        <Link href={`/${locale}`} className="logo">
           <span className="logo-L">
             <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
               <path d="M2 12C4 11 6 7 9 5C8 3 9 1.5 10 1" stroke="#c41e3a" strokeWidth="2" strokeLinecap="round"/>
@@ -66,43 +95,40 @@ export default function DiscountsPage() {
           ovely Girls
         </Link>
         <div className="nav-links">
-          <Link href="/">Home</Link>
-          <Link href="/divky">Dívky</Link>
-          <Link href="/cenik">Ceník</Link>
-          <Link href="/schedule">Schedule</Link>
-          <Link href="/discounts" className="active">Discounts</Link>
-          <Link href="/faq">FAQ</Link>
+          <Link href={`/${locale}`}>{tNav('home')}</Link>
+          <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
+          <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
+          <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
+          <Link href={`/${locale}/discounts`} className="active">{tNav('discounts')}</Link>
+          <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
         </div>
         <div className="nav-contact">
-          <a href="tel:+420734332131" className="btn">+420 734 332 131</a>
-          <a href="https://wa.me/420734332131" className="btn btn-fill">WhatsApp</a>
+          <LanguageSwitcher />
+          <a href="tel:+420734332131" className="btn">{tNav('phone')}</a>
+          <a href="https://wa.me/420734332131" className="btn btn-fill">{tNav('whatsapp')}</a>
         </div>
-        <button className="mobile-menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        <MobileMenu currentPath={pathname} />
       </nav>
 
       {/* Page Header */}
       <section className="page-header">
-        <h1 className="page-title">Discounts</h1>
-        <p className="page-subtitle">Speciální nabídky a slevy pro naše klienty. Ušetřete při každé návštěvě.</p>
+        <h1 className="page-title">{tDiscounts('title')}</h1>
+        <p className="page-subtitle">{tDiscounts('subtitle')}</p>
       </section>
 
       {/* Featured Offer */}
       <section className="featured">
         <div className="featured-card">
           <div className="featured-content">
-            <span className="featured-badge">🎁 Vánoční akce</span>
-            <h2>Christmas Special</h2>
-            <p>Užijte si vánoční atmosféru s naší speciální nabídkou. 90 minut relaxace včetně sektu a vánočního překvapení.</p>
+            <span className="featured-badge">🎁 {tDiscounts('featured_badge')}</span>
+            <h2>{tDiscounts('featured_title')}</h2>
+            <p>{tDiscounts('featured_desc')}</p>
             <div className="featured-price">
-              <span className="featured-old">4 500 Kč</span>
-              <span className="featured-new">3 200 Kč</span>
+              <span className="featured-old">{tDiscounts('featured_old_price')}</span>
+              <span className="featured-new">{tDiscounts('featured_new_price')}</span>
             </div>
             <button className="featured-btn">
-              Rezervovat
+              {tDiscounts('featured_btn')}
               <ChevronRight size={20} />
             </button>
           </div>
@@ -112,7 +138,7 @@ export default function DiscountsPage() {
 
       {/* Discounts Grid */}
       <section className="discounts">
-        <h2 className="discounts-title">Aktuální slevy</h2>
+        <h2 className="discounts-title">{tDiscounts('current_title')}</h2>
         <div className="discounts-grid">
           {discounts.map((discount, i) => (
             <div key={i} className="discount-card">
@@ -128,8 +154,8 @@ export default function DiscountsPage() {
       {/* Loyalty Program */}
       <section className="loyalty">
         <div className="loyalty-inner">
-          <h2 className="loyalty-title">Věrnostní program</h2>
-          <p className="loyalty-subtitle">Čím víc nás navštívíte, tím víc ušetříte</p>
+          <h2 className="loyalty-title">{tDiscounts('loyalty_title')}</h2>
+          <p className="loyalty-subtitle">{tDiscounts('loyalty_subtitle')}</p>
           <div className="loyalty-steps">
             {loyaltySteps.map((step, i) => (
               <div key={i} className="loyalty-step">
@@ -146,17 +172,17 @@ export default function DiscountsPage() {
       <section className="note">
         <div className="note-box">
           <p className="note-text">
-            ⚠️ Slevy nelze kombinovat s jinými akcemi. Pro uplatnění slevy informujte operátora při rezervaci.
+            ⚠️ {tDiscounts('note')}
           </p>
         </div>
       </section>
 
       {/* Footer */}
       <footer>
-        <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
+        <div>{tFooter('copyright')} — {tCommon('adults_only')}</div>
         <div className="footer-links">
-          <Link href="/podminky">Podmínky</Link>
-          <Link href="/soukromi">Soukromí</Link>
+          <Link href={`/${locale}/podminky`}>{tFooter('terms')}</Link>
+          <Link href={`/${locale}/soukromi`}>{tFooter('privacy')}</Link>
         </div>
       </footer>
     </>

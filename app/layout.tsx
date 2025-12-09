@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant, DM_Sans } from "next/font/google";
 import "./globals.css";
+import SessionProvider from "@/components/SessionProvider";
 
 const cormorant = Cormorant({
   variable: "--font-cormorant",
@@ -83,8 +84,84 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs">
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            if (typeof window !== 'undefined') {
+              // NUCLEAR STRENGTH - Hide Next.js dev indicators
+              const hideNextIndicators = () => {
+                // Target ALL fixed positioned elements at bottom-left AND bottom-right
+                document.querySelectorAll('body > div').forEach(el => {
+                  const style = window.getComputedStyle(el);
+                  if (style.position === 'fixed') {
+                    const bottom = parseInt(style.bottom) || 0;
+                    const left = parseInt(style.left) || 0;
+                    const right = parseInt(style.right) || 0;
+
+                    // Check BOTH bottom-left (0-100px) AND bottom-right (0-100px)
+                    const isBottomLeft = bottom >= 0 && bottom <= 100 && left >= 0 && left <= 100;
+                    const isBottomRight = bottom >= 0 && bottom <= 100 && right >= 0 && right <= 100;
+
+                    if (isBottomLeft || isBottomRight) {
+                      // NUCLEAR hiding
+                      el.style.display = 'none';
+                      el.style.visibility = 'hidden';
+                      el.style.opacity = '0';
+                      el.style.pointerEvents = 'none';
+                      el.style.width = '0';
+                      el.style.height = '0';
+                      el.style.transform = 'scale(0)';
+                      el.style.zIndex = '-9999';
+                      el.style.position = 'absolute';
+                      el.style.left = '-9999px';
+                      el.style.top = '-9999px';
+                      el.remove(); // Just remove it entirely
+                    }
+                  }
+                });
+
+                // Also target by common Next.js attributes
+                const selectors = [
+                  '[id*="next"]',
+                  '[class*="next-dev"]',
+                  'button[title*="Next"]',
+                  'button[aria-label*="Next"]',
+                  'svg[aria-label*="Next"]'
+                ];
+
+                selectors.forEach(selector => {
+                  document.querySelectorAll(selector).forEach(el => {
+                    const parent = el.parentElement;
+                    if (parent && parent.style.position === 'fixed') {
+                      parent.remove();
+                    }
+                    el.remove();
+                  });
+                });
+              };
+
+              // Run immediately
+              hideNextIndicators();
+
+              // Run after DOM loads
+              if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', hideNextIndicators);
+              }
+
+              // Run AGGRESSIVELY every 100ms
+              setInterval(hideNextIndicators, 100);
+
+              // ALSO keep watching for new elements
+              const observer = new MutationObserver(hideNextIndicators);
+              observer.observe(document.documentElement, { childList: true, subtree: true });
+            }
+          `
+        }} />
+      </head>
       <body className={`${cormorant.variable} ${dmSans.variable} antialiased`}>
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

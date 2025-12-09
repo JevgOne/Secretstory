@@ -35,50 +35,6 @@ export default function LanguageSwitcher() {
           <span className="code">{locale.toUpperCase()}</span>
         </button>
       ))}
-      <style jsx>{`
-        .language-switcher {
-          display: flex;
-          gap: 8px;
-          align-items: center;
-        }
-        .lang-btn {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          padding: 6px 10px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 6px;
-          color: #e8e8e8;
-          font-size: 0.85rem;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .lang-btn:hover {
-          background: rgba(255, 255, 255, 0.1);
-          border-color: var(--wine);
-        }
-        .lang-btn.active {
-          background: var(--wine);
-          border-color: var(--wine);
-          color: white;
-        }
-        .flag {
-          font-size: 1.1rem;
-        }
-        .code {
-          font-weight: 500;
-          font-size: 0.75rem;
-        }
-        @media (max-width: 768px) {
-          .code {
-            display: none;
-          }
-          .lang-btn {
-            padding: 6px;
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -206,6 +206,33 @@ export default function CalendarPage() {
 
   const openEventDetail = (event: Event) => {
     setSelectedEvent(event);
+    setShowEventModal(true);
+  };
+
+  const deleteEvent = async (eventId: number) => {
+    if (!confirm('Opravdu chcete smazat tuto rezervaci?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/bookings/${eventId}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh bookings list and close detail panel
+        await fetchBookings();
+        setSelectedEvent(null);
+        alert('Rezervace byla úspěšně smazána');
+      } else {
+        alert('Chyba při mazání rezervace: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting booking:', error);
+      alert('Chyba při mazání rezervace');
+    }
   };
 
   const saveNewEvent = async () => {
@@ -489,6 +516,33 @@ export default function CalendarPage() {
                   <div className="detail-value">{selectedEvent.notes}</div>
                 </div>
               )}
+
+              {/* DELETE BUTTON */}
+              <div className="detail-actions" style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <button
+                  onClick={() => deleteEvent(selectedEvent.id)}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    background: 'rgba(239, 68, 68, 0.15)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    borderRadius: '8px',
+                    color: '#ef4444',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.25)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+                  }}
+                >
+                  🗑️ Smazat rezervaci
+                </button>
+              </div>
             </div>
           </div>
         )}

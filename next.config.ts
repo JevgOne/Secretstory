@@ -18,7 +18,7 @@ const securityHeaders = [
       base-uri 'self';
       form-action 'self';
       frame-ancestors 'none';
-      upgrade-insecure-requests;
+      ${process.env.NODE_ENV === 'production' ? 'upgrade-insecure-requests;' : ''}
     `.replace(/\n/g, '').replace(/\s{2,}/g, ' ').trim()
   },
   {
@@ -44,6 +44,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  devIndicators: {
+    position: 'bottom-right',
+  },
   async headers() {
     return [
       {

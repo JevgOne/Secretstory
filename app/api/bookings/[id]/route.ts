@@ -126,8 +126,8 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  // Only admin can delete bookings
-  const user = await requireAuth(['admin']);
+  // Only admin and manager can delete bookings
+  const user = await requireAuth(['admin', 'manager']);
   if (user instanceof NextResponse) return user;
 
   try {

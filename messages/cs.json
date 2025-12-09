@@ -11,25 +11,67 @@
     "age_modal_text": "Tento web je určen pouze pro dospělé. Vstupem potvrzujete, že vám je 18 let nebo více.",
     "age_enter": "Vstoupit",
     "age_leave": "Odejít",
-    "hero_title": "Prémiové společnice v Praze",
-    "hero_subtitle": "Diskrétní setkání s ověřenými dívkami. Profesionální služby v luxusním prostředí.",
-    "hero_cta": "Vybrat dívku",
-    "featured_girls": "Doporučené dívky",
-    "view_all_girls": "Zobrazit všechny dívky",
-    "why_choose_us": "Proč si vybrat nás",
-    "verified_profiles": "Ověřené profily",
-    "verified_desc": "Všechny dívky jsou pečlivě ověřené a jejich fotky jsou 100% pravdivé",
-    "discrete_safe": "Diskrétní a bezpečné",
-    "discrete_desc": "Vaše soukromí je naší prioritou. Diskrétní apartmány v centru Prahy",
-    "professional": "Profesionální přístup",
-    "professional_desc": "Vysoká úroveň služeb a profesionální chování našich dívek"
+    "hero_title": "Luxusní escort v Praze",
+    "hero_subtitle": "Diskrétní společnice na nejvyšší úrovni. Ověřené profily, rychlá rezervace.",
+    "hero_cta_primary": "Zobrazit dívky",
+    "hero_cta_secondary": "Jak rezervovat",
+    "new_label": "Nově na webu",
+    "new_badge": "NEW",
+    "new_girl_name": "Kristýna",
+    "new_girl_meta": "23 let • 172 cm",
+    "new_girl_desc": "Nová společnice právě přidána do našeho týmu",
+    "view_profile": "Zobrazit profil",
+    "profiles_title": "Naše dívky",
+    "profiles_subtitle": "Vyberte si a kontaktujte nás pro rezervaci",
+    "view_all": "Zobrazit všechny",
+    "badge_new": "Nová",
+    "badge_top": "Top recenze",
+    "badge_asian": "Asiatka",
+    "stat_years": "let",
+    "stat_cm": "cm",
+    "stat_kg": "kg",
+    "stat_bust": "Prsa",
+    "info_verified_title": "Ověřené profily",
+    "info_verified_text": "Aktuální fotky a video u každé dívky",
+    "info_fast_title": "Rychlá rezervace",
+    "info_fast_text": "Potvrzení do 5 minut přes WhatsApp",
+    "info_discrete_title": "Diskrétnost",
+    "info_discrete_text": "Soukromé apartmány, bez evidence",
+    "info_discounts_title": "Slevy pro stálé",
+    "info_discounts_text": "Věrnostní program a výhodné balíčky",
+    "locations_title": "Lokace",
+    "locations_subtitle": "Diskrétní apartmány v centru Prahy",
+    "location_main_label": "Hlavní",
+    "location_main_name": "Praha 2 — Nové Město",
+    "location_main_address": "5 min od Václavského náměstí",
+    "location_main_hours": "10:00 — 22:00",
+    "location_new_label": "Nové",
+    "location_new_name": "Praha 3 — Žižkov",
+    "location_new_address": "Klidná lokalita, parkování",
+    "location_new_hours": "12:00 — 20:00",
+    "booking_title": "Jak rezervovat",
+    "booking_subtitle": "Jednoduchý proces bez komplikací",
+    "booking_step1_num": "01",
+    "booking_step1_title": "Vyberte dívku",
+    "booking_step1_text": "Prohlédněte si profily a zjistěte dostupnost",
+    "booking_step2_num": "02",
+    "booking_step2_title": "Kontaktujte nás",
+    "booking_step2_text": "WhatsApp, Telegram nebo telefon",
+    "booking_step3_num": "03",
+    "booking_step3_title": "Užijte si",
+    "booking_step3_text": "Obdržíte adresu a přijďte",
+    "cta_title": "Rezervujte nyní",
+    "cta_text": "Kontaktujte nás pro okamžité potvrzení",
+    "cta_whatsapp": "WhatsApp",
+    "cta_telegram": "Telegram",
+    "cta_call": "Zavolat"
   },
   "nav": {
-    "home": "Home",
+    "home": "Domů",
     "girls": "Dívky",
     "pricing": "Ceník",
-    "schedule": "Schedule",
-    "discounts": "Discounts",
+    "schedule": "Rozvrh",
+    "discounts": "Slevy",
     "faq": "FAQ",
     "phone": "+420 734 332 131",
     "whatsapp": "WhatsApp"
@@ -142,8 +184,85 @@
     "error_generic": "Chyba při registraci. Zkuste to prosím znovu."
   },
   "pricing": {
-    "title": "Ceník služeb",
-    "packages": "Balíčky"
+    "title": "Ceník",
+    "subtitle": "Transparentní ceny bez skrytých poplatků. Vyberte si program, který vám vyhovuje.",
+    "duration": "minut",
+    "most_popular": "Nejoblíbenější",
+    "reserve": "Rezervovat",
+    "extras_title": "Extra služby",
+    "note_title": "Platba",
+    "note_text": "Přijímáme hotovost i platební karty. Platba probíhá vždy předem na začátku návštěvy. Ceny jsou konečné a zahrnují vše uvedené v popisu programu.",
+    "currency": "Kč",
+    "plans": {
+      "quick_relax": {
+        "duration": "30",
+        "title": "Quick Relax",
+        "price": "1 500",
+        "features": [
+          "Erotická masáž",
+          "Společná sprcha",
+          "Uvolnění na závěr"
+        ]
+      },
+      "classic_experience": {
+        "duration": "60",
+        "title": "Classic Experience",
+        "price": "2 500",
+        "features": [
+          "Klasická + erotická masáž",
+          "Body to body",
+          "Společná sprcha",
+          "Líbání",
+          "Neomezený happy end"
+        ]
+      },
+      "premium_pleasure": {
+        "duration": "90",
+        "title": "Premium Pleasure",
+        "price": "3 500",
+        "features": [
+          "Vše z Classic Experience",
+          "Tantra elementy",
+          "Delší relaxace",
+          "Sklenka sektu",
+          "Bez spěchu"
+        ]
+      }
+    },
+    "extras": {
+      "nuru_massage": {
+        "name": "Nuru masáž",
+        "price": "+500 Kč"
+      },
+      "tantra_massage": {
+        "name": "Tantra masáž",
+        "price": "+800 Kč"
+      },
+      "duo_massage": {
+        "name": "Masáž ve dvou",
+        "price": "+1 500 Kč"
+      },
+      "extension_30min": {
+        "name": "Prodloužení 30 min",
+        "price": "+1 000 Kč"
+      },
+      "prostate_massage": {
+        "name": "Prostatová masáž",
+        "price": "+500 Kč"
+      },
+      "roleplay": {
+        "name": "Roleplay",
+        "price": "+500 Kč"
+      },
+      "dominance_light": {
+        "name": "Dominance light",
+        "price": "+800 Kč"
+      },
+      "foot_fetish": {
+        "name": "Foot fetish",
+        "price": "+300 Kč"
+      }
+    }
   },
   "schedule": {
     "title": "Rozvrh",
@@ -191,5 +310,145 @@
     "tagline": "Elegantní společnice pro náročné gentlemany",
     "location_prague": "Praha 2 — Nové Město",
     "location_details": "5 min od metra Můstek • Diskrétní apartmán"
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Odpovědi na nejčastější otázky. Nenašli jste co hledáte? Kontaktujte nás.",
+    "category_all": "Vše",
+    "category_booking": "Rezervace",
+    "category_services": "Služby",
+    "category_payment": "Platba",
+    "category_discretion": "Diskrétnost",
+    "contact_title": "Máte další otázky?",
+    "contact_subtitle": "Neváhejte nás kontaktovat. Odpovíme do pár minut.",
+    "items": {
+      "booking_how": {
+        "question": "Jak si mohu rezervovat termín?",
+        "answer": "Rezervaci můžete provést přes WhatsApp, Telegram nebo telefonicky. Stačí nám napsat jméno preferované dívky, datum, čas a délku programu. Potvrzení obdržíte do 5 minut.",
+        "category": "booking"
+      },
+      "booking_advance": {
+        "question": "Je potřeba rezervovat předem?",
+        "answer": "Doporučujeme rezervovat alespoň 1-2 hodiny předem, abyste měli jistotu dostupnosti vaší preferované dívky. V případě volné kapacity přijímáme i walk-in návštěvy.",
+        "category": "booking"
+      },
+      "payment_methods": {
+        "question": "Jaké platební metody přijímáte?",
+        "answer": "Přijímáme hotovost i platební karty (Visa, Mastercard). Platba probíhá vždy na začátku návštěvy. Na požádání vystavíme účtenku.",
+        "category": "payment"
+      },
+      "discretion_how": {
+        "question": "Jak je zajištěna diskrétnost?",
+        "answer": "Naše apartmány jsou v běžných rezidenčních budovách bez jakéhokoliv označení. Nevedeme žádnou evidenci klientů. Na výpisu z karty se zobrazí neutrální název.",
+        "category": "discretion"
+      },
+      "services_included": {
+        "question": "Co je zahrnuto v ceně?",
+        "answer": "Základní cena zahrnuje erotickou masáž, body to body, společnou sprchu a happy end. Detailní rozpis služeb najdete v ceníku nebo na profilu každé dívky.",
+        "category": "services"
+      },
+      "booking_cancel": {
+        "question": "Mohu zrušit rezervaci?",
+        "answer": "Ano, rezervaci lze zrušit bez poplatku nejpozději 2 hodiny před termínem. V případě pozdějšího zrušení nebo nedostavení se může být účtován storno poplatek.",
+        "category": "booking"
+      },
+      "discretion_location": {
+        "question": "Kde se apartmány nacházejí?",
+        "answer": "Máme dvě lokace v centru Prahy — Praha 2 (Nové Město) a Praha 3 (Žižkov). Přesnou adresu obdržíte po potvrzení rezervace.",
+        "category": "discretion"
+      },
+      "services_couples": {
+        "question": "Poskytujete služby i pro páry?",
+        "answer": "Ano, nabízíme programy pro páry. Můžete si vybrat masáž pro oba partnery současně nebo individuální programy. Kontaktujte nás pro více informací.",
+        "category": "services"
+      }
+    }
+  },
+  "discounts": {
+    "title": "Slevy",
+    "subtitle": "Speciální nabídky a slevy pro naše klienty. Ušetřete při každé návštěvě.",
+    "featured_badge": "Vánoční akce",
+    "featured_title": "Christmas Special",
+    "featured_desc": "Užijte si vánoční atmosféru s naší speciální nabídkou. 90 minut relaxace včetně sektu a vánočního překvapení.",
+    "featured_old_price": "4 500 Kč",
+    "featured_new_price": "3 200 Kč",
+    "featured_btn": "Rezervovat",
+    "current_title": "Aktuální slevy",
+    "first_time_name": "First Time",
+    "first_time_value": "-200 Kč",
+    "first_time_desc": "Sleva pro nové klienty na první návštěvu. Platí na všechny programy.",
+    "double_delight_name": "Double Delight",
+    "double_delight_value": "-800 Kč",
+    "double_delight_desc": "Užijte si zážitek se dvěma dívkami za zvýhodněnou cenu.",
+    "birthday_name": "Birthday Treat",
+    "birthday_value": "-500 Kč",
+    "birthday_desc": "Oslavte narozeniny s námi. Ukažte občanku a získejte slevu.",
+    "come_back_name": "Come Back",
+    "come_back_value": "-300 Kč",
+    "come_back_desc": "Sleva na druhou návštěvu do 14 dnů od první.",
+    "early_bird_name": "Early Bird",
+    "early_bird_value": "-200 Kč",
+    "early_bird_desc": "Ranní ptáče. Sleva na návštěvy před 12:00.",
+    "midweek_name": "Midweek",
+    "midweek_value": "-150 Kč",
+    "midweek_desc": "Sleva na návštěvy v úterý a ve středu.",
+    "loyalty_title": "Věrnostní program",
+    "loyalty_subtitle": "Čím víc nás navštívíte, tím víc ušetříte",
+    "loyalty_bronze_num": "3",
+    "loyalty_bronze_title": "Bronzová karta",
+    "loyalty_bronze_desc": "-5% na každou návštěvu",
+    "loyalty_silver_num": "5",
+    "loyalty_silver_title": "Stříbrná karta",
+    "loyalty_silver_desc": "-10% na každou návštěvu",
+    "loyalty_gold_num": "10",
+    "loyalty_gold_title": "Zlatá karta",
+    "loyalty_gold_desc": "-15% na každou návštěvu",
+    "loyalty_vip_num": "20",
+    "loyalty_vip_title": "VIP karta",
+    "loyalty_vip_desc": "-20% + priority booking",
+    "note": "Slevy nelze kombinovat s jinými akcemi. Pro uplatnění slevy informujte operátora při rezervaci."
+  },
+  "blog": {
+    "title": "Blog",
+    "hero_label": "Příběhy & Tipy z Prahy",
+    "hero_title": "Svůdné Příběhy & Tajemství Zevnitř",
+    "hero_subtitle": "Intimní setkání, zákulisní momenty a vše co potřebujete vědět o luxusních escort zážitcích v Praze.",
+    "category_all": "Vše",
+    "category_erotic_stories": "Erotické příběhy",
+    "category_girl_spotlights": "Představení děvčat",
+    "category_prague_tips": "Tipy pro Prahu",
+    "category_guides": "Průvodce",
+    "latest_story": "Nejnovější příběh",
+    "view_all_stories": "Zobrazit všechny příběhy",
+    "view_all": "Zobrazit vše",
+    "erotic_stories": "Erotické příběhy",
+    "guides_tips": "Průvodce & Tipy",
+    "view_all_guides": "Zobrazit všechny průvodce",
+    "newsletter_title": "Získejte Exkluzivní Novinky",
+    "newsletter_subtitle": "Nové dívky, speciální nabídky a příběhy. Žádný spam, jen potěšení.",
+    "newsletter_placeholder": "Váš email",
+    "newsletter_btn": "Odebírat",
+    "tags_label": "Populární témata",
+    "new_story": "Nový příběh",
+    "featured_category": "Erotický příběh",
+    "article": {
+      "breadcrumb_blog": "Blog",
+      "breadcrumb_story": "Příběh",
+      "story_features": "V tomto příběhu vystupuje",
+      "view_profile": "Zobrazit profil",
+      "the_end": "Konec",
+      "share_text": "Líbil se vám příběh? Sdílejte ho:",
+      "featured_in": "V tomto příběhu vystupuje",
+      "meet": "Seznamte se s",
+      "more_stories": "Další příběhy",
+      "read_time": "min čtení",
+      "date_format": "DD. MMMM YYYY"
+    }
+  },
+  "legal": {
+    "terms_title": "Obchodní podmínky",
+    "terms_subtitle": "Podmínky používání služeb LovelyGirls Prague",
+    "privacy_title": "Ochrana osobních údajů",
+    "privacy_subtitle": "Zásady zpracování osobních údajů dle GDPR"
   }
 }

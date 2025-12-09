@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -28,28 +29,21 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(data.error || 'Chyba při přihlašování');
+      if (result?.error) {
+        alert('Neplatný email nebo heslo');
         setLoading(false);
         return;
       }
 
-      // Redirect based on role (using NextAuth session)
-      if (data.user.role === 'girl') {
-        router.push('/girl/dashboard');
-      } else if (data.user.role === 'manager') {
-        router.push('/manager/dashboard');
-      } else if (data.user.role === 'admin') {
-        router.push('/admin/dashboard');
-      }
+      // Success - redirect to admin dashboard
+      router.push('/admin/dashboard');
+      router.refresh();
     } catch (error) {
       console.error('Login error:', error);
       alert('Chyba při přihlašování');

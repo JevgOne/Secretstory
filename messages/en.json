@@ -174,5 +174,139 @@
     "tagline": "Elegant companion for discerning gentlemen",
     "location_prague": "Prague 2 — New Town",
     "location_details": "5 min from Můstek metro • Discreet apartment"
+  },
+  "discounts": {
+    "title": "Discounts",
+    "subtitle": "Special offers and discounts for our clients. Save on every visit.",
+    "featured_badge": "Christmas Special",
+    "featured_title": "Christmas Special",
+    "featured_desc": "Enjoy the Christmas atmosphere with our special offer. 90 minutes of relaxation including champagne and a Christmas surprise.",
+    "featured_old_price": "4 500 CZK",
+    "featured_new_price": "3 200 CZK",
+    "featured_btn": "Book Now",
+    "current_title": "Current Discounts",
+    "first_time_name": "First Time",
+    "first_time_value": "-200 CZK",
+    "first_time_desc": "Discount for new clients on their first visit. Valid for all programs.",
+    "double_delight_name": "Double Delight",
+    "double_delight_value": "-800 CZK",
+    "double_delight_desc": "Enjoy the experience with two girls at a special price.",
+    "birthday_name": "Birthday Treat",
+    "birthday_value": "-500 CZK",
+    "birthday_desc": "Celebrate your birthday with us. Show your ID and get a discount.",
+    "come_back_name": "Come Back",
+    "come_back_value": "-300 CZK",
+    "come_back_desc": "Discount on your second visit within 14 days of the first.",
+    "early_bird_name": "Early Bird",
+    "early_bird_value": "-200 CZK",
+    "early_bird_desc": "Early bird special. Discount on visits before 12:00.",
+    "midweek_name": "Midweek",
+    "midweek_value": "-150 CZK",
+    "midweek_desc": "Discount on visits on Tuesdays and Wednesdays.",
+    "loyalty_title": "Loyalty Program",
+    "loyalty_subtitle": "The more you visit, the more you save",
+    "loyalty_bronze_num": "3",
+    "loyalty_bronze_title": "Bronze Card",
+    "loyalty_bronze_desc": "-5% on every visit",
+    "loyalty_silver_num": "5",
+    "loyalty_silver_title": "Silver Card",
+    "loyalty_silver_desc": "-10% on every visit",
+    "loyalty_gold_num": "10",
+    "loyalty_gold_title": "Gold Card",
+    "loyalty_gold_desc": "-15% on every visit",
+    "loyalty_vip_num": "20",
+    "loyalty_vip_title": "VIP Card",
+    "loyalty_vip_desc": "-20% + priority booking",
+    "note": "Discounts cannot be combined with other promotions. Please inform the operator when booking to apply the discount."
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Answers to the most common questions. Didn't find what you're looking for? Contact us.",
+    "category_all": "All",
+    "category_booking": "Booking",
+    "category_services": "Services",
+    "category_payment": "Payment",
+    "category_discretion": "Discretion",
+    "contact_title": "Have more questions?",
+    "contact_subtitle": "Don't hesitate to contact us. We'll respond within minutes.",
+    "items": {
+      "booking_how": {
+        "question": "How can I make a reservation?",
+        "answer": "You can make a reservation via WhatsApp, Telegram, or by phone. Just send us the name of your preferred girl, date, time, and program length. You'll receive confirmation within 5 minutes.",
+        "category": "booking"
+      },
+      "booking_advance": {
+        "question": "Do I need to book in advance?",
+        "answer": "We recommend booking at least 1-2 hours in advance to ensure your preferred girl's availability. We also accept walk-in visits if capacity allows.",
+        "category": "booking"
+      },
+      "payment_methods": {
+        "question": "What payment methods do you accept?",
+        "answer": "We accept cash and credit cards (Visa, Mastercard). Payment is always made at the beginning of the visit. We can issue a receipt upon request.",
+        "category": "payment"
+      },
+      "discretion_how": {
+        "question": "How is discretion ensured?",
+        "answer": "Our apartments are in regular residential buildings without any signage. We don't keep any client records. A neutral name appears on card statements.",
+        "category": "discretion"
+      },
+      "services_included": {
+        "question": "What's included in the price?",
+        "answer": "The basic price includes erotic massage, body to body, shared shower, and happy ending. Detailed service breakdown is available in the price list or on each girl's profile.",
+        "category": "services"
+      },
+      "booking_cancel": {
+        "question": "Can I cancel my reservation?",
+        "answer": "Yes, reservations can be canceled free of charge at least 2 hours before the appointment. Late cancellations or no-shows may incur a cancellation fee.",
+        "category": "booking"
+      },
+      "discretion_location": {
+        "question": "Where are the apartments located?",
+        "answer": "We have two locations in central Prague — Prague 2 (New Town) and Prague 3 (Žižkov). You'll receive the exact address after confirming your reservation.",
+        "category": "discretion"
+      },
+      "services_couples": {
+        "question": "Do you provide services for couples?",
+        "answer": "Yes, we offer programs for couples. You can choose a massage for both partners simultaneously or individual programs. Contact us for more information.",
+        "category": "services"
+      }
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "hero_label": "Stories & Tips from Prague",
+    "hero_title": "Seductive Stories & Insider Secrets",
+    "hero_subtitle": "Intimate encounters, behind-the-scenes moments, and everything you need to know about luxury escort experiences in Prague.",
+    "category_all": "All",
+    "category_erotic_stories": "Erotic Stories",
+    "category_girl_spotlights": "Girl Spotlights",
+    "category_prague_tips": "Prague Tips",
+    "category_guides": "Guides",
+    "latest_story": "Latest Story",
+    "view_all_stories": "View all stories",
+    "view_all": "View all",
+    "erotic_stories": "Erotic Stories",
+    "guides_tips": "Guides & Tips",
+    "view_all_guides": "View all guides",
+    "newsletter_title": "Get Exclusive Updates",
+    "newsletter_subtitle": "New girls, special offers, and stories. No spam, just pleasure.",
+    "newsletter_placeholder": "Your email",
+    "newsletter_btn": "Subscribe",
+    "tags_label": "Popular Topics",
+    "new_story": "New Story",
+    "featured_category": "Erotic Story",
+    "article": {
+      "breadcrumb_blog": "Blog",
+      "breadcrumb_story": "Story",
+      "story_features": "This story features",
+      "view_profile": "View Profile",
+      "the_end": "The End",
+      "share_text": "Enjoyed this story? Share it:",
+      "featured_in": "Featured in this story",
+      "meet": "Meet",
+      "more_stories": "More Stories",
+      "read_time": "min read",
+      "date_format": "MMMM DD, YYYY"
+    }
   }
 }

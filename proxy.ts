@@ -12,12 +12,14 @@ const intlMiddleware = createMiddleware({
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Check if user is trying to access protected routes
-  const isAdminRoute = pathname.startsWith('/admin') && !pathname.startsWith('/admin/login');
-  const isManagerRoute = pathname.startsWith('/manager');
-  const isGirlRoute = pathname.startsWith('/girl');
+  // Skip intl middleware for admin/manager/girl routes
+  if (pathname.startsWith('/admin') || pathname.startsWith('/manager') || pathname.startsWith('/girl')) {
+    // Allow /admin/login without auth
+    if (pathname === '/admin/login') {
+      return NextResponse.next();
+    }
 
-  if (isAdminRoute || isManagerRoute || isGirlRoute) {
+    // Check authentication for protected routes
     const session = await auth();
 
     if (!session?.user) {
@@ -27,21 +29,28 @@ export default async function middleware(request: NextRequest) {
     const userRole = session.user.role as string;
 
     // Role-based access control
-    if (isAdminRoute && userRole !== 'admin') {
+    if (pathname.startsWith('/admin') && userRole !== 'admin') {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
-    if (isManagerRoute && !['admin', 'manager'].includes(userRole)) {
+    if (pathname.startsWith('/manager') && !['admin', 'manager'].includes(userRole)) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
-    if (isGirlRoute && userRole !== 'girl') {
+    if (pathname.startsWith('/girl') && userRole !== 'girl') {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
+
+    return NextResponse.next();
   }
 
-  // Handle i18n
+  // Handle i18n for all other routes
   return intlMiddleware(request);
 }
 
 export const config = {
-  matcher: ['/', '/(cs|en|de|uk)/:path*', '/admin/:path*', '/manager/:path*', '/girl/:path*'],
+  matcher: [
+    // Match all pathnames except for
+    // - … if they start with `/api`, `/_next` or `/_vercel`
+    // - … the ones containing a dot (e.g. `favicon.ico`)
+    '/((?!api|_next|_vercel|.*\\..*).*)',
+  ],
 };

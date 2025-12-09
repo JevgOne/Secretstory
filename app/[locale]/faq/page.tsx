@@ -3,6 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Phone } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from 'next-intl';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import MobileMenu from '@/components/MobileMenu';
 
 // WhatsApp Icon
 const WhatsAppIcon = () => (
@@ -18,63 +22,50 @@ interface FAQItem {
 }
 
 export default function FAQPage() {
-  const [activeCategory, setActiveCategory] = useState("Vše");
+  const tNav = useTranslations('nav');
+  const tCommon = useTranslations('common');
+  const tFooter = useTranslations('footer');
+  const tFaq = useTranslations('faq');
+  const locale = useLocale();
+  const pathname = usePathname();
+  const [activeCategory, setActiveCategory] = useState("all");
   const [openItems, setOpenItems] = useState<number[]>([0]); // První otázka otevřená
 
-  const faqs: FAQItem[] = [
-    {
-      question: "Jak si mohu rezervovat termín?",
-      answer: "Rezervaci můžete provést přes WhatsApp, Telegram nebo telefonicky. Stačí nám napsat jméno preferované dívky, datum, čas a délku programu. Potvrzení obdržíte do 5 minut.",
-      category: "Rezervace"
-    },
-    {
-      question: "Je potřeba rezervovat předem?",
-      answer: "Doporučujeme rezervovat alespoň 1-2 hodiny předem, abyste měli jistotu dostupnosti vaší preferované dívky. V případě volné kapacity přijímáme i walk-in návštěvy.",
-      category: "Rezervace"
-    },
-    {
-      question: "Jaké platební metody přijímáte?",
-      answer: "Přijímáme hotovost i platební karty (Visa, Mastercard). Platba probíhá vždy na začátku návštěvy. Na požádání vystavíme účtenku.",
-      category: "Platba"
-    },
-    {
-      question: "Jak je zajištěna diskrétnost?",
-      answer: "Naše apartmány jsou v běžných rezidenčních budovách bez jakéhokoliv označení. Nevedeme žádnou evidenci klientů. Na výpisu z karty se zobrazí neutrální název.",
-      category: "Diskrétnost"
-    },
-    {
-      question: "Co je zahrnuto v ceně?",
-      answer: "Základní cena zahrnuje erotickou masáž, body to body, společnou sprchu a happy end. Detailní rozpis služeb najdete v ceníku nebo na profilu každé dívky.",
-      category: "Služby"
-    },
-    {
-      question: "Mohu zrušit rezervaci?",
-      answer: "Ano, rezervaci lze zrušit bez poplatku nejpozději 2 hodiny před termínem. V případě pozdějšího zrušení nebo nedostavení se může být účtován storno poplatek.",
-      category: "Rezervace"
-    },
-    {
-      question: "Kde se apartmány nacházejí?",
-      answer: "Máme dvě lokace v centru Prahy — Praha 2 (Nové Město) a Praha 3 (Žižkov). Přesnou adresu obdržíte po potvrzení rezervace.",
-      category: "Diskrétnost"
-    },
-    {
-      question: "Poskytujete služby i pro páry?",
-      answer: "Ano, nabízíme programy pro páry. Můžete si vybrat masáž pro oba partnery současně nebo individuální programy. Kontaktujte nás pro více informací.",
-      category: "Služby"
-    }
+  // Load FAQ items from translations
+  const faqKeys = [
+    'booking_how',
+    'booking_advance',
+    'payment_methods',
+    'discretion_how',
+    'services_included',
+    'booking_cancel',
+    'discretion_location',
+    'services_couples'
   ];
 
-  const categories = ["Vše", "Rezervace", "Služby", "Platba", "Diskrétnost"];
+  const faqs: FAQItem[] = faqKeys.map(key => ({
+    question: tFaq(`items.${key}.question`),
+    answer: tFaq(`items.${key}.answer`),
+    category: tFaq(`items.${key}.category`)
+  }));
 
-  const filteredFAQs = activeCategory === "Vše"
+  const categories = [
+    { key: "all", label: tFaq('category_all') },
+    { key: "booking", label: tFaq('category_booking') },
+    { key: "services", label: tFaq('category_services') },
+    { key: "payment", label: tFaq('category_payment') },
+    { key: "discretion", label: tFaq('category_discretion') }
+  ];
+
+  const filteredFAQs = activeCategory === "all"
     ? faqs
     : faqs.filter(faq => faq.category === activeCategory);
 
   const toggleItem = (index: number) => {
     setOpenItems(prev =>
       prev.includes(index)
-        ? prev.filter(i => i !== index)
-        : [...prev, index]
+        ? [] // Close if already open (accordion behavior)
+        : [index] // Open only this one
     );
   };
 
@@ -82,7 +73,7 @@ export default function FAQPage() {
     <>
       {/* Navigation */}
       <nav>
-        <Link href="/" className="logo">
+        <Link href={`/${locale}`} className="logo">
           <span className="logo-L">
             <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
               <path d="M2 12C4 11 6 7 9 5C8 3 9 1.5 10 1" stroke="#c41e3a" strokeWidth="2" strokeLinecap="round"/>
@@ -94,28 +85,25 @@ export default function FAQPage() {
           ovely Girls
         </Link>
         <div className="nav-links">
-          <Link href="/">Home</Link>
-          <Link href="/divky">Dívky</Link>
-          <Link href="/cenik">Ceník</Link>
-          <Link href="/schedule">Schedule</Link>
-          <Link href="/discounts">Discounts</Link>
-          <Link href="/faq" className="active">FAQ</Link>
+          <Link href={`/${locale}`}>{tNav('home')}</Link>
+          <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
+          <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
+          <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
+          <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
+          <Link href={`/${locale}/faq`} className="active">{tNav('faq')}</Link>
         </div>
         <div className="nav-contact">
-          <a href="tel:+420734332131" className="btn">+420 734 332 131</a>
-          <a href="https://wa.me/420734332131" className="btn btn-fill">WhatsApp</a>
+          <LanguageSwitcher />
+          <a href="tel:+420734332131" className="btn">{tNav('phone')}</a>
+          <a href="https://wa.me/420734332131" className="btn btn-fill">{tNav('whatsapp')}</a>
         </div>
-        <button className="mobile-menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        <MobileMenu currentPath={pathname} />
       </nav>
 
       {/* Page Header */}
       <section className="page-header">
-        <h1 className="page-title">FAQ</h1>
-        <p className="page-subtitle">Odpovědi na nejčastější otázky. Nenašli jste co hledáte? Kontaktujte nás.</p>
+        <h1 className="page-title">{tFaq('title')}</h1>
+        <p className="page-subtitle">{tFaq('subtitle')}</p>
       </section>
 
       {/* FAQ Section */}
@@ -124,11 +112,11 @@ export default function FAQPage() {
         <div className="faq-categories">
           {categories.map((cat) => (
             <button
-              key={cat}
-              className={`faq-cat ${activeCategory === cat ? "active" : ""}`}
-              onClick={() => setActiveCategory(cat)}
+              key={cat.key}
+              className={`faq-cat ${activeCategory === cat.key ? "active" : ""}`}
+              onClick={() => setActiveCategory(cat.key)}
             >
-              {cat}
+              {cat.label}
             </button>
           ))}
         </div>
@@ -156,16 +144,16 @@ export default function FAQPage() {
       {/* Contact CTA */}
       <section className="contact-cta">
         <div className="contact-inner">
-          <h2 className="contact-title">Máte další otázky?</h2>
-          <p className="contact-subtitle">Neváhejte nás kontaktovat. Odpovíme do pár minut.</p>
+          <h2 className="contact-title">{tFaq('contact_title')}</h2>
+          <p className="contact-subtitle">{tFaq('contact_subtitle')}</p>
           <div className="contact-buttons">
             <a href="https://wa.me/420734332131" className="contact-btn whatsapp">
               <WhatsAppIcon />
-              WhatsApp
+              {tNav('whatsapp')}
             </a>
             <a href="tel:+420734332131" className="contact-btn phone">
               <Phone size={20} />
-              +420 734 332 131
+              {tNav('phone')}
             </a>
           </div>
         </div>
@@ -173,10 +161,10 @@ export default function FAQPage() {
 
       {/* Footer */}
       <footer>
-        <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
+        <div>{tFooter('copyright')} — {tCommon('adults_only')}</div>
         <div className="footer-links">
-          <Link href="/podminky">Podmínky</Link>
-          <Link href="/soukromi">Soukromí</Link>
+          <Link href={`/${locale}/podminky`}>{tFooter('terms')}</Link>
+          <Link href={`/${locale}/soukromi`}>{tFooter('privacy')}</Link>
         </div>
       </footer>
     </>

@@ -29,6 +29,40 @@ body {
     font-weight: 400;
     line-height: 1.6;
     letter-spacing: 0.01em;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Ambient Background Animation */
+.ambient-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.ambient-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        radial-gradient(ellipse at 20% 20%, rgba(139,58,92,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(107,40,71,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(180,80,120,0.05) 0%, transparent 60%);
+    animation: ambientMove 20s ease-in-out infinite;
+}
+
+@keyframes ambientMove {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-2%, -2%) rotate(1deg); }
 }
 
 a { color: inherit; text-decoration: none; }
@@ -170,6 +204,8 @@ nav {
     display: flex;
     align-items: center;
     padding: 120px 4% 80px;
+    position: relative;
+    z-index: 1;
 }
 
 .hero-inner {
@@ -290,6 +326,8 @@ nav {
 /* SECTION */
 section {
     padding: 100px 4%;
+    position: relative;
+    z-index: 1;
 }
 
 .section-title {
@@ -336,6 +374,7 @@ section {
     background: var(--bg);
     cursor: pointer;
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1;
 }
 
 .profile-card::before {
@@ -767,6 +806,8 @@ section {
     background: transparent;
     color: var(--white);
     transition: all 0.3s;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 .cta-btn svg {

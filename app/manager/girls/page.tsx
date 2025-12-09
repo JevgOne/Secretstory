@@ -62,177 +62,52 @@ export default function GirlsManagementPage() {
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
   const [showToast, setShowToast] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [girls, setGirls] = useState<Girl[]>([
-    {
-      id: 1,
-      name: 'Katy',
-      email: 'katy@lovelygirls.cz',
-      color: 'pink',
-      age: 24,
-      nationality: 'czech',
-      height: 168,
-      weight: 54,
-      bust: 'C',
-      hair: 'brunette',
-      eyes: 'brown',
-      status: 'active',
-      verified: true,
-      online: true,
-      rating: 4.9,
-      reviews: 47,
-      bookings: 156,
-      services: ['GFE', 'Massage', 'Dinner Date'],
-      bio: 'Sexy brunetka s babygirl vibe...'
-    },
-    {
-      id: 2,
-      name: 'Ema',
-      email: 'ema@lovelygirls.cz',
-      color: 'blue',
-      age: 26,
-      nationality: 'slovak',
-      height: 172,
-      weight: 58,
-      bust: 'B',
-      hair: 'blonde',
-      eyes: 'blue',
-      status: 'active',
-      verified: true,
-      online: true,
-      rating: 4.8,
-      reviews: 32,
-      bookings: 98,
-      services: ['GFE', 'Classic', 'Oral'],
-      bio: 'Elegantní blondýnka...'
-    },
-    {
-      id: 3,
-      name: 'Daniela',
-      email: 'daniela@lovelygirls.cz',
-      color: 'purple',
-      age: 23,
-      nationality: 'ukrainian',
-      height: 165,
-      weight: 52,
-      bust: 'D',
-      hair: 'red',
-      eyes: 'green',
-      status: 'active',
-      verified: true,
-      online: false,
-      rating: 4.9,
-      reviews: 28,
-      bookings: 87,
-      services: ['GFE', 'Massage', 'BDSM'],
-      bio: 'Zrzavá kočka s temperamentem...'
-    },
-    {
-      id: 4,
-      name: 'Natalie',
-      email: 'natalie@lovelygirls.cz',
-      color: 'green',
-      age: 22,
-      nationality: 'czech',
-      height: 170,
-      weight: 55,
-      bust: 'C',
-      hair: 'brunette',
-      eyes: 'brown',
-      status: 'active',
-      verified: false,
-      online: true,
-      rating: 4.7,
-      reviews: 19,
-      bookings: 45,
-      services: ['GFE', 'Classic'],
-      bio: 'Mladá brunetka s otevřenou myslí...'
-    },
-    {
-      id: 5,
-      name: 'Sofia',
-      email: 'sofia@lovelygirls.cz',
-      color: 'orange',
-      age: 27,
-      nationality: 'russian',
-      height: 175,
-      weight: 60,
-      bust: 'DD',
-      hair: 'black',
-      eyes: 'brown',
-      status: 'active',
-      verified: true,
-      online: true,
-      rating: 4.8,
-      reviews: 41,
-      bookings: 134,
-      services: ['GFE', 'PSE', 'Overnight', 'Travel'],
-      bio: 'Luxusní společnice pro náročné...'
-    },
-    {
-      id: 6,
-      name: 'Victoria',
-      email: 'victoria@lovelygirls.cz',
-      color: 'cyan',
-      age: 25,
-      nationality: 'czech',
-      height: 178,
-      weight: 62,
-      bust: 'C',
-      hair: 'blonde',
-      eyes: 'blue',
-      status: 'active',
-      verified: true,
-      online: true,
-      rating: 5.0,
-      reviews: 23,
-      bookings: 67,
-      services: ['GFE', 'Dinner Date', 'Travel', 'Overnight'],
-      bio: 'Modelka s vytříbeným vkusem...'
-    },
-    {
-      id: 7,
-      name: 'Andrea',
-      email: 'andrea@lovelygirls.cz',
-      color: 'rose',
-      age: 24,
-      nationality: 'polish',
-      height: 167,
-      weight: 53,
-      bust: 'B',
-      hair: 'brunette',
-      eyes: 'green',
-      status: 'pending',
-      verified: false,
-      online: false,
-      rating: 0,
-      reviews: 0,
-      bookings: 0,
-      services: ['GFE', 'Classic'],
-      bio: 'Nová v Praze, těším se na setkání...'
-    },
-    {
-      id: 8,
-      name: 'Monika',
-      email: 'monika@lovelygirls.cz',
-      color: 'amber',
-      age: 28,
-      nationality: 'czech',
-      height: 164,
-      weight: 56,
-      bust: 'D',
-      hair: 'blonde',
-      eyes: 'blue',
-      status: 'pending',
-      verified: false,
-      online: false,
-      rating: 0,
-      reviews: 0,
-      bookings: 0,
-      services: ['GFE', 'Massage', 'BDSM'],
-      bio: 'Zkušená domina i GFE...'
+  const [girls, setGirls] = useState<Girl[]>([]);
+
+  // Load girls from API
+  useEffect(() => {
+    async function loadGirls() {
+      try {
+        const response = await fetch('/api/admin/girls');
+        const data = await response.json();
+
+        if (data.success && data.girls) {
+          // Transform API data to match our interface
+          const transformedGirls = data.girls.map((girl: any) => ({
+            id: girl.id,
+            name: girl.name,
+            email: girl.email || '',
+            color: girl.color || 'pink',
+            age: girl.age,
+            nationality: girl.nationality || '',
+            height: girl.height || 0,
+            weight: girl.weight || 0,
+            bust: girl.bust || '',
+            hair: girl.hair || '',
+            eyes: girl.eyes || '',
+            status: girl.status || 'active',
+            verified: girl.status === 'active',
+            online: girl.is_online || false,
+            rating: girl.rating || 0,
+            reviews: girl.review_count || 0,
+            bookings: girl.booking_count || 0,
+            services: girl.services || [],
+            bio: girl.bio || ''
+          }));
+          setGirls(transformedGirls);
+        }
+      } catch (error) {
+        console.error('Error loading girls:', error);
+        displayToast('Chyba při načítání dívek', 'error');
+      } finally {
+        setLoading(false);
+      }
     }
-  ]);
+
+    loadGirls();
+  }, []);
 
   const [formData, setFormData] = useState({
     name: '',

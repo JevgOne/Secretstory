@@ -3,9 +3,17 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 interface Booking {
+  id: number;
+  girl_id: number;
+  client_name: string;
+  client_phone: string;
   duration: number;
+  created_at: string;
+  booking_date: string;
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no-show';
 }
 
 export default function AdminDashboardPage() {
@@ -28,7 +36,57 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Calculate duration stats
+  const deleteBooking = async (bookingId: number) => {
+    if (!confirm('Opravdu chcete smazat tuto rezervaci?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh bookings list
+        fetchBookings();
+        alert('Rezervace byla úspěšně smazána');
+      } else {
+        alert('Chyba při mazání rezervace: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting booking:', error);
+      alert('Chyba při mazání rezervace');
+    }
+  };
+
+  // Convert duration to points
+  const getPoints = (duration: number): number => {
+    if (duration === 60 || duration === 120) return 1000;
+    if (duration === 45 || duration === 90) return 900;
+    if (duration === 30) return 800;
+    return 0;
+  };
+
+  // Filter ONLY completed bookings by time period
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const completedBookings = bookings.filter(b => b.status === 'completed');
+
+  const todayBookings = completedBookings.filter(b => new Date(b.created_at) >= todayStart);
+  const weekBookings = completedBookings.filter(b => new Date(b.created_at) >= weekStart);
+  const monthBookings = completedBookings.filter(b => new Date(b.created_at) >= monthStart);
+
+  // Calculate points (only from completed bookings)
+  const todayPoints = todayBookings.reduce((sum, b) => sum + getPoints(b.duration), 0);
+  const weekPoints = weekBookings.reduce((sum, b) => sum + getPoints(b.duration), 0);
+  const monthPoints = monthBookings.reduce((sum, b) => sum + getPoints(b.duration), 0);
+
+  // Calculate duration stats for calendar
   const bookings60min = bookings.filter(b => b.duration === 60 || b.duration === 120).length;
   const bookings45min = bookings.filter(b => b.duration === 45 || b.duration === 90).length;
   const bookings30min = bookings.filter(b => b.duration === 30).length;
@@ -41,7 +99,7 @@ export default function AdminDashboardPage() {
           <span className="app-admin-badge">Admin</span>
           <div className="app-header-title">Administrace</div>
         </div>
-        <button className="app-header-btn" onClick={() => router.push("/admin/login")}>
+        <button className="app-header-btn" onClick={() => signOut({ callbackUrl: '/admin/login' })}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
             <polyline points="16 17 21 12 16 7"/>
@@ -77,6 +135,45 @@ export default function AdminDashboardPage() {
           <div>
             <h3 style={{ fontSize: '0.95rem', marginBottom: '2px' }}>Systém běží normálně</h3>
             <div style={{ fontSize: '0.8rem', color: '#22c55e' }}>Všechny služby jsou dostupné</div>
+          </div>
+        </div>
+
+        {/* STATISTIKY BODŮ */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
+          {/* DNES */}
+          <div style={{
+            background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+            borderRadius: '16px',
+            padding: '20px',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div style={{ fontSize: '0.85rem', opacity: 0.9, marginBottom: '8px' }}>📊 Dnes</div>
+            <div style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '4px' }}>{todayPoints.toLocaleString()}</div>
+            <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>bodů • {todayBookings.length} rezervací</div>
+          </div>
+
+          {/* TÝDEN */}
+          <div style={{
+            background: 'linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%)',
+            borderRadius: '16px',
+            padding: '20px',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div style={{ fontSize: '0.85rem', opacity: 0.9, marginBottom: '8px' }}>📅 Týden (7 dní)</div>
+            <div style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '4px' }}>{weekPoints.toLocaleString()}</div>
+            <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>bodů • {weekBookings.length} rezervací</div>
+          </div>
+
+          {/* MĚSÍC */}
+          <div style={{
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            borderRadius: '16px',
+            padding: '20px',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div style={{ fontSize: '0.85rem', opacity: 0.9, marginBottom: '8px' }}>📈 Měsíc</div>
+            <div style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '4px' }}>{monthPoints.toLocaleString()}</div>
+            <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>bodů • {monthBookings.length} rezervací</div>
           </div>
         </div>
 
@@ -151,6 +248,8 @@ export default function AdminDashboardPage() {
         {/* ADMIN MENU */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginBottom: '24px' }}>
           {[
+            { icon: '👩', title: 'Dívky', count: 'Správa profilů', color: 'rgba(139, 92, 246, 0.15)', path: '/admin/girls' },
+            { icon: '⭐', title: 'Recenze', count: 'Schvalování', color: 'rgba(251, 191, 36, 0.15)', path: '/admin/reviews' },
             { icon: '👥', title: 'Uživatelé', count: '15 uživatelů', color: 'rgba(139, 92, 246, 0.15)', path: '/admin/users' },
             { icon: '🏷️', title: 'Služby', count: '24 služeb', color: 'rgba(59, 130, 246, 0.15)', path: '/admin/services' },
             { icon: '📊', title: 'Statistiky', count: 'Reporty', color: 'rgba(234, 179, 8, 0.15)', path: '/admin/stats' },
@@ -244,6 +343,106 @@ export default function AdminDashboardPage() {
               </span>
             </div>
           ))}
+        </section>
+
+        {/* POSLEDNÍ REZERVACE */}
+        <section style={{ marginBottom: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: '600' }}>📅 Poslední rezervace</h3>
+            <Link href="/manager/calendar" style={{ fontSize: '0.85rem', color: '#a33352', textDecoration: 'none' }}>
+              Všechny →
+            </Link>
+          </div>
+
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                  <th style={{ padding: '12px 8px', textAlign: 'left', fontSize: '0.8rem', fontWeight: '600', color: '#9a8a8e' }}>Klient</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'left', fontSize: '0.8rem', fontWeight: '600', color: '#9a8a8e' }}>Telefon</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'left', fontSize: '0.8rem', fontWeight: '600', color: '#9a8a8e' }}>Datum</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'left', fontSize: '0.8rem', fontWeight: '600', color: '#9a8a8e' }}>Délka</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'left', fontSize: '0.8rem', fontWeight: '600', color: '#9a8a8e' }}>Body</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'left', fontSize: '0.8rem', fontWeight: '600', color: '#9a8a8e' }}>Status</th>
+                  <th style={{ padding: '12px 8px', textAlign: 'left', fontSize: '0.8rem', fontWeight: '600', color: '#9a8a8e' }}>Akce</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bookings.slice(0, 10).map((booking) => (
+                  <tr key={booking.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td style={{ padding: '12px 8px', fontSize: '0.85rem' }}>{booking.client_name}</td>
+                    <td style={{ padding: '12px 8px', fontSize: '0.85rem', color: '#9a8a8e' }}>{booking.client_phone}</td>
+                    <td style={{ padding: '12px 8px', fontSize: '0.85rem', color: '#9a8a8e' }}>
+                      {new Date(booking.booking_date).toLocaleDateString('cs-CZ')}
+                    </td>
+                    <td style={{ padding: '12px 8px', fontSize: '0.85rem' }}>{booking.duration} min</td>
+                    <td style={{ padding: '12px 8px', fontSize: '0.85rem', fontWeight: '600' }}>
+                      {booking.status === 'completed' ? getPoints(booking.duration) : '—'}
+                    </td>
+                    <td style={{ padding: '12px 8px' }}>
+                      <span style={{
+                        padding: '4px 10px',
+                        borderRadius: '100px',
+                        fontSize: '0.65rem',
+                        fontWeight: '600',
+                        textTransform: 'uppercase',
+                        background:
+                          booking.status === 'completed' ? 'rgba(34, 197, 94, 0.15)' :
+                          booking.status === 'confirmed' ? 'rgba(59, 130, 246, 0.15)' :
+                          booking.status === 'pending' ? 'rgba(234, 179, 8, 0.15)' :
+                          'rgba(239, 68, 68, 0.15)',
+                        color:
+                          booking.status === 'completed' ? '#22c55e' :
+                          booking.status === 'confirmed' ? '#3b82f6' :
+                          booking.status === 'pending' ? '#eab308' :
+                          '#ef4444'
+                      }}>
+                        {booking.status === 'completed' ? 'Proběhlo' :
+                         booking.status === 'confirmed' ? 'Potvrzeno' :
+                         booking.status === 'pending' ? 'Čeká' :
+                         booking.status === 'cancelled' ? 'Zrušeno' :
+                         'Nedorazil'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '12px 8px' }}>
+                      <button
+                        onClick={() => deleteBooking(booking.id)}
+                        style={{
+                          padding: '6px 12px',
+                          background: 'rgba(239, 68, 68, 0.15)',
+                          border: '1px solid rgba(239, 68, 68, 0.3)',
+                          borderRadius: '8px',
+                          color: '#ef4444',
+                          fontSize: '0.75rem',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.25)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+                        }}
+                      >
+                        🗑️ Smazat
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {bookings.length === 0 && (
+            <div style={{
+              padding: '40px 20px',
+              textAlign: 'center',
+              color: '#9a8a8e',
+              fontSize: '0.9rem'
+            }}>
+              Žádné rezervace
+            </div>
+          )}
         </section>
 
         {/* AUDIT LOG */}

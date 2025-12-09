@@ -99,18 +99,18 @@ export default function GirlCard({
               {badge === 'recommended' && badgeText.recommended}
             </div>
           )}
-          {girl.online && (
-            <div className="girl-card-online">
-              <span className="online-dot-animated"></span>
-              Online
-            </div>
-          )}
         </div>
 
         <div className="girl-card-info">
           <div className="girl-card-header">
             <span className="girl-card-name">{girl.name}</span>
-            <span className="girl-card-time">{getTimeRange()}</span>
+            <span className="schedule-time">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+              {getTimeRange()}
+            </span>
           </div>
 
           <div className="girl-card-stats">
@@ -236,34 +236,6 @@ export default function GirlCard({
           color: white;
         }
 
-        .girl-card-online {
-          position: absolute;
-          top: 12px;
-          left: 12px;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 6px 12px;
-          background: rgba(34, 197, 94, 0.9);
-          color: white;
-          border-radius: 6px;
-          font-size: 0.75rem;
-          font-weight: 500;
-        }
-
-        .online-dot-animated {
-          width: 8px;
-          height: 8px;
-          background: white;
-          border-radius: 50%;
-          animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-
         .girl-card-info {
           padding: 1rem;
         }
@@ -281,9 +253,23 @@ export default function GirlCard({
           color: var(--white);
         }
 
-        .girl-card-time {
+        .schedule-time {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          background: rgba(34, 197, 94, 0.15);
+          border: 1px solid rgba(34, 197, 94, 0.3);
+          color: #22c55e;
           font-size: 0.75rem;
-          color: var(--gray);
+          font-weight: 500;
+          padding: 0.35rem 0.7rem;
+          border-radius: 6px;
+        }
+
+        .schedule-time svg {
+          width: 14px;
+          height: 14px;
+          flex-shrink: 0;
         }
 
         .girl-card-stats {

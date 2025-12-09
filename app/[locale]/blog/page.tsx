@@ -2,8 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from 'next-intl';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import MobileMenu from '@/components/MobileMenu';
 
 export default function BlogPage() {
+  const tNav = useTranslations('nav');
+  const locale = useLocale();
+  const pathname = usePathname();
   const [activeCategory, setActiveCategory] = useState("All");
 
   const categories = ["All", "Erotic Stories", "Girl Spotlights", "Prague Tips", "Guides"];
@@ -87,7 +94,7 @@ export default function BlogPage() {
     <>
       {/* Navigation */}
       <nav>
-        <Link href="/" className="logo">
+        <Link href={`/${locale}`} className="logo">
           <span className="logo-L">
             <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
               <path d="M2 12C4 11 6 7 9 5C8 3 9 1.5 10 1" stroke="#c41e3a" strokeWidth="2" strokeLinecap="round"/>
@@ -99,21 +106,19 @@ export default function BlogPage() {
           ovely Girls
         </Link>
         <div className="nav-links">
-          <Link href="/">Home</Link>
-          <Link href="/divky">Dívky</Link>
-          <Link href="/cenik">Ceník</Link>
-          <Link href="/blog" className="active">Blog</Link>
-          <Link href="/faq">FAQ</Link>
+          <Link href={`/${locale}`}>{tNav('home')}</Link>
+          <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
+          <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
+          <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
+          <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
+          <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
         </div>
         <div className="nav-contact">
-          <a href="tel:+420734332131" className="btn">+420 734 332 131</a>
-          <a href="https://wa.me/420734332131" className="btn btn-fill">WhatsApp</a>
+          <LanguageSwitcher />
+          <a href="tel:+420734332131" className="btn">{tNav('phone')}</a>
+          <a href="https://wa.me/420734332131" className="btn btn-fill">{tNav('whatsapp')}</a>
         </div>
-        <button className="mobile-menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        <MobileMenu currentPath={pathname} />
       </nav>
 
       {/* Hero */}
@@ -280,8 +285,8 @@ export default function BlogPage() {
       <footer>
         <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
         <div className="footer-links">
-          <Link href="/podminky">Podmínky</Link>
-          <Link href="/soukromi">Soukromí</Link>
+          <Link href={`/${locale}/podminky`}>Podmínky</Link>
+          <Link href={`/${locale}/soukromi`}>Soukromí</Link>
         </div>
       </footer>
     </>

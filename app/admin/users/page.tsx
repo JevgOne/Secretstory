@@ -1,18 +1,68 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}
 
 export default function AdminUsersPage() {
   const router = useRouter();
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const users = [
-    { id: 1, name: 'Admin User', email: 'admin@lovelygirls.cz', role: 'admin', status: 'active', avatar: '👨‍💼' },
-    { id: 2, name: 'Manager Jana', email: 'jana@lovelygirls.cz', role: 'manager', status: 'active', avatar: '👔' },
-    { id: 3, name: 'Katy Nováková', email: 'katy@lovelygirls.cz', role: 'girl', status: 'active', avatar: '👩' },
-    { id: 4, name: 'Ema Krásná', email: 'ema@lovelygirls.cz', role: 'girl', status: 'active', avatar: '👩' },
-    { id: 5, name: 'Sofia Luxusní', email: 'sofia@lovelygirls.cz', role: 'girl', status: 'active', avatar: '👱‍♀️' },
-    { id: 6, name: 'Nová dívka', email: 'nova@lovelygirls.cz', role: 'girl', status: 'pending', avatar: '👱‍♀️' }
-  ];
+  useEffect(() => {
+    async function loadUsers() {
+      try {
+        const response = await fetch('/api/admin/users');
+        const data = await response.json();
+
+        if (data.success && data.users) {
+          setUsers(data.users);
+        }
+      } catch (error) {
+        console.error('Error loading users:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadUsers();
+  }, []);
+
+  const getAvatar = (role: string) => {
+    if (role === 'admin') return '👨‍💼';
+    if (role === 'manager') return '👔';
+    return '👩';
+  };
+
+  if (loading) {
+    return (
+      <>
+        <header className="app-header admin">
+          <div className="app-header-left">
+            <button className="back-btn" onClick={() => router.push('/admin/dashboard')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <span className="app-admin-badge">Admin</span>
+            <div className="app-header-title">Uživatelé</div>
+          </div>
+        </header>
+        <main className="app-content">
+          <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--gray)' }}>
+            Načítání...
+          </div>
+        </main>
+      </>
+    );
+  }
 
   const getRoleBadge = (role: string) => {
     const badges = {
@@ -107,6 +157,7 @@ export default function AdminUsersPage() {
 
           {users.map((user) => {
             const badge = getRoleBadge(user.role);
+            const avatar = getAvatar(user.role);
             return (
               <div
                 key={user.id}
@@ -132,7 +183,7 @@ export default function AdminUsersPage() {
                   fontSize: '1.25rem',
                   flexShrink: 0
                 }}>
-                  {user.avatar}
+                  {avatar}
                 </div>
 
                 <div style={{ flex: 1 }}>
