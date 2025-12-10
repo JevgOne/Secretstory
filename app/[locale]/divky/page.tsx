@@ -40,6 +40,8 @@ interface Girl {
 
 export default function GirlsPage() {
   const t = useTranslations();
+  const tNav = useTranslations('nav');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
   const pathname = usePathname();
   const [girls, setGirls] = useState<Girl[]>([]);
@@ -250,11 +252,11 @@ export default function GirlsPage() {
                 <div className="footer-links-col">
                   <h4 className="footer-links-title">Služby</h4>
                   <nav className="footer-links">
-                    <Link href={`/${locale}/divky`}>{t('nav.girls')}</Link>
-                    <Link href={`/${locale}/cenik`}>{t('nav.pricing')}</Link>
-                    <Link href={`/${locale}/schedule`}>{t('nav.schedule')}</Link>
-                    <Link href={`/${locale}/discounts`}>{t('nav.discounts')}</Link>
-                    <Link href={`/${locale}/faq`}>{t('nav.faq')}</Link>
+                    <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
+                    <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
+                    <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
+                    <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
+                    <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
                     <Link href={`/${locale}/blog`}>{t('footer.blog')}</Link>
                   </nav>
                 </div>
@@ -294,7 +296,7 @@ export default function GirlsPage() {
               <div className="footer-bottom-left">
                 <span>{t('footer.copyright')}</span>
                 <span className="dot">•</span>
-                <span>{t('common.adults_only')}</span>
+                <span>{tCommon('adults_only')}</span>
               </div>
               <div className="footer-bottom-right">
                 <Link href={`/${locale}/podminky`}>{t('footer.terms')}</Link>
