@@ -131,7 +131,7 @@ export default function PricingPage() {
       />
 
       {/* Navigation */}
-      <nav>
+      <nav className="main-nav">
         <Link href={`/${locale}`} className="logo">
           <span className="logo-L">
             <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
@@ -153,7 +153,7 @@ export default function PricingPage() {
         </div>
         <div className="nav-contact">
           <LanguageSwitcher />
-          <a href="tel:+420734332131" className="btn">{tNav('phone')}</a>
+          <a href="https://t.me/+420734332131" className="btn">{tNav('telegram')}</a>
           <a href="https://wa.me/420734332131" className="btn btn-fill">{tNav('whatsapp')}</a>
         </div>
         <MobileMenu currentPath={pathname} />

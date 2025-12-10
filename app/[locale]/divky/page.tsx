@@ -105,7 +105,7 @@ export default function GirlsPage() {
         <div className="ambient-bg"></div>
 
         {/* Navigation */}
-        <nav>
+        <nav className="main-nav">
           <Link href={`/${locale}`} className="logo">
             <span className="logo-L">
               <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
@@ -127,7 +127,7 @@ export default function GirlsPage() {
           </div>
           <div className="nav-contact">
             <LanguageSwitcher />
-            <a href="tel:+420734332131" className="btn">{t('nav.phone')}</a>
+            <a href="https://t.me/+420734332131" className="btn">{t('nav.telegram')}</a>
             <a href="https://wa.me/420734332131" className="btn btn-fill">{t('nav.whatsapp')}</a>
           </div>
           <MobileMenu currentPath={pathname} />
