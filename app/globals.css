@@ -1123,8 +1123,10 @@ footer {
         padding: 0.75rem 3%;
         gap: 0.5rem;
     }
-    .nav-links { display: none !important; }
-    .nav-contact { display: none !important; } /* Hide on mobile - available in mobile menu */
+    .nav-links,
+    .main-nav .nav-links { display: none !important; }
+    .nav-contact,
+    .main-nav .nav-contact { display: none !important; } /* Hide on mobile - available in mobile menu */
     .mobile-menu { display: block !important; }
     .mobile-menu-btn { display: flex !important; }
 
