@@ -151,7 +151,7 @@ export default function Home() {
         </div>
         <div className="nav-contact">
           <LanguageSwitcher />
-          <a href="tel:+420734332131" className="btn">{t('nav.phone')}</a>
+          <a href="https://t.me/+420734332131" className="btn">{t('nav.telegram')}</a>
           <a href="https://wa.me/420734332131" className="btn btn-fill">{t('nav.whatsapp')}</a>
         </div>
         <MobileMenu currentPath={pathname} />

@@ -121,11 +121,11 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
             <LanguageSwitcher />
           </div>
           <div className="mobile-menu-actions">
-            <a href="tel:+420734332131" className="mobile-menu-btn call">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            <a href="https://t.me/+420734332131" className="mobile-menu-btn telegram">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.781-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.324-.437.892-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.14.121.099.155.232.171.326.016.095.036.312.02.482z"/>
               </svg>
-              {t('nav.phone')}
+              {t('nav.telegram')}
             </a>
             <a href="https://wa.me/420734332131" className="mobile-menu-btn whatsapp">
               <svg viewBox="0 0 24 24" fill="currentColor">
@@ -283,14 +283,14 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
           height: 20px;
         }
 
-        .mobile-menu-btn.call {
-          background: rgba(59, 130, 246, 0.1);
-          color: #3b82f6;
-          border: 1px solid rgba(59, 130, 246, 0.3);
+        .mobile-menu-btn.telegram {
+          background: rgba(42, 171, 238, 0.1);
+          color: #2aabee;
+          border: 1px solid rgba(42, 171, 238, 0.3);
         }
 
-        .mobile-menu-btn.call:active {
-          background: rgba(59, 130, 246, 0.2);
+        .mobile-menu-btn.telegram:active {
+          background: rgba(42, 171, 238, 0.2);
         }
 
         .mobile-menu-btn.whatsapp {
