@@ -458,6 +458,7 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     margin-bottom: 14px;
 }
 
@@ -538,30 +539,39 @@ section {
 }
 
 .profile-location {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    color: rgba(255,255,255,0.85);
-    font-size: 0.95rem;
-    padding-top: 14px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    gap: 6px;
+    color: var(--white);
+    font-size: 0.85rem;
+    margin-top: 14px;
+    padding: 8px 14px;
+    background: linear-gradient(135deg, rgba(139, 0, 0, 0.25) 0%, rgba(139, 0, 0, 0.15) 100%);
+    border: 1.5px solid rgba(139, 0, 0, 0.4);
+    border-radius: 8px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .profile-location:hover {
-    color: var(--wine-light);
+    background: linear-gradient(135deg, rgba(139, 0, 0, 0.35) 0%, rgba(139, 0, 0, 0.25) 100%);
+    border-color: rgba(139, 0, 0, 0.6);
+    transform: translateY(-1px);
 }
 
 .profile-location svg {
-    width: 18px;
-    height: 18px;
-    color: var(--wine-light);
+    width: 16px;
+    height: 16px;
+    color: rgb(220, 100, 100);
+    flex-shrink: 0;
     transition: transform 0.3s ease;
 }
 
 .profile-location:hover svg {
-    transform: scale(1.1);
+    transform: scale(1.15);
+    color: rgb(255, 120, 120);
 }
 
 /* INFO STRIP */
