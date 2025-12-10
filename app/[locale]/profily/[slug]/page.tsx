@@ -493,7 +493,7 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
 
             {/* CTA */}
             <div className="profile-cta">
-              <a href="https://wa.me/420734332131" className="cta-btn whatsapp">
+              <a href={`https://wa.me/420734332131?text=Ahoj%20${encodeURIComponent(profile.name)}%2C%20m%C3%A1%C5%A1%20dneska%20%C4%8Das%3F`} className="cta-btn whatsapp">
                 <WhatsAppIcon />
                 WhatsApp
               </a>
