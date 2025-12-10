@@ -84,8 +84,9 @@ nav:not(.footer-nav):not(.mobile-menu-nav) {
 }
 
 /* Logo styles */
+nav .logo,
 .logo {
-    display: flex;
+    display: flex !important;
     align-items: center;
     font-family: 'DM Sans', sans-serif;
     font-size: 1.3rem;
@@ -123,8 +124,9 @@ nav:not(.footer-nav):not(.mobile-menu-nav) {
 .nav-links a:hover,
 .nav-links a.active { color: var(--white); }
 
+nav .nav-contact,
 .nav-contact {
-    display: flex;
+    display: flex !important;
     gap: 1rem;
     align-items: center;
 }
