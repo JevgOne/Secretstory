@@ -68,8 +68,7 @@ body {
 a { color: inherit; text-decoration: none; }
 
 /* NAV */
-body > nav,
-nav:not(.footer-nav) {
+nav:not(.footer-nav):not(.mobile-menu-nav) {
     position: fixed;
     top: 0;
     left: 0;
