@@ -1119,8 +1119,12 @@ footer {
 
 @media (max-width: 768px) {
     /* Navigation */
-    .main-nav { padding: 1rem 4%; }
+    .main-nav {
+        padding: 0.75rem 3%;
+        gap: 0.5rem;
+    }
     .nav-links { display: none !important; }
+    .nav-contact { display: none !important; } /* Hide on mobile - available in mobile menu */
     .mobile-menu { display: block !important; }
     .mobile-menu-btn { display: flex !important; }
 
@@ -5761,10 +5765,13 @@ footer {
 
     /* Navigation */
     .main-nav {
-        padding: 0.875rem 4%;
+        padding: 0.75rem 3%;
+        gap: 0.5rem;
     }
-    nav .logo {
+    nav .logo,
+    .logo {
         font-size: 1.15rem;
+        letter-spacing: 0.06em; /* Slightly tighter for small screens */
     }
 
     /* Age Modal */
