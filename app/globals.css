@@ -126,7 +126,7 @@ nav .logo,
 
 nav .nav-contact,
 .nav-contact {
-    display: flex !important;
+    display: flex;
     gap: 1rem;
     align-items: center;
 }
