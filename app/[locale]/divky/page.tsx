@@ -39,6 +39,7 @@ interface Girl {
 }
 
 export default function GirlsPage() {
+  const t = useTranslations();
   const tNav = useTranslations('nav');
   const tCommon = useTranslations('common');
   const tFooter = useTranslations('footer');
