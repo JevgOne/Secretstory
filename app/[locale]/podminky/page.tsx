@@ -7,13 +7,15 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
 
 export default function TermsPage() {
+  const t = useTranslations();
   const tNav = useTranslations('nav');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
   const pathname = usePathname();
   return (
     <>
       {/* Navigation */}
-      <nav>
+      <nav className="main-nav">
         <Link href={`/${locale}`} className="logo">
           <span className="logo-L">
             <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
@@ -26,17 +28,17 @@ export default function TermsPage() {
           ovely Girls
         </Link>
         <div className="nav-links">
-          <Link href={`/${locale}`}>{tNav('home')}</Link>
-          <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
-          <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
-          <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
-          <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
-          <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
+          <Link href={`/${locale}`}>{t('nav.home')}</Link>
+          <Link href={`/${locale}/divky`}>{t('nav.girls')}</Link>
+          <Link href={`/${locale}/cenik`}>{t('nav.pricing')}</Link>
+          <Link href={`/${locale}/schedule`}>{t('nav.schedule')}</Link>
+          <Link href={`/${locale}/discounts`}>{t('nav.discounts')}</Link>
+          <Link href={`/${locale}/faq`}>{t('nav.faq')}</Link>
         </div>
         <div className="nav-contact">
           <LanguageSwitcher />
-          <a href="tel:+420734332131" className="btn">{tNav('phone')}</a>
-          <a href="https://wa.me/420734332131" className="btn btn-fill">{tNav('whatsapp')}</a>
+          <a href="https://t.me/+420734332131" className="btn">{t('nav.telegram')}</a>
+          <a href="https://wa.me/420734332131" className="btn btn-fill">{t('nav.whatsapp')}</a>
         </div>
         <MobileMenu currentPath={pathname} />
       </nav>
@@ -179,7 +181,7 @@ export default function TermsPage() {
                 ovely Girls
               </Link>
               <p className="footer-tagline">Prague Premium Escort</p>
-              <p className="footer-desc">Luxusní eskortní služby v Praze. Diskrétní, profesionální a nezapomenutelné zážitky.</p>
+              <p className="footer-desc">{t('footer.about_text')}</p>
             </div>
 
             <div className="footer-links-grid">
@@ -192,21 +194,21 @@ export default function TermsPage() {
                   <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
                   <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
                   <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
-                  <Link href={`/${locale}/blog`}>Blog</Link>
+                  <Link href={`/${locale}/blog`}>{t('footer.blog')}</Link>
                 </nav>
               </div>
 
               {/* Contact */}
               <div className="footer-links-col">
-                <h4 className="footer-links-title">Kontakt</h4>
+                <h4 className="footer-links-title">{t('footer.contact')}</h4>
                 <div className="footer-contact-info">
                   <div className="footer-contact-item">
-                    <span className="label">Otevírací doba</span>
-                    <span className="value">10:00 - 04:00</span>
+                    <span className="label">{t('footer.hours')}</span>
+                    <span className="value">{t('footer.hours_value')}</span>
                   </div>
                   <div className="footer-contact-item">
-                    <span className="label">Lokace</span>
-                    <span className="value">Praha 2</span>
+                    <span className="label">{t('footer.location')}</span>
+                    <span className="value">{t('footer.location_value')}</span>
                   </div>
                 </div>
                 <div className="footer-contact-actions">
@@ -229,13 +231,13 @@ export default function TermsPage() {
 
           <div className="footer-bottom">
             <div className="footer-bottom-left">
-              <span>LovelyGirls Prague © 2025</span>
+              <span>{t('footer.copyright')}</span>
               <span className="dot">•</span>
-              <span>Pouze 18+</span>
+              <span>{tCommon('adults_only')}</span>
             </div>
             <div className="footer-bottom-right">
-              <Link href={`/${locale}/podminky`}>Podmínky</Link>
-              <Link href={`/${locale}/soukromi`}>Soukromí</Link>
+              <Link href={`/${locale}/podminky`}>{t('footer.terms')}</Link>
+              <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
             </div>
           </div>
         </div>

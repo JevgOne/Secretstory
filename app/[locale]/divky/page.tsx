@@ -702,16 +702,36 @@ export default function GirlsPage() {
 
         @media (max-width: 600px) {
           .cards-grid {
-            grid-template-columns: 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
           }
           .container {
-            padding: 30px 20px;
+            padding: 20px 12px;
           }
           .section-header {
             flex-direction: column;
             align-items: flex-start;
-            gap: 20px;
+            gap: 16px;
+            margin-bottom: 30px;
+          }
+          .section-title {
+            font-size: 1.8rem;
+          }
+          .card-info {
+            padding: 12px;
+          }
+          .card-name {
+            font-size: 1.1rem;
+          }
+          .time-badge {
+            font-size: 0.65rem;
+            padding: 4px 8px;
+          }
+          .stat-value {
+            font-size: 0.95rem;
+          }
+          .stat-label {
+            font-size: 0.6rem;
           }
         }
       `}</style>
