@@ -345,12 +345,67 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer>
-        <div>{t('footer.copyright')} — {t('common.adults_only')}</div>
-        <div className="footer-disclaimer">{t('footer.disclaimer')}</div>
-        <div className="footer-links">
-          <Link href={`/${locale}/blog`}>{t('footer.blog')}</Link>
-          <Link href={`/${locale}/podminky`}>{t('footer.terms')}</Link>
-          <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
+        <div className="footer-container">
+          <div className="footer-grid">
+            {/* About Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">{t('footer.about_us')}</h4>
+              <p className="footer-text">{t('footer.about_text')}</p>
+            </div>
+
+            {/* Quick Links Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">{t('footer.quick_links')}</h4>
+              <nav className="footer-nav">
+                <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
+                <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
+                <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
+                <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
+                <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
+              </nav>
+            </div>
+
+            {/* Contact Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">{t('footer.contact')}</h4>
+              <div className="footer-contact">
+                <a href="tel:+420734332131" className="footer-btn footer-btn-primary">
+                  {t('footer.call_us')}
+                </a>
+                <a href="https://wa.me/420734332131" className="footer-btn footer-btn-secondary">
+                  {t('footer.whatsapp')}
+                </a>
+                <div className="footer-info">
+                  <div className="footer-info-item">
+                    <span className="footer-info-label">{t('footer.hours')}</span>
+                    <span className="footer-info-value">{t('footer.hours_value')}</span>
+                  </div>
+                  <div className="footer-info-item">
+                    <span className="footer-info-label">{t('footer.location')}</span>
+                    <span className="footer-info-value">{t('footer.location_value')}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Legal Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">{t('footer.legal')}</h4>
+              <nav className="footer-nav">
+                <Link href={`/${locale}/blog`}>{t('footer.blog')}</Link>
+                <Link href={`/${locale}/podminky`}>{t('footer.terms')}</Link>
+                <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
+              </nav>
+              <div className="footer-copyright">
+                {t('footer.copyright')} — {t('common.adults_only')}
+              </div>
+            </div>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="footer-disclaimer">
+            {t('footer.disclaimer')}
+          </div>
         </div>
       </footer>
 

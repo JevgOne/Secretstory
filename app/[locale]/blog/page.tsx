@@ -290,14 +290,69 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* FOOTER */}
       <footer>
-        <div>{tFooter('copyright')} — {tCommon('adults_only')}</div>
-        <div className="footer-disclaimer">{tFooter('disclaimer')}</div>
-        <div className="footer-links">
-          <Link href={`/${locale}/blog`}>{tFooter('blog')}</Link>
-          <Link href={`/${locale}/podminky`}>{tFooter('terms')}</Link>
-          <Link href={`/${locale}/soukromi`}>{tFooter('privacy')}</Link>
+        <div className="footer-container">
+          <div className="footer-grid">
+            {/* About Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">{tFooter('about_us')}</h4>
+              <p className="footer-text">{tFooter('about_text')}</p>
+            </div>
+
+            {/* Quick Links Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">{tFooter('quick_links')}</h4>
+              <nav className="footer-nav">
+                <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
+                <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
+                <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
+                <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
+                <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
+              </nav>
+            </div>
+
+            {/* Contact Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">{tFooter('contact')}</h4>
+              <div className="footer-contact">
+                <a href="tel:+420734332131" className="footer-btn footer-btn-primary">
+                  {tFooter('call_us')}
+                </a>
+                <a href="https://wa.me/420734332131" className="footer-btn footer-btn-secondary">
+                  {tFooter('whatsapp')}
+                </a>
+                <div className="footer-info">
+                  <div className="footer-info-item">
+                    <span className="footer-info-label">{tFooter('hours')}</span>
+                    <span className="footer-info-value">{tFooter('hours_value')}</span>
+                  </div>
+                  <div className="footer-info-item">
+                    <span className="footer-info-label">{tFooter('location')}</span>
+                    <span className="footer-info-value">{tFooter('location_value')}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Legal Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">{tFooter('legal')}</h4>
+              <nav className="footer-nav">
+                <Link href={`/${locale}/blog`}>{tFooter('blog')}</Link>
+                <Link href={`/${locale}/podminky`}>{tFooter('terms')}</Link>
+                <Link href={`/${locale}/soukromi`}>{tFooter('privacy')}</Link>
+              </nav>
+              <div className="footer-copyright">
+                {tFooter('copyright')} — {tCommon('adults_only')}
+              </div>
+            </div>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="footer-disclaimer">
+            {tFooter('disclaimer')}
+          </div>
         </div>
       </footer>
     </>

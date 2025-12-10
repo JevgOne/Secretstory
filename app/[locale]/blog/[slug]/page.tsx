@@ -235,14 +235,69 @@ export default function BlogArticlePage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* FOOTER */}
       <footer>
-        <div>LovelyGirls Prague © 2025 — Pouze 18+</div>
-        <div className="footer-disclaimer">Všechny modely jsou plnoleté. Pouze pro osoby 18+.</div>
-        <div className="footer-links">
-          <Link href="/blog">Blog</Link>
-          <Link href="/podminky">Podmínky</Link>
-          <Link href="/soukromi">Soukromí</Link>
+        <div className="footer-container">
+          <div className="footer-grid">
+            {/* About Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">O nás</h4>
+              <p className="footer-text">Luxusní eskortní služby v Praze. Diskrétní, profesionální a nezapomenutelné zážitky.</p>
+            </div>
+
+            {/* Quick Links Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">Rychlé odkazy</h4>
+              <nav className="footer-nav">
+                <Link href="/divky">Dívky</Link>
+                <Link href="/cenik">Ceník</Link>
+                <Link href="/schedule">Rozvrh</Link>
+                <Link href="/discounts">Slevy</Link>
+                <Link href="/faq">FAQ</Link>
+              </nav>
+            </div>
+
+            {/* Contact Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">Kontakt</h4>
+              <div className="footer-contact">
+                <a href="tel:+420734332131" className="footer-btn footer-btn-primary">
+                  Zavolat
+                </a>
+                <a href="https://wa.me/420734332131" className="footer-btn footer-btn-secondary">
+                  WhatsApp
+                </a>
+                <div className="footer-info">
+                  <div className="footer-info-item">
+                    <span className="footer-info-label">Otevírací doba</span>
+                    <span className="footer-info-value">10:00 - 04:00</span>
+                  </div>
+                  <div className="footer-info-item">
+                    <span className="footer-info-label">Lokace</span>
+                    <span className="footer-info-value">Praha 2</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Legal Column */}
+            <div className="footer-col">
+              <h4 className="footer-heading">Právní informace</h4>
+              <nav className="footer-nav">
+                <Link href="/blog">Blog</Link>
+                <Link href="/podminky">Podmínky</Link>
+                <Link href="/soukromi">Soukromí</Link>
+              </nav>
+              <div className="footer-copyright">
+                LovelyGirls Prague © 2025 — Pouze 18+
+              </div>
+            </div>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="footer-disclaimer">
+            Všechny modely jsou plnoleté. Pouze pro osoby 18+.
+          </div>
         </div>
       </footer>
     </>
