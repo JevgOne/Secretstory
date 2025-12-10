@@ -39,9 +39,9 @@ interface Girl {
 }
 
 export default function GirlsPage() {
-  const t = useTranslations();
   const tNav = useTranslations('nav');
   const tCommon = useTranslations('common');
+  const tFooter = useTranslations('footer');
   const locale = useLocale();
   const pathname = usePathname();
   const [girls, setGirls] = useState<Girl[]>([]);
