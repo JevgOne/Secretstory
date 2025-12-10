@@ -75,6 +75,9 @@ const girls = [
 export default function Home() {
   const t = useTranslations();
   const tHome = useTranslations('home');
+  const tNav = useTranslations('nav');
+  const tCommon = useTranslations('common');
+  const tFooter = useTranslations('footer');
   const locale = useLocale();
   const pathname = usePathname();
   const [showAgeModal, setShowAgeModal] = useState(false);
