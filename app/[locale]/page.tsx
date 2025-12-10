@@ -129,7 +129,7 @@ export default function Home() {
         )}
 
         {/* NAVIGATION */}
-        <nav>
+        <nav className="main-nav">
         <Link href={`/${locale}`} className="logo">
           <span className="logo-L">
             <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
