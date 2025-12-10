@@ -349,43 +349,144 @@ export default function Home() {
       {/* FOOTER */}
       <footer>
         <div className="footer-container">
+          <div className="footer-top">
+            <div className="footer-brand">
+              <h3 className="footer-brand-name">LovelyGirls</h3>
+              <p className="footer-brand-tagline">Prague Premium Escort</p>
+            </div>
+          </div>
+
           <div className="footer-grid">
             {/* About Column */}
             <div className="footer-col">
-              <h4 className="footer-heading">{t('footer.about_us')}</h4>
+              <div className="footer-heading-wrapper">
+                <svg className="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                <h4 className="footer-heading">{t('footer.about_us')}</h4>
+              </div>
               <p className="footer-text">{t('footer.about_text')}</p>
+              <div className="footer-features">
+                <div className="footer-feature">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                  <span>100% Diskrétní</span>
+                </div>
+                <div className="footer-feature">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>Ověřené Profily</span>
+                </div>
+                <div className="footer-feature">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <span>24/7 Dostupnost</span>
+                </div>
+              </div>
             </div>
 
             {/* Quick Links Column */}
             <div className="footer-col">
-              <h4 className="footer-heading">{t('footer.quick_links')}</h4>
+              <div className="footer-heading-wrapper">
+                <svg className="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="8" y1="6" x2="21" y2="6"/>
+                  <line x1="8" y1="12" x2="21" y2="12"/>
+                  <line x1="8" y1="18" x2="21" y2="18"/>
+                  <line x1="3" y1="6" x2="3.01" y2="6"/>
+                  <line x1="3" y1="12" x2="3.01" y2="12"/>
+                  <line x1="3" y1="18" x2="3.01" y2="18"/>
+                </svg>
+                <h4 className="footer-heading">{t('footer.quick_links')}</h4>
+              </div>
               <nav className="footer-nav">
-                <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
-                <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
-                <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
-                <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
-                <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
+                <Link href={`/${locale}/divky`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                  {tNav('girls')}
+                </Link>
+                <Link href={`/${locale}/cenik`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                  </svg>
+                  {tNav('pricing')}
+                </Link>
+                <Link href={`/${locale}/schedule`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  {tNav('schedule')}
+                </Link>
+                <Link href={`/${locale}/discounts`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                  </svg>
+                  {tNav('discounts')}
+                </Link>
+                <Link href={`/${locale}/faq`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                  {tNav('faq')}
+                </Link>
               </nav>
             </div>
 
             {/* Contact Column */}
             <div className="footer-col">
-              <h4 className="footer-heading">{t('footer.contact')}</h4>
+              <div className="footer-heading-wrapper">
+                <svg className="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                <h4 className="footer-heading">{t('footer.contact')}</h4>
+              </div>
               <div className="footer-contact">
                 <a href="tel:+420734332131" className="footer-btn footer-btn-primary">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
                   {t('footer.call_us')}
                 </a>
                 <a href="https://wa.me/420734332131" className="footer-btn footer-btn-secondary">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                  </svg>
                   {t('footer.whatsapp')}
                 </a>
                 <div className="footer-info">
                   <div className="footer-info-item">
-                    <span className="footer-info-label">{t('footer.hours')}</span>
-                    <span className="footer-info-value">{t('footer.hours_value')}</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <div>
+                      <span className="footer-info-label">{t('footer.hours')}</span>
+                      <span className="footer-info-value">{t('footer.hours_value')}</span>
+                    </div>
                   </div>
                   <div className="footer-info-item">
-                    <span className="footer-info-label">{t('footer.location')}</span>
-                    <span className="footer-info-value">{t('footer.location_value')}</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <div>
+                      <span className="footer-info-label">{t('footer.location')}</span>
+                      <span className="footer-info-value">{t('footer.location_value')}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -393,11 +494,37 @@ export default function Home() {
 
             {/* Legal Column */}
             <div className="footer-col">
-              <h4 className="footer-heading">{t('footer.legal')}</h4>
+              <div className="footer-heading-wrapper">
+                <svg className="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                <h4 className="footer-heading">{t('footer.legal')}</h4>
+              </div>
               <nav className="footer-nav">
-                <Link href={`/${locale}/blog`}>{t('footer.blog')}</Link>
-                <Link href={`/${locale}/podminky`}>{t('footer.terms')}</Link>
-                <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
+                <Link href={`/${locale}/blog`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 19l7 3-2-7 6-6H17l-5-4-5 4H1l6 6-2 7 7-3z"/>
+                  </svg>
+                  {t('footer.blog')}
+                </Link>
+                <Link href={`/${locale}/podminky`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  {t('footer.terms')}
+                </Link>
+                <Link href={`/${locale}/soukromi`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  {t('footer.privacy')}
+                </Link>
               </nav>
               <div className="footer-copyright">
                 {t('footer.copyright')} — {t('common.adults_only')}
