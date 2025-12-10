@@ -58,7 +58,7 @@ export default function PrivacyPage() {
             <p>
               <strong>Provozovatel:</strong> LovelyGirls Prague<br/>
               <strong>Kontaktní email:</strong> info@lovelygirls.cz<br/>
-              <strong>Telefon:</strong> +420 734 332 131
+              <strong>Telegram/WhatsApp:</strong> Dostupné přes tlačítka na webu
             </p>
             <p>
               Tento dokument popisuje, jak zpracováváme vaše osobní údaje v souladu s Nařízením Evropského
@@ -221,8 +221,7 @@ export default function PrivacyPage() {
             </p>
             <p>
               <strong>Email:</strong> info@lovelygirls.cz<br/>
-              <strong>Telefon:</strong> +420 734 332 131<br/>
-              <strong>WhatsApp:</strong> +420 734 332 131
+              <strong>Telegram/WhatsApp:</strong> Dostupné přes tlačítka na webu
             </p>
           </div>
 

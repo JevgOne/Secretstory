@@ -155,9 +155,8 @@ export default function TermsPage() {
             <h2>11. Kontakt</h2>
             <p>
               <strong>Provozovatel:</strong> LovelyGirls Prague<br/>
-              <strong>Telefon:</strong> +420 734 332 131<br/>
-              <strong>WhatsApp:</strong> +420 734 332 131<br/>
               <strong>Email:</strong> info@lovelygirls.cz<br/>
+              <strong>Telegram/WhatsApp:</strong> Dostupné přes tlačítka na webu<br/>
             </p>
           </div>
 
