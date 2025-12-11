@@ -1451,26 +1451,6 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
           gap: 1.25rem;
         }
 
-        /* Footer */
-        footer {
-          padding: 2rem 4%;
-          border-top: 1px solid rgba(255,255,255,0.05);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-size: 0.8rem;
-          color: var(--gray);
-        }
-
-        .footer-links {
-          display: flex;
-          gap: 2rem;
-        }
-
-        .footer-links :global(a:hover) {
-          color: var(--white);
-        }
-
         /* Responsive */
         @media (max-width: 1024px) {
           .detail-grid {
