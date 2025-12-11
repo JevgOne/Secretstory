@@ -731,21 +731,6 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
           border-color: var(--wine-light);
         }
 
-        .mobile-menu {
-          display: none;
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 0.5rem;
-        }
-
-        .mobile-menu span {
-          display: block;
-          width: 20px;
-          height: 1px;
-          background: var(--white);
-          margin: 5px 0;
-        }
 
         /* Breadcrumb */
         .breadcrumb {
@@ -1513,9 +1498,6 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
           }
           .nav-links {
             display: none;
-          }
-          .mobile-menu {
-            display: block;
           }
           .gallery-thumbs {
             grid-template-columns: repeat(5, 1fr);
