@@ -193,13 +193,14 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
         .mobile-menu-panel {
           position: fixed;
           top: 0;
-          right: -100%;
+          right: 0;
           width: 85%;
           max-width: 400px;
           height: 100vh;
           background: var(--bg);
           z-index: 100;
-          transition: right 0.3s ease;
+          transform: translateX(100%);
+          transition: transform 0.3s ease;
           display: flex;
           flex-direction: column;
           overflow-y: auto;
@@ -207,7 +208,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
         }
 
         .mobile-menu-panel.open {
-          right: 0;
+          transform: translateX(0);
         }
 
         .mobile-menu-header {
