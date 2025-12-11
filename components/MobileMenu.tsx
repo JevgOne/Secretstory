@@ -200,7 +200,8 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
           background: var(--bg);
           z-index: 100;
           transform: translateX(100%);
-          transition: transform 0.3s ease;
+          transition: transform 0.3s ease, visibility 0s linear 0.3s;
+          visibility: hidden;
           display: flex;
           flex-direction: column;
           overflow-y: auto;
@@ -209,6 +210,8 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
 
         .mobile-menu-panel.open {
           transform: translateX(0);
+          transition: transform 0.3s ease;
+          visibility: visible;
         }
 
         .mobile-menu-header {
