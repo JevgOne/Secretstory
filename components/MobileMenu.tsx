@@ -14,6 +14,8 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
   const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
 
+  console.log('MobileMenu rendered, isOpen:', isOpen);
+
   // Prevent body scroll when menu is open
   useEffect(() => {
     if (isOpen) {
@@ -56,7 +58,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
       )}
 
       {/* Menu Panel */}
-      <div className={`mobile-menu-panel ${isOpen ? 'open' : ''}`}>
+      {isOpen && <div className="mobile-menu-panel open">
         <div className="mobile-menu-header">
           <Link href={`/${locale}`} className="mobile-menu-logo" onClick={closeMenu}>
             <span className="logo-L">
@@ -135,7 +137,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
             </a>
           </div>
         </div>
-      </div>
+      </div>}
 
       <style jsx>{`
         /* Hamburger Button */
@@ -199,19 +201,20 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
           height: 100vh;
           background: var(--bg);
           z-index: 100;
-          transform: translateX(100%);
-          transition: transform 0.3s ease, visibility 0s linear 0.3s;
-          visibility: hidden;
           display: flex;
           flex-direction: column;
           overflow-y: auto;
           box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+          animation: slideIn 0.3s ease;
         }
 
-        .mobile-menu-panel.open {
-          transform: translateX(0);
-          transition: transform 0.3s ease;
-          visibility: visible;
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+          }
+          to {
+            transform: translateX(0);
+          }
         }
 
         .mobile-menu-header {
