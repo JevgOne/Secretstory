@@ -9,7 +9,6 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
 import BottomCTA from '@/components/BottomCTA';
 import { useFavorites } from '@/contexts/FavoritesContext';
-import { useLocations } from '@/lib/hooks/useLocations';
 
 const cormorant = Cormorant({
   subsets: ['latin'],
@@ -46,7 +45,6 @@ interface Girl {
 }
 
 export default function Home() {
-  const { primaryLocation, locations, loading: locationsLoading } = useLocations();
   const [girls, setGirls] = useState<Girl[]>([]);
   const [featuredGirl, setFeaturedGirl] = useState<Girl | null>(null);
   const [loading, setLoading] = useState(true);
@@ -330,33 +328,24 @@ export default function Home() {
           <p className="section-subtitle">{tHome('locations_subtitle')}</p>
         </div>
         <div className="locations-grid">
-          {locationsLoading ? (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
-              Načítání poboček...
+          <div className="location-card">
+            <div className="location-img"></div>
+            <div className="location-content">
+              <div className="location-label">{tHome('location_main_label')}</div>
+              <div className="location-name">{tHome('location_main_name')}</div>
+              <div className="location-address">{tHome('location_main_address')}</div>
+              <div className="location-time">{tHome('location_main_hours')}</div>
             </div>
-          ) : locations.length === 0 ? (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
-              Žádné dostupné pobočky
+          </div>
+          <div className="location-card">
+            <div className="location-img"></div>
+            <div className="location-content">
+              <div className="location-label">{tHome('location_new_label')}</div>
+              <div className="location-name">{tHome('location_new_name')}</div>
+              <div className="location-address">{tHome('location_new_address')}</div>
+              <div className="location-time">{tHome('location_new_hours')}</div>
             </div>
-          ) : (
-            locations.map((location, index) => (
-              <div key={location.id} className="location-card">
-                <div className="location-img"></div>
-                <div className="location-content">
-                  <div className="location-label">
-                    {location.is_primary ? tHome('location_main_label') : index === 1 ? tHome('location_new_label') : 'Pobočka'}
-                  </div>
-                  <div className="location-name">{location.display_name}</div>
-                  <div className="location-address">
-                    {location.address || location.district || `${location.city}`}
-                  </div>
-                  <div className="location-time">
-                    {location.opening_hours || location.description || '10:00 — 22:00'}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
+          </div>
         </div>
       </section>
 
