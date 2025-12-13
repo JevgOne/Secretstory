@@ -161,7 +161,7 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
         )}
 
         {!loading && !error && girls.length > 0 && (
-          <div className="schedule-grid">
+          <div className="cards-grid">
             {girls.map((girl) => {
               const isWorking = girl.status === 'working';
               const statusText = isWorking
@@ -172,34 +172,36 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
                 <Link
                   key={girl.id}
                   href={`/${locale}/profily/${girl.slug}`}
-                  className={`schedule-card ${!isWorking ? "unavailable" : ""}`}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
                 >
-                  <div className="schedule-img">
-                    {girl.photos && girl.photos[0] && (
-                      <img src={girl.photos[0]} alt={girl.name} />
-                    )}
-                    <div className="schedule-status">
-                      <span className={`status-dot ${isWorking ? "online" : "offline"}`}></span>
-                      {statusText}
+                  <article className={`card ${!isWorking ? "unavailable" : ""}`}>
+                    <div className="card-image-container">
+                      {isWorking && (
+                        <span className="badge badge-top">{t('status.online')}</span>
+                      )}
+                      <div className="card-placeholder">FOTO</div>
+                      <div className="card-overlay"></div>
                     </div>
-                  </div>
-                  <div className="schedule-info">
-                    <div className="schedule-name">{girl.name}</div>
-                    <div className="schedule-time">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{width: '14px', height: '14px'}}>
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
-                      </svg>
-                      {girl.shift.from} - {girl.shift.to}
+                    <div className="card-info">
+                      <div className="card-header">
+                        <h3 className="card-name">
+                          {isWorking && <span className="online-dot"></span>}
+                          {girl.name}
+                        </h3>
+                        <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`}>
+                          {girl.shift.from} - {girl.shift.to}
+                        </span>
+                      </div>
+                      <div className="card-location-wrapper">
+                        <div className="card-location">
+                          <svg className="location-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                          </svg>
+                          {girl.location}
+                        </div>
+                      </div>
                     </div>
-                    <div className="schedule-location">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                        <circle cx="12" cy="10" r="3"/>
-                      </svg>
-                      {girl.location}
-                    </div>
-                  </div>
+                  </article>
                 </Link>
               );
             })}
@@ -242,7 +244,7 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
             <div className="footer-links-grid">
               {/* Services */}
               <div className="footer-links-col">
-                <h4 className="footer-links-title">Služby</h4>
+                <h4 className="footer-links-title">Praktiky</h4>
                 <nav className="footer-links">
                   <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
                   <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>

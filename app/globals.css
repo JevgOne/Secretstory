@@ -361,14 +361,16 @@ section {
     margin-right: auto;
 }
 
-.profiles-grid {
+/* OLD PROFILES STYLES - REPLACED BY .cards-grid - DO NOT USE */
+/* .profiles-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
     max-width: 1400px;
     margin: 0 auto;
-}
-
+} */
+/* OLD PROFILE STYLES - REPLACED BY .card STYLES - DO NOT USE */
+/*
 .profile-card {
     position: relative;
     border-radius: 20px;
@@ -575,6 +577,7 @@ section {
     transform: scale(1.15);
     color: rgb(255, 120, 120);
 }
+*/
 
 /* INFO STRIP */
 .info-strip {
@@ -1095,7 +1098,7 @@ footer {
     .new-girl-card {
         grid-template-columns: 140px 1fr;
     }
-    .profiles-grid { grid-template-columns: repeat(3, 1fr); }
+    /* .profiles-grid { grid-template-columns: repeat(3, 1fr); } */
     .info-strip-inner { grid-template-columns: repeat(2, 1fr); }
     .info-item:nth-child(2) { border-right: none; }
 }
@@ -1150,24 +1153,24 @@ footer {
     }
 
     /* Profiles */
-    .profiles-grid {
+    /* .profiles-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
-    }
-    .profile-name {
+    } */
+    /* .profile-name {
         font-size: 1.25rem;
     }
     .profile-stats {
         grid-template-columns: repeat(4, 1fr);
         gap: 6px;
-    }
-    .profile-stat {
+    } */
+    /* .profile-stat {
         padding: 6px 4px;
         font-size: 0.7rem;
-    }
-    .profile-stat-value {
+    } */
+    /* .profile-stat-value {
         font-size: 0.95rem;
-    }
+    } */
 
     /* Info Strip */
     .info-item {
@@ -1253,42 +1256,42 @@ footer {
     section { padding: 40px 4%; }
 
     /* Profiles - Better mobile layout */
-    .profiles-grid {
+    /* .profiles-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
-    }
-    .profile-card {
+    } */
+    /* .profile-card {
         border-radius: 16px;
-    }
-    .profile-name {
+    } */
+    /* .profile-name {
         font-size: 1.1rem;
-    }
-    .profile-info {
+    } */
+    /* .profile-info {
         padding: 12px;
-    }
-    .profile-stats {
+    } */
+    /* .profile-stats {
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
-    }
-    .profile-stat {
+    } */
+    /* .profile-stat {
         padding: 8px 6px;
         font-size: 0.65rem;
-    }
-    .profile-stat-value {
+    } */
+    /* .profile-stat-value {
         font-size: 0.9rem;
-    }
-    .profile-location {
+    } */
+    /* .profile-location {
         font-size: 0.75rem;
         padding: 6px 10px;
-    }
-    .profile-time {
+    } */
+    /* .profile-time {
         font-size: 0.6rem;
         padding: 0.15rem 0.4rem;
-    }
-    .profile-badge {
+    } */
+    /* .profile-badge {
         font-size: 0.65rem;
         padding: 5px 10px;
-    }
+    } */
 
     /* Info Strip - Stack vertically */
     .info-strip-inner {
@@ -1725,16 +1728,34 @@ footer {
 }
 
 .schedule-card {
-    background: var(--bg);
-    border-radius: 8px;
+    position: relative;
+    border-radius: 12px;
     overflow: hidden;
+    background: var(--bg-card);
     cursor: pointer;
-    transition: transform 0.3s;
-    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.schedule-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    padding: 1px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
 }
 
 .schedule-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px) scale(1.03);
+    box-shadow:
+        0 16px 32px rgba(0,0,0,0.5),
+        0 0 60px rgba(139,58,92,0.25);
 }
 
 .schedule-card.unavailable {
@@ -1742,13 +1763,21 @@ footer {
 }
 
 .schedule-img {
-    aspect-ratio: 3/4;
-    background: var(--wine-dark);
+    aspect-ratio: 2/3;
+    background: linear-gradient(145deg, #8b3a5c 0%, #6b2847 100%);
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.2);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.schedule-card:hover .schedule-img {
+    transform: scale(1.08);
 }
 
 .schedule-img img {
@@ -5489,6 +5518,83 @@ footer {
     font-weight: 600;
 }
 
+/* Calendar Mobile Responsive */
+@media (max-width: 768px) {
+    .gcal-container {
+        grid-template-columns: 1fr;
+    }
+
+    .gcal-sidebar {
+        display: none;
+    }
+
+    .gcal-detail {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 100;
+        border-left: none;
+    }
+
+    .gcal-header {
+        padding: 1rem;
+    }
+
+    .current-date {
+        font-size: 1.1rem;
+    }
+
+    .view-toggle {
+        display: none;
+    }
+
+    .fab {
+        bottom: 5rem;
+        right: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-arrows {
+        gap: 0.25rem;
+    }
+
+    .nav-arrow {
+        width: 32px;
+        height: 32px;
+    }
+
+    .today-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .current-date {
+        font-size: 1rem;
+    }
+
+    .week-day-name {
+        font-size: 0.7rem;
+    }
+
+    .week-day-number {
+        font-size: 1rem;
+    }
+
+    .time-label {
+        font-size: 0.7rem;
+        padding: 0.25rem;
+    }
+
+    .event-title,
+    .event-time,
+    .event-location {
+        font-size: 0.7rem;
+    }
+}
+
 /* ============================================
    APP NAVIGATION & MOBILE UI
    ============================================ */
@@ -5651,32 +5757,32 @@ footer {
     }
 
     /* Profiles */
-    .profiles-grid {
+    /* .profiles-grid {
         gap: 8px;
-    }
-    .profile-card {
+    } */
+    /* .profile-card {
         border-radius: 14px;
-    }
-    .profile-name {
+    } */
+    /* .profile-name {
         font-size: 1rem;
-    }
-    .profile-info {
+    } */
+    /* .profile-info {
         padding: 10px;
-    }
-    .profile-stats {
+    } */
+    /* .profile-stats {
         gap: 5px;
-    }
-    .profile-stat {
+    } */
+    /* .profile-stat {
         padding: 6px 4px;
         font-size: 0.6rem;
-    }
-    .profile-stat-value {
+    } */
+    /* .profile-stat-value {
         font-size: 0.85rem;
-    }
-    .profile-location {
+    } */
+    /* .profile-location {
         font-size: 0.7rem;
         padding: 5px 8px;
-    }
+    } */
 
     /* Info Strip */
     .info-item {
@@ -5872,4 +5978,361 @@ body > div > button[title*="Next"],
     position: absolute !important;
     left: -9999px !important;
     top: -9999px !important;
+}
+
+/* ============================================
+   CARDS - Unified Card Design for /divky and Homepage
+   ============================================ */
+
+/* Cards Grid */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 40px 48px;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px;
+}
+
+/* Card */
+.card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow:
+        0 16px 32px rgba(0,0,0,0.5),
+        0 0 60px rgba(139,58,92,0.25);
+}
+
+.card:hover .card-placeholder {
+    transform: scale(1.08);
+}
+
+.card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-image-container {
+    position: relative;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    background: linear-gradient(145deg, #1a1a24 0%, #0f0f15 100%);
+}
+
+/* Placeholder for demo */
+.card-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #8b3a5c 0%, #6b2847 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.2);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+/* Badges */
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 11px;
+    border-radius: 100px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.badge-new {
+    background: linear-gradient(135deg, #e85a4f 0%, #ff6b5b 100%);
+    box-shadow: 0 4px 20px rgba(232,90,79,0.4);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(232,90,79,0.4); }
+    50% { box-shadow: 0 4px 30px rgba(232,90,79,0.6); }
+}
+
+.badge-top {
+    background: linear-gradient(135deg, var(--accent-gold) 0%, #f0c56e 100%);
+    color: #1a1a1a;
+    box-shadow: 0 4px 20px rgba(212,168,83,0.4);
+}
+
+.badge-asian {
+    background: linear-gradient(135deg, var(--accent-violet) 0%, #a78bfa 100%);
+    box-shadow: 0 4px 20px rgba(139,92,246,0.4);
+}
+
+/* Online indicator */
+.online-dot {
+    width: 7px;
+    height: 7px;
+    background: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    box-shadow: 0 0 10px rgba(34,197,94,0.6);
+    animation: onlinePulse 2s ease-in-out infinite;
+}
+
+@keyframes onlinePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Card Info */
+.card-info {
+    padding: 10px;
+    background: rgba(18, 18, 26, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.card-name {
+    font-family: var(--font-playfair), 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+}
+
+.time-badge {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.time-badge.available {
+    background: rgba(34,197,94,0.15);
+    border-color: rgba(34,197,94,0.4);
+    color: #4ade80;
+    box-shadow: 0 0 12px rgba(34,197,94,0.2);
+}
+
+.time-badge.tomorrow {
+    background: rgba(251,146,60,0.15);
+    border-color: rgba(251,146,60,0.4);
+    color: #fb923c;
+    box-shadow: 0 0 12px rgba(251,146,60,0.2);
+}
+
+.card-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255,255,255,0.06);
+    padding: 5px 3px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+}
+
+.stat:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(139,58,92,0.3);
+    transform: translateY(-1px);
+}
+
+.stat-value {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.card-location-wrapper {
+    text-align: center;
+}
+
+.card-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-primary);
+    font-size: 0.7rem;
+    font-weight: 500;
+    background: rgba(139,58,92,0.2);
+    padding: 5px 9px;
+    border-radius: 16px;
+    border: 1px solid rgba(139,58,92,0.35);
+    transition: all 0.3s ease;
+}
+
+.card-location:hover {
+    background: rgba(139,58,92,0.3);
+    border-color: rgba(139,58,92,0.5);
+}
+
+.location-icon {
+    width: 11px;
+    height: 11px;
+    color: #e84a7f;
+}
+
+/* Quick actions on hover */
+.quick-actions {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    display: flex;
+    gap: 12px;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 3;
+}
+
+.card:hover .quick-actions {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.action-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: #8b3a5c;
+    border-color: #8b3a5c;
+    transform: scale(1.1);
+}
+
+.action-btn svg {
+    width: 18px;
+    height: 18px;
+    color: white;
+}
+
+.action-btn.favorite-active {
+    background: rgba(232,90,79,0.3);
+    border-color: #e85a4f;
+}
+
+.action-btn.favorite-active:hover {
+    background: #e85a4f;
+    border-color: #e85a4f;
+}
+
+.action-btn.favorite-active svg {
+    color: #ff6b5b;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .cards-grid {
+        gap: 32px 40px;
+        padding: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 24px;
+        padding: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 16px;
+    }
+    .card-info {
+        padding: 12px;
+    }
+    .card-name {
+        font-size: 1.1rem;
+    }
+    .time-badge {
+        font-size: 0.65rem;
+        padding: 4px 8px;
+    }
+    .stat-value {
+        font-size: 0.95rem;
+    }
+    .stat-label {
+        font-size: 0.6rem;
+    }
 }
