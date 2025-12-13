@@ -230,7 +230,7 @@ export default function Home() {
 
             const breastSize = getBreastSize(girl.bust);
             const timeRange = girl.online ? '12:00 - 20:00' : '14:00 - 22:00';
-            const location = girl.location || primaryLocation?.display_name || 'Praha 2';
+            const location = girl.location || 'Praha 2';
 
             return (
               <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} style={{ textDecoration: 'none', color: 'inherit' }}>
