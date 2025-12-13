@@ -5987,11 +5987,11 @@ body > div > button[title*="Next"],
 /* Cards Grid */
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 48px 56px;
-    max-width: 1800px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 48px;
+    padding: 32px;
 }
 
 /* Card */
@@ -6122,7 +6122,7 @@ body > div > button[title*="Next"],
 
 /* Card Info */
 .card-info {
-    padding: 16px 14px;
+    padding: 20px 16px;
     background: rgba(18, 18, 26, 0.95);
     backdrop-filter: blur(10px);
 }
@@ -6131,12 +6131,12 @@ body > div > button[title*="Next"],
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }
 
 .card-name {
     font-family: var(--font-playfair), 'Playfair Display', serif;
-    font-size: 1.25rem;
+    font-size: 1.45rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -6146,9 +6146,9 @@ body > div > button[title*="Next"],
 .time-badge {
     background: rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.15);
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 8px;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.02em;
     backdrop-filter: blur(10px);
@@ -6217,13 +6217,13 @@ body > div > button[title*="Next"],
 .card-location {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     color: var(--text-primary);
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     font-weight: 500;
     background: rgba(139,58,92,0.2);
-    padding: 7px 12px;
-    border-radius: 18px;
+    padding: 9px 16px;
+    border-radius: 20px;
     border: 1px solid rgba(139,58,92,0.35);
     transition: all 0.3s ease;
 }
@@ -6234,8 +6234,8 @@ body > div > button[title*="Next"],
 }
 
 .location-icon {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     color: #e84a7f;
 }
 
@@ -6298,33 +6298,11 @@ body > div > button[title*="Next"],
 }
 
 /* Responsive */
-@media (max-width: 1200px) {
-    .cards-grid {
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-        gap: 40px 48px;
-        padding: 40px;
-    }
-}
-
-@media (max-width: 768px) {
-    .cards-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 28px;
-        padding: 28px;
-    }
-    .card-name {
-        font-size: 1.15rem;
-    }
-    .time-badge {
-        font-size: 0.75rem;
-    }
-}
-
 @media (max-width: 600px) {
     .cards-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        padding: 20px;
+        gap: 16px;
+        padding: 16px;
     }
     .card-info {
         padding: 14px 12px;
