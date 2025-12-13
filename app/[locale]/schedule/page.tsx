@@ -19,8 +19,12 @@ interface Girl {
   location: string;
   photos: string[];
   age: number;
+  height: number;
+  weight: number;
+  bust: number;
   description: string;
   online: boolean;
+  badge_type: string | null;
 }
 
 interface ScheduleResponse {
@@ -38,23 +42,46 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
   const tNav = useTranslations('nav');
   const tCommon = useTranslations('common');
   const tFooter = useTranslations('footer');
+  const tGirls = useTranslations('girls');
   const [girls, setGirls] = useState<Girl[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
   const [selectedDate, setSelectedDate] = useState(0); // 0 = today, 1 = tomorrow, etc.
 
-  // Generate 7 days starting from today
+  // Helper function for breast size
+  const getBreastSize = (bust: number) => {
+    if (bust < 75) return 'A';
+    if (bust < 80) return 'B';
+    if (bust < 85) return 'C';
+    if (bust < 90) return 'D';
+    if (bust < 95) return 'DD';
+    return 'E+';
+  };
+
+  // Generate days from today until end of week (Sunday)
   const getDays = () => {
     const days = [];
     const dayNames = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
 
-    for (let i = 0; i < 7; i++) {
+    const today = new Date();
+    const currentDayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+    // Convert to our format: 0 = Monday, 6 = Sunday
+    const currentDay = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+
+    // Calculate how many days until Sunday
+    const daysUntilSunday = 6 - currentDay;
+
+    // Generate days from today to Sunday
+    for (let i = 0; i <= daysUntilSunday; i++) {
       const date = new Date();
       date.setDate(date.getDate() + i);
+      const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1;
+
       days.push({
         index: i,
-        dayName: i === 0 ? t('days.today_short') : dayNames[date.getDay() === 0 ? 6 : date.getDay() - 1],
+        dayName: i === 0 ? t('days.today_short') : dayNames[dayOfWeek],
         dayNum: date.getDate(),
         date: date
       });
@@ -164,9 +191,10 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
           <div className="cards-grid">
             {girls.map((girl) => {
               const isWorking = girl.status === 'working';
-              const statusText = isWorking
-                ? t('status.online')
-                : t('status.available_from', { time: girl.shift.from });
+              const breastSize = getBreastSize(girl.bust);
+              const badge = girl.badge_type || null;
+              const badgeText = badge === 'new' ? tGirls('new') : badge === 'top' ? tGirls('top_reviews') : badge === 'recommended' ? tGirls('recommended') : '';
+              const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
 
               return (
                 <Link
@@ -174,10 +202,10 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
                   href={`/${locale}/profily/${girl.slug}`}
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
-                  <article className={`card ${!isWorking ? "unavailable" : ""}`}>
+                  <article className="card">
                     <div className="card-image-container">
-                      {isWorking && (
-                        <span className="badge badge-top">{t('status.online')}</span>
+                      {badge && (
+                        <span className={`badge ${badgeClass}`}>{badgeText}</span>
                       )}
                       <div className="card-placeholder">FOTO</div>
                       <div className="card-overlay"></div>
@@ -185,12 +213,18 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
                     <div className="card-info">
                       <div className="card-header">
                         <h3 className="card-name">
-                          {isWorking && <span className="online-dot"></span>}
+                          {girl.online && <span className="online-dot"></span>}
                           {girl.name}
                         </h3>
                         <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`}>
                           {girl.shift.from} - {girl.shift.to}
                         </span>
+                      </div>
+                      <div className="card-stats">
+                        <span className="stat"><span className="stat-value">{girl.age}</span><span className="stat-label">{tGirls('age_years')}</span></span>
+                        <span className="stat"><span className="stat-value">{girl.height}</span><span className="stat-label">cm</span></span>
+                        <span className="stat"><span className="stat-value">{girl.weight}</span><span className="stat-label">kg</span></span>
+                        <span className="stat"><span className="stat-value">{breastSize}</span><span className="stat-label">{tGirls('bust')}</span></span>
                       </div>
                       <div className="card-location-wrapper">
                         <div className="card-location">
