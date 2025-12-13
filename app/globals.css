@@ -349,6 +349,9 @@ section {
 /* PROFILES GRID */
 .profiles {
     background: var(--black);
+    padding: 80px 4%;
+    position: relative;
+    z-index: 1;
 }
 
 .profiles-header {
@@ -1679,39 +1682,46 @@ footer {
 
 .date-tab {
     background: var(--black);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    padding: 1rem 1.5rem;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 1.25rem 2rem;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.5rem;
+    min-width: 90px;
 }
 
 .date-tab:hover {
     border-color: var(--wine);
+    transform: translateY(-2px);
 }
 
 .date-tab.active {
     background: var(--wine);
     border-color: var(--wine);
+    box-shadow: 0 4px 16px rgba(139,42,66,0.4);
 }
 
 .date-day {
-    font-size: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .date-tab.active .date-day {
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.95);
 }
 
 .date-num {
     font-family: 'Cormorant', serif;
-    font-size: 1.5rem;
-    font-weight: 400;
+    font-size: 2rem;
+    font-weight: 600;
+    color: white;
 }
 
 .schedule {
