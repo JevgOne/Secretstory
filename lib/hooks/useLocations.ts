@@ -12,6 +12,7 @@ export interface Location {
   phone?: string;
   email?: string;
   description?: string;
+  opening_hours?: string;
   is_active: number;
   is_primary: number;
   created_at: string;

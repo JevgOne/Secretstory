@@ -8,6 +8,8 @@ import { Cormorant, DM_Sans } from 'next/font/google';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
 import BottomCTA from '@/components/BottomCTA';
+import { useFavorites } from '@/contexts/FavoritesContext';
+import { useLocations } from '@/lib/hooks/useLocations';
 
 const cormorant = Cormorant({
   subsets: ['latin'],
@@ -24,55 +26,30 @@ const dmSans = DM_Sans({
   variable: '--font-dm-sans'
 });
 
-const girls = [
-  {
-    id: 1,
-    name: "Natalie",
-    slug: "natalie",
-    age: 24,
-    bust: "3",
-    height: 170,
-    weight: 52,
-    location: "Praha 2",
-    badge: "new",
-  },
-  {
-    id: 2,
-    name: "Victoria",
-    slug: "victoria",
-    age: 26,
-    bust: "2",
-    height: 175,
-    weight: 58,
-    location: "Praha 3",
-    badge: "top",
-  },
-  {
-    id: 3,
-    name: "Isabella",
-    slug: "isabella",
-    age: 23,
-    bust: "2",
-    height: 168,
-    weight: 50,
-    location: "Praha 2",
-    badge: "asian",
-  },
-  {
-    id: 4,
-    name: "Sophie",
-    slug: "sophie",
-    age: 25,
-    bust: "3",
-    height: 172,
-    weight: 55,
-    location: "Praha 2",
-    time: "10:00 - 16:00",
-    online: true,
-  },
-];
+interface Girl {
+  id: number;
+  name: string;
+  slug: string;
+  age: number;
+  height: number;
+  weight: number;
+  bust: string;
+  online: boolean;
+  status: string;
+  color: string;
+  location?: string;
+  is_new?: boolean;
+  is_top?: boolean;
+  is_featured?: boolean;
+  badge_type?: string;
+  featured_section?: string;
+}
 
 export default function Home() {
+  const { primaryLocation, locations, loading: locationsLoading } = useLocations();
+  const [girls, setGirls] = useState<Girl[]>([]);
+  const [featuredGirl, setFeaturedGirl] = useState<Girl | null>(null);
+  const [loading, setLoading] = useState(true);
   const t = useTranslations();
   const tHome = useTranslations('home');
   const tNav = useTranslations('nav');
@@ -81,6 +58,7 @@ export default function Home() {
   const locale = useLocale();
   const pathname = usePathname();
   const [showAgeModal, setShowAgeModal] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -97,6 +75,33 @@ export default function Home() {
       setShowAgeModal(false);
     }
   };
+
+  // Fetch girls from API
+  useEffect(() => {
+    async function fetchGirls() {
+      try {
+        const response = await fetch('/api/girls?status=active');
+        const data = await response.json();
+        if (data.success) {
+          const allGirls = data.girls;
+
+          // Find featured girl for "New Girl" section (homepage_new)
+          const newGirl = allGirls.find((g: Girl) => g.featured_section === 'homepage_new');
+          if (newGirl) {
+            setFeaturedGirl(newGirl);
+          }
+
+          // Show first 4 girls in grid (or all if less than 4)
+          setGirls(allGirls.slice(0, 4));
+        }
+      } catch (error) {
+        console.error('Error fetching girls:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchGirls();
+  }, []);
 
   const denyAge = () => {
     if (typeof window !== "undefined") {
@@ -168,21 +173,23 @@ export default function Home() {
               <a href="#booking" className="btn">{tHome('hero_cta_secondary')}</a>
             </div>
           </div>
-          <div className="hero-new">
-            <div className="new-label">✦ {tHome('new_label')}</div>
-            <div className="new-girl-card">
-              <div className="new-girl-img">
-                <div className="placeholder">FOTO</div>
-                <span className="new-badge">{tHome('new_badge')}</span>
-              </div>
-              <div className="new-girl-info">
-                <div className="new-girl-name">{tHome('new_girl_name')}</div>
-                <div className="new-girl-meta">{tHome('new_girl_meta')}</div>
-                <div className="new-girl-desc">{tHome('new_girl_desc')}</div>
-                <a href={`/${locale}/divky`} className="btn btn-fill" style={{ marginTop: '1rem', width: '100%', justifyContent: 'center' }}>{tHome('view_profile')}</a>
+          {featuredGirl && (
+            <div className="hero-new">
+              <div className="new-label">✦ {tHome('new_label')}</div>
+              <div className="new-girl-card">
+                <div className="new-girl-img">
+                  <div className="placeholder">FOTO</div>
+                  <span className="new-badge">{tHome('new_badge')}</span>
+                </div>
+                <div className="new-girl-info">
+                  <div className="new-girl-name">{featuredGirl.name}</div>
+                  <div className="new-girl-meta">{featuredGirl.age} let • {featuredGirl.height} cm</div>
+                  <div className="new-girl-desc">{tHome('new_girl_desc')}</div>
+                  <Link href={`/${locale}/profily/${featuredGirl.slug}`} className="btn btn-fill" style={{ marginTop: '1rem', width: '100%', justifyContent: 'center' }}>{tHome('view_profile')}</Link>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -195,55 +202,98 @@ export default function Home() {
           </div>
           <Link href={`/${locale}/divky`} className="btn">{tHome('view_all')}</Link>
         </div>
-        <div className="profiles-grid">
-          {girls.map((girl) => {
-            const badgeText = girl.badge === 'new' ? tHome('badge_new') : girl.badge === 'top' ? tHome('badge_top') : tHome('badge_asian');
+        <div className="cards-grid">
+          {loading ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
+              Načítání...
+            </div>
+          ) : girls.length === 0 ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
+              Žádné dostupné dívky
+            </div>
+          ) : (
+            girls.map((girl) => {
+            const badge = girl.badge_type || null;
+            const badgeText = badge === 'new' ? t('girls.new') : badge === 'top' ? t('girls.top_reviews') : badge === 'recommended' ? t('girls.recommended') : badge === 'asian' ? 'Asian' : '';
+            const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
 
-            // Determine online status and time for specific girls (matches HTML)
-            const online = girl.id === 1 || girl.id === 2 || girl.id === 3; // Natalie, Victoria, Isabella are online
-            const timeRange = girl.id === 1 ? '10:00 - 18:00' : girl.id === 2 ? '12:00 - 20:00' : girl.id === 3 ? '14:00 - 22:00' : girl.id === 4 ? '10:00 - 16:00' : null;
-            const isAvailableNow = girl.id !== 4; // Sophie is tomorrow
+            // Calculate breast size from bust measurement
+            const getBreastSize = (bust: string): number => {
+              if (!bust) return 2;
+              if (bust.includes('-')) {
+                const size = parseInt(bust.split('-')[0]);
+                if (size >= 95) return 3;
+                if (size >= 85) return 2;
+                return 1;
+              }
+              const cups: Record<string, number> = { 'A': 1, 'B': 2, 'C': 3, 'D': 3, 'DD': 3 };
+              return cups[bust] || 2;
+            };
+
+            const breastSize = getBreastSize(girl.bust);
+            const timeRange = girl.online ? '12:00 - 20:00' : '14:00 - 22:00';
+            const location = girl.location || primaryLocation?.display_name || 'Praha 2';
 
             return (
-              <div key={girl.id} className="profile-card">
-                <div className="profile-img">
-                  <div className="placeholder">FOTO</div>
-                  {girl.badge && (
-                    <div className={`profile-badge ${girl.badge}`}>{badgeText}</div>
-                  )}
-                </div>
-                <div className="profile-info">
-                  <div className="profile-name-row">
-                    {online && <span className="online-dot"></span>}
-                    <span className="profile-name">{girl.name}</span>
-                    {timeRange && (
-                      <span className="profile-time">
-                        {timeRange}
-                      </span>
+              <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <article className="card">
+                  <div className="card-image-container">
+                    {badge && (
+                      <span className={`badge ${badgeClass}`}>{badgeText}</span>
                     )}
+                    <div className="card-placeholder">FOTO</div>
+                    <div className="card-overlay"></div>
+                    <div className="quick-actions">
+                      <button
+                        className="action-btn"
+                        title="Profil"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.location.href = `/${locale}/profily/${girl.slug}`;
+                        }}
+                      >
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                      </button>
+                      <button
+                        className={`action-btn ${isFavorite(girl.id) ? 'favorite-active' : ''}`}
+                        title={isFavorite(girl.id) ? 'Odebrat z oblíbených' : 'Přidat do oblíbených'}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleFavorite(girl.id);
+                        }}
+                      >
+                        <svg viewBox="0 0 24 24" fill={isFavorite(girl.id) ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                  <div className="profile-stats">
-                    <div className="profile-stat">
-                      <span className="profile-stat-value">{girl.age}</span> {tHome('stat_years')}
+                  <div className="card-info">
+                    <div className="card-header">
+                      <h3 className="card-name">
+                        {girl.online && <span className="online-dot"></span>}
+                        {girl.name}
+                      </h3>
+                      <span className={`time-badge ${girl.online ? 'available' : 'tomorrow'}`}>{timeRange}</span>
                     </div>
-                    <div className="profile-stat">
-                      {tHome('stat_bust')} <span className="profile-stat-value">{girl.bust}</span>
+                    <div className="card-stats">
+                      <span className="stat"><span className="stat-value">{girl.age || '?'}</span><span className="stat-label">{t('girls.age_years')}</span></span>
+                      <span className="stat"><span className="stat-value">{girl.height || '?'}</span><span className="stat-label">cm</span></span>
+                      <span className="stat"><span className="stat-value">{girl.weight || '?'}</span><span className="stat-label">kg</span></span>
+                      <span className="stat"><span className="stat-value">{breastSize}</span><span className="stat-label">{t('girls.bust')}</span></span>
                     </div>
-                    <div className="profile-stat">
-                      <span className="profile-stat-value">{girl.height}</span> {tHome('stat_cm')}
-                    </div>
-                    <div className="profile-stat">
-                      <span className="profile-stat-value">{girl.weight}</span> {tHome('stat_kg')}
+                    <div className="card-location-wrapper">
+                      <div className="card-location">
+                        <svg className="location-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        {location}
+                      </div>
                     </div>
                   </div>
-                  <div className="profile-location">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    {girl.location}
-                  </div>
-                </div>
-              </div>
+                </article>
+              </Link>
             );
-          })}
+          })
+          )}
         </div>
       </section>
 
@@ -280,24 +330,33 @@ export default function Home() {
           <p className="section-subtitle">{tHome('locations_subtitle')}</p>
         </div>
         <div className="locations-grid">
-          <div className="location-card">
-            <div className="location-img"></div>
-            <div className="location-content">
-              <div className="location-label">{tHome('location_main_label')}</div>
-              <div className="location-name">{tHome('location_main_name')}</div>
-              <div className="location-address">{tHome('location_main_address')}</div>
-              <div className="location-time">{tHome('location_main_hours')}</div>
+          {locationsLoading ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
+              Načítání poboček...
             </div>
-          </div>
-          <div className="location-card">
-            <div className="location-img"></div>
-            <div className="location-content">
-              <div className="location-label">{tHome('location_new_label')}</div>
-              <div className="location-name">{tHome('location_new_name')}</div>
-              <div className="location-address">{tHome('location_new_address')}</div>
-              <div className="location-time">{tHome('location_new_hours')}</div>
+          ) : locations.length === 0 ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
+              Žádné dostupné pobočky
             </div>
-          </div>
+          ) : (
+            locations.map((location, index) => (
+              <div key={location.id} className="location-card">
+                <div className="location-img"></div>
+                <div className="location-content">
+                  <div className="location-label">
+                    {location.is_primary ? tHome('location_main_label') : index === 1 ? tHome('location_new_label') : 'Pobočka'}
+                  </div>
+                  <div className="location-name">{location.display_name}</div>
+                  <div className="location-address">
+                    {location.address || location.district || `${location.city}`}
+                  </div>
+                  <div className="location-time">
+                    {location.opening_hours || location.description || '10:00 — 22:00'}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </section>
 
@@ -369,7 +428,7 @@ export default function Home() {
             <div className="footer-links-grid">
               {/* Services */}
               <div className="footer-links-col">
-                <h4 className="footer-links-title">Služby</h4>
+                <h4 className="footer-links-title">Praktiky</h4>
                 <nav className="footer-links">
                   <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
                   <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
