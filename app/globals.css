@@ -1324,7 +1324,7 @@ footer {
         grid-template-columns: 1fr;
     }
     .location-img {
-        aspect-ratio: 16/9;
+        min-height: 120px;
     }
     .location-content {
         padding: 1.25rem;
