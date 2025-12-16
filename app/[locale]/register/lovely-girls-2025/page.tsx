@@ -13,6 +13,7 @@ export default function SecretRegistrationPage() {
   const t = useTranslations();
   const locale = useLocale();
   const [step, setStep] = useState(1);
+  const [photos, setPhotos] = useState<Array<{file: File, preview: string, maskFace: boolean}>>([]);
   const [formData, setFormData] = useState({
     // Osobní údaje
     name: '',
@@ -72,9 +73,22 @@ export default function SecretRegistrationPage() {
     // Připravit data s automaticky zahrnutými základními službami
     const basicServiceIds = getBasicServices().map(s => s.id);
     const allServices = [...new Set([...basicServiceIds, ...formData.services])];
+
+    // Zpracovat fotky s maskováním
+    const processedPhotos = await Promise.all(
+      photos.map(async (photo) => {
+        const maskedPreview = await applyFaceMask(photo.preview, photo.maskFace);
+        return {
+          data: maskedPreview,
+          masked: photo.maskFace
+        };
+      })
+    );
+
     const submissionData = {
       ...formData,
-      services: allServices
+      services: allServices,
+      photos: processedPhotos
     };
 
     // Odeslat na API
@@ -133,6 +147,61 @@ export default function SecretRegistrationPage() {
         ? prev.services.filter(s => s !== serviceId)
         : [...prev.services, serviceId]
     }));
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach(file => {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setPhotos(prev => [...prev, {
+            file,
+            preview: event.target?.result as string,
+            maskFace: false
+          }]);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const toggleMaskFace = (index: number) => {
+    setPhotos(prev => prev.map((photo, i) =>
+      i === index ? {...photo, maskFace: !photo.maskFace} : photo
+    ));
+  };
+
+  const applyFaceMask = async (preview: string, shouldMask: boolean): Promise<string> => {
+    if (!shouldMask) return preview;
+
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return resolve(preview);
+
+        // Draw original image
+        ctx.drawImage(img, 0, 0);
+
+        // Apply blur to top 40% (where face usually is)
+        const faceHeight = img.height * 0.4;
+        ctx.filter = 'blur(30px)';
+        ctx.drawImage(img, 0, 0, img.width, faceHeight, 0, 0, img.width, faceHeight);
+
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      };
+      img.src = preview;
+    });
   };
 
   return (
@@ -822,6 +891,137 @@ export default function SecretRegistrationPage() {
               )}
             </div>
 
+            {/* Photo Upload */}
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.85rem',
+                color: '#9a8a8e',
+                marginBottom: '12px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}>
+                📸 Fotografie (pro schválení adminem)
+              </label>
+
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handlePhotoUpload}
+                style={{ display: 'none' }}
+                id="photo-upload"
+              />
+
+              <label
+                htmlFor="photo-upload"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '24px',
+                  background: 'rgba(255,255,255,0.02)',
+                  border: '2px dashed rgba(255,255,255,0.1)',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  marginBottom: '16px'
+                }}
+              >
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📷</div>
+                  <div style={{ fontSize: '0.9rem', color: '#e8e8e8', marginBottom: '4px' }}>
+                    Klikněte pro výběr fotek
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#9a8a8e' }}>
+                    Můžete vybrat více fotek najednou
+                  </div>
+                </div>
+              </label>
+
+              {photos.length > 0 && (
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                  gap: '12px'
+                }}>
+                  {photos.map((photo, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        position: 'relative',
+                        aspectRatio: '3/4',
+                        borderRadius: '12px',
+                        overflow: 'hidden',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        background: '#1a1416'
+                      }}
+                    >
+                      <img
+                        src={photo.preview}
+                        alt={`Preview ${index + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          filter: photo.maskFace ? 'blur(15px)' : 'none',
+                          maskImage: photo.maskFace ? 'linear-gradient(to bottom, transparent 40%, black 40%)' : 'none',
+                          WebkitMaskImage: photo.maskFace ? 'linear-gradient(to bottom, transparent 40%, black 40%)' : 'none'
+                        }}
+                      />
+
+                      {/* Controls */}
+                      <div style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
+                        padding: '8px',
+                        display: 'flex',
+                        gap: '4px',
+                        justifyContent: 'center'
+                      }}>
+                        <button
+                          onClick={() => toggleMaskFace(index)}
+                          style={{
+                            padding: '6px 12px',
+                            background: photo.maskFace ? 'var(--wine)' : 'rgba(255,255,255,0.1)',
+                            border: 'none',
+                            borderRadius: '6px',
+                            color: 'white',
+                            fontSize: '0.7rem',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {photo.maskFace ? '✓ Maskováno' : '👤 Maskovat'}
+                        </button>
+                        <button
+                          onClick={() => removePhoto(index)}
+                          style={{
+                            padding: '6px 12px',
+                            background: 'rgba(239, 68, 68, 0.2)',
+                            border: 'none',
+                            borderRadius: '6px',
+                            color: '#ef4444',
+                            fontSize: '0.7rem',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div style={{ fontSize: '0.75rem', color: '#9a8a8e', marginTop: '8px' }}>
+                {photos.length} {photos.length === 1 ? 'fotka' : photos.length < 5 ? 'fotky' : 'fotek'} nahráno
+                {photos.filter(p => p.maskFace).length > 0 && ` • ${photos.filter(p => p.maskFace).length} maskováno`}
+              </div>
+            </div>
+
             <div style={{ display: 'flex', gap: '12px' }}>
               <button
                 onClick={() => setStep(1)}
@@ -873,39 +1073,6 @@ export default function SecretRegistrationPage() {
               ✅ Dokončení registrace
             </h2>
 
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '0.85rem',
-                color: '#9a8a8e',
-                marginBottom: '12px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px'
-              }}>
-                Dostupné dny
-              </label>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'].map(day => (
-                  <button
-                    key={day}
-                    onClick={() => toggleDay(day)}
-                    style={{
-                      padding: '10px 16px',
-                      borderRadius: '100px',
-                      border: formData.availableDays.includes(day) ? '2px solid var(--wine)' : '1px solid rgba(255,255,255,0.1)',
-                      background: formData.availableDays.includes(day) ? 'rgba(139, 41, 66, 0.15)' : '#1a1416',
-                      color: formData.availableDays.includes(day) ? 'var(--wine)' : '#e8e8e8',
-                      fontSize: '0.9rem',
-                      fontWeight: '600',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {day}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div style={{
               padding: '20px',
               background: 'rgba(234, 179, 8, 0.1)',
@@ -913,12 +1080,12 @@ export default function SecretRegistrationPage() {
               borderRadius: '12px',
               marginBottom: '24px'
             }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                 <input
                   type="checkbox"
                   id="terms"
                   checked={formData.agreeTerms}
-                  onChange={(e) => setFormData({ ...formData, agreeTerms: e.target.checked })}
+                  onChange={(e) => setFormData({ ...formData, agreeTerms: e.target.checked, agreePrivacy: e.target.checked })}
                   style={{
                     width: '20px',
                     height: '20px',
@@ -928,26 +1095,7 @@ export default function SecretRegistrationPage() {
                   }}
                 />
                 <label htmlFor="terms" style={{ fontSize: '0.9rem', lineHeight: '1.5', cursor: 'pointer' }}>
-                  Souhlasím s <strong>obchodními podmínkami</strong> a zavazuji se dodržovat pravidla LovelyGirls.cz
-                </label>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                <input
-                  type="checkbox"
-                  id="privacy"
-                  checked={formData.agreePrivacy}
-                  onChange={(e) => setFormData({ ...formData, agreePrivacy: e.target.checked })}
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    cursor: 'pointer',
-                    accentColor: 'var(--wine)',
-                    marginTop: '2px'
-                  }}
-                />
-                <label htmlFor="privacy" style={{ fontSize: '0.9rem', lineHeight: '1.5', cursor: 'pointer' }}>
-                  Souhlasím se <strong>zpracováním osobních údajů</strong> podle GDPR
+                  Souhlasím s <strong>pronájmem prostor pro umělecké účely</strong> a se <strong>zveřejněním inzerce</strong>
                 </label>
               </div>
             </div>
