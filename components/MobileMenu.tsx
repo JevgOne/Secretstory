@@ -38,6 +38,27 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
 
   return (
     <>
+      {/* DEBUG INDICATOR - Remove after testing */}
+      <div style={{
+        position: 'fixed',
+        top: '70px',
+        right: '4%',
+        width: '60px',
+        height: '60px',
+        background: 'red',
+        zIndex: 99999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: '10px',
+        fontWeight: 'bold',
+        borderRadius: '50%',
+        border: '3px solid yellow'
+      }}>
+        DEBUG
+      </div>
+
       {/* Hamburger Button */}
       <button
         className={`mobile-menu-btn ${isOpen ? 'open' : ''}`}
@@ -142,6 +163,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
       <style jsx>{`
         /* Hamburger Button */
         .mobile-menu-btn {
+          display: flex;
           position: fixed;
           top: 1rem;
           right: 4%;
