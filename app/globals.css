@@ -113,6 +113,7 @@ nav .logo,
 .nav-links {
     display: flex;
     gap: 2.5rem;
+    flex-wrap: wrap;
 }
 
 .nav-links a {
@@ -198,6 +199,24 @@ nav .nav-contact,
 .language-switcher .code {
     font-weight: 500;
     font-size: 0.75rem;
+}
+
+/* Mobile language switcher optimizations */
+@media (max-width: 768px) {
+    .language-switcher {
+        gap: 4px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .lang-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        min-height: 44px;
+        min-width: 44px;
+    }
+    .language-switcher .flag {
+        font-size: 1rem;
+    }
 }
 
 /* HERO */
