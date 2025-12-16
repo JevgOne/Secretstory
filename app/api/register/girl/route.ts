@@ -76,10 +76,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Password strength (at least 6 characters)
-    if (password.length < 6) {
+    // Password strength (at least 8 characters)
+    if (password.length < 8) {
       return NextResponse.json(
-        { error: 'Heslo musí mít alespoň 6 znaků' },
+        { error: 'Heslo musí mít alespoň 8 znaků' },
+        { status: 400 }
+      );
+    }
+
+    // Password must contain at least one digit
+    if (!/\d/.test(password)) {
+      return NextResponse.json(
+        { error: 'Heslo musí obsahovat alespoň jednu číslici' },
         { status: 400 }
       );
     }

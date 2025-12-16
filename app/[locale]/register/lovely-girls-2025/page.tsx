@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import { useLocations } from '@/lib/hooks/useLocations';
+import { toast } from 'sonner';
 
 export default function SecretRegistrationPage() {
   const { primaryLocation } = useLocations();
@@ -46,14 +47,24 @@ export default function SecretRegistrationPage() {
   });
 
   const handleSubmit = async () => {
-    // Validace
+    // Validace hesla
+    if (formData.password.length < 8) {
+      toast.error('Heslo musí mít alespoň 8 znaků');
+      return;
+    }
+
+    if (!/\d/.test(formData.password)) {
+      toast.error('Heslo musí obsahovat alespoň jednu číslici');
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
-      alert('Hesla se neshodují!');
+      toast.error('Hesla se neshodují!');
       return;
     }
 
     if (!formData.agreeTerms || !formData.agreePrivacy) {
-      alert('Musíte souhlasit s podmínkami!');
+      toast.error('Musíte souhlasit s podmínkami!');
       return;
     }
 
@@ -66,15 +77,15 @@ export default function SecretRegistrationPage() {
       });
 
       if (response.ok) {
-        alert('Registrace úspěšná! Váš profil čeká na schválení administrátorem.');
-        router.push('/admin/login');
+        toast.success('Registrace úspěšná! Váš profil čeká na schválení administrátorem.');
+        setTimeout(() => router.push('/admin/login'), 1500);
       } else {
         const data = await response.json();
-        alert(`Chyba: ${data.error || 'Registrace se nezdařila'}`);
+        toast.error(data.error || 'Registrace se nezdařila');
       }
     } catch (error) {
       console.error('Registration error:', error);
-      alert('Chyba při registraci. Zkuste to prosím znovu.');
+      toast.error('Chyba při registraci. Zkuste to prosím znovu.');
     }
   };
 
