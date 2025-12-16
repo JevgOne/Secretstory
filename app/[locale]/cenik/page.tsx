@@ -221,9 +221,10 @@ export default function PricingPage() {
 
       {/* Bottom CTA Bar */}
       <BottomCTA translations={{
-        browse_girls: tNav('girls'),
+        call: tFooter('call'),
         whatsapp: tNav('whatsapp'),
-        call: tFooter('call')
+        branches: 'Branches',
+        discounts: tNav('discounts')
       }} />
 
       {/* FOOTER */}

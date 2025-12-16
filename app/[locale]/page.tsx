@@ -546,9 +546,10 @@ export default function Home() {
         {/* MOBILE BOTTOM CTA */}
         <BottomCTA
           translations={{
-            browse_girls: t('nav.girls'),
+            call: t('nav.phone'),
             whatsapp: t('nav.whatsapp'),
-            call: t('nav.phone')
+            branches: 'Branches',
+            discounts: t('nav.discounts')
           }}
         />
       </div>

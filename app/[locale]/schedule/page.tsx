@@ -339,9 +339,10 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
       {/* MOBILE BOTTOM CTA */}
       <BottomCTA
         translations={{
-          browse_girls: tNav('girls'),
+          call: tNav('phone'),
           whatsapp: tNav('whatsapp'),
-          call: tNav('phone')
+          branches: 'Branches',
+          discounts: tNav('discounts')
         }}
       />
     </>

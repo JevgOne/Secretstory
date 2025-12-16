@@ -6,9 +6,10 @@ import { useLocale } from 'next-intl';
 
 interface BottomCTAProps {
   translations: {
-    browse_girls: string;
-    whatsapp: string;
     call: string;
+    whatsapp: string;
+    branches: string;
+    discounts: string;
   };
 }
 
@@ -66,18 +67,8 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
   return (
     <>
       <div className={`bottom-cta ${isVisible ? 'visible' : 'hidden'}`}>
-        <Link href={`/${locale}/divky`} className="bottom-cta-btn browse">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          <span className="bottom-cta-label">{translations.browse_girls}</span>
-        </Link>
-
         <button onClick={handleCall} className="bottom-cta-btn call">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
           </svg>
           <span className="bottom-cta-label">{translations.call}</span>
@@ -89,6 +80,22 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           </svg>
           <span className="bottom-cta-label">{translations.whatsapp}</span>
         </button>
+
+        <Link href={`/${locale}`} className="bottom-cta-btn branches">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span className="bottom-cta-label">{translations.branches}</span>
+        </Link>
+
+        <Link href={`/${locale}/discounts`} className="bottom-cta-btn discounts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <span className="bottom-cta-label">{translations.discounts}</span>
+        </Link>
       </div>
 
       <style jsx>{`
@@ -99,15 +106,16 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           right: 0;
           z-index: 90;
           display: none;
-          grid-template-columns: 1fr 1fr 1fr;
-          gap: 1px;
-          background: rgba(26, 18, 22, 0.98);
-          backdrop-filter: blur(10px);
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          padding: env(safe-area-inset-bottom, 0);
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0;
+          background: rgba(26, 18, 22, 0.95);
+          backdrop-filter: blur(12px);
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 0.5rem 0;
+          padding-bottom: env(safe-area-inset-bottom, 0.5rem);
           transform: translateY(0);
-          transition: transform 0.3s ease;
-          box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4);
         }
 
         .bottom-cta.hidden {
@@ -123,53 +131,59 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 4px;
-          padding: 0.75rem 0.5rem;
+          gap: 6px;
+          padding: 0.85rem 0.25rem;
           background: transparent;
           border: none;
           cursor: pointer;
-          transition: all 0.2s;
-          min-height: 60px;
+          transition: all 0.15s ease;
           text-decoration: none;
+          position: relative;
         }
 
-        .bottom-cta-btn:active {
-          transform: scale(0.95);
+        .bottom-cta-btn::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: rgba(255, 255, 255, 0);
+          transition: background 0.15s ease;
+          border-radius: 8px;
+        }
+
+        .bottom-cta-btn:active::before {
+          background: rgba(255, 255, 255, 0.08);
         }
 
         .bottom-cta-btn svg {
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
+          position: relative;
+          z-index: 1;
         }
 
         .bottom-cta-label {
-          font-size: 0.7rem;
+          font-size: 0.75rem;
           font-weight: 500;
           text-align: center;
-        }
-
-        .bottom-cta-btn.browse {
-          color: var(--white);
-        }
-
-        .bottom-cta-btn.browse:active {
-          background: rgba(255, 255, 255, 0.05);
+          line-height: 1.2;
+          position: relative;
+          z-index: 1;
         }
 
         .bottom-cta-btn.call {
-          color: #3b82f6;
-        }
-
-        .bottom-cta-btn.call:active {
-          background: rgba(59, 130, 246, 0.1);
+          color: #ffffff;
         }
 
         .bottom-cta-btn.whatsapp {
-          color: var(--green);
+          color: #25d366;
         }
 
-        .bottom-cta-btn.whatsapp:active {
-          background: rgba(34, 197, 94, 0.1);
+        .bottom-cta-btn.branches {
+          color: #ffffff;
+        }
+
+        .bottom-cta-btn.discounts {
+          color: #fbbf24;
         }
 
         /* Show only on mobile */
@@ -182,7 +196,7 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
         /* Support for iPhone notch */
         @supports (padding: env(safe-area-inset-bottom)) {
           .bottom-cta {
-            padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+            padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
           }
         }
       `}</style>
