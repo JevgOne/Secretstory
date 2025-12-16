@@ -6449,7 +6449,7 @@ body > div > button[title*="Next"],
 
 /* Menu Header */
 .mobile-menu-header {
-    padding: 1.5rem 1.5rem 1rem !important;
+    padding: 1.1rem 1.5rem 0.7rem !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
     background: rgba(0, 0, 0, 0.2) !important;
 }
@@ -6490,16 +6490,16 @@ body > div > button[title*="Next"],
 /* Menu Navigation */
 .mobile-menu-nav {
     flex: 1 !important;
-    padding: 1rem 1.5rem !important;
+    padding: 0.75rem 1.5rem !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 0.4rem !important;
+    gap: 0.35rem !important;
 }
 
 .mobile-menu-link {
     display: block !important;
     width: 100% !important;
-    padding: 0.85rem 1.5rem !important;
+    padding: 0.7rem 1.5rem !important;
     font-size: 1.05rem !important;
     color: #e5e5e5 !important;
     transition: all 0.25s ease !important;
@@ -6543,12 +6543,12 @@ body > div > button[title*="Next"],
 
 /* Menu Footer */
 .mobile-menu-footer {
-    padding: 1rem 1.5rem 1.5rem !important;
+    padding: 0.75rem 1.5rem 1.25rem !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .mobile-menu-lang {
-    margin-bottom: 0.75rem !important;
+    margin-bottom: 0.6rem !important;
     display: flex !important;
     justify-content: center !important;
 }
@@ -6556,7 +6556,7 @@ body > div > button[title*="Next"],
 .mobile-menu-actions {
     display: flex !important;
     flex-direction: column !important;
-    gap: 0.6rem !important;
+    gap: 0.5rem !important;
 }
 
 .mobile-contact-btn {
@@ -6564,7 +6564,7 @@ body > div > button[title*="Next"],
     align-items: center !important;
     justify-content: center !important;
     gap: 0.75rem !important;
-    padding: 0.85rem 1rem !important;
+    padding: 0.75rem 1rem !important;
     border-radius: 8px !important;
     font-size: 1rem !important;
     font-weight: 500 !important;
