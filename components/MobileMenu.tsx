@@ -261,36 +261,55 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
 
         .mobile-menu-nav {
           flex: 1;
-          padding: 2rem 0;
+          padding: 1.5rem 1.5rem;
           display: flex;
           flex-direction: column;
-          gap: 0;
+          gap: 0.5rem;
         }
 
         .mobile-menu-link {
           display: block !important;
           width: 100%;
-          padding: 1.2rem 2rem 1.2rem 3rem;
-          font-size: 1.15rem;
-          color: #d4d4d4;
-          transition: all 0.3s;
-          border-left: 4px solid transparent;
+          padding: 1rem 1.5rem;
+          font-size: 1.05rem;
+          color: #e5e5e5;
+          transition: all 0.25s ease;
           text-decoration: none;
           box-sizing: border-box;
           font-weight: 400;
-          margin-left: 0;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .mobile-menu-link::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 4px;
+          background: var(--wine);
+          transform: scaleY(0);
+          transition: transform 0.25s ease;
         }
 
         .mobile-menu-link:active {
-          background: rgba(255, 255, 255, 0.08);
-          color: #ffffff;
+          background: rgba(255, 255, 255, 0.1);
+          transform: scale(0.98);
         }
 
         .mobile-menu-link.active {
           color: #ffffff;
-          border-left-color: var(--wine);
-          background: rgba(139, 41, 66, 0.15);
+          background: rgba(139, 41, 66, 0.2);
+          border-color: rgba(139, 41, 66, 0.4);
           font-weight: 500;
+        }
+
+        .mobile-menu-link.active::before {
+          transform: scaleY(1);
         }
 
         .mobile-menu-footer {
