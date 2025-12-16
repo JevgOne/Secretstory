@@ -6622,3 +6622,98 @@ body > div > button[title*="Next"],
         display: none !important;
     }
 }
+
+/* ========================================
+   BOTTOM CTA BAR (Mobile)
+   ======================================== */
+
+.bottom-cta {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 90 !important;
+    display: none !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0 !important;
+    background: rgba(26, 18, 22, 0.98) !important;
+    backdrop-filter: blur(12px) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 0.6rem 0 !important;
+    padding-bottom: env(safe-area-inset-bottom, 0.6rem) !important;
+    transform: translateY(0) !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.bottom-cta.hidden {
+    transform: translateY(100%) !important;
+}
+
+.bottom-cta.visible {
+    transform: translateY(0) !important;
+}
+
+.bottom-cta-btn {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    padding: 0.5rem 0.25rem !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    position: relative !important;
+}
+
+.bottom-cta-btn:active {
+    transform: scale(0.95) !important;
+    opacity: 0.7 !important;
+}
+
+.bottom-cta-btn svg {
+    width: 22px !important;
+    height: 22px !important;
+    flex-shrink: 0 !important;
+}
+
+.bottom-cta-label {
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+    text-align: center !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+}
+
+.bottom-cta-btn.call {
+    color: #ffffff !important;
+}
+
+.bottom-cta-btn.whatsapp {
+    color: #25d366 !important;
+}
+
+.bottom-cta-btn.branches {
+    color: #ffffff !important;
+}
+
+.bottom-cta-btn.discounts {
+    color: #fbbf24 !important;
+}
+
+/* Show only on mobile */
+@media (max-width: 768px) {
+    .bottom-cta {
+        display: grid !important;
+    }
+}
+
+/* Support for iPhone notch */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .bottom-cta {
+        padding-bottom: calc(0.6rem + env(safe-area-inset-bottom)) !important;
+    }
+}
