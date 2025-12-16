@@ -67,6 +67,7 @@ export default function Home() {
   const tHome = useTranslations('home');
   const tNav = useTranslations('nav');
   const tCommon = useTranslations('common');
+  const tGirls = useTranslations('girls');
   const tFooter = useTranslations('footer');
   const locale = useLocale();
   const pathname = usePathname();
@@ -266,12 +267,12 @@ export default function Home() {
             </div>
           ) : girls.length === 0 ? (
             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
-              {t('girls.no_girls_available')}
+              {tGirls('no_girls_available')}
             </div>
           ) : (
             girls.map((girl) => {
             const badge = girl.badge_type || null;
-            const badgeText = badge === 'new' ? t('girls.new') : badge === 'top' ? t('girls.top_reviews') : badge === 'recommended' ? t('girls.recommended') : badge === 'asian' ? 'Asian' : '';
+            const badgeText = badge === 'new' ? tGirls('new') : badge === 'top' ? tGirls('top_reviews') : badge === 'recommended' ? tGirls('recommended') : badge === 'asian' ? 'Asian' : '';
             const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
 
             // Calculate breast size from bust measurement
