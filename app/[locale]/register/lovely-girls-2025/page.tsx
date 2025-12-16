@@ -24,11 +24,14 @@ export default function SecretRegistrationPage() {
 
     // Profil
     age: '',
+    nationality: 'Česká',
     height: '',
     weight: '',
     bust: '',
     waist: '',
     hips: '',
+    hair: 'Blond',
+    eyes: 'Modré',
 
     // Tetování & Piercing
     tattoo_percentage: 0,
@@ -507,6 +510,42 @@ export default function SecretRegistrationPage() {
                   textTransform: 'uppercase',
                   letterSpacing: '0.5px'
                 }}>
+                  Národnost
+                </label>
+                <select
+                  value={formData.nationality}
+                  onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    background: '#1a1416',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px',
+                    color: '#e8e8e8',
+                    fontSize: '1rem',
+                    fontFamily: 'inherit'
+                  }}
+                >
+                  <option>Česká</option>
+                  <option>Slovenka</option>
+                  <option>Ukrajinka</option>
+                  <option>Ruska</option>
+                  <option>Polka</option>
+                  <option>Jiná</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '20px' }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.85rem',
+                  color: '#9a8a8e',
+                  marginBottom: '8px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
                   Výška (cm)
                 </label>
                 <input
@@ -514,6 +553,35 @@ export default function SecretRegistrationPage() {
                   value={formData.height}
                   onChange={(e) => setFormData({ ...formData, height: e.target.value })}
                   placeholder="170"
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    background: '#1a1416',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px',
+                    color: '#e8e8e8',
+                    fontSize: '1rem',
+                    fontFamily: 'inherit'
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.85rem',
+                  color: '#9a8a8e',
+                  marginBottom: '8px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  Váha (kg)
+                </label>
+                <input
+                  type="number"
+                  value={formData.weight}
+                  onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                  placeholder="55"
                   style={{
                     width: '100%',
                     padding: '14px 16px',
@@ -614,6 +682,73 @@ export default function SecretRegistrationPage() {
                     fontFamily: 'inherit'
                   }}
                 />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '20px' }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.85rem',
+                  color: '#9a8a8e',
+                  marginBottom: '8px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  Vlasy
+                </label>
+                <select
+                  value={formData.hair}
+                  onChange={(e) => setFormData({ ...formData, hair: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    background: '#1a1416',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px',
+                    color: '#e8e8e8',
+                    fontSize: '1rem',
+                    fontFamily: 'inherit'
+                  }}
+                >
+                  <option>Blond</option>
+                  <option>Hnědé</option>
+                  <option>Černé</option>
+                  <option>Zrzavé</option>
+                  <option>Jiné</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.85rem',
+                  color: '#9a8a8e',
+                  marginBottom: '8px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  Oči
+                </label>
+                <select
+                  value={formData.eyes}
+                  onChange={(e) => setFormData({ ...formData, eyes: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    background: '#1a1416',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px',
+                    color: '#e8e8e8',
+                    fontSize: '1rem',
+                    fontFamily: 'inherit'
+                  }}
+                >
+                  <option>Modré</option>
+                  <option>Zelené</option>
+                  <option>Hnědé</option>
+                  <option>Šedé</option>
+                </select>
               </div>
             </div>
 
