@@ -62,7 +62,7 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
   // Generate days from today until end of week (Sunday)
   const getDays = () => {
     const days = [];
-    const dayNames = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+    const dayNames = [t('days.mon'), t('days.tue'), t('days.wed'), t('days.thu'), t('days.fri'), t('days.sat'), t('days.sun')];
 
     const today = new Date();
     const currentDayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
