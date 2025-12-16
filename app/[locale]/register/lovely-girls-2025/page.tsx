@@ -322,6 +322,16 @@ export default function SecretRegistrationPage() {
                   fontFamily: 'inherit'
                 }}
               />
+              <p style={{
+                fontSize: '0.75rem',
+                color: '#22c55e',
+                marginTop: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                🔒 <strong>Email nebude nikde veřejný</strong> - slouží pouze pro přihlášení
+              </p>
             </div>
 
             <div style={{ marginBottom: '20px' }}>
@@ -352,6 +362,16 @@ export default function SecretRegistrationPage() {
                   fontFamily: 'inherit'
                 }}
               />
+              <p style={{
+                fontSize: '0.75rem',
+                color: '#22c55e',
+                marginTop: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                🔒 <strong>Telefon nebude nikde veřejný</strong> - slouží pouze pro interní kontakt
+              </p>
             </div>
 
             <div style={{ marginBottom: '20px' }}>
