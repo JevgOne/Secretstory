@@ -6492,6 +6492,7 @@ body > div > button[title*="Next"],
     flex: 1 1 auto !important;
     min-height: 0 !important;
     padding: 0.75rem 1.5rem !important;
+    padding-bottom: 200px !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 0.35rem !important;
