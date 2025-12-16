@@ -177,11 +177,6 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           .bottom-cta {
             display: grid;
           }
-
-          /* Add bottom padding to body to prevent content from being hidden */
-          :global(body) {
-            padding-bottom: 60px;
-          }
         }
 
         /* Support for iPhone notch */

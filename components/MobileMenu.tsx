@@ -142,7 +142,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
       <style jsx>{`
         /* Hamburger Button */
         .mobile-menu-btn {
-          display: none;
+          display: none !important;
           flex-direction: column;
           justify-content: space-around;
           width: 44px;
@@ -321,7 +321,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
 
         @media (max-width: 768px) {
           .mobile-menu-btn {
-            display: flex;
+            display: flex !important;
           }
         }
       `}</style>
