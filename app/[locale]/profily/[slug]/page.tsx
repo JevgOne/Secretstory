@@ -143,6 +143,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   const tNav = useTranslations('nav');
   const tCommon = useTranslations('common');
   const tFooter = useTranslations('footer');
+  const tSchedule = useTranslations('schedule');
+  const tHome = useTranslations('home');
   const locale = useLocale();
   const [activeGalleryMode, setActiveGalleryMode] = useState<"photo" | "video">("photo");
   const [activeThumb, setActiveThumb] = useState(0);
@@ -395,7 +397,15 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             <div className="schedule-section">
               <div className="schedule-grid">
                 {profile.schedule.map((item, index) => {
-                  const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+                  const dayNames = [
+                    tSchedule('days.mon'),
+                    tSchedule('days.tue'),
+                    tSchedule('days.wed'),
+                    tSchedule('days.thu'),
+                    tSchedule('days.fri'),
+                    tSchedule('days.sat'),
+                    tSchedule('days.sun')
+                  ];
                   return (
                     <div className="schedule-item" key={index}>
                       <span className="schedule-day">{dayNames[item.day_of_week]}</span>
@@ -408,7 +418,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                             <circle cx="12" cy="10" r="3"/>
                           </svg>
-                          Prague 2
+                          {tHome('default_location')}
                         </span>
                       </div>
                     </div>
