@@ -142,7 +142,6 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
       <style jsx>{`
         /* Hamburger Button */
         .mobile-menu-btn {
-          display: none !important;
           position: fixed;
           top: 1rem;
           right: 4%;
