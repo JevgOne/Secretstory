@@ -119,6 +119,9 @@ export default function BlogArticleContent({ locale, post, relatedPosts }: Props
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      {/* Mobile Menu - outside nav for proper z-index */}
+      <MobileMenu currentPath={pathname} />
+
       {/* Navigation */}
       <nav className="main-nav">
         <Link href={`/${locale}`} className="logo">
@@ -145,7 +148,6 @@ export default function BlogArticleContent({ locale, post, relatedPosts }: Props
           <a href="https://t.me/+420734332131" className="btn">{t('nav.telegram')}</a>
           <a href="https://wa.me/420734332131" className="btn btn-fill">{t('nav.whatsapp')}</a>
         </div>
-        <MobileMenu currentPath={pathname} />
       </nav>
 
       {/* Hero */}

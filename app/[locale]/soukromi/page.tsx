@@ -14,6 +14,9 @@ export default function PrivacyPage() {
   const pathname = usePathname();
   return (
     <>
+      {/* Mobile Menu - outside nav for proper z-index */}
+      <MobileMenu currentPath={pathname} />
+
       {/* Navigation */}
       <nav className="main-nav">
         <Link href={`/${locale}`} className="logo">
@@ -40,7 +43,6 @@ export default function PrivacyPage() {
           <a href="https://t.me/+420734332131" className="btn">{tNav('telegram')}</a>
           <a href="https://wa.me/420734332131" className="btn btn-fill">{tNav('whatsapp')}</a>
         </div>
-        <MobileMenu currentPath={pathname} />
       </nav>
 
       {/* Page Header */}
