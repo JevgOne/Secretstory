@@ -221,17 +221,42 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
         }
 
         .mobile-menu-header {
-          padding: 1.5rem;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 2rem 1.5rem 1.5rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+          background: rgba(0, 0, 0, 0.2);
         }
 
         .mobile-menu-logo {
           font-family: var(--font-dm-sans), sans-serif;
-          font-size: 1.3rem;
-          font-weight: 500;
-          letter-spacing: 0.08em;
+          font-size: 1.4rem;
+          font-weight: 600;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: #fff;
+          color: #ffffff;
+          text-decoration: none;
+          display: inline-block;
+          transition: opacity 0.3s;
+        }
+
+        .mobile-menu-logo:active {
+          opacity: 0.7;
+        }
+
+        .logo-L {
+          position: relative;
+          display: inline-block;
+          color: var(--wine);
+          font-weight: 700;
+          margin-right: 0.1em;
+        }
+
+        .santa-hat {
+          position: absolute;
+          top: -8px;
+          left: -4px;
+          width: 20px;
+          height: 18px;
+          opacity: 0.9;
         }
 
         .mobile-menu-nav {
@@ -245,23 +270,26 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
         .mobile-menu-link {
           display: block !important;
           width: 100%;
-          padding: 1rem 1.5rem;
-          font-size: 1.1rem;
-          color: var(--gray);
+          padding: 1.2rem 2rem;
+          font-size: 1.15rem;
+          color: #d4d4d4;
           transition: all 0.3s;
-          border-left: 3px solid transparent;
+          border-left: 4px solid transparent;
           text-decoration: none;
           box-sizing: border-box;
+          font-weight: 400;
         }
 
         .mobile-menu-link:active {
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(255, 255, 255, 0.08);
+          color: #ffffff;
         }
 
         .mobile-menu-link.active {
-          color: var(--white);
+          color: #ffffff;
           border-left-color: var(--wine);
-          background: rgba(139, 41, 66, 0.1);
+          background: rgba(139, 41, 66, 0.15);
+          font-weight: 500;
         }
 
         .mobile-menu-footer {
