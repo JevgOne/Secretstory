@@ -40,11 +40,14 @@ export async function POST(request: NextRequest) {
       password,
       confirmPassword,
       age,
+      nationality,
       height,
       weight,
       bust,
       waist,
       hips,
+      hair,
+      eyes,
       bio,
       location,
       availableDays,
@@ -54,6 +57,7 @@ export async function POST(request: NextRequest) {
       piercing_description,
       languages,
       services,
+      photos,
       agreeTerms,
       agreePrivacy
     } = body;
@@ -168,10 +172,10 @@ export async function POST(request: NextRequest) {
       const girlInsert = await db.execute({
         sql: `
           INSERT INTO girls (
-            name, slug, email, phone, age, height, weight, bust,
-            color, status, bio, verified, online,
+            name, slug, email, phone, age, nationality, height, weight, bust, hair, eyes,
+            color, status, bio, verified, online, photos,
             tattoo_percentage, tattoo_description, piercing, piercing_description, languages, services
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, 0, 0, ?, ?, ?, ?, ?, ?)
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, 0, 0, ?, ?, ?, ?, ?, ?, ?)
         `,
         args: [
           name,
@@ -179,11 +183,15 @@ export async function POST(request: NextRequest) {
           email,
           phone || null,
           age ? parseInt(age) : null,
+          nationality || null,
           height ? parseInt(height) : null,
           weight ? parseInt(weight) : null,
           measurements || null,
+          hair || null,
+          eyes || null,
           color,
           fullBio || null,
+          photos && photos.length > 0 ? JSON.stringify(photos) : null,
           tattoo_percentage || 0,
           tattoo_description || null,
           piercing ? 1 : 0,
