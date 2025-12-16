@@ -147,8 +147,8 @@ export default function Home() {
         description="Premium escort services in Prague. Professional companions, erotic massage, VIP services."
         telephone="+420734332131"
         address={{
-          streetAddress: "Vinohrady",
-          addressLocality: "Praha 2",
+          streetAddress: tHome('location_main_address'),
+          addressLocality: tHome('default_location'),
           postalCode: "120 00",
           addressCountry: "CZ"
         }}

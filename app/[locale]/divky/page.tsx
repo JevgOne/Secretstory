@@ -53,6 +53,7 @@ export default function GirlsPage() {
   const t = useTranslations();
   const tNav = useTranslations('nav');
   const tCommon = useTranslations('common');
+  const tHome = useTranslations('home');
   const tFooter = useTranslations('footer');
   const locale = useLocale();
   const pathname = usePathname();
@@ -98,7 +99,7 @@ export default function GirlsPage() {
   };
 
   const getLocation = (): string => {
-    const locations = locationNames.length > 0 ? locationNames : ["Praha 2", "Praha 3"];
+    const locations = locationNames.length > 0 ? locationNames : [tHome('default_location'), tHome('location_new_name')];
     return locations[Math.floor(Math.random() * locations.length)];
   };
 
