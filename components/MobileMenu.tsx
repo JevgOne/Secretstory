@@ -270,7 +270,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
         .mobile-menu-link {
           display: block !important;
           width: 100%;
-          padding: 1.2rem 2rem;
+          padding: 1.2rem 2rem 1.2rem 2.5rem;
           font-size: 1.15rem;
           color: #d4d4d4;
           transition: all 0.3s;
@@ -278,6 +278,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
           text-decoration: none;
           box-sizing: border-box;
           font-weight: 400;
+          margin-left: 0;
         }
 
         .mobile-menu-link:active {
