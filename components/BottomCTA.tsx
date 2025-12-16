@@ -108,14 +108,14 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           display: none;
           grid-template-columns: repeat(4, 1fr);
           gap: 0;
-          background: rgba(26, 18, 22, 0.95);
+          background: rgba(26, 18, 22, 0.98);
           backdrop-filter: blur(12px);
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-          padding: 0.5rem 0;
-          padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 0.6rem 0;
+          padding-bottom: env(safe-area-inset-bottom, 0.6rem);
           transform: translateY(0);
           transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
         }
 
         .bottom-cta.hidden {
@@ -131,43 +131,33 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 6px;
-          padding: 0.85rem 0.25rem;
+          gap: 4px;
+          padding: 0.5rem 0.25rem;
           background: transparent;
           border: none;
           cursor: pointer;
-          transition: all 0.15s ease;
+          transition: all 0.2s ease;
           text-decoration: none;
           position: relative;
         }
 
-        .bottom-cta-btn::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: rgba(255, 255, 255, 0);
-          transition: background 0.15s ease;
-          border-radius: 8px;
-        }
-
-        .bottom-cta-btn:active::before {
-          background: rgba(255, 255, 255, 0.08);
+        .bottom-cta-btn:active {
+          transform: scale(0.95);
+          opacity: 0.7;
         }
 
         .bottom-cta-btn svg {
-          width: 28px;
-          height: 28px;
-          position: relative;
-          z-index: 1;
+          width: 22px;
+          height: 22px;
+          flex-shrink: 0;
         }
 
         .bottom-cta-label {
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           font-weight: 500;
           text-align: center;
-          line-height: 1.2;
-          position: relative;
-          z-index: 1;
+          line-height: 1.1;
+          white-space: nowrap;
         }
 
         .bottom-cta-btn.call {
