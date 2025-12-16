@@ -1,0 +1,675 @@
+"use client";
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import AdminHeader from '@/components/AdminHeader';
+import type { SEOMetadata } from '@/lib/seo-types';
+import { calculateSEOScore } from '@/lib/seo-utils';
+import { getAllPages } from '@/lib/pages';
+
+interface PageWithSEO {
+  path: string;
+  type: string;
+  name: string;
+  locale: string;
+  seo?: SEOMetadata;
+  seoScore: number;
+}
+
+export default function AdminSEOPage() {
+  const router = useRouter();
+  const [pages, setPages] = useState<PageWithSEO[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [scanning, setScanning] = useState(false);
+  const [localeFilter, setLocaleFilter] = useState<string>('all');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [scoreFilter, setScoreFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetchSEOData();
+  }, []);
+
+  const fetchSEOData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/seo');
+      const data = await response.json();
+
+      if (data.success) {
+        const allPages = getAllPages();
+        const seoMap = new Map<string, SEOMetadata>(
+          data.metadata.map((seo: SEOMetadata) => [seo.page_path, seo])
+        );
+
+        const pagesWithSEO: PageWithSEO[] = allPages.map(page => {
+          const seo = seoMap.get(page.path) as SEOMetadata | undefined;
+          const seoScore = seo ? calculateSEOScore(seo) : 0;
+
+          // Extract locale from path (e.g., /cs/divky -> cs)
+          const locale = page.path.split('/')[1] || 'cs';
+
+          return {
+            path: page.path,
+            type: page.type,
+            name: page.name,
+            locale,
+            seo,
+            seoScore
+          };
+        });
+
+        setPages(pagesWithSEO);
+      }
+    } catch (err) {
+      console.error('Error fetching SEO data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleScanWebsite = async () => {
+    try {
+      setScanning(true);
+      const allPages = getAllPages();
+
+      // Get current SEO data
+      const response = await fetch('/api/seo');
+      const data = await response.json();
+
+      if (data.success) {
+        const existingPaths = new Set(
+          data.metadata.map((seo: SEOMetadata) => seo.page_path)
+        );
+
+        // Create records for pages without SEO metadata
+        const createPromises = allPages
+          .filter(page => !existingPaths.has(page.path))
+          .map(page => {
+            const locale = page.path.split('/')[1] || 'cs';
+            return fetch('/api/seo', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                page_path: page.path,
+                page_type: page.type,
+                locale,
+                meta_title: '',
+                meta_description: '',
+                focus_keyword: '',
+                seo_score: 0
+              })
+            });
+          });
+
+        await Promise.all(createPromises);
+        await fetchSEOData();
+        alert(`Scan dokončen! Nalezeno ${createPromises.length} nových stránek.`);
+      }
+    } catch (err) {
+      console.error('Error scanning website:', err);
+      alert('Chyba při skenování webu');
+    } finally {
+      setScanning(false);
+    }
+  };
+
+  const getSEOScoreBadge = (score: number) => {
+    let color = '#ef4444'; // red
+    let bg = 'rgba(239, 68, 68, 0.2)';
+    let label = 'Špatné';
+
+    if (score >= 80) {
+      color = '#22c55e'; // green
+      bg = 'rgba(34, 197, 94, 0.2)';
+      label = 'Výborné';
+    } else if (score >= 50) {
+      color = '#f59e0b'; // orange
+      bg = 'rgba(245, 158, 11, 0.2)';
+      label = 'Střední';
+    }
+
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div
+          style={{
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            background: bg,
+            border: `3px solid ${color}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: '700',
+            fontSize: '1.1rem',
+            color
+          }}
+        >
+          {score}
+        </div>
+        <span style={{ fontSize: '0.85rem', color }}>{label}</span>
+      </div>
+    );
+  };
+
+  const getLocaleFlag = (locale: string) => {
+    const flags: Record<string, string> = {
+      cs: '🇨🇿',
+      en: '🇬🇧',
+      de: '🇩🇪',
+      uk: '🇺🇦'
+    };
+    return flags[locale] || '🌐';
+  };
+
+  const getTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      static: 'Statická stránka',
+      dynamic: 'Dynamická stránka',
+      blog: 'Blog',
+      girl: 'Profil dívky'
+    };
+    return labels[type] || type;
+  };
+
+  const getTypeBadge = (type: string) => {
+    const colors: Record<string, { bg: string; color: string }> = {
+      static: { bg: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6' },
+      dynamic: { bg: 'rgba(139, 92, 246, 0.2)', color: '#8b5cf6' },
+      blog: { bg: 'rgba(34, 197, 94, 0.2)', color: '#22c55e' },
+      girl: { bg: 'rgba(236, 72, 153, 0.2)', color: '#ec4899' }
+    };
+
+    const style = colors[type] || { bg: 'rgba(107, 114, 128, 0.2)', color: '#6b7280' };
+
+    return (
+      <span
+        style={{
+          padding: '4px 12px',
+          borderRadius: '6px',
+          fontSize: '0.85rem',
+          fontWeight: '500',
+          background: style.bg,
+          color: style.color
+        }}
+      >
+        {getTypeLabel(type)}
+      </span>
+    );
+  };
+
+  const filteredPages = pages.filter(page => {
+    // Locale filter
+    if (localeFilter !== 'all' && page.locale !== localeFilter) {
+      return false;
+    }
+
+    // Type filter
+    if (typeFilter !== 'all' && page.type !== typeFilter) {
+      return false;
+    }
+
+    // Score filter
+    if (scoreFilter === 'poor' && page.seoScore >= 50) {
+      return false;
+    }
+    if (scoreFilter === 'needs-work' && (page.seoScore < 50 || page.seoScore >= 80)) {
+      return false;
+    }
+    if (scoreFilter === 'good' && page.seoScore < 80) {
+      return false;
+    }
+
+    // Search filter
+    if (searchTerm && !page.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        !page.path.toLowerCase().includes(searchTerm.toLowerCase())) {
+      return false;
+    }
+
+    return true;
+  });
+
+  // Calculate statistics
+  const totalPages = pages.length;
+  const avgScore = pages.length > 0
+    ? Math.round(pages.reduce((sum, p) => sum + p.seoScore, 0) / pages.length)
+    : 0;
+  const poorPages = pages.filter(p => p.seoScore < 50).length;
+  const goodPages = pages.filter(p => p.seoScore >= 80).length;
+
+  return (
+    <>
+      <AdminHeader title="SEO Manager" showBack={true} />
+      <div className="admin-container">
+        <div className="admin-header">
+          <div>
+            <p className="admin-subtitle">
+              Spravujte SEO metadata pro všechny stránky webu (inspirováno Yoast SEO)
+            </p>
+          </div>
+          <button
+            onClick={handleScanWebsite}
+            disabled={scanning}
+            className="btn btn-primary"
+          >
+            {scanning ? '⏳ Skenuji...' : '🔍 Skenovat web'}
+          </button>
+        </div>
+
+        {/* Statistics Cards */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-value">{totalPages}</div>
+            <div className="stat-label">Celkem stránek</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-value" style={{ color: '#22c55e' }}>{avgScore}</div>
+            <div className="stat-label">Průměrné SEO skóre</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-value" style={{ color: '#ef4444' }}>{poorPages}</div>
+            <div className="stat-label">Potřebují úpravu</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-value" style={{ color: '#22c55e' }}>{goodPages}</div>
+            <div className="stat-label">Optimalizované</div>
+          </div>
+        </div>
+
+        {/* Search Bar */}
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Hledat podle názvu nebo cesty..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+
+        {/* Filters */}
+        <div className="filters">
+          <div className="filter-group">
+            <label>Jazyk:</label>
+            <select value={localeFilter} onChange={(e) => setLocaleFilter(e.target.value)}>
+              <option value="all">Všechny</option>
+              <option value="cs">🇨🇿 Čeština</option>
+              <option value="en">🇬🇧 English</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="uk">🇺🇦 Українська</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label>Typ stránky:</label>
+            <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+              <option value="all">Všechny</option>
+              <option value="static">Statická</option>
+              <option value="dynamic">Dynamická</option>
+              <option value="blog">Blog</option>
+              <option value="girl">Profil dívky</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label>SEO skóre:</label>
+            <select value={scoreFilter} onChange={(e) => setScoreFilter(e.target.value)}>
+              <option value="all">Všechny</option>
+              <option value="poor">🔴 Špatné (&lt;50)</option>
+              <option value="needs-work">🟠 Střední (50-79)</option>
+              <option value="good">🟢 Výborné (≥80)</option>
+            </select>
+          </div>
+        </div>
+
+        {/* SEO Table */}
+        {loading ? (
+          <div className="loading">Načítání SEO dat...</div>
+        ) : (
+          <div className="seo-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>SEO Skóre</th>
+                  <th>Název stránky</th>
+                  <th>Cesta</th>
+                  <th>Jazyk</th>
+                  <th>Typ</th>
+                  <th>Meta Title</th>
+                  <th>Focus Keyword</th>
+                  <th>Akce</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredPages.map((page) => (
+                  <tr key={page.path}>
+                    <td>{getSEOScoreBadge(page.seoScore)}</td>
+                    <td>
+                      <strong>{page.name}</strong>
+                    </td>
+                    <td>
+                      <code className="path-code">{page.path}</code>
+                    </td>
+                    <td>
+                      <span style={{ fontSize: '1.5rem' }}>
+                        {getLocaleFlag(page.locale)}
+                      </span>
+                    </td>
+                    <td>{getTypeBadge(page.type)}</td>
+                    <td>
+                      {page.seo?.meta_title ? (
+                        <div className="meta-preview">
+                          {page.seo.meta_title.substring(0, 50)}
+                          {page.seo.meta_title.length > 50 && '...'}
+                          <div className="meta-length">
+                            {page.seo.meta_title.length} znaků
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="not-set">[Nenastaveno]</span>
+                      )}
+                    </td>
+                    <td>
+                      {page.seo?.focus_keyword ? (
+                        <span className="keyword-badge">{page.seo.focus_keyword}</span>
+                      ) : (
+                        <span className="not-set">[Žádné]</span>
+                      )}
+                    </td>
+                    <td>
+                      <Link
+                        href={`/admin/seo/edit?path=${encodeURIComponent(page.path)}`}
+                        className="action-btn edit"
+                      >
+                        ✏️ Upravit SEO
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {filteredPages.length === 0 && (
+              <div className="empty-state">
+                <p>
+                  {searchTerm || localeFilter !== 'all' || typeFilter !== 'all' || scoreFilter !== 'all'
+                    ? 'Žádné stránky nenalezeny s těmito filtry'
+                    : 'Zatím nejsou žádné stránky. Klikněte na "Skenovat web" pro načtení stránek.'}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        <style jsx>{`
+          .admin-container {
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+          }
+
+          .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+          }
+
+          .admin-subtitle {
+            color: var(--gray);
+            margin-top: 0.5rem;
+          }
+
+          .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+          }
+
+          .btn-primary {
+            background: #d4af37;
+            color: #1a1a1a;
+          }
+
+          .btn-primary:hover:not(:disabled) {
+            background: #c9a532;
+            transform: translateY(-2px);
+          }
+
+          .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+
+          .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+          }
+
+          .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+          }
+
+          .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+          }
+
+          .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+
+          .search-bar {
+            margin-bottom: 1.5rem;
+          }
+
+          .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 0.95rem;
+            transition: all 0.3s;
+          }
+
+          .search-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(255, 255, 255, 0.08);
+          }
+
+          .search-input::placeholder {
+            color: var(--gray);
+          }
+
+          .filters {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+          }
+
+          .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          .filter-group label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            white-space: nowrap;
+          }
+
+          .filter-group select {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+          }
+
+          .filter-group select:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(255, 255, 255, 0.08);
+          }
+
+          .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+          }
+
+          .seo-table {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          thead {
+            background: rgba(255, 255, 255, 0.05);
+          }
+
+          th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+
+          td {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            vertical-align: middle;
+          }
+
+          .path-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #d4af37;
+          }
+
+          .meta-preview {
+            max-width: 300px;
+          }
+
+          .meta-length {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-top: 4px;
+          }
+
+          .not-set {
+            color: var(--gray);
+            font-style: italic;
+            font-size: 0.9rem;
+          }
+
+          .keyword-badge {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+          }
+
+          .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+          }
+
+          .action-btn.edit {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+          }
+
+          .action-btn.edit:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+          }
+
+          .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+          }
+
+          @media (max-width: 1400px) {
+            .seo-table {
+              overflow-x: auto;
+            }
+
+            table {
+              min-width: 1200px;
+            }
+          }
+
+          @media (max-width: 768px) {
+            .stats-grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters {
+              flex-direction: column;
+              align-items: stretch;
+            }
+
+            .filter-group {
+              flex-direction: column;
+              align-items: stretch;
+            }
+
+            .filter-group select {
+              width: 100%;
+            }
+          }
+        `}</style>
+      </div>
+    </>
+  );
+}

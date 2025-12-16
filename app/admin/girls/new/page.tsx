@@ -29,7 +29,12 @@ export default function NewGirlPage() {
     piercing: false,
     piercing_description: '',
     languages: ['cs'],
-    services: [] as string[]
+    services: [] as string[],
+    is_new: false,
+    is_top: false,
+    is_featured: false,
+    featured_section: '',
+    badge_type: ''
   });
 
   // Auto-assign color based on existing girls count
@@ -433,6 +438,81 @@ export default function NewGirlPage() {
               rows={8}
               placeholder="Popis dívky, její osobnost, co nabízí..."
             />
+          </div>
+        </div>
+
+        <div className="form-section">
+          <h2 className="section-title">🏷️ Badges & Zvýraznění</h2>
+          <p style={{ color: 'var(--gray)', marginBottom: '1.5rem' }}>
+            Nastavte badges a featured sekce pro tuto dívku
+          </p>
+
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.is_new}
+                  onChange={(e) => setFormData({ ...formData, is_new: e.target.checked })}
+                />
+                <span>🆕 Nová dívka (New badge)</span>
+              </label>
+            </div>
+
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.is_top}
+                  onChange={(e) => setFormData({ ...formData, is_top: e.target.checked })}
+                />
+                <span>⭐ Top recenze (Top Reviews badge)</span>
+              </label>
+            </div>
+
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.is_featured}
+                  onChange={(e) => setFormData({ ...formData, is_featured: e.target.checked })}
+                />
+                <span>💎 Zvýrazněná dívka (Featured)</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="form-grid">
+            <div className="form-group">
+              <label>Typ badge</label>
+              <select
+                value={formData.badge_type}
+                onChange={(e) => setFormData({ ...formData, badge_type: e.target.value })}
+              >
+                <option value="">Žádný</option>
+                <option value="new">🆕 New (červený)</option>
+                <option value="top">⭐ Top Reviews (zlatý)</option>
+                <option value="recommended">💎 Recommended (fialový)</option>
+                <option value="asian">🌸 Asian (fialový)</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.featured_section === 'homepage_new'}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    featured_section: e.target.checked ? 'homepage_new' : ''
+                  })}
+                />
+                <span>🆕 Zobrazit jako "Nová dívka" na homepage</span>
+              </label>
+              <p style={{ fontSize: '0.85rem', color: 'var(--gray)', marginTop: '0.5rem' }}>
+                ⚠️ Pouze jedna dívka by měla mít tuto možnost aktivní!
+              </p>
+            </div>
           </div>
         </div>
 

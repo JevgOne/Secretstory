@@ -28,7 +28,12 @@ export async function POST(request: NextRequest) {
       tattoo_description,
       piercing,
       piercing_description,
-      languages
+      languages,
+      is_new,
+      is_top,
+      is_featured,
+      featured_section,
+      badge_type
     } = body;
 
     // Validate required fields
@@ -66,8 +71,9 @@ export async function POST(request: NextRequest) {
         INSERT INTO girls (
           name, slug, email, phone, age, nationality, height, weight,
           bust, hair, eyes, color, status, services, bio,
-          tattoo_percentage, tattoo_description, piercing, piercing_description, languages
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?)
+          tattoo_percentage, tattoo_description, piercing, piercing_description, languages,
+          is_new, is_top, is_featured, featured_section, badge_type
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         name,
@@ -88,13 +94,18 @@ export async function POST(request: NextRequest) {
         tattoo_description || null,
         piercing ? 1 : 0,
         piercing_description || null,
-        languages ? JSON.stringify(languages) : JSON.stringify(['cs'])
+        languages ? JSON.stringify(languages) : JSON.stringify(['cs']),
+        is_new ? 1 : 0,
+        is_top ? 1 : 0,
+        is_featured ? 1 : 0,
+        featured_section || null,
+        badge_type || null
       ]
     });
 
     return NextResponse.json({
       success: true,
-      girl_id: result.lastInsertRowid,
+      girl_id: Number(result.lastInsertRowid),
       slug,
       message: 'Profil dívky vytvořen'
     });
@@ -137,7 +148,10 @@ export async function GET(request: NextRequest) {
         languages: row.languages ? JSON.parse(row.languages as string) : ['cs'],
         verified: Boolean(row.verified),
         online: Boolean(row.online),
-        piercing: Boolean(row.piercing)
+        piercing: Boolean(row.piercing),
+        is_new: Boolean(row.is_new),
+        is_top: Boolean(row.is_top),
+        is_featured: Boolean(row.is_featured)
       }))
     });
   } catch (error) {

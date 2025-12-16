@@ -40,3 +40,33 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env*.local
+
+# backup files
+*.bak
+*.backup
+*~
+
+# documentation (optional - odkomentuj pokud nechceš commitovat)
+# IMPLEMENTATION_*.md
+# CHANGELOG.md
+# FIXES-SUMMARY.md
+# TESTING-*.md
+# BEFORE-AFTER-*.md
+# SEO-STRATEGY.md
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# database files (if any)
+*.db
+*.sqlite
+*.sqlite3
+
+# logs
+logs/
+*.log

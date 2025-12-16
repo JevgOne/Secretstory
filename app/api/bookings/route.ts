@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth-helpers';
+import { sendBookingNotification } from '@/lib/email';
 
 // GET /api/bookings - Get all bookings (with filters)
 export async function GET(request: NextRequest) {
@@ -150,7 +151,9 @@ export async function POST(request: NextRequest) {
       ]
     });
 
-    // Create notification for the girl
+    const bookingId = Number(result.lastInsertRowid);
+
+    // Create in-app notification for the girl
     try {
       await db.execute({
         sql: `
@@ -172,9 +175,43 @@ export async function POST(request: NextRequest) {
       // Don't fail the booking if notification fails
     }
 
+    // Send email notifications (non-blocking, runs in background)
+    Promise.all([
+      // Get girl's email and name
+      db.execute({
+        sql: 'SELECT name, email FROM girls WHERE id = ?',
+        args: [girl_id]
+      }),
+      // Get manager's email (the one who created the booking)
+      db.execute({
+        sql: 'SELECT email FROM users WHERE id = ?',
+        args: [created_by]
+      })
+    ]).then(([girlResult, managerResult]) => {
+      const girl = girlResult.rows[0];
+      const manager = managerResult.rows[0];
+
+      if (girl?.email && manager?.email) {
+        sendBookingNotification({
+          girlEmail: girl.email as string,
+          girlName: girl.name as string,
+          managerEmail: manager.email as string,
+          customerName: client_name || 'Zákazník',
+          date: date,
+          time: `${start_time} - ${end_time}`,
+          bookingId
+        }).catch(error => {
+          console.error('Failed to send booking emails:', error);
+          // Email failure doesn't affect booking creation
+        });
+      }
+    }).catch(error => {
+      console.error('Failed to fetch email data:', error);
+    });
+
     return NextResponse.json({
       success: true,
-      booking_id: result.lastInsertRowid,
+      booking_id: bookingId,
       message: 'Rezervace vytvořena'
     });
   } catch (error) {

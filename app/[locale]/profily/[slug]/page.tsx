@@ -18,6 +18,7 @@ import {
 import ReviewsList from '@/components/ReviewsList';
 import ReviewForm from '@/components/ReviewForm';
 import ReviewStars from '@/components/ReviewStars';
+import { getBasicServices, getServiceName } from '@/lib/services';
 
 const cormorant = Cormorant({
   subsets: ['latin', 'latin-ext'],
@@ -82,6 +83,28 @@ const TelegramIcon = () => (
   </svg>
 );
 
+interface ScheduleItem {
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+}
+
+interface Photo {
+  id: number;
+  url: string;
+  thumbnail_url: string | null;
+  is_primary: boolean;
+  display_order: number;
+}
+
+interface Video {
+  id: number;
+  url: string;
+  thumbnail_url: string | null;
+  display_order: number;
+  duration: number | null;
+}
+
 interface Girl {
   id: number;
   name: string;
@@ -104,6 +127,13 @@ interface Girl {
   piercing?: boolean;
   piercing_description?: string;
   languages?: string; // JSON array: ["cs", "en", "de", "uk"]
+  is_new?: boolean;
+  is_top?: boolean;
+  is_featured?: boolean;
+  badge_type?: string;
+  schedule?: ScheduleItem[];
+  photos?: Photo[];
+  videos?: Video[];
 }
 
 export default function ProfileDetailPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
@@ -123,6 +153,11 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   useEffect(() => {
     fetchProfile();
   }, []);
+
+  // Reset active thumbnail when switching between photo/video modes
+  useEffect(() => {
+    setActiveThumb(0);
+  }, [activeGalleryMode]);
 
   const fetchProfile = async () => {
     try {
@@ -202,20 +237,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
     }
   };
 
-  const includedServices = [
-    { code: "classic_massage" },
-    { code: "erotic_massage" },
-    { code: "body_to_body" },
-    { code: "shared_shower" },
-    { code: "kissing" },
-    { code: "striptease" }
-  ];
-
-  const extraServices = [
-    { code: "nuru_massage", price: "+500 Kč" },
-    { code: "tantra_massage", price: "+800 Kč" },
-    { code: "duo", price: "+1500 Kč" }
-  ];
+  // Basic services - always included (mandatory)
+  const basicServices = getBasicServices();
 
   const breadcrumbItems = [
     { name: t('breadcrumb.home'), url: `https://lovelygirls.cz/${locale}` },
@@ -272,8 +295,36 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           {/* Gallery - Sticky */}
           <div className="gallery">
             <div className="gallery-main">
-              {profile.verified && <span className="gallery-badge">{t('girls.verified')}</span>}
-              HLAVNÍ FOTO / VIDEO
+              {profile.verified && <span className="gallery-badge verified">{t('girls.verified')}</span>}
+              {profile.badge_type && (
+                <span className={`gallery-badge badge-${profile.badge_type}`}>
+                  {profile.badge_type === 'new' ? t('girls.new') : profile.badge_type === 'top' ? t('girls.top_reviews') : profile.badge_type === 'recommended' ? t('girls.recommended') : tCommon('asian')}
+                </span>
+              )}
+              {activeGalleryMode === "photo" ? (
+                profile.photos && profile.photos.length > 0 && profile.photos[activeThumb] ? (
+                  <img
+                    src={profile.photos[activeThumb].url}
+                    alt={`${profile.name} - ${t('detail.photo')} ${activeThumb + 1}`}
+                    className="gallery-image"
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                  />
+                ) : (
+                  <div className="gallery-placeholder">{tCommon('no_photos')}</div>
+                )
+              ) : (
+                profile.videos && profile.videos.length > 0 && profile.videos[activeThumb] ? (
+                  <video
+                    src={profile.videos[activeThumb].url}
+                    controls
+                    className="gallery-video"
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                    poster={profile.videos[activeThumb].thumbnail_url || undefined}
+                  />
+                ) : (
+                  <div className="gallery-placeholder">{tCommon('no_videos')}</div>
+                )
+              )}
               <div className="gallery-toggle">
                 <button
                   className={`toggle-btn ${activeGalleryMode === "photo" ? "active" : ""}`}
@@ -298,38 +349,69 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               </div>
             </div>
             <div className="gallery-thumbs">
-              <div className={`gallery-thumb ${activeThumb === 0 ? "active" : ""}`} onClick={() => setActiveThumb(0)}>1</div>
-              <div className={`gallery-thumb ${activeThumb === 1 ? "active" : ""}`} onClick={() => setActiveThumb(1)}>2</div>
-              <div className={`gallery-thumb ${activeThumb === 2 ? "active" : ""}`} onClick={() => setActiveThumb(2)}>3</div>
-              <div className={`gallery-thumb video ${activeThumb === 3 ? "active" : ""}`} onClick={() => setActiveThumb(3)}>▶</div>
-              <div className={`gallery-thumb video ${activeThumb === 4 ? "active" : ""}`} onClick={() => setActiveThumb(4)}>▶</div>
+              {activeGalleryMode === "photo" ? (
+                profile.photos && profile.photos.length > 0 ? (
+                  profile.photos.map((photo, index) => (
+                    <div
+                      key={photo.id}
+                      className={`gallery-thumb ${activeThumb === index ? "active" : ""}`}
+                      onClick={() => setActiveThumb(index)}
+                      style={{
+                        backgroundImage: `url(${photo.thumbnail_url || photo.url})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                      }}
+                    />
+                  ))
+                ) : (
+                  <div className="gallery-thumb">{tCommon('no_photos')}</div>
+                )
+              ) : (
+                profile.videos && profile.videos.length > 0 ? (
+                  profile.videos.map((video, index) => (
+                    <div
+                      key={video.id}
+                      className={`gallery-thumb video ${activeThumb === index ? "active" : ""}`}
+                      onClick={() => setActiveThumb(index)}
+                      style={{
+                        backgroundImage: video.thumbnail_url ? `url(${video.thumbnail_url})` : 'none',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                      }}
+                    >
+                      {!video.thumbnail_url && '▶'}
+                    </div>
+                  ))
+                ) : (
+                  <div className="gallery-thumb video">{tCommon('no_videos')}</div>
+                )
+              )}
             </div>
 
             {/* Schedule Section */}
-            {/* TODO: Load schedule from bookings API - only show days with actual bookings */}
-            {/* If no bookings in current week, show nothing */}
-            {false && (
+            {profile.schedule && profile.schedule.length > 0 && (
             <div className="schedule-section">
               <div className="schedule-grid">
-                {/* Schedule items should be dynamically generated from bookings */}
-                {/* Example: */}
-                {/* {weekBookings.map(booking => (
-                  <div className="schedule-item" key={booking.id}>
-                    <span className="schedule-day">{getDayAbbr(booking.date)}</span>
-                    <div className="schedule-info">
-                      <span className={`schedule-time ${getTimeClass(booking.date)}`}>
-                        {booking.start_time} - {booking.end_time}
-                      </span>
-                      <span className="schedule-location">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                          <circle cx="12" cy="10" r="3"/>
-                        </svg>
-                        {booking.location}
-                      </span>
+                {profile.schedule.map((item, index) => {
+                  const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+                  return (
+                    <div className="schedule-item" key={index}>
+                      <span className="schedule-day">{dayNames[item.day_of_week]}</span>
+                      <div className="schedule-info">
+                        <span className="schedule-time">
+                          {item.start_time} – {item.end_time}
+                        </span>
+                        <span className="schedule-location">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                          </svg>
+                          Prague 2
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))} */}
+                  );
+                })}
               </div>
             </div>
             )}
@@ -460,15 +542,15 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
               </div>
             ) : null}
 
-            {/* Services - Included */}
+            {/* Services - Included (Basic - mandatory) */}
             <div className="profile-section">
               <h3 className={`section-title ${cormorant.className}`}>{t('profile.included')}</h3>
               <div className="services-grid">
-                {includedServices.map((service, i) => (
-                  <div key={i} className="service-item">
+                {basicServices.map((service) => (
+                  <div key={service.id} className="service-item">
                     <div className="service-name">
                       <div className="service-icon">✓</div>
-                      {t(`services.${service.code}`)}
+                      {getServiceName(service.id, locale)}
                     </div>
                     <span className="service-price included">{t('profile.included')}</span>
                   </div>
@@ -476,21 +558,25 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
               </div>
             </div>
 
-            {/* Services - Extra */}
-            <div className="profile-section">
-              <h3 className={`section-title ${cormorant.className}`}>{t('profile.extra_services')}</h3>
-              <div className="services-grid">
-                {extraServices.map((service, i) => (
-                  <div key={i} className="service-item extra">
-                    <div className="service-name">
-                      <div className="service-icon">+</div>
-                      {t(`services.${service.code}`)}
-                    </div>
-                    <span className="service-price extra">{service.price}</span>
-                  </div>
-                ))}
+            {/* Services - Extra (from profile) */}
+            {profile.services && profile.services.filter(s => !basicServices.find(bs => bs.id === s)).length > 0 && (
+              <div className="profile-section">
+                <h3 className={`section-title ${cormorant.className}`}>{t('profile.extra_services')}</h3>
+                <div className="services-grid">
+                  {profile.services
+                    .filter(serviceId => !basicServices.find(bs => bs.id === serviceId))
+                    .map((serviceId) => (
+                      <div key={serviceId} className="service-item extra">
+                        <div className="service-name">
+                          <div className="service-icon">+</div>
+                          {getServiceName(serviceId, locale)}
+                        </div>
+                        <span className="service-price extra">{t('profile.extra')}</span>
+                      </div>
+                    ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* CTA */}
             <div className="profile-cta">
@@ -514,12 +600,12 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
       {/* Reviews Section */}
       <section className="reviews-section">
         <div className="reviews-header">
-          <h2 className={`reviews-title ${cormorant.className}`}>Recenze</h2>
+          <h2 className={`reviews-title ${cormorant.className}`}>{t('reviews.title')}</h2>
           {profile.reviews_count > 0 && (
             <div className="reviews-rating">
               <span className="rating-stars">★★★★★</span>
               <span className="rating-value">{profile.rating || 4.9}</span>
-              <span className="rating-count">({profile.reviews_count} recenzí)</span>
+              <span className="rating-count">({profile.reviews_count} {t('reviews.reviews_count')})</span>
             </div>
           )}
         </div>
@@ -528,11 +614,11 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
             girlId={profile.id}
             limit={3}
             translations={{
-              title: 'Recenze od klientů',
-              no_reviews: 'Zatím žádné recenze. Buďte první!',
-              loading: 'Načítání recenzí...',
-              verified_booking: 'Ověřená rezervace',
-              reviewed_on: 'Hodnoceno'
+              title: t('reviews.title') || 'Recenze od klientů',
+              no_reviews: t('reviews.no_reviews') || 'Zatím žádné recenze. Buďte první!',
+              loading: t('reviews.loading'),
+              verified_booking: t('reviews.verified_booking') || 'Ověřená rezervace',
+              reviewed_on: t('reviews.reviewed_on') || 'Hodnoceno'
             }}
           />
         </div>
@@ -541,7 +627,7 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
       {/* Similar Girls Section */}
       <section className="similar-section">
         <div className="similar-header">
-          <h2 className={`similar-title ${cormorant.className}`}>Podobné dívky</h2>
+          <h2 className={`similar-title ${cormorant.className}`}>{t('profile.similar_girls')}</h2>
         </div>
         <div className="similar-grid">
           {/* Similar girls cards will be populated here */}
@@ -564,14 +650,14 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
                 </span>
                 ovely Girls
               </Link>
-              <p className="footer-tagline">Prague Premium Escort</p>
+              <p className="footer-tagline">{tFooter('tagline')}</p>
               <p className="footer-desc">{tFooter('about_text')}</p>
             </div>
 
             <div className="footer-links-grid">
               {/* Services */}
               <div className="footer-links-col">
-                <h4 className="footer-links-title">Služby</h4>
+                <h4 className="footer-links-title">{tFooter('practices')}</h4>
                 <nav className="footer-links">
                   <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
                   <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
@@ -600,13 +686,13 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
-                    Zavolat
+                    {tFooter('call')}
                   </a>
                   <a href="https://wa.me/420734332131?text=Ahoj%2C%20m%C3%A1te%20dneska%20voln%C3%BD%20term%C3%ADn%3F" className="footer-contact-btn whatsapp">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                     </svg>
-                    WhatsApp
+                    {tFooter('whatsapp')}
                   </a>
                 </div>
               </div>
@@ -644,7 +730,7 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
         }
 
         /* Navigation */
-        nav {
+        .main-nav {
           position: fixed;
           top: 0;
           left: 0;
@@ -755,6 +841,7 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
         /* Detail Layout */
         .detail {
           padding: 1rem 4% 4rem;
+          padding-top: 0; /* Breadcrumb already has top padding */
         }
 
         .detail-grid {
@@ -792,14 +879,53 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
         .gallery-badge {
           position: absolute;
           top: 1rem;
-          left: 1rem;
-          background: var(--wine-light);
-          color: #fff;
           font-size: 0.7rem;
           font-weight: 600;
           padding: 0.4rem 0.8rem;
-          border-radius: 4px;
+          border-radius: 100px;
           text-transform: uppercase;
+          backdrop-filter: blur(10px);
+          z-index: 2;
+        }
+
+        .gallery-badge.verified {
+          left: 1rem;
+          background: var(--wine-light);
+          color: #fff;
+        }
+
+        .gallery-badge.badge-new {
+          left: 1rem;
+          background: linear-gradient(135deg, #e85a4f 0%, #ff6b5b 100%);
+          color: #fff;
+          box-shadow: 0 4px 20px rgba(232,90,79,0.4);
+          animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        .gallery-badge.badge-top {
+          left: 1rem;
+          background: linear-gradient(135deg, var(--accent-gold) 0%, #f0c56e 100%);
+          color: #1a1a1a;
+          box-shadow: 0 4px 20px rgba(212,168,83,0.4);
+        }
+
+        .gallery-badge.badge-recommended,
+        .gallery-badge.badge-asian {
+          left: 1rem;
+          background: linear-gradient(135deg, var(--accent-violet) 0%, #a78bfa 100%);
+          color: #fff;
+          box-shadow: 0 4px 20px rgba(139,92,246,0.4);
+        }
+
+        /* If both verified and badge exist, offset them */
+        .gallery-badge.verified ~ .gallery-badge {
+          left: auto;
+          right: 1rem;
+        }
+
+        @keyframes badgePulse {
+          0%, 100% { box-shadow: 0 4px 20px rgba(232,90,79,0.4); }
+          50% { box-shadow: 0 4px 30px rgba(232,90,79,0.6); }
         }
 
         .gallery-toggle {
@@ -977,6 +1103,7 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
 
         /* Profile Content */
         .profile-content {
+          padding-top: 2rem;
           padding-bottom: 4rem;
         }
 
@@ -1473,10 +1600,11 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
         }
 
         @media (max-width: 768px) {
-          nav {
+          .main-nav {
             padding: 1rem 4%;
           }
-          .nav-links {
+          .nav-links,
+          .nav-contact {
             display: none;
           }
           .gallery-thumbs {

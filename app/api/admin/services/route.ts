@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Služba vytvořena',
-      id: result.lastInsertRowid
+      id: Number(result.lastInsertRowid)
     });
   } catch (error) {
     console.error('Create service error:', error);

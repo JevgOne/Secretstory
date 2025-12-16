@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
+import { useLocations } from '@/lib/hooks/useLocations';
 
 export default function SecretRegistrationPage() {
+  const { primaryLocation } = useLocations();
   const router = useRouter();
   const t = useTranslations();
   const locale = useLocale();
@@ -35,7 +37,7 @@ export default function SecretRegistrationPage() {
 
     // Pracovní údaje
     bio: '',
-    location: 'Praha',
+    location: primaryLocation?.display_name || 'Praha',
     availableDays: [] as string[],
 
     // Souhlas

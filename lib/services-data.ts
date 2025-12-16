@@ -8,7 +8,7 @@ export interface Service {
     de: string;
     uk: string;
   };
-  category: 'basic' | 'oral' | 'special' | 'massage' | 'extras' | 'types';
+  category: 'oral' | 'special' | 'massage' | 'extras' | 'types';
   description: {
     cs: string;
     en: string;
@@ -37,7 +37,7 @@ export interface Service {
 }
 
 export const SERVICES: Service[] = [
-  // Basic Services
+  // Extras
   {
     id: 'classic-sex',
     slug: 'klasicky-sex',
@@ -47,7 +47,7 @@ export const SERVICES: Service[] = [
       de: 'Klassischer Sex',
       uk: 'Класичний секс'
     },
-    category: 'basic',
+    category: 'extras',
     description: {
       cs: 'Tradiční pohlavní styk s ochranou',
       en: 'Traditional intercourse with protection',
@@ -1127,7 +1127,7 @@ Deep Throat вважається преміум послугою з відпов
       de: 'Französisches Küssen',
       uk: 'Французькі поцілунки'
     },
-    category: 'basic',
+    category: 'extras',
     description: {
       cs: 'Vášnivé líbání s jazykem',
       en: 'Passionate kissing with tongue',
@@ -6783,12 +6783,6 @@ Travel Companion - це красива та інтелігентна супут�
 ];
 
 export const SERVICE_CATEGORIES = {
-  basic: {
-    cs: 'Základní služby',
-    en: 'Basic Services',
-    de: 'Grundlegende Dienstleistungen',
-    uk: 'Основні послуги'
-  },
   oral: {
     cs: 'Orální služby',
     en: 'Oral Services',

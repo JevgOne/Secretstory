@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       ]
     })
 
-    const girlId = result.lastInsertRowid
+    const girlId = Number(result.lastInsertRowid)
 
     // Insert services if provided
     if (service_ids && Array.isArray(service_ids) && service_ids.length > 0) {

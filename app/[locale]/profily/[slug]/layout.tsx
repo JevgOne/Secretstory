@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   try {
     const result = await db.execute({
-      sql: `SELECT name, age, height, weight, bust, bio, nationality FROM girls WHERE slug = ? AND status = 'active'`,
+      sql: `SELECT name, age, height, weight, bust, bio, nationality, meta_title, meta_description, og_image FROM girls WHERE slug = ? AND status = 'active'`,
       args: [slug]
     })
 
@@ -25,10 +25,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       }
     }
 
-    const title = `${girl.name} - ${girl.age} years | Premium Escort Prague | LovelyGirls`
-    const description = girl.bio
+    // Use custom SEO fields if available, otherwise fallback to generated defaults
+    const title = girl.meta_title || `${girl.name} - ${girl.age} years | Premium Escort Prague | LovelyGirls`
+    const description = girl.meta_description || (girl.bio
       ? girl.bio.substring(0, 155) + '...'
-      : `Meet ${girl.name}, ${girl.age} years old, ${girl.height}cm. Premium escort services in Prague. Available for incall & outcall. Book now via WhatsApp or call.`
+      : `Meet ${girl.name}, ${girl.age} years old, ${girl.height}cm. Premium escort services in Prague. Available for incall & outcall. Book now via WhatsApp or call.`)
+    const ogImage = girl.og_image || '/og-image.jpg'
 
     const url = `https://lovelygirls.cz/${locale}/profily/${slug}`
 
@@ -46,7 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         type: 'profile',
         images: [
           {
-            url: '/og-image.jpg', // You can add girl-specific images later
+            url: ogImage,
             width: 1200,
             height: 630,
             alt: `${girl.name} - Premium Escort Prague`
@@ -57,7 +59,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         card: 'summary_large_image',
         title,
         description,
-        images: ['/og-image.jpg']
+        images: [ogImage]
       },
       alternates: {
         canonical: url,

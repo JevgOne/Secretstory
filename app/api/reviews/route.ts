@@ -96,13 +96,15 @@ export async function POST(request: NextRequest) {
       ]
     });
 
+    const reviewId = Number(result.lastInsertRowid);
+
     // Create notification for all admin users
     const adminUsers = await db.execute({
-      sql: 'SELECT id FROM users WHERE role = ?',
+      sql: 'SELECT id, email FROM users WHERE role = ?',
       args: ['admin']
     });
 
-    // Create notification for each admin
+    // Create in-app notification for each admin
     for (const admin of adminUsers.rows) {
       await createNotification({
         userId: (admin as any).id,
@@ -113,9 +115,60 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Send email notifications ONLY to admins (non-blocking, runs in background)
+    Promise.all([
+      // Get girl's name for email template
+      db.execute({
+        sql: 'SELECT name FROM girls WHERE id = ?',
+        args: [girl_id]
+      })
+    ]).then(([girlResult]) => {
+      const girl = girlResult.rows[0];
+      const adminEmails = adminUsers.rows
+        .map(admin => (admin as any).email)
+        .filter(Boolean);
+
+      if (girl && adminEmails.length > 0) {
+        // Send email ONLY to admins, NOT to the girl
+        const adminHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #8B1538;">Nová recenze čeká na schválení</h2>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p><strong>Dívka:</strong> ${girl.name}</p>
+              <p><strong>Autor:</strong> ${author_name}</p>
+              <p><strong>Hodnocení:</strong> ${'⭐'.repeat(rating)} (${rating}/5)</p>
+              <p><strong>Recenze:</strong></p>
+              <p style="font-style: italic;">"${content}"</p>
+            </div>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/reviews"
+               style="display: inline-block; background: #8B1538; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 10px;">
+              Schválit/Zamítnout
+            </a>
+          </div>
+        `;
+
+        // Import sendEmail directly for admin-only emails
+        import('@/lib/email').then(({ sendEmail }) => {
+          Promise.all(
+            adminEmails.map(adminEmail =>
+              sendEmail({
+                to: adminEmail,
+                subject: `Nová recenze čeká na schválení - ${girl.name}`,
+                html: adminHtml
+              })
+            )
+          ).catch(error => {
+            console.error('Failed to send review emails to admins:', error);
+          });
+        });
+      }
+    }).catch(error => {
+      console.error('Failed to fetch girl data for review:', error);
+    });
+
     return NextResponse.json({
       success: true,
-      review_id: result.lastInsertRowid,
+      review_id: reviewId,
       message: 'Recenze vytvořena a čeká na schválení'
     });
   } catch (error) {

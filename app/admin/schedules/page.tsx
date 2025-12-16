@@ -37,8 +37,7 @@ export default function SchedulesPage() {
   // Form state
   const [formGirlId, setFormGirlId] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
-  const [formStartTime, setFormStartTime] = useState("10:00");
-  const [formEndTime, setFormEndTime] = useState("22:00");
+  const [dayTimes, setDayTimes] = useState<Record<number, { start: string; end: string }>>({});
   const [formLocation, setFormLocation] = useState<string>(primaryLocation?.display_name || "Praha");
 
   // Fetch girls and schedules on mount
@@ -74,11 +73,36 @@ export default function SchedulesPage() {
   };
 
   const toggleDay = (dayIndex: number) => {
-    setSelectedDays(prev =>
-      prev.includes(dayIndex)
-        ? prev.filter(d => d !== dayIndex)
-        : [...prev, dayIndex].sort()
-    );
+    setSelectedDays(prev => {
+      if (prev.includes(dayIndex)) {
+        // Remove day and its times
+        setDayTimes(times => {
+          const newTimes = { ...times };
+          delete newTimes[dayIndex];
+          return newTimes;
+        });
+        return prev.filter(d => d !== dayIndex);
+      } else {
+        // Add day with default time (celodenní)
+        setDayTimes(times => ({
+          ...times,
+          [dayIndex]: { start: "10:00", end: "22:00" }
+        }));
+        return [...prev, dayIndex].sort();
+      }
+    });
+  };
+
+  const setDayTimePreset = (dayIndex: number, preset: 'morning' | 'afternoon' | 'fullday') => {
+    const presets = {
+      morning: { start: "10:00", end: "16:00" },
+      afternoon: { start: "16:30", end: "22:30" },
+      fullday: { start: "10:00", end: "22:00" }
+    };
+    setDayTimes(times => ({
+      ...times,
+      [dayIndex]: presets[preset]
+    }));
   };
 
   const handleAddSchedule = async () => {
@@ -93,20 +117,21 @@ export default function SchedulesPage() {
     }
 
     try {
-      // Create schedule for each selected day
-      const promises = selectedDays.map(dayIndex =>
-        fetch('/api/admin/schedules', {
+      // Create schedule for each selected day with its specific time
+      const promises = selectedDays.map(dayIndex => {
+        const times = dayTimes[dayIndex] || { start: "10:00", end: "22:00" };
+        return fetch('/api/admin/schedules', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             girl_id: formGirlId,
             day_of_week: dayIndex,
-            start_time: formStartTime,
-            end_time: formEndTime,
+            start_time: times.start,
+            end_time: times.end,
             location: formLocation
           })
-        })
-      );
+        });
+      });
 
       const responses = await Promise.all(promises);
       const allSuccess = responses.every(r => r.ok);
@@ -117,8 +142,7 @@ export default function SchedulesPage() {
         // Reset form
         setFormGirlId(0);
         setSelectedDays([]);
-        setFormStartTime("10:00");
-        setFormEndTime("22:00");
+        setDayTimes({});
         setFormLocation(primaryLocation?.display_name || "Praha");
       } else {
         alert('Některé rozvrhy se nepodařilo vytvořit');
@@ -400,61 +424,48 @@ export default function SchedulesPage() {
               <button className="modal-close" onClick={() => setShowAddModal(false)}>×</button>
             </div>
             <div className="modal-body">
-              {/* Girl Selection - Modern Cards */}
+              {/* Girl Selection - Compact */}
               <div className="form-group">
                 <label className="form-label">Vyberte dívku</label>
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gap: '12px',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: '8px',
                   marginTop: '8px'
                 }}>
                   {girls.map(girl => (
-                    <div
+                    <button
                       key={girl.id}
+                      type="button"
                       onClick={() => setFormGirlId(girl.id)}
                       style={{
-                        padding: '12px',
+                        padding: '8px 10px',
                         background: formGirlId === girl.id
                           ? 'linear-gradient(135deg, #8b2942 0%, #5c1c2e 100%)'
                           : '#1a1418',
                         border: formGirlId === girl.id
                           ? '2px solid #8b2942'
                           : '1px solid rgba(255,255,255,0.05)',
-                        borderRadius: '12px',
+                        borderRadius: '8px',
                         cursor: 'pointer',
                         transition: 'all 0.2s',
-                        textAlign: 'center',
                         display: 'flex',
-                        flexDirection: 'column',
                         alignItems: 'center',
                         gap: '6px',
-                        transform: formGirlId === girl.id ? 'scale(1.05)' : 'scale(1)'
+                        fontSize: '0.8rem',
+                        fontWeight: formGirlId === girl.id ? '600' : '500',
+                        color: formGirlId === girl.id ? '#fff' : '#ccc'
                       }}
                     >
                       <div style={{
-                        width: '36px',
-                        height: '36px',
+                        width: '8px',
+                        height: '8px',
                         borderRadius: '50%',
                         background: girl.color || '#8b2942',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.2rem',
-                        boxShadow: formGirlId === girl.id
-                          ? `0 4px 12px ${girl.color}60`
-                          : 'none'
-                      }}>
-                        👩
-                      </div>
-                      <span style={{
-                        fontSize: '0.85rem',
-                        fontWeight: formGirlId === girl.id ? '600' : '500',
-                        color: formGirlId === girl.id ? '#fff' : '#ccc'
-                      }}>
-                        {girl.name}
-                      </span>
-                    </div>
+                        flexShrink: 0
+                      }} />
+                      {girl.name}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -556,47 +567,162 @@ export default function SchedulesPage() {
                 </div>
               </div>
 
-              {/* Time Range - Modern Design */}
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }}>
-                      <circle cx="12" cy="12" r="10"/>
-                      <polyline points="12 6 12 12 16 14"/>
-                    </svg>
-                    Od
-                  </label>
-                  <input
-                    type="time"
-                    className="form-input"
-                    value={formStartTime}
-                    onChange={(e) => setFormStartTime(e.target.value)}
-                    style={{
-                      fontSize: '1rem',
-                      fontWeight: '600'
-                    }}
-                  />
+              {/* Time Settings for Each Selected Day */}
+              {selectedDays.length > 0 && (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  marginTop: '16px'
+                }}>
+                  {selectedDays.map(dayIndex => {
+                    const times = dayTimes[dayIndex] || { start: "10:00", end: "22:00" };
+                    const isMorning = times.start === "10:00" && times.end === "16:00";
+                    const isAfternoon = times.start === "16:30" && times.end === "22:30";
+                    const isFullday = times.start === "10:00" && times.end === "22:00";
+
+                    return (
+                      <div key={dayIndex} style={{
+                        background: '#1a1418',
+                        borderRadius: '12px',
+                        padding: '16px',
+                        border: '1px solid rgba(255,255,255,0.05)'
+                      }}>
+                        {/* Day Header */}
+                        <div style={{
+                          fontSize: '0.95rem',
+                          fontWeight: '600',
+                          marginBottom: '12px',
+                          color: '#fff'
+                        }}>
+                          {DAYS[dayIndex]}
+                        </div>
+
+                        {/* Quick Time Presets */}
+                        <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
+                          <button
+                            type="button"
+                            onClick={() => setDayTimePreset(dayIndex, 'morning')}
+                            style={{
+                              flex: 1,
+                              padding: '8px 6px',
+                              background: isMorning
+                                ? 'linear-gradient(135deg, #8b2942 0%, #5c1c2e 100%)'
+                                : '#231a1e',
+                              border: isMorning
+                                ? '2px solid #8b2942'
+                                : '1px solid rgba(255,255,255,0.05)',
+                              borderRadius: '8px',
+                              color: '#fff',
+                              fontSize: '0.75rem',
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s'
+                            }}
+                          >
+                            Ranní
+                            <div style={{ fontSize: '0.7rem', color: '#9a8a8e', marginTop: '2px' }}>
+                              10:00-16:00
+                            </div>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDayTimePreset(dayIndex, 'afternoon')}
+                            style={{
+                              flex: 1,
+                              padding: '8px 6px',
+                              background: isAfternoon
+                                ? 'linear-gradient(135deg, #8b2942 0%, #5c1c2e 100%)'
+                                : '#231a1e',
+                              border: isAfternoon
+                                ? '2px solid #8b2942'
+                                : '1px solid rgba(255,255,255,0.05)',
+                              borderRadius: '8px',
+                              color: '#fff',
+                              fontSize: '0.75rem',
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s'
+                            }}
+                          >
+                            Odpolední
+                            <div style={{ fontSize: '0.7rem', color: '#9a8a8e', marginTop: '2px' }}>
+                              16:30-22:30
+                            </div>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDayTimePreset(dayIndex, 'fullday')}
+                            style={{
+                              flex: 1,
+                              padding: '8px 6px',
+                              background: isFullday
+                                ? 'linear-gradient(135deg, #8b2942 0%, #5c1c2e 100%)'
+                                : '#231a1e',
+                              border: isFullday
+                                ? '2px solid #8b2942'
+                                : '1px solid rgba(255,255,255,0.05)',
+                              borderRadius: '8px',
+                              color: '#fff',
+                              fontSize: '0.75rem',
+                              fontWeight: '600',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s'
+                            }}
+                          >
+                            Celodenní
+                            <div style={{ fontSize: '0.7rem', color: '#9a8a8e', marginTop: '2px' }}>
+                              10:00-22:00
+                            </div>
+                          </button>
+                        </div>
+
+                        {/* Manual Time Inputs */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                          <div>
+                            <label style={{ fontSize: '0.7rem', color: '#9a8a8e', marginBottom: '4px', display: 'block' }}>
+                              Od
+                            </label>
+                            <input
+                              type="time"
+                              className="form-input"
+                              value={times.start}
+                              onChange={(e) => setDayTimes(prev => ({
+                                ...prev,
+                                [dayIndex]: { ...prev[dayIndex], start: e.target.value }
+                              }))}
+                              style={{
+                                fontSize: '0.85rem',
+                                fontWeight: '600',
+                                padding: '8px'
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <label style={{ fontSize: '0.7rem', color: '#9a8a8e', marginBottom: '4px', display: 'block' }}>
+                              Do
+                            </label>
+                            <input
+                              type="time"
+                              className="form-input"
+                              value={times.end}
+                              onChange={(e) => setDayTimes(prev => ({
+                                ...prev,
+                                [dayIndex]: { ...prev[dayIndex], end: e.target.value }
+                              }))}
+                              style={{
+                                fontSize: '0.85rem',
+                                fontWeight: '600',
+                                padding: '8px'
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-                <div className="form-group">
-                  <label className="form-label">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }}>
-                      <circle cx="12" cy="12" r="10"/>
-                      <polyline points="12 6 12 12 16 14"/>
-                    </svg>
-                    Do
-                  </label>
-                  <input
-                    type="time"
-                    className="form-input"
-                    value={formEndTime}
-                    onChange={(e) => setFormEndTime(e.target.value)}
-                    style={{
-                      fontSize: '1rem',
-                      fontWeight: '600'
-                    }}
-                  />
-                </div>
-              </div>
+              )}
             </div>
             <div className="modal-footer">
               <button className="modal-btn secondary" onClick={() => setShowAddModal(false)}>

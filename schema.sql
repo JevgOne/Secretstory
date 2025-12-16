@@ -35,6 +35,12 @@ CREATE TABLE IF NOT EXISTS girls (
   bookings_count INTEGER DEFAULT 0,
   services TEXT, -- JSON array of services
   bio TEXT,
+  -- Badges for featured sections
+  is_new BOOLEAN DEFAULT 0, -- Show "New" badge
+  is_top BOOLEAN DEFAULT 0, -- Show "Top Reviews" badge
+  is_featured BOOLEAN DEFAULT 0, -- Show as featured girl
+  featured_section TEXT, -- Which section: 'homepage_hero' | 'homepage_new' | null
+  badge_type TEXT, -- Badge type: 'new' | 'top' | 'recommended' | 'asian' | null
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -101,6 +107,8 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_girls_status ON girls(status);
 CREATE INDEX IF NOT EXISTS idx_girls_slug ON girls(slug);
+CREATE INDEX IF NOT EXISTS idx_girls_featured ON girls(is_featured);
+CREATE INDEX IF NOT EXISTS idx_girls_badge_type ON girls(badge_type);
 CREATE INDEX IF NOT EXISTS idx_bookings_girl_id ON bookings(girl_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(date);
 CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings(status);
@@ -108,5 +116,39 @@ CREATE INDEX IF NOT EXISTS idx_reviews_girl_id ON reviews(girl_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_status ON reviews(status);
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(read);
+
+-- Services table (Seznam služeb)
+CREATE TABLE IF NOT EXISTS services (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug TEXT NOT NULL UNIQUE,
+  name_cs TEXT NOT NULL,
+  name_en TEXT NOT NULL,
+  name_de TEXT NOT NULL,
+  name_uk TEXT NOT NULL,
+  category TEXT NOT NULL CHECK(category IN ('basic', 'oral', 'special', 'massage', 'extras', 'types')),
+  description_cs TEXT,
+  description_en TEXT,
+  description_de TEXT,
+  description_uk TEXT,
+  seo_title_cs TEXT,
+  seo_title_en TEXT,
+  seo_title_de TEXT,
+  seo_title_uk TEXT,
+  seo_description_cs TEXT,
+  seo_description_en TEXT,
+  seo_description_de TEXT,
+  seo_description_uk TEXT,
+  content_cs TEXT,
+  content_en TEXT,
+  content_de TEXT,
+  content_uk TEXT,
+  icon TEXT,
+  base_price INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_services_slug ON services(slug);
+CREATE INDEX IF NOT EXISTS idx_services_category ON services(category);
 
 -- Initial data will be inserted via separate script after tables are created

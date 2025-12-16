@@ -22,13 +22,15 @@ export async function PATCH(
       'name', 'email', 'phone', 'age', 'nationality', 'height', 'weight',
       'bust', 'hair', 'eyes', 'color', 'status', 'verified', 'online',
       'bio', 'tattoo_percentage', 'tattoo_description', 'piercing', 'piercing_description',
-      'description_cs', 'description_en', 'description_de', 'description_uk', 'location'
+      'description_cs', 'description_en', 'description_de', 'description_uk', 'location',
+      'is_new', 'is_top', 'is_featured', 'featured_section', 'badge_type',
+      'meta_title', 'meta_description', 'og_image'
     ];
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
         updates.push(`${field} = ?`);
-        if (field === 'verified' || field === 'online' || field === 'piercing') {
+        if (field === 'verified' || field === 'online' || field === 'piercing' || field === 'is_new' || field === 'is_top' || field === 'is_featured') {
           args.push(body[field] ? 1 : 0);
         } else {
           args.push(body[field]);
@@ -175,7 +177,10 @@ export async function GET(
         languages: girl.languages ? JSON.parse(girl.languages as string) : ['cs'],
         verified: Boolean(girl.verified),
         online: Boolean(girl.online),
-        piercing: Boolean(girl.piercing)
+        piercing: Boolean(girl.piercing),
+        is_new: Boolean(girl.is_new),
+        is_top: Boolean(girl.is_top),
+        is_featured: Boolean(girl.is_featured)
       }
     });
   } catch (error) {

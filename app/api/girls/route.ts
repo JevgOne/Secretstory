@@ -57,41 +57,40 @@ export async function GET(request: NextRequest) {
 
     const result = await db.execute({ sql, args });
 
-    // Fetch services for all girls
-    const girlsWithServices = await Promise.all(
+    // For each girl, fetch their primary photo
+    const girlsWithPhotos = await Promise.all(
       result.rows.map(async (row) => {
-        const servicesResult = await db.execute({
+        const photoResult = await db.execute({
           sql: `
-            SELECT s.id, s.name_cs, s.name_en, s.name_de, s.name_uk, s.category, s.duration
-            FROM services s
-            INNER JOIN girl_services gs ON s.id = gs.service_id
-            WHERE gs.girl_id = ? AND s.is_active = 1
-            ORDER BY s.display_order, s.id
+            SELECT url, thumbnail_url
+            FROM girl_photos
+            WHERE girl_id = ? AND is_primary = 1
+            LIMIT 1
           `,
           args: [row.id]
         });
 
-        // Get translated service names
-        const services = servicesResult.rows.map(service => ({
-          id: service.id,
-          name: service[`name_${lang}` as keyof typeof service] || service.name_cs,
-          category: service.category,
-          duration: service.duration
-        }));
+        const primaryPhoto = photoResult.rows[0];
+        const services = row.services ? JSON.parse(row.services as string) : [];
 
         return {
           ...row,
           services,
           verified: Boolean(row.verified),
           online: Boolean(row.online),
-          piercing: Boolean(row.piercing)
+          piercing: Boolean(row.piercing),
+          is_new: Boolean(row.is_new),
+          is_top: Boolean(row.is_top),
+          is_featured: Boolean(row.is_featured),
+          primary_photo: primaryPhoto?.url || null,
+          thumbnail: primaryPhoto?.thumbnail_url || null
         };
       })
     );
 
     return NextResponse.json({
       success: true,
-      girls: girlsWithServices
+      girls: girlsWithPhotos
     });
   } catch (error) {
     console.error('Get girls error:', error);

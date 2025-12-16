@@ -1,5 +1,6 @@
 "use client";
 
+import AdminHeader from '@/components/AdminHeader';
 import { useState, useEffect } from 'react';
 import ReviewStars from '@/components/ReviewStars';
 
@@ -162,13 +163,14 @@ export default function AdminReviewsPage() {
   };
 
   return (
-    <div className="admin-container">
-      <div className="admin-header">
-        <div>
-          <h1 className="admin-title">Správa recenzí</h1>
-          <p className="admin-subtitle">Schvalujte a spravujte recenze od klientů</p>
+    <>
+      <AdminHeader title="Správa recenzí" showBack={true} />
+      <div className="admin-container">
+        <div className="admin-header">
+          <div>
+            <p className="admin-subtitle">Schvalujte a spravujte recenze od klientů</p>
+          </div>
         </div>
-      </div>
 
       <div className="filters">
         <button
@@ -292,7 +294,7 @@ export default function AdminReviewsPage() {
         }
 
         .admin-subtitle {
-          color: var(--gray);
+          color: #9ca3af;
         }
 
         .filters {
@@ -304,16 +306,16 @@ export default function AdminReviewsPage() {
 
         .filter-btn {
           padding: 0.75rem 1.5rem;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: #2d2d31;
+          border: 1px solid #3d3d41;
           border-radius: 8px;
-          color: var(--gray);
+          color: #9ca3af;
           cursor: pointer;
           transition: all 0.3s;
         }
 
         .filter-btn:hover {
-          background: rgba(255, 255, 255, 0.08);
+          background: #35353a;
         }
 
         .filter-btn.active {
@@ -325,7 +327,7 @@ export default function AdminReviewsPage() {
         .loading {
           text-align: center;
           padding: 3rem;
-          color: var(--gray);
+          color: #9ca3af;
         }
 
         .reviews-grid {
@@ -334,8 +336,8 @@ export default function AdminReviewsPage() {
         }
 
         .review-card {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: #1f1f23;
+          border: 1px solid #2d2d31;
           border-radius: 12px;
           padding: 1.5rem;
         }
@@ -376,17 +378,17 @@ export default function AdminReviewsPage() {
 
         .author-name {
           font-weight: 500;
-          color: var(--white);
+          color: #ffffff;
         }
 
         .author-email {
           font-size: 0.85rem;
-          color: var(--gray);
+          color: #9ca3af;
         }
 
         .review-girl {
           font-size: 0.9rem;
-          color: var(--gray);
+          color: #9ca3af;
         }
 
         .review-girl strong {
@@ -403,12 +405,12 @@ export default function AdminReviewsPage() {
         .review-title {
           font-size: 1.1rem;
           font-weight: 500;
-          color: var(--white);
+          color: #ffffff;
           margin-bottom: 0.75rem;
         }
 
         .review-content {
-          color: var(--gray);
+          color: #9ca3af;
           line-height: 1.6;
           margin-bottom: 1rem;
         }
@@ -418,13 +420,13 @@ export default function AdminReviewsPage() {
           justify-content: space-between;
           align-items: center;
           padding-top: 1rem;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          border-top: 1px solid #2d2d31;
           gap: 1rem;
         }
 
         .review-date {
           font-size: 0.85rem;
-          color: var(--gray);
+          color: #9ca3af;
         }
 
         .review-actions {
@@ -473,9 +475,9 @@ export default function AdminReviewsPage() {
         .empty-state {
           text-align: center;
           padding: 3rem;
-          color: var(--gray);
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #9ca3af;
+          background: #1f1f23;
+          border: 1px solid #2d2d31;
           border-radius: 12px;
         }
 
@@ -496,5 +498,6 @@ export default function AdminReviewsPage() {
         }
       `}</style>
     </div>
+    </>
   );
 }

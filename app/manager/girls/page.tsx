@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AdminHeader from "@/components/AdminHeader";
 
 // Color palette - 16 distinct colors for calendar coding
 const COLOR_PALETTE = [
@@ -63,6 +64,7 @@ export default function GirlsManagementPage() {
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
   const [showToast, setShowToast] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const [girls, setGirls] = useState<Girl[]>([]);
 
@@ -176,37 +178,95 @@ export default function GirlsManagementPage() {
     setShowNewGirlModal(true);
   };
 
-  const saveNewGirl = () => {
+  const saveNewGirl = async () => {
     if (!formData.name || !formData.email) {
       displayToast('Vyplňte jméno a email', 'error');
       return;
     }
 
-    const newGirl: Girl = {
-      id: girls.length + 1,
-      name: formData.name,
-      email: formData.email,
-      color: selectedColor,
-      age: parseInt(formData.age) || 25,
-      nationality: formData.nationality,
-      height: parseInt(formData.height) || 170,
-      weight: parseInt(formData.weight) || 55,
-      bust: formData.bust,
-      hair: formData.hair,
-      eyes: formData.eyes,
-      status: 'pending',
-      verified: false,
-      online: false,
-      rating: 0,
-      reviews: 0,
-      bookings: 0,
-      services: [...selectedServices],
-      bio: formData.bio
-    };
+    if (!formData.age) {
+      displayToast('Vyplňte věk', 'error');
+      return;
+    }
 
-    setGirls([...girls, newGirl]);
-    setShowNewGirlModal(false);
-    displayToast(`Profil ${formData.name} vytvořen`, 'success');
+    setSaving(true);
+
+    try {
+      const response = await fetch('/api/admin/girls', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: null,
+          age: parseInt(formData.age),
+          nationality: formData.nationality,
+          height: parseInt(formData.height) || null,
+          weight: parseInt(formData.weight) || null,
+          bust: formData.bust,
+          hair: formData.hair,
+          eyes: formData.eyes,
+          color: selectedColor,
+          services: selectedServices,
+          bio: formData.bio,
+          tattoo_percentage: 0,
+          tattoo_description: null,
+          piercing: false,
+          piercing_description: null,
+          languages: ['cs'],
+          is_new: true,
+          is_top: false,
+          is_featured: false,
+          featured_section: null,
+          badge_type: null
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        displayToast(`Profil ${formData.name} vytvořen`, 'success');
+        setShowNewGirlModal(false);
+
+        // Reload girls list
+        const girlsResponse = await fetch('/api/admin/girls');
+        const girlsData = await girlsResponse.json();
+
+        if (girlsData.success && girlsData.girls) {
+          const transformedGirls = girlsData.girls.map((girl: any) => ({
+            id: girl.id,
+            name: girl.name,
+            email: girl.email || '',
+            color: girl.color || 'pink',
+            age: girl.age,
+            nationality: girl.nationality || '',
+            height: girl.height || 0,
+            weight: girl.weight || 0,
+            bust: girl.bust || '',
+            hair: girl.hair || '',
+            eyes: girl.eyes || '',
+            status: girl.status || 'active',
+            verified: girl.status === 'active',
+            online: girl.online || false,
+            rating: girl.rating || 0,
+            reviews: girl.reviews_count || 0,
+            bookings: girl.bookings_count || 0,
+            services: girl.services || [],
+            bio: girl.bio || ''
+          }));
+          setGirls(transformedGirls);
+        }
+      } else {
+        displayToast(data.error || 'Chyba při vytváření profilu', 'error');
+      }
+    } catch (error) {
+      console.error('Error creating girl:', error);
+      displayToast('Chyba při vytváření profilu', 'error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const openGirlDetail = (girl: Girl) => {
@@ -236,25 +296,15 @@ export default function GirlsManagementPage() {
 
   return (
     <>
-      {/* HEADER */}
-      <header className="app-header">
-        <div className="header-left">
-          <button className="back-btn" onClick={() => router.push('/manager/dashboard')}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-          </button>
-          <span className="header-title">Správa dívek</span>
-        </div>
-        <button className="header-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-          </svg>
-        </button>
-      </header>
+      <AdminHeader title="Správa dívek" showBack={true} />
 
-      {/* SEARCH */}
-      <div className="search-bar">
+      {/* CONTENT */}
+      <main className="app-content">
+        {/* SEARCH */}
+        <div style={{
+          marginBottom: '20px',
+          position: 'relative'
+        }}>
         <div className="search-input-wrap">
           <span className="search-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -369,6 +419,7 @@ export default function GirlsManagementPage() {
           <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
       </div>
+      </main>
 
       {/* NEW GIRL MODAL */}
       {showNewGirlModal && (
@@ -540,8 +591,10 @@ export default function GirlsManagementPage() {
               </div>
             </div>
             <div className="modal-footer">
-              <button className="modal-btn secondary" onClick={() => setShowNewGirlModal(false)}>Zrušit</button>
-              <button className="modal-btn primary" onClick={saveNewGirl}>Vytvořit profil</button>
+              <button className="modal-btn secondary" onClick={() => setShowNewGirlModal(false)} disabled={saving}>Zrušit</button>
+              <button className="modal-btn primary" onClick={saveNewGirl} disabled={saving}>
+                {saving ? 'Vytváření...' : 'Vytvořit profil'}
+              </button>
             </div>
           </div>
         </div>

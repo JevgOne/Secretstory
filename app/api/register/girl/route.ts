@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db, executeTransaction } from '@/lib/db';
 import * as bcrypt from 'bcryptjs';
+import { sendNewGirlNotification } from '@/lib/email';
 
 // Helper function to generate slug from name
 function generateSlug(name: string): string {
@@ -193,6 +194,31 @@ export async function POST(request: NextRequest) {
           VALUES (?, ?, 'girl', ?)
         `,
         args: [email, password_hash, girl_id]
+      });
+
+      // === EMAIL NOTIFICATION (non-blocking) ===
+
+      // Send email to all admins in background
+      db.execute({
+        sql: 'SELECT email FROM users WHERE role = ? AND email IS NOT NULL',
+        args: ['admin']
+      }).then(adminResult => {
+        const adminEmails = adminResult.rows
+          .map(row => row.email as string)
+          .filter(Boolean);
+
+        if (adminEmails.length > 0) {
+          sendNewGirlNotification({
+            adminEmails,
+            girlName: name,
+            girlEmail: email,
+            girlId: girl_id
+          }).catch(error => {
+            console.error('Failed to send new girl notification:', error);
+          });
+        }
+      }).catch(error => {
+        console.error('Failed to fetch admin emails:', error);
       });
 
       // === SUCCESS RESPONSE ===

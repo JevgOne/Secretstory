@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      user_id: result.lastInsertRowid,
+      user_id: Number(result.lastInsertRowid),
       message: 'User created successfully'
     })
   } catch (error: any) {

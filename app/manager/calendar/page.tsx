@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import AdminHeader from "@/components/AdminHeader";
+import { useLocations } from "@/lib/hooks/useLocations";
 
 // Same color palette as girls management
 const GIRL_COLORS: Record<string, { hex: string; name: string }> = {
@@ -26,7 +28,22 @@ interface Event {
   notes?: string;
 }
 
+interface Schedule {
+  id: number;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+}
+
+interface GirlSchedule {
+  girl_id: number;
+  girl_name: string;
+  girl_color: string;
+  schedules: Schedule[];
+}
+
 export default function CalendarPage() {
+  const { primaryLocation } = useLocations();
   const router = useRouter();
   const [view, setView] = useState<'week' | 'day'>('week');
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -54,6 +71,9 @@ export default function CalendarPage() {
   // Events from database
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Girl schedules from database
+  const [girlSchedules, setGirlSchedules] = useState<GirlSchedule[]>([]);
 
   // Fetch bookings from API
   const fetchBookings = async () => {
@@ -84,6 +104,20 @@ export default function CalendarPage() {
     }
   };
 
+  // Fetch girl schedules from API
+  const fetchSchedules = async () => {
+    try {
+      const response = await fetch('/api/admin/schedules');
+      const data = await response.json();
+
+      if (data.success) {
+        setGirlSchedules(data.schedules);
+      }
+    } catch (error) {
+      console.error('Error fetching schedules:', error);
+    }
+  };
+
   const [newEvent, setNewEvent] = useState({
     girlId: 'katy',
     title: '',
@@ -91,7 +125,7 @@ export default function CalendarPage() {
     date: '',
     startTime: '14:00',
     endTime: '16:00',
-    location: 'Praha 2',
+    location: primaryLocation?.display_name || 'Praha 2',
     status: 'confirmed' as const
   });
 
@@ -155,9 +189,10 @@ export default function CalendarPage() {
     setCurrentDate(new Date());
   };
 
-  // Fetch bookings and scroll to current time on mount
+  // Fetch bookings, schedules and scroll to current time on mount
   useEffect(() => {
     fetchBookings();
+    fetchSchedules();
 
     if (timeGridRef.current) {
       const now = new Date();
@@ -189,6 +224,34 @@ export default function CalendarPage() {
       gridColumn: view === 'week' ? dayIndex + 2 : 2,
       gridRow: '1 / -1'
     };
+  };
+
+  // Get schedules for a specific day
+  const getSchedulesForDay = (date: Date) => {
+    const dayOfWeek = date.getDay();
+    // Convert Sunday (0) to 6, and Monday-Saturday (1-6) to 0-5
+    const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+    const daySchedules: { girlId: string; schedule: Schedule; color: string }[] = [];
+
+    girlSchedules.forEach((girlSchedule) => {
+      const girlId = girlSchedule.girl_name?.toLowerCase() || 'unknown';
+
+      // Only include if calendar is visible
+      if (!visibleCalendars.includes(girlId)) return;
+
+      girlSchedule.schedules.forEach((schedule) => {
+        if (schedule.day_of_week === adjustedDay) {
+          daySchedules.push({
+            girlId,
+            schedule,
+            color: GIRL_COLORS[girlId]?.hex || '#8b2942'
+          });
+        }
+      });
+    });
+
+    return daySchedules;
   };
 
   // Filter events
@@ -283,7 +346,7 @@ export default function CalendarPage() {
           date: '',
           startTime: '14:00',
           endTime: '16:00',
-          location: 'Praha 2',
+          location: primaryLocation?.display_name || 'Praha 2',
           status: 'confirmed'
         });
       } else {
@@ -295,14 +358,16 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="gcal-app">
-      {/* HEADER */}
-      <header className="gcal-header">
-        <div className="header-top">
-          <div className="header-left">
-            <button className="back-btn" onClick={() => router.push('/manager/dashboard')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
+    <>
+      <AdminHeader title="Rezervace" showBack={true} />
+      <div className="gcal-app">
+        {/* HEADER */}
+        <header className="gcal-header" style={{ marginTop: '0', paddingTop: '1rem' }}>
+          <div className="header-top">
+            <div className="header-left">
+              <button className="back-btn" onClick={() => router.push('/manager/dashboard')} style={{ display: 'none' }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
             </button>
             <span className="current-date">{formatDate(currentDate)}</span>
@@ -375,6 +440,41 @@ export default function CalendarPage() {
               </div>
             ))}
           </div>
+
+          {/* LEGEND */}
+          <div style={{
+            marginTop: '24px',
+            padding: '16px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            borderRadius: '12px',
+            fontSize: '0.8rem'
+          }}>
+            <div style={{ fontWeight: '600', marginBottom: '12px', color: '#e0d0d5' }}>
+              Legenda
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '20px',
+                  height: '12px',
+                  background: 'rgba(139, 41, 66, 0.08)',
+                  border: '2px solid rgba(139, 41, 66, 0.3)',
+                  borderRadius: '2px'
+                }}></div>
+                <span style={{ color: '#9a8a8e' }}>Dostupná hodina</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '20px',
+                  height: '12px',
+                  background: 'rgba(139, 41, 66, 0.2)',
+                  borderLeft: '3px solid #8b2942',
+                  borderRadius: '2px'
+                }}></div>
+                <span style={{ color: '#9a8a8e' }}>Rezervace</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* CENTER - CALENDAR */}
@@ -410,6 +510,33 @@ export default function CalendarPage() {
                     <div className="half-hour"></div>
                   </div>
                 ))}
+
+                {/* SCHEDULE AVAILABILITY BLOCKS (background) */}
+                {getSchedulesForDay(day).map((scheduleItem, idx) => {
+                  const [startHour, startMinute] = scheduleItem.schedule.start_time.substring(0, 5).split(':').map(Number);
+                  const [endHour, endMinute] = scheduleItem.schedule.end_time.substring(0, 5).split(':').map(Number);
+
+                  const top = (startHour * 60 + startMinute);
+                  const duration = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+
+                  return (
+                    <div
+                      key={`schedule-${idx}`}
+                      style={{
+                        position: 'absolute',
+                        top: `${top}px`,
+                        height: `${duration}px`,
+                        left: '0',
+                        right: '0',
+                        background: `${scheduleItem.color}08`,
+                        borderLeft: `2px solid ${scheduleItem.color}30`,
+                        borderRight: `2px solid ${scheduleItem.color}30`,
+                        zIndex: 1,
+                        pointerEvents: 'none'
+                      }}
+                    />
+                  );
+                })}
 
                 {/* EVENTS for this day */}
                 {filteredEvents
@@ -638,7 +765,7 @@ export default function CalendarPage() {
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="Praha 2"
+                  placeholder={primaryLocation?.display_name || 'Praha 2'}
                   value={newEvent.location}
                   onChange={(e) => setNewEvent({...newEvent, location: e.target.value})}
                 />
@@ -733,5 +860,6 @@ export default function CalendarPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

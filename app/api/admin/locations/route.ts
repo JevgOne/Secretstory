@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Pobočka byla úspěšně vytvořena',
-      location_id: result.lastInsertRowid
+      location_id: Number(result.lastInsertRowid)
     });
   } catch (error: any) {
     console.error('Create location error:', error);
