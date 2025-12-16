@@ -262,11 +262,11 @@ export default function Home() {
         <div className="cards-grid">
           {loading ? (
             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
-              Načítání...
+              {tCommon('loading')}
             </div>
           ) : girls.length === 0 ? (
             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
-              Žádné dostupné dívky
+              {t('girls.no_girls_available')}
             </div>
           ) : (
             girls.map((girl) => {
