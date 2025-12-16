@@ -214,6 +214,14 @@ export default function AdminGirlsPage() {
                   <td>{new Date(girl.created_at).toLocaleDateString('cs-CZ')}</td>
                   <td>
                     <div className="action-buttons">
+                      {girl.status === 'pending' && (
+                        <button
+                          className="action-btn approve"
+                          onClick={() => handleStatusChange(girl.id, 'active')}
+                        >
+                          Schválit
+                        </button>
+                      )}
                       <Link href={`/admin/girls/${girl.id}/edit`} className="action-btn edit">
                         Upravit
                       </Link>
@@ -458,6 +466,17 @@ export default function AdminGirlsPage() {
 
         .action-btn.view:hover {
           background: #d8b4fe;
+          transform: translateY(-1px);
+        }
+
+        .action-btn.approve {
+          background: #d1fae5;
+          color: #065f46;
+          border-color: #10b981;
+        }
+
+        .action-btn.approve:hover {
+          background: #a7f3d0;
           transform: translateY(-1px);
         }
 

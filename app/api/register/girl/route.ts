@@ -155,15 +155,8 @@ export async function POST(request: NextRequest) {
       measurements = `${bust || '-'}-${waist || '-'}-${hips || '-'}`;
     }
 
-    // Build bio with location and availability if provided
-    let fullBio = bio || '';
-    if (location) {
-      fullBio += `\n\nMísto: ${location}`;
-    }
-    if (availableDays && availableDays.length > 0) {
-      fullBio += `\n\nDostupnost: ${availableDays.join(', ')}`;
-    }
-    fullBio = fullBio.trim();
+    // Use bio as is, without auto-adding location or availability
+    const fullBio = bio || '';
 
     // === INSERT INTO DATABASE (TRANSACTION) ===
 
@@ -173,9 +166,9 @@ export async function POST(request: NextRequest) {
         sql: `
           INSERT INTO girls (
             name, slug, email, phone, age, nationality, height, weight, bust, hair, eyes,
-            color, status, bio, verified, online, photos,
+            color, status, bio, verified, online,
             tattoo_percentage, tattoo_description, piercing, piercing_description, languages, services
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, 0, 0, ?, ?, ?, ?, ?, ?, ?)
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, 0, 0, ?, ?, ?, ?, ?, ?)
         `,
         args: [
           name,
@@ -191,7 +184,6 @@ export async function POST(request: NextRequest) {
           eyes || null,
           color,
           fullBio || null,
-          photos && photos.length > 0 ? JSON.stringify(photos) : null,
           tattoo_percentage || 0,
           tattoo_description || null,
           piercing ? 1 : 0,
@@ -202,6 +194,26 @@ export async function POST(request: NextRequest) {
       });
 
       const girl_id = Number(girlInsert.lastInsertRowid);
+
+      // Insert photos into girl_photos table
+      if (photos && photos.length > 0) {
+        for (let i = 0; i < photos.length; i++) {
+          const photo = photos[i];
+          await db.execute({
+            sql: `INSERT INTO girl_photos
+                  (girl_id, url, display_order, is_primary, file_size, mime_type)
+                  VALUES (?, ?, ?, ?, ?, ?)`,
+            args: [
+              girl_id,
+              photo.data, // Base64 data URL
+              i, // display_order
+              i === 0 ? 1 : 0, // First photo is primary
+              photo.data.length, // Approximate file size
+              'image/jpeg' // Default mime type
+            ]
+          });
+        }
+      }
 
       // Then insert into users table with the girl_id
       await db.execute({
