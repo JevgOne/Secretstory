@@ -6354,3 +6354,48 @@ body > div > button[title*="Next"],
         font-size: 0.6rem;
     }
 }
+
+/* ========================================
+   MOBILE MENU HAMBURGER BUTTON - CRITICAL FIX
+   ======================================== */
+/* Force hamburger button to show on mobile with maximum CSS specificity */
+@media (max-width: 768px) {
+    button.mobile-menu-btn,
+    .mobile-menu-btn,
+    button[class*="mobile-menu-btn"] {
+        display: flex !important;
+        position: fixed !important;
+        top: 1rem !important;
+        right: 4% !important;
+        flex-direction: column !important;
+        justify-content: space-around !important;
+        width: 44px !important;
+        height: 44px !important;
+        background: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
+        padding: 10px !important;
+        z-index: 10000 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+    
+    .mobile-menu-btn span {
+        width: 24px !important;
+        height: 2px !important;
+        background: #ffffff !important;
+        transition: all 0.3s ease !important;
+        border-radius: 2px !important;
+        display: block !important;
+    }
+}
+
+/* Force hide on desktop */
+@media (min-width: 769px) {
+    button.mobile-menu-btn,
+    .mobile-menu-btn,
+    button[class*="mobile-menu-btn"] {
+        display: none !important;
+    }
+}
