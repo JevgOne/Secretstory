@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
+import BottomCTA from '@/components/BottomCTA';
 
 export default function PricingPage() {
   const tNav = useTranslations('nav');
@@ -217,6 +218,13 @@ export default function PricingPage() {
           </p>
         </div>
       </section>
+
+      {/* Bottom CTA Bar */}
+      <BottomCTA translations={{
+        browse_girls: tNav('girls'),
+        whatsapp: tNav('whatsapp'),
+        call: tFooter('call')
+      }} />
 
       {/* FOOTER */}
       <footer>
