@@ -47,11 +47,77 @@ const nextConfig: NextConfig = {
   devIndicators: {
     position: 'bottom-right',
   },
+  // Image optimization
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.public.blob.vercel-storage.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.vercel-storage.com',
+      },
+    ],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 31536000, // 1 year
+  },
+  // Performance optimizations
+  compress: true,
+  poweredByHeader: false,
+  // Caching
   async headers() {
     return [
       {
         source: '/:path*',
         headers: securityHeaders,
+      },
+      // Cache static assets aggressively
+      {
+        source: '/icon.svg',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/apple-icon.svg',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/manifest.webmanifest',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, must-revalidate',
+          },
+        ],
+      },
+      // Cache API responses for 60 seconds
+      {
+        source: '/api/girls',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=60, stale-while-revalidate=120',
+          },
+        ],
+      },
+      {
+        source: '/api/girls/:slug',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=120, stale-while-revalidate=240',
+          },
+        ],
       },
     ];
   },

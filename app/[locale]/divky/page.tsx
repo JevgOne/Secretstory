@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import { Playfair_Display, DM_Sans } from 'next/font/google';
