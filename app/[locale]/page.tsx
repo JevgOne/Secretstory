@@ -195,7 +195,7 @@ export default function Home() {
           </span>
           ovely Girls
         </Link>
-        <div className="nav-links">
+        <div className="nav-links" style={{ display: 'none' }} data-mobile-hide="true">
           <Link href={`/${locale}`} className="active">{t('nav.home')}</Link>
           <Link href={`/${locale}/divky`}>{t('nav.girls')}</Link>
           <Link href={`/${locale}/cenik`}>{t('nav.pricing')}</Link>
@@ -203,11 +203,20 @@ export default function Home() {
           <Link href={`/${locale}/discounts`}>{t('nav.discounts')}</Link>
           <Link href={`/${locale}/faq`}>{t('nav.faq')}</Link>
         </div>
-        <div className="nav-contact">
+        <div className="nav-contact" style={{ display: 'none' }} data-mobile-hide="true">
           <LanguageSwitcher />
           <a href="https://t.me/+420734332131" className="btn">{t('nav.telegram')}</a>
           <a href="https://wa.me/420734332131" className="btn btn-fill">{t('nav.whatsapp')}</a>
         </div>
+
+        <style jsx>{`
+          @media (min-width: 769px) {
+            .nav-links[data-mobile-hide],
+            .nav-contact[data-mobile-hide] {
+              display: flex !important;
+            }
+          }
+        `}</style>
       </nav>
 
       {/* HERO */}
