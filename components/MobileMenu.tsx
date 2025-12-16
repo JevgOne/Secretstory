@@ -202,7 +202,7 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
           width: 85%;
           max-width: 400px;
           height: 100vh;
-          background: var(--bg);
+          background: #1a1216;
           z-index: 100;
           display: flex;
           flex-direction: column;
@@ -237,15 +237,21 @@ export default function MobileMenu({ currentPath }: MobileMenuProps) {
         .mobile-menu-nav {
           flex: 1;
           padding: 2rem 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0;
         }
 
         .mobile-menu-link {
-          display: block;
+          display: block !important;
+          width: 100%;
           padding: 1rem 1.5rem;
           font-size: 1.1rem;
           color: var(--gray);
           transition: all 0.3s;
           border-left: 3px solid transparent;
+          text-decoration: none;
+          box-sizing: border-box;
         }
 
         .mobile-menu-link:active {
