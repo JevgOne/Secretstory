@@ -1173,9 +1173,11 @@ footer {
     }
     .new-girl-card {
         grid-template-columns: 1fr;
+        max-height: none;
     }
     .new-girl-img {
         aspect-ratio: 16/9;
+        max-height: 220px;
     }
 
     /* General Sections */
@@ -6355,6 +6357,15 @@ body > div > button[title*="Next"],
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
         padding: 16px;
+    }
+    .card-image-container {
+        aspect-ratio: 3/4;
+        min-height: 200px;
+    }
+    .card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
     .card-info {
         padding: 14px 12px;
