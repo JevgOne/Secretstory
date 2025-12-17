@@ -18,7 +18,7 @@ import {
 import ReviewsList from '@/components/ReviewsList';
 import ReviewForm from '@/components/ReviewForm';
 import ReviewStars from '@/components/ReviewStars';
-import { getBasicServices, getExtraServices, getServiceName } from '@/lib/services';
+import { getBasicServices, getExtraServices, getServiceName, getServiceById } from '@/lib/services';
 
 const cormorant = Cormorant({
   subsets: ['latin', 'latin-ext'],
@@ -506,10 +506,15 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               const basicServicesList = getBasicServices();
               const extraServicesList = getExtraServices();
 
-              const userBasicServices = profile.services.filter(sid =>
+              // Filter valid services only
+              const validServices = profile.services.filter(sid =>
+                getServiceById(sid) !== undefined
+              );
+
+              const userBasicServices = validServices.filter(sid =>
                 basicServicesList.some(s => s.id === sid)
               );
-              const userExtraServices = profile.services.filter(sid =>
+              const userExtraServices = validServices.filter(sid =>
                 extraServicesList.some(s => s.id === sid)
               );
 
