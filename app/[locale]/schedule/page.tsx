@@ -209,7 +209,15 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
                       {badge && (
                         <span className={`badge ${badgeClass}`}>{badgeText}</span>
                       )}
-                      <div className="card-placeholder">{tCommon('photo')}</div>
+                      {girl.photos && girl.photos.length > 0 ? (
+                        <img
+                          src={girl.photos[0]}
+                          alt={girl.name}
+                          className="card-image"
+                        />
+                      ) : (
+                        <div className="card-placeholder">{tCommon('photo')}</div>
+                      )}
                       <div className="card-overlay"></div>
                     </div>
                     <div className="card-info">
