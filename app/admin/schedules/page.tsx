@@ -134,9 +134,11 @@ export default function SchedulesPage() {
       });
 
       const responses = await Promise.all(promises);
-      const allSuccess = responses.every(r => r.ok);
+      const successCount = responses.filter(r => r.ok).length;
+      const totalCount = responses.length;
 
-      if (allSuccess) {
+      // Always refresh schedules and close modal if at least one succeeded
+      if (successCount > 0) {
         setShowAddModal(false);
         fetchSchedules();
         // Reset form
@@ -144,8 +146,15 @@ export default function SchedulesPage() {
         setSelectedDays([]);
         setDayTimes({});
         setFormLocation(primaryLocation?.display_name || "Praha");
+
+        // Show appropriate message
+        if (successCount === totalCount) {
+          alert(`✅ Všechny rozvrhy (${successCount}) byly úspěšně vytvořeny`);
+        } else {
+          alert(`⚠️ ${successCount} z ${totalCount} rozvrhů bylo vytvořeno. ${totalCount - successCount} se nepodařilo.`);
+        }
       } else {
-        alert('Některé rozvrhy se nepodařilo vytvořit');
+        alert('❌ Nepodařilo se vytvořit žádný rozvrh');
       }
     } catch (error) {
       alert('Chyba při vytváření rozvrhů');
