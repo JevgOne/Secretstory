@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
+// Revalidate every 60 seconds (ISR)
+export const revalidate = 60;
+
 // GET /api/girls - Get all girls (with optional filters)
 export async function GET(request: NextRequest) {
   try {
@@ -182,10 +185,17 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      girls: girlsWithPhotos
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        girls: girlsWithPhotos
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
+        }
+      }
+    );
   } catch (error) {
     console.error('Get girls error:', error);
     return NextResponse.json(

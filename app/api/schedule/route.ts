@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
+// Revalidate every 60 seconds (ISR)
+export const revalidate = 60;
+
 // GET /api/schedule - Get girls available on specified date with their schedule
 export async function GET(request: NextRequest) {
   try {
@@ -130,13 +133,20 @@ export async function GET(request: NextRequest) {
     const dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     const dayName = dayNames[dayOfWeek];
 
-    return NextResponse.json({
-      success: true,
-      current_time: currentTime,
-      day: dayName,
-      timezone: pragueTz,
-      girls: filteredGirls
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        current_time: currentTime,
+        day: dayName,
+        timezone: pragueTz,
+        girls: filteredGirls
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
+        }
+      }
+    );
   } catch (error) {
     console.error('Schedule API error:', error);
     return NextResponse.json(
