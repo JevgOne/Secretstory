@@ -136,6 +136,11 @@ interface Girl {
   schedule?: ScheduleItem[];
   photos?: Photo[];
   videos?: Video[];
+  // For online girls list
+  primary_photo?: string;
+  is_working_now?: boolean;
+  schedule_from?: string;
+  schedule_to?: string;
 }
 
 export default function ProfileDetailPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
