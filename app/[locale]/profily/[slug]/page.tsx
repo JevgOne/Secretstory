@@ -151,6 +151,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   const [activeGalleryMode, setActiveGalleryMode] = useState<"photo" | "video">("photo");
   const [activeThumb, setActiveThumb] = useState(0);
   const [profile, setProfile] = useState<Girl | null>(null);
+  const [onlineGirls, setOnlineGirls] = useState<Girl[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -171,6 +172,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
       if (data.success) {
         setProfile(data.girl);
+        // Fetch online girls (exclude current girl)
+        fetchOnlineGirls(data.girl.id);
       } else {
         setError(data.error || t('detail.not_found'));
       }
@@ -179,6 +182,18 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
       setError(t('detail.error'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchOnlineGirls = async (excludeId: number) => {
+    try {
+      const response = await fetch(`/api/girls/online-today?exclude=${excludeId}&limit=4`);
+      const data = await response.json();
+      if (data.success) {
+        setOnlineGirls(data.girls || []);
+      }
+    } catch (err) {
+      console.error('Error fetching online girls:', err);
     }
   };
 
@@ -245,6 +260,33 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
     // Compare times (HH:MM format)
     return currentTime >= todaySchedule.start_time && currentTime <= todaySchedule.end_time;
+  };
+
+  // Check if shift has ended for today
+  const isClosedToday = () => {
+    if (!profile.schedule || profile.schedule.length === 0) {
+      return false;
+    }
+
+    const now = new Date();
+    const today = now.getDay();
+    const currentTime = now.toLocaleTimeString('cs-CZ', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+
+    const todaySchedule = profile.schedule.find(s => {
+      const scheduleDayJS = s.day_of_week === 6 ? 0 : s.day_of_week + 1;
+      return scheduleDayJS === today;
+    });
+
+    if (!todaySchedule) {
+      return false; // No schedule = not closed, just not working
+    }
+
+    // If current time is past end time, it's closed
+    return currentTime > todaySchedule.end_time;
   };
 
   const getBreastSize = (): string => {
@@ -487,9 +529,16 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               <div className="profile-top-row">
                 <div className="profile-status">
                   {isWorkingNow() && <span className="online-dot"></span>}
-                  <span className="status-text">{isWorkingNow() ? t('girls.online') : t('girls.offline')}</span>
+                  <span className="status-text">
+                    {isWorkingNow()
+                      ? t('girls.online')
+                      : isClosedToday()
+                        ? t('girls.closed')
+                        : t('girls.offline')
+                    }
+                  </span>
                 </div>
-                {getTodayTimeRange() && (
+                {getTodayTimeRange() && !isClosedToday() && (
                   <div className="profile-time">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="12" cy="12" r="10"/>
@@ -573,25 +622,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                 <div className="location-address">{t('detail.location_details')}</div>
               </div>
             </div>
-
-            {/* Hashtags */}
-            {profile.hashtags && profile.hashtags.length > 0 && (
-              <div className="profile-hashtags">
-                {profile.hashtags.map((tag: string) => {
-                  const hashtag = getHashtagById(tag);
-                  if (!hashtag) return null;
-                  return (
-                    <Link
-                      href={`/${locale}/hashtag/${tag}`}
-                      key={tag}
-                      className="profile-hashtag"
-                    >
-                      #{getHashtagName(tag, locale)}
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
 
             {/* About Me - Modern Design */}
             <div className="profile-section">
@@ -719,15 +749,47 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         </div>
       </section>
 
-      {/* Similar Girls Section */}
-      <section className="similar-section">
-        <div className="similar-header">
-          <h2 className={`similar-title ${cormorant.className}`}>{t('profile.similar_girls')}</h2>
-        </div>
-        <div className="similar-grid">
-          {/* Similar girls cards will be populated here */}
-        </div>
-      </section>
+      {/* Online Girls Section */}
+      {onlineGirls.length > 0 && (
+        <section className="similar-section">
+          <div className="similar-header">
+            <h2 className={`similar-title ${cormorant.className}`}>{t('profile.online_girls')}</h2>
+          </div>
+          <div className="similar-grid">
+            {onlineGirls.map((girl) => (
+              <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} className="girl-card">
+                <div className="girl-card-image">
+                  {girl.primary_photo ? (
+                    <img src={girl.primary_photo} alt={girl.name} />
+                  ) : (
+                    <div className="girl-card-placeholder">FOTO</div>
+                  )}
+                  {girl.verified && <span className="girl-badge verified">{t('girls.verified')}</span>}
+                  {girl.is_working_now && (
+                    <span className="girl-badge working">{t('profile.working_now')}</span>
+                  )}
+                </div>
+                <div className="girl-card-info">
+                  <h3 className="girl-name">{girl.name}</h3>
+                  <div className="girl-meta">
+                    {girl.age} {t('girls.age_years')} • {girl.height} {t('girls.height_cm')}
+                  </div>
+                  {girl.schedule_from && girl.schedule_to && (
+                    <div className="girl-schedule">
+                      <Clock size={14} />
+                      {girl.is_working_now ? (
+                        <span>{girl.schedule_from} – {girl.schedule_to}</span>
+                      ) : (
+                        <span>{t('profile.starts_at', { time: girl.schedule_from })}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* FOOTER */}
       <footer>
@@ -1877,6 +1939,100 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 1.25rem;
+        }
+
+        .girl-card {
+          background: var(--bg);
+          border-radius: 16px;
+          overflow: hidden;
+          transition: all 0.3s;
+          border: 1px solid rgba(255,255,255,0.05);
+          text-decoration: none;
+          color: var(--white);
+        }
+
+        .girl-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(139, 41, 66, 0.3);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .girl-card-image {
+          position: relative;
+          aspect-ratio: 3/4;
+          background: var(--wine-dark);
+          overflow: hidden;
+        }
+
+        .girl-card-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .girl-card-placeholder {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(255,255,255,0.3);
+          font-size: 0.8rem;
+          letter-spacing: 0.15em;
+        }
+
+        .girl-badge {
+          position: absolute;
+          top: 0.75rem;
+          left: 0.75rem;
+          font-size: 0.65rem;
+          font-weight: 600;
+          padding: 0.35rem 0.7rem;
+          border-radius: 100px;
+          text-transform: uppercase;
+          backdrop-filter: blur(10px);
+          z-index: 2;
+        }
+
+        .girl-badge.verified {
+          background: var(--wine-light);
+          color: #fff;
+        }
+
+        .girl-badge.working {
+          left: auto;
+          right: 0.75rem;
+          background: rgba(34, 197, 94, 0.9);
+          color: #fff;
+        }
+
+        .girl-card-info {
+          padding: 1.25rem;
+        }
+
+        .girl-name {
+          font-family: 'Cormorant', serif;
+          font-size: 1.5rem;
+          font-weight: 400;
+          margin-bottom: 0.5rem;
+        }
+
+        .girl-meta {
+          font-size: 0.85rem;
+          color: var(--gray);
+          margin-bottom: 0.75rem;
+        }
+
+        .girl-schedule {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.8rem;
+          color: var(--wine-light);
+        }
+
+        .girl-schedule :global(svg) {
+          color: var(--wine-light);
         }
 
         /* Responsive */

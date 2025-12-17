@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
+// Revalidate every 60 seconds
+export const revalidate = 60;
+
 // GET /api/girls/[slug] - Get girl by slug
 export async function GET(
   request: NextRequest,
@@ -103,20 +106,27 @@ export async function GET(
       args: [girl.id]
     });
 
-    return NextResponse.json({
-      success: true,
-      girl: {
-        ...girl,
-        services: girl.services ? JSON.parse(girl.services as string) : [],
-        hashtags: girl.hashtags ? JSON.parse(girl.hashtags as string) : [],
-        verified: Boolean(girl.verified),
-        online: Boolean(girl.online),
-        piercing: Boolean(girl.piercing),
-        schedule: weekSchedule,
-        photos: photosResult.rows,
-        videos: videosResult.rows
+    return NextResponse.json(
+      {
+        success: true,
+        girl: {
+          ...girl,
+          services: girl.services ? JSON.parse(girl.services as string) : [],
+          hashtags: girl.hashtags ? JSON.parse(girl.hashtags as string) : [],
+          verified: Boolean(girl.verified),
+          online: Boolean(girl.online),
+          piercing: Boolean(girl.piercing),
+          schedule: weekSchedule,
+          photos: photosResult.rows,
+          videos: videosResult.rows
+        }
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
+        }
       }
-    });
+    );
   } catch (error) {
     console.error('Get girl error:', error);
     return NextResponse.json(
