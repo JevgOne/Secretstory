@@ -44,67 +44,78 @@ export async function GET(request: NextRequest) {
       args: [dayOfWeek]
     });
 
+    // Get all girl IDs that have schedules
+    const girlIds = result.rows
+      .filter((girl: any) => girl.start_time && girl.end_time)
+      .map((girl: any) => girl.id);
+
+    // Fetch ALL primary photos in one query (much faster!)
+    let photoMap = new Map<number, string>();
+    if (girlIds.length > 0) {
+      const placeholders = girlIds.map(() => '?').join(',');
+      const photosResult = await db.execute({
+        sql: `
+          SELECT girl_id, url
+          FROM girl_photos
+          WHERE girl_id IN (${placeholders}) AND is_primary = 1
+        `,
+        args: girlIds
+      });
+
+      photosResult.rows.forEach((row: any) => {
+        photoMap.set(row.girl_id as number, row.url as string);
+      });
+    }
+
     // 3. Filter by schedule and determine status
-    const girls = await Promise.all(
-      result.rows
-        .map(async (girl: any) => {
-          // If no schedule for this day, skip
-          if (!girl.start_time || !girl.end_time) return null;
+    const girls = result.rows
+      .map((girl: any) => {
+        // If no schedule for this day, skip
+        if (!girl.start_time || !girl.end_time) return null;
 
-          const shiftFrom = girl.start_time.substring(0, 5); // HH:MM
-          const shiftTo = girl.end_time.substring(0, 5);     // HH:MM
+        const shiftFrom = girl.start_time.substring(0, 5); // HH:MM
+        const shiftTo = girl.end_time.substring(0, 5);     // HH:MM
 
-          // Determine status (only for today)
-          let status = 'later'; // Default: not working yet
+        // Determine status (only for today)
+        let status = 'later'; // Default: not working yet
 
-          const isToday = targetDate.toDateString() === now.toDateString();
+        const isToday = targetDate.toDateString() === now.toDateString();
 
-          if (isToday) {
-            if (currentTime >= shiftFrom && currentTime <= shiftTo) {
-              status = 'working'; // Currently working
-            }
-            // Don't filter out girls whose shift ended - show all girls with schedule
+        if (isToday) {
+          if (currentTime >= shiftFrom && currentTime <= shiftTo) {
+            status = 'working'; // Currently working
           }
+          // Don't filter out girls whose shift ended - show all girls with schedule
+        }
 
-          // Fetch photos from girl_photos table
-          const photoResult = await db.execute({
-            sql: `
-              SELECT url, thumbnail_url
-              FROM girl_photos
-              WHERE girl_id = ? AND is_primary = 1
-              LIMIT 1
-            `,
-            args: [girl.id]
-          });
+        // Get photo from pre-fetched map
+        const photoUrl = photoMap.get(girl.id as number);
+        const photos = photoUrl ? [photoUrl] : [];
 
-          const primaryPhoto = photoResult.rows[0];
-          const photos = primaryPhoto ? [primaryPhoto.url] : [];
+        // Get description in requested language
+        const descriptionKey = `description_${lang}` as keyof typeof girl;
+        const description = girl[descriptionKey] as string || girl.bio as string || '';
 
-          // Get description in requested language
-          const descriptionKey = `description_${lang}` as keyof typeof girl;
-          const description = girl[descriptionKey] as string || girl.bio as string || '';
-
-          return {
-            id: girl.id,
-            name: girl.name,
-            slug: girl.slug,
-            status,
-            shift: {
-              from: shiftFrom,
-              to: shiftTo
-            },
-            location: girl.location || 'Praha 2',
-            photos,
-            age: girl.age,
-            height: girl.height,
-            weight: girl.weight,
-            bust: girl.bust,
-            description,
-            online: girl.online,
-            badge_type: girl.badge_type
-          };
-        })
-    );
+        return {
+          id: girl.id,
+          name: girl.name,
+          slug: girl.slug,
+          status,
+          shift: {
+            from: shiftFrom,
+            to: shiftTo
+          },
+          location: girl.location || 'Praha 2',
+          photos,
+          age: girl.age,
+          height: girl.height,
+          weight: girl.weight,
+          bust: girl.bust,
+          description,
+          online: girl.online,
+          badge_type: girl.badge_type
+        };
+      });
 
     const filteredGirls = girls.filter(Boolean); // Remove nulls
 
