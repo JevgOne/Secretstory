@@ -46,6 +46,9 @@ interface Girl {
   featured_section?: string;
   primary_photo?: string | null;
   thumbnail?: string | null;
+  schedule_status?: 'working' | 'later' | null;
+  schedule_from?: string | null;
+  schedule_to?: string | null;
 }
 
 export default function GirlsPage() {
