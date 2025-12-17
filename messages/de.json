@@ -19,6 +19,7 @@
     "hero_subtitle": "Diskrete Begleiterinnen auf höchstem Niveau. Verifizierte Profile, schnelle Buchung.",
     "hero_cta_primary": "Mädchen anzeigen",
     "hero_cta_secondary": "Wie buchen",
+    "closed_today": "Wir haben heute geschlossen. Kommen Sie morgen wieder!",
     "new_label": "Neu auf der Website",
     "new_badge": "NEU",
     "new_girl_name": "Kristýna",
@@ -313,6 +314,7 @@
     "loading": "Zeitplan wird geladen...",
     "error": "Fehler beim Laden des Zeitplans",
     "no_girls": "Heute sind keine Mädchen verfügbar",
+    "closed_today": "Wir haben heute geschlossen. Kommen Sie morgen wieder!",
     "today": "Heute",
     "weekly_schedule": "Wochenplan",    "status": {
       "online": "Online",

@@ -19,6 +19,7 @@
     "hero_subtitle": "Discreet companions at the highest level. Verified profiles, fast booking.",
     "hero_cta_primary": "View Girls",
     "hero_cta_secondary": "How to Book",
+    "closed_today": "We're closed for today. Come back tomorrow!",
     "new_label": "New on the site",
     "new_badge": "NEW",
     "new_girl_name": "Kristýna",
@@ -312,6 +313,7 @@
     "loading": "Loading schedule...",
     "error": "Error loading schedule",
     "no_girls": "No girls available today",
+    "closed_today": "We're closed for today. Come back tomorrow!",
     "today": "Today",
     "weekly_schedule": "Weekly Schedule",    "status": {
       "online": "Online",

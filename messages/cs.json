@@ -19,6 +19,7 @@
     "hero_subtitle": "Diskrétní společnice na nejvyšší úrovni. Ověřené profily, rychlá rezervace.",
     "hero_cta_primary": "Zobrazit dívky",
     "hero_cta_secondary": "Jak rezervovat",
+    "closed_today": "Dnes už máme zavřeno. Přijďte zítra!",
     "new_label": "Nově na webu",
     "new_badge": "NEW",
     "new_girl_name": "Kristýna",
@@ -332,6 +333,7 @@
     "loading": "Načítání rozvrhu...",
     "error": "Chyba při načítání rozvrhu",
     "no_girls": "Dnes nejsou k dispozici žádné dívky",
+    "closed_today": "Dnes už máme zavřeno. Přijďte zítra!",
     "today": "Dnes",
     "weekly_schedule": "Týdenní rozvrh",
     "status": {
