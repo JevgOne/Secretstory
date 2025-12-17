@@ -524,45 +524,54 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               </div>
             </div>
 
-            {/* Description */}
+            {/* About Me - Modern Design */}
             <div className="profile-section">
               <h3 className={`section-title ${cormorant.className}`}>{t('profile.about_me')}</h3>
-              <p className="profile-description" style={{ whiteSpace: "pre-line" }}>
-                {profile.bio || `Vítejte na mém profilu. Jsem ${profile.name} — ${profile.age}letá společnice, která věří, že pravý luxus spočívá v detailech a autentickém prožitku.
-
-Ráda vytvářím atmosféru, kde se budete cítit uvolněně a výjimečně. Každé setkání je pro mě jedinečné — ať už hledáte relaxační masáž po náročném dni nebo příjemnou společnost na večer.
-
-Mluvím plynule česky a anglicky. Těším se na vás.`}
-              </p>
+              <div className="about-me-card">
+                <div className="about-me-content">
+                  <p className="profile-description">
+                    {profile.bio || t('profile.default_bio', { name: profile.name, age: profile.age })}
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* Tattoo & Piercing Section */}
+            {/* Tattoo & Piercing - Premium Cards */}
             {(profile.tattoo_percentage && profile.tattoo_percentage > 0) || profile.piercing ? (
               <div className="profile-section">
                 <h3 className={`section-title ${cormorant.className}`}>{t('profile.tattoo_piercing')}</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div className="body-art-grid">
                   {profile.tattoo_percentage && profile.tattoo_percentage > 0 && (
-                    <div>
-                      <div style={{ fontSize: '14px', color: '#9a8a8e', marginBottom: '4px' }}>
-                        {t('profile.tattoo')}: <strong style={{ color: '#fff' }}>{profile.tattoo_percentage}{t('profile.tattoo_percentage')}</strong>
+                    <div className="body-art-card">
+                      <div className="body-art-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
                       </div>
-                      {profile.tattoo_description && (
-                        <div style={{ fontSize: '14px', color: '#c9b8bd', lineHeight: '1.5' }}>
-                          {profile.tattoo_description}
-                        </div>
-                      )}
+                      <div className="body-art-details">
+                        <div className="body-art-label">{t('profile.tattoo')}</div>
+                        <div className="body-art-value">{profile.tattoo_percentage}% {t('profile.body_coverage')}</div>
+                        {profile.tattoo_description && (
+                          <div className="body-art-description">{profile.tattoo_description}</div>
+                        )}
+                      </div>
                     </div>
                   )}
                   {profile.piercing && (
-                    <div>
-                      <div style={{ fontSize: '14px', color: '#9a8a8e', marginBottom: '4px' }}>
-                        {t('profile.piercing')}: <strong style={{ color: '#fff' }}>{t('profile.yes')}</strong>
+                    <div className="body-art-card">
+                      <div className="body-art-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"/>
+                          <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                        </svg>
                       </div>
-                      {profile.piercing_description && (
-                        <div style={{ fontSize: '14px', color: '#c9b8bd', lineHeight: '1.5' }}>
-                          {profile.piercing_description}
-                        </div>
-                      )}
+                      <div className="body-art-details">
+                        <div className="body-art-label">{t('profile.piercing')}</div>
+                        <div className="body-art-value">{t('profile.yes')}</div>
+                        {profile.piercing_description && (
+                          <div className="body-art-description">{profile.piercing_description}</div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1427,6 +1436,133 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
           font-size: 1rem;
           color: var(--gray-light);
           line-height: 1.9;
+          white-space: pre-line;
+        }
+
+        /* About Me Card - Premium Design */
+        .about-me-card {
+          background: linear-gradient(135deg, rgba(139, 41, 66, 0.08) 0%, rgba(35, 26, 30, 0.5) 100%);
+          border: 1px solid rgba(163, 51, 82, 0.15);
+          border-radius: 16px;
+          padding: 2rem;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .about-me-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, var(--wine-light), var(--wine), var(--wine-light));
+          opacity: 0.6;
+        }
+
+        .about-me-content {
+          position: relative;
+          z-index: 1;
+        }
+
+        /* Body Art Grid - Premium Cards */
+        .body-art-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 1rem;
+        }
+
+        .body-art-card {
+          background: linear-gradient(135deg, rgba(139, 41, 66, 0.05) 0%, rgba(35, 26, 30, 0.3) 100%);
+          border: 1px solid rgba(163, 51, 82, 0.12);
+          border-radius: 14px;
+          padding: 1.5rem;
+          display: flex;
+          gap: 1.25rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .body-art-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 4px;
+          height: 100%;
+          background: linear-gradient(180deg, var(--wine-light), var(--wine));
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+
+        .body-art-card:hover {
+          border-color: rgba(163, 51, 82, 0.3);
+          background: linear-gradient(135deg, rgba(139, 41, 66, 0.12) 0%, rgba(35, 26, 30, 0.5) 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(139, 41, 66, 0.15);
+        }
+
+        .body-art-card:hover::before {
+          opacity: 1;
+        }
+
+        .body-art-icon {
+          width: 48px;
+          height: 48px;
+          min-width: 48px;
+          background: rgba(139, 41, 66, 0.2);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s;
+        }
+
+        .body-art-icon svg {
+          width: 24px;
+          height: 24px;
+          color: var(--wine-light);
+          transition: all 0.3s;
+        }
+
+        .body-art-card:hover .body-art-icon {
+          background: rgba(163, 51, 82, 0.3);
+          transform: scale(1.05);
+        }
+
+        .body-art-card:hover .body-art-icon svg {
+          color: #e8b4c0;
+        }
+
+        .body-art-details {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+        }
+
+        .body-art-label {
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: var(--gray);
+          font-weight: 600;
+        }
+
+        .body-art-value {
+          font-size: 1.1rem;
+          font-weight: 500;
+          color: #fff;
+          line-height: 1.3;
+        }
+
+        .body-art-description {
+          font-size: 0.85rem;
+          color: #c9b8bd;
+          line-height: 1.5;
+          margin-top: 0.25rem;
+          font-style: italic;
         }
 
         /* Services - Modern Grid */
