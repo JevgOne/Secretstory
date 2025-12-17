@@ -18,7 +18,7 @@ import {
 import ReviewsList from '@/components/ReviewsList';
 import ReviewForm from '@/components/ReviewForm';
 import ReviewStars from '@/components/ReviewStars';
-import { getBasicServices, getServiceName } from '@/lib/services';
+import { getBasicServices, getExtraServices, getServiceName } from '@/lib/services';
 
 const cormorant = Cormorant({
   subsets: ['latin', 'latin-ext'],
@@ -501,16 +501,70 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               </div>
             </div>
 
-            {/* Hashtags */}
-            {profile.services && profile.services.length > 0 && (
-              <div className="hashtags">
-                {profile.services.map((serviceId, i) => (
-                  <Link href={`/${locale}/praktiky/${serviceId}`} key={i} className="hashtag">
-                    {getServiceName(serviceId, locale)}
-                  </Link>
-                ))}
-              </div>
-            )}
+            {/* Services - Basic & Extra */}
+            {profile.services && profile.services.length > 0 && (() => {
+              const basicServicesList = getBasicServices();
+              const extraServicesList = getExtraServices();
+
+              const userBasicServices = profile.services.filter(sid =>
+                basicServicesList.some(s => s.id === sid)
+              );
+              const userExtraServices = profile.services.filter(sid =>
+                extraServicesList.some(s => s.id === sid)
+              );
+
+              return (
+                <>
+                  {/* Basic Services */}
+                  {userBasicServices.length > 0 && (
+                    <div className="services-section">
+                      <div className="services-grid">
+                        {userBasicServices.map((serviceId) => (
+                          <Link
+                            href={`/${locale}/praktiky/${serviceId}`}
+                            key={serviceId}
+                            className="service-card basic-service"
+                          >
+                            <div className="service-icon">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                            </div>
+                            <span className="service-name">{getServiceName(serviceId, locale)}</span>
+                            <span className="service-label included">V ceně</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Extra Services */}
+                  {userExtraServices.length > 0 && (
+                    <div className="services-section">
+                      <h3 className="services-section-title">Extra služby</h3>
+                      <div className="services-grid">
+                        {userExtraServices.map((serviceId) => (
+                          <Link
+                            href={`/${locale}/praktiky/${serviceId}`}
+                            key={serviceId}
+                            className="service-card extra-service"
+                          >
+                            <div className="service-icon">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                              </svg>
+                            </div>
+                            <span className="service-name">{getServiceName(serviceId, locale)}</span>
+                            <span className="service-label extra">Za příplatek</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
 
             {/* Location */}
             <div className="location-row">

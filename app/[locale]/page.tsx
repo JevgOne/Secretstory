@@ -295,7 +295,8 @@ export default function Home() {
             };
 
             const breastSize = getBreastSize(girl.bust);
-            const timeRange = girl.online ? '12:00 - 20:00' : '14:00 - 22:00';
+            // Don't show fake time - only show real schedule from database
+            const timeRange = null; // TODO: Load from girl_schedules table
             const location = girl.location || tHome('default_location');
 
             return (
@@ -305,7 +306,11 @@ export default function Home() {
                     {badge && (
                       <span className={`badge ${badgeClass}`}>{badgeText}</span>
                     )}
-                    <div className="card-placeholder">FOTO</div>
+                    {girl.primary_photo || girl.thumbnail ? (
+                      <img src={girl.thumbnail || girl.primary_photo} alt={girl.name} className="card-image" />
+                    ) : (
+                      <div className="card-placeholder">FOTO</div>
+                    )}
                     <div className="card-overlay"></div>
                     <div className="quick-actions">
                       <button
@@ -338,7 +343,7 @@ export default function Home() {
                         {girl.online && <span className="online-dot"></span>}
                         {girl.name}
                       </h3>
-                      <span className={`time-badge ${girl.online ? 'available' : 'tomorrow'}`}>{timeRange}</span>
+                      {timeRange && <span className={`time-badge ${girl.online ? 'available' : 'tomorrow'}`}>{timeRange}</span>}
                     </div>
                     <div className="card-stats">
                       <span className="stat"><span className="stat-value">{girl.age || '?'}</span><span className="stat-label">{t('girls.age_years')}</span></span>
