@@ -223,7 +223,7 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
                     <div className="card-info">
                       <div className="card-header">
                         <h3 className="card-name">
-                          {girl.online && <span className="online-dot"></span>}
+                          {isWorking && <span className="online-dot"></span>}
                           {girl.name}
                         </h3>
                         <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`}>
