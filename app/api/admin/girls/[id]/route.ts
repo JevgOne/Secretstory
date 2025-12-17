@@ -17,6 +17,18 @@ export async function PATCH(
     const updates: string[] = [];
     const args: any[] = [];
 
+    // If status is being changed from pending to active, automatically set is_new = true
+    if (body.status === 'active') {
+      const currentGirl = await db.execute({
+        sql: 'SELECT status FROM girls WHERE id = ?',
+        args: [parseInt(id)]
+      });
+
+      if (currentGirl.rows.length > 0 && currentGirl.rows[0].status === 'pending') {
+        body.is_new = true;
+      }
+    }
+
     // Build dynamic update query
     const allowedFields = [
       'name', 'email', 'phone', 'age', 'nationality', 'height', 'weight',

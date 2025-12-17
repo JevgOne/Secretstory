@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db, executeTransaction } from '@/lib/db';
 import * as bcrypt from 'bcryptjs';
 import { sendNewGirlNotification } from '@/lib/email';
+import { put } from '@vercel/blob';
 
 // Helper function to generate slug from name
 function generateSlug(name: string): string {
@@ -195,21 +196,38 @@ export async function POST(request: NextRequest) {
 
       const girl_id = Number(girlInsert.lastInsertRowid);
 
-      // Insert photos into girl_photos table
+      // Upload photos to Vercel Blob and insert into girl_photos table
       if (photos && photos.length > 0) {
         for (let i = 0; i < photos.length; i++) {
           const photo = photos[i];
+
+          // Convert base64 to Buffer
+          const base64Data = photo.data.replace(/^data:image\/\w+;base64,/, '');
+          const buffer = Buffer.from(base64Data, 'base64');
+
+          // Generate unique filename
+          const timestamp = Date.now();
+          const filename = `girls/${girl_id}/registration-${timestamp}-${i}.jpg`;
+
+          // Upload to Vercel Blob
+          const { url } = await put(filename, buffer, {
+            access: 'public',
+            addRandomSuffix: false
+          });
+
+          // Insert into database
           await db.execute({
             sql: `INSERT INTO girl_photos
-                  (girl_id, url, display_order, is_primary, file_size, mime_type)
-                  VALUES (?, ?, ?, ?, ?, ?)`,
+                  (girl_id, filename, url, display_order, is_primary, file_size, mime_type)
+                  VALUES (?, ?, ?, ?, ?, ?, ?)`,
             args: [
               girl_id,
-              photo.data, // Base64 data URL
+              filename,
+              url,
               i, // display_order
               i === 0 ? 1 : 0, // First photo is primary
-              photo.data.length, // Approximate file size
-              'image/jpeg' // Default mime type
+              buffer.length,
+              'image/jpeg'
             ]
           });
         }
