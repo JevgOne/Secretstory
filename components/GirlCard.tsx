@@ -15,6 +15,7 @@ interface GirlCardProps {
     bust: string;
     online: boolean;
     languages?: string;
+    location?: string;
   };
   badge?: 'new' | 'top' | 'recommended' | null;
   badgeText?: {
@@ -60,6 +61,9 @@ export default function GirlCard({
   // Removed fake time - real schedule should come from database
 
   const getLocation = (): string => {
+    // Use location from database if available
+    if (girl.location) return girl.location;
+    // Otherwise fallback to primary location
     if (locationNames.length === 0) return primaryLocation?.display_name || 'Praha 2';
     return locationNames[Math.floor(Math.random() * locationNames.length)];
   };
