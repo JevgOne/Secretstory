@@ -86,71 +86,94 @@ export async function GET(request: NextRequest) {
     const jsDay = now.getDay();
     const dayOfWeek = jsDay === 0 ? 6 : jsDay - 1;
 
-    // For each girl, fetch their primary photo and today's schedule
-    let girlsWithPhotos = await Promise.all(
-      result.rows.map(async (row) => {
-        const photoResult = await db.execute({
-          sql: `
-            SELECT url, thumbnail_url
-            FROM girl_photos
-            WHERE girl_id = ? AND is_primary = 1
-            LIMIT 1
-          `,
-          args: [row.id]
+    // Get all girl IDs
+    const girlIds = result.rows.map((row: any) => row.id);
+
+    // Fetch ALL photos in one query (much faster!)
+    let photoMap = new Map<number, { url: string; thumbnail_url: string }>();
+    if (girlIds.length > 0) {
+      const placeholders = girlIds.map(() => '?').join(',');
+      const photosResult = await db.execute({
+        sql: `
+          SELECT girl_id, url, thumbnail_url
+          FROM girl_photos
+          WHERE girl_id IN (${placeholders}) AND is_primary = 1
+        `,
+        args: girlIds
+      });
+
+      photosResult.rows.forEach((row: any) => {
+        photoMap.set(row.girl_id as number, {
+          url: row.url as string,
+          thumbnail_url: row.thumbnail_url as string
         });
+      });
+    }
 
-        // Get today's schedule for this girl
-        const scheduleResult = await db.execute({
-          sql: `
-            SELECT start_time, end_time
-            FROM girl_schedules
-            WHERE girl_id = ? AND day_of_week = ? AND is_active = 1
-            LIMIT 1
-          `,
-          args: [row.id, dayOfWeek]
+    // Fetch ALL schedules in one query (much faster!)
+    let scheduleMap = new Map<number, { start_time: string; end_time: string }>();
+    if (girlIds.length > 0) {
+      const placeholders = girlIds.map(() => '?').join(',');
+      const schedulesResult = await db.execute({
+        sql: `
+          SELECT girl_id, start_time, end_time
+          FROM girl_schedules
+          WHERE girl_id IN (${placeholders}) AND day_of_week = ? AND is_active = 1
+        `,
+        args: [...girlIds, dayOfWeek]
+      });
+
+      schedulesResult.rows.forEach((row: any) => {
+        scheduleMap.set(row.girl_id as number, {
+          start_time: row.start_time as string,
+          end_time: row.end_time as string
         });
+      });
+    }
 
-        const primaryPhoto = photoResult.rows[0];
-        const services = row.services ? JSON.parse(row.services as string) : [];
-        const hashtags = row.hashtags ? JSON.parse(row.hashtags as string) : [];
+    // Map girls with their photos and schedules
+    let girlsWithPhotos = result.rows.map((row: any) => {
+      const primaryPhoto = photoMap.get(row.id as number);
+      const schedule = scheduleMap.get(row.id as number);
 
-        // Determine schedule status
-        let scheduleStatus = null;
-        let scheduleFrom = null;
-        let scheduleTo = null;
+      const services = row.services ? JSON.parse(row.services as string) : [];
+      const hashtags = row.hashtags ? JSON.parse(row.hashtags as string) : [];
 
-        if (scheduleResult.rows.length > 0) {
-          const schedule = scheduleResult.rows[0];
-          scheduleFrom = schedule.start_time ? (schedule.start_time as string).substring(0, 5) : null;
-          scheduleTo = schedule.end_time ? (schedule.end_time as string).substring(0, 5) : null;
+      // Determine schedule status
+      let scheduleStatus = null;
+      let scheduleFrom = null;
+      let scheduleTo = null;
 
-          if (scheduleFrom && scheduleTo) {
-            if (currentTime >= scheduleFrom && currentTime <= scheduleTo) {
-              scheduleStatus = 'working';
-            } else {
-              scheduleStatus = 'later';
-            }
+      if (schedule) {
+        scheduleFrom = schedule.start_time ? schedule.start_time.substring(0, 5) : null;
+        scheduleTo = schedule.end_time ? schedule.end_time.substring(0, 5) : null;
+
+        if (scheduleFrom && scheduleTo) {
+          if (currentTime >= scheduleFrom && currentTime <= scheduleTo) {
+            scheduleStatus = 'working';
+          } else {
+            scheduleStatus = 'later';
           }
         }
+      }
 
-        return {
-          ...row,
-          services,
-          hashtags,
-          verified: Boolean(row.verified),
-          online: Boolean(row.online),
-          piercing: Boolean(row.piercing),
-          is_new: Boolean(row.is_new),
-          is_top: Boolean(row.is_top),
-          is_featured: Boolean(row.is_featured),
-          primary_photo: primaryPhoto?.url || null,
-          thumbnail: primaryPhoto?.thumbnail_url || null,
-          schedule_status: scheduleStatus,
-          schedule_from: scheduleFrom,
-          schedule_to: scheduleTo
-        };
-      })
-    );
+      return {
+        ...row,
+        services,
+        hashtags,
+        verified: Boolean(row.verified),
+        online: Boolean(row.online),
+        piercing: Boolean(row.piercing),
+        is_new: Boolean(row.is_new),
+        is_top: Boolean(row.is_top),
+        is_featured: Boolean(row.is_featured),
+        primary_photo: primaryPhoto?.url || null,
+        thumbnail: primaryPhoto?.thumbnail_url || null,
+        schedule_status: scheduleStatus,
+        schedule_from: scheduleFrom,
+        schedule_to: scheduleTo
+      };
+    });
 
     // Filter by service if specified (client-side filtering since services is JSON)
     if (service) {
