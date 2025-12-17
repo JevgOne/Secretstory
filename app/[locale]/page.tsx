@@ -46,6 +46,9 @@ interface Girl {
   featured_section?: string;
   primary_photo?: string;
   thumbnail?: string;
+  schedule_status?: 'working' | 'later' | null;
+  schedule_from?: string | null;
+  schedule_to?: string | null;
 }
 
 interface Location {
@@ -296,8 +299,9 @@ export default function Home() {
             };
 
             const breastSize = getBreastSize(girl.bust);
-            // Don't show fake time - only show real schedule from database
-            const timeRange = null; // TODO: Load from girl_schedules table
+            // Use schedule data from API
+            const timeRange = girl.schedule_from && girl.schedule_to ? `${girl.schedule_from} - ${girl.schedule_to}` : null;
+            const isWorking = girl.schedule_status === 'working';
             const location = girl.location || tHome('default_location');
 
             return (
@@ -341,10 +345,10 @@ export default function Home() {
                   <div className="card-info">
                     <div className="card-header">
                       <h3 className="card-name">
-                        {girl.online && <span className="online-dot"></span>}
+                        {isWorking && <span className="online-dot"></span>}
                         {girl.name}
                       </h3>
-                      {timeRange && <span className={`time-badge ${girl.online ? 'available' : 'tomorrow'}`}>{timeRange}</span>}
+                      {timeRange && <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`}>{timeRange}</span>}
                     </div>
                     <div className="card-stats">
                       <span className="stat"><span className="stat-value">{girl.age || '?'}</span><span className="stat-label">{t('girls.age_years')}</span></span>
