@@ -104,13 +104,6 @@ export default function GirlCard({
         <div className="girl-card-info">
           <div className="girl-card-header">
             <span className="girl-card-name">{girl.name}</span>
-            <span className="schedule-time">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 6v6l4 2"/>
-              </svg>
-              {getTimeRange()}
-            </span>
           </div>
 
           <div className="girl-card-stats">
