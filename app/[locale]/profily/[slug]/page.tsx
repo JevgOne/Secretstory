@@ -504,8 +504,10 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             {/* Hashtags */}
             {profile.services && profile.services.length > 0 && (
               <div className="hashtags">
-                {profile.services.map((tag, i) => (
-                  <Link href={`/${locale}/praktiky/${tag}`} key={i} className="hashtag">{tag}</Link>
+                {profile.services.map((serviceId, i) => (
+                  <Link href={`/${locale}/praktiky/${serviceId}`} key={i} className="hashtag">
+                    {getServiceName(serviceId, locale)}
+                  </Link>
                 ))}
               </div>
             )}
