@@ -18,7 +18,6 @@ import {
 import ReviewsList from '@/components/ReviewsList';
 import ReviewForm from '@/components/ReviewForm';
 import ReviewStars from '@/components/ReviewStars';
-import { getBasicServices, getExtraServices, getServiceName, getServiceById } from '@/lib/services';
 import { getHashtagById, getHashtagName } from '@/lib/hashtags';
 
 const cormorant = Cormorant({
@@ -253,9 +252,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
       return [{ code: 'cs', name: 'Čeština', flag: <CzechFlag /> }];
     }
   };
-
-  // Basic services - always included (mandatory)
-  const basicServices = getBasicServices();
 
   const breadcrumbItems = [
     { name: t('breadcrumb.home'), url: `https://lovelygirls.cz/${locale}` },
@@ -592,41 +588,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               </div>
             ) : null}
 
-            {/* Services - Included (Basic - mandatory) */}
-            <div className="profile-section">
-              <h3 className={`section-title ${cormorant.className}`}>{t('profile.included')}</h3>
-              <div className="services-grid">
-                {basicServices.map((service) => (
-                  <div key={service.id} className="service-item">
-                    <div className="service-name">
-                      <div className="service-icon">✓</div>
-                      {getServiceName(service.id, locale)}
-                    </div>
-                    <span className="service-price included">{t('profile.included')}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Services - Extra (from profile) */}
-            {profile.services && profile.services.filter(s => !basicServices.find(bs => bs.id === s)).length > 0 && (
-              <div className="profile-section">
-                <h3 className={`section-title ${cormorant.className}`}>{t('profile.extra_services')}</h3>
-                <div className="services-grid">
-                  {profile.services
-                    .filter(serviceId => !basicServices.find(bs => bs.id === serviceId))
-                    .map((serviceId) => (
-                      <div key={serviceId} className="service-item extra">
-                        <div className="service-name">
-                          <div className="service-icon">+</div>
-                          {getServiceName(serviceId, locale)}
-                        </div>
-                        <span className="service-price extra">{t('profile.extra')}</span>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
 
             {/* CTA */}
             <div className="profile-cta">
