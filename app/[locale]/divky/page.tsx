@@ -91,12 +91,7 @@ export default function GirlsPage() {
     return cups[bust] || 2;
   };
 
-  const getTimeRange = (): string => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "10:00 - 18:00";
-    if (hour < 18) return "12:00 - 20:00";
-    return "14:00 - 22:00";
-  };
+  // Removed getTimeRange() - now using real schedule data from API
 
   const getLocation = (): string => {
     const locations = locationNames.length > 0 ? locationNames : [tHome('default_location'), tHome('location_new_name')];
@@ -179,7 +174,9 @@ export default function GirlsPage() {
                 const badgeText = badge === 'new' ? t('girls.new') : badge === 'top' ? t('girls.top_reviews') : badge === 'recommended' ? t('girls.recommended') : badge === 'asian' ? tCommon('asian') : '';
                 const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
                 const breastSize = getBreastSize(girl.bust);
-                const timeRange = getTimeRange();
+                // Use schedule data from API (same as homepage)
+                const timeRange = girl.schedule_from && girl.schedule_to ? `${girl.schedule_from} - ${girl.schedule_to}` : null;
+                const isWorking = girl.schedule_status === 'working';
                 const location = getLocation();
 
                 return (
@@ -228,10 +225,10 @@ export default function GirlsPage() {
                       <div className="card-info">
                         <div className="card-header">
                           <h3 className="card-name">
-                            {girl.online && <span className="online-dot"></span>}
+                            {isWorking && <span className="online-dot"></span>}
                             {girl.name}
                           </h3>
-                          <span className={`time-badge ${girl.online ? 'available' : 'tomorrow'}`}>{timeRange}</span>
+                          {timeRange && <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`}>{timeRange}</span>}
                         </div>
                         <div className="card-stats">
                           <span className="stat"><span className="stat-value">{girl.age}</span><span className="stat-label">{t('girls.age_years')}</span></span>
