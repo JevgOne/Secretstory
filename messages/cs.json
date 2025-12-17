@@ -328,6 +328,7 @@
     "error": "Chyba při načítání rozvrhu",
     "no_girls": "Dnes nejsou k dispozici žádné dívky",
     "today": "Dnes",
+    "weekly_schedule": "Týdenní rozvrh",
     "status": {
       "online": "Online",
       "available_from": "Od {time}",

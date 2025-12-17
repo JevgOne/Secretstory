@@ -309,7 +309,7 @@
     "error": "Fehler beim Laden des Zeitplans",
     "no_girls": "Heute sind keine Mädchen verfügbar",
     "today": "Heute",
-    "status": {
+    "weekly_schedule": "Wochenplan",    "status": {
       "online": "Online",
       "available_from": "Ab {time}",
       "not_available": "Frei"

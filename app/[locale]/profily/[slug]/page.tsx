@@ -406,7 +406,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             {/* Schedule Section */}
             {profile.schedule && profile.schedule.length > 0 && (
             <div className="schedule-section">
-              <div className="schedule-grid">
+              <h3 className="schedule-title">{tSchedule('weekly_schedule')}</h3>
+              <div className="schedule-week">
                 {profile.schedule.map((item, index) => {
                   const dayNames = [
                     tSchedule('days.mon'),
@@ -417,20 +418,30 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                     tSchedule('days.sat'),
                     tSchedule('days.sun')
                   ];
+                  // Determine if this is today
+                  const today = new Date().getDay();
+                  const todayIndex = today === 0 ? 6 : today - 1;
+                  const isToday = item.day_of_week === todayIndex;
+
                   return (
-                    <div className="schedule-item" key={index}>
-                      <span className="schedule-day">{dayNames[item.day_of_week]}</span>
-                      <div className="schedule-info">
-                        <span className="schedule-time">
-                          {item.start_time} – {item.end_time}
-                        </span>
-                        <span className="schedule-location">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                            <circle cx="12" cy="10" r="3"/>
-                          </svg>
-                          {tHome('default_location')}
-                        </span>
+                    <div className={`schedule-card ${isToday ? 'today' : ''}`} key={index}>
+                      <div className="schedule-card-header">
+                        <span className="schedule-card-day">{dayNames[item.day_of_week]}</span>
+                        {isToday && <span className="today-badge">{tSchedule('today')}</span>}
+                      </div>
+                      <div className="schedule-card-time">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"/>
+                          <path d="M12 6v6l4 2"/>
+                        </svg>
+                        {item.start_time} – {item.end_time}
+                      </div>
+                      <div className="schedule-card-location">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                          <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        {tHome('default_location')}
                       </div>
                     </div>
                   );
@@ -1035,80 +1046,95 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
         /* Schedule Section */
         .schedule-section {
-          margin-top: 1.5rem;
-          padding-top: 1.5rem;
+          margin-top: 2rem;
+          padding-top: 2rem;
           border-top: 1px solid rgba(255,255,255,0.08);
         }
 
-        .schedule-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 0.75rem;
-        }
-
-        .schedule-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 0.75rem;
-        }
-
-        .schedule-day {
-          background: rgba(255,255,255,0.08);
+        .schedule-title {
+          font-family: 'Cormorant', serif;
+          font-size: 1.5rem;
+          font-weight: 400;
+          margin-bottom: 1.25rem;
           color: var(--white);
-          font-size: 0.7rem;
-          font-weight: 600;
-          padding: 0.4rem 0.6rem;
-          border-radius: 4px;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          min-width: 42px;
-          text-align: center;
         }
 
-        .schedule-info {
-          display: flex;
-          flex-direction: column;
-          gap: 0.2rem;
+        .schedule-week {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+          gap: 1rem;
         }
 
-        .schedule-time {
-          font-size: 0.8rem;
-          font-weight: 500;
-          padding: 0.25rem 0.5rem;
-          border-radius: 4px;
-          display: inline-block;
-          width: fit-content;
+        .schedule-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 12px;
+          padding: 1rem;
+          transition: all 0.3s ease;
         }
 
-        .schedule-time.available {
-          background: rgba(34, 197, 94, 0.15);
-          border: 1px solid rgba(34, 197, 94, 0.3);
-          color: #4ade80;
-        }
-
-        .schedule-time.tomorrow {
-          background: rgba(251, 146, 60, 0.15);
-          border: 1px solid rgba(251, 146, 60, 0.3);
-          color: #fb923c;
-        }
-
-        .schedule-time.future {
+        .schedule-card:hover {
           background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: var(--gray-light);
+          border-color: rgba(139, 41, 66, 0.3);
+          transform: translateY(-2px);
         }
 
-        .schedule-location {
-          font-size: 0.75rem;
-          color: var(--gray);
+        .schedule-card.today {
+          background: rgba(139, 41, 66, 0.15);
+          border-color: rgba(139, 41, 66, 0.4);
+        }
+
+        .schedule-card-header {
           display: flex;
           align-items: center;
-          gap: 0.3rem;
+          justify-content: space-between;
+          margin-bottom: 0.75rem;
         }
 
-        .schedule-location svg {
-          width: 12px;
-          height: 12px;
+        .schedule-card-day {
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: var(--wine-light);
+        }
+
+        .today-badge {
+          font-size: 0.65rem;
+          background: var(--wine);
+          color: white;
+          padding: 0.2rem 0.5rem;
+          border-radius: 4px;
+          font-weight: 600;
+        }
+
+        .schedule-card-time {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: var(--white);
+          margin-bottom: 0.5rem;
+        }
+
+        .schedule-card-time svg {
+          width: 16px;
+          height: 16px;
+          color: var(--wine-light);
+        }
+
+        .schedule-card-location {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.75rem;
+          color: var(--gray);
+        }
+
+        .schedule-card-location svg {
+          width: 14px;
+          height: 14px;
           color: var(--wine-light);
         }
 

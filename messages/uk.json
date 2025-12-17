@@ -309,7 +309,7 @@
     "error": "Помилка завантаження розкладу",
     "no_girls": "Сьогодні немає доступних дівчат",
     "today": "Сьогодні",
-    "status": {
+    "weekly_schedule": "Тижневий розклад",    "status": {
       "online": "Онлайн",
       "available_from": "Від {time}",
       "not_available": "Вихідний"

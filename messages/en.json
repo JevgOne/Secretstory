@@ -309,7 +309,7 @@
     "error": "Error loading schedule",
     "no_girls": "No girls available today",
     "today": "Today",
-    "status": {
+    "weekly_schedule": "Weekly Schedule",    "status": {
       "online": "Online",
       "available_from": "From {time}",
       "not_available": "Off"
