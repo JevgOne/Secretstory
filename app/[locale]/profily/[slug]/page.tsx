@@ -197,11 +197,24 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
     );
   }
 
-  const getTimeRange = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "10:00 – 18:00";
-    if (hour < 18) return "12:00 – 20:00";
-    return "14:00 – 22:00";
+  // Get today's schedule time range if exists
+  const getTodayTimeRange = () => {
+    if (!profile.schedule || profile.schedule.length === 0) {
+      return null; // No schedule = no time display
+    }
+
+    const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const todaySchedule = profile.schedule.find(s => {
+      // Convert day_of_week (0=Monday) to JS day (0=Sunday)
+      const scheduleDayJS = s.day_of_week === 6 ? 0 : s.day_of_week + 1;
+      return scheduleDayJS === today;
+    });
+
+    if (todaySchedule) {
+      return `${todaySchedule.start_time} – ${todaySchedule.end_time}`;
+    }
+
+    return null; // No schedule for today
   };
 
   const getBreastSize = (): string => {
@@ -438,13 +451,15 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                   {profile.online && <span className="online-dot"></span>}
                   <span className="status-text">{profile.online ? t('girls.online') : t('girls.offline')}</span>
                 </div>
-                <div className="profile-time">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 6v6l4 2"/>
-                  </svg>
-                  {getTimeRange()}
-                </div>
+                {getTodayTimeRange() && (
+                  <div className="profile-time">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 6v6l4 2"/>
+                    </svg>
+                    {getTodayTimeRange()}
+                  </div>
+                )}
               </div>
               <h1 className={`profile-name ${cormorant.className}`}>{profile.name}</h1>
               <p className="profile-tagline">{t('detail.tagline')}</p>
