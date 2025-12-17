@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     // 2. Fetch all active girls with their schedules for the target day
     const result = await db.execute({
       sql: `SELECT DISTINCT
-        g.id, g.name, g.slug, g.age, g.height, g.weight, g.bust, g.location, g.photos,
+        g.id, g.name, g.slug, g.age, g.height, g.weight, g.bust, g.location,
         g.description_cs, g.description_en, g.description_de, g.description_uk,
         g.bio, g.online, g.badge_type,
         gs.start_time, gs.end_time
@@ -45,66 +45,71 @@ export async function GET(request: NextRequest) {
     });
 
     // 3. Filter by schedule and determine status
-    const girls = result.rows
-      .map((girl: any) => {
-        // If no schedule for this day, skip
-        if (!girl.start_time || !girl.end_time) return null;
+    const girls = await Promise.all(
+      result.rows
+        .map(async (girl: any) => {
+          // If no schedule for this day, skip
+          if (!girl.start_time || !girl.end_time) return null;
 
-        const shiftFrom = girl.start_time.substring(0, 5); // HH:MM
-        const shiftTo = girl.end_time.substring(0, 5);     // HH:MM
+          const shiftFrom = girl.start_time.substring(0, 5); // HH:MM
+          const shiftTo = girl.end_time.substring(0, 5);     // HH:MM
 
-        // Determine status (only for today)
-        let status = 'later'; // Default: not working yet
+          // Determine status (only for today)
+          let status = 'later'; // Default: not working yet
 
-        const isToday = targetDate.toDateString() === now.toDateString();
+          const isToday = targetDate.toDateString() === now.toDateString();
 
-        if (isToday) {
-          if (currentTime >= shiftFrom && currentTime <= shiftTo) {
-            status = 'working'; // Currently working
+          if (isToday) {
+            if (currentTime >= shiftFrom && currentTime <= shiftTo) {
+              status = 'working'; // Currently working
+            }
+            // Don't filter out girls whose shift ended - show all girls with schedule
           }
-          // Don't filter out girls whose shift ended - show all girls with schedule
-        }
 
-        // Parse photos
-        let photos = [];
-        try {
-          const parsedPhotos = girl.photos ? JSON.parse(girl.photos as string) : [];
-          // Photos may be stored as [{data: "url"}] or as ["url"]
-          photos = parsedPhotos.map((p: any) =>
-            typeof p === 'string' ? p : (p.data || p.url || '')
-          ).filter(Boolean);
-        } catch (e) {
-          console.error(`Failed to parse photos for girl ${girl.id}:`, e);
-        }
+          // Fetch photos from girl_photos table
+          const photoResult = await db.execute({
+            sql: `
+              SELECT url, thumbnail_url
+              FROM girl_photos
+              WHERE girl_id = ? AND is_primary = 1
+              LIMIT 1
+            `,
+            args: [girl.id]
+          });
 
-        // Get description in requested language
-        const descriptionKey = `description_${lang}` as keyof typeof girl;
-        const description = girl[descriptionKey] as string || girl.bio as string || '';
+          const primaryPhoto = photoResult.rows[0];
+          const photos = primaryPhoto ? [primaryPhoto.url] : [];
 
-        return {
-          id: girl.id,
-          name: girl.name,
-          slug: girl.slug,
-          status,
-          shift: {
-            from: shiftFrom,
-            to: shiftTo
-          },
-          location: girl.location || 'Praha 2',
-          photos,
-          age: girl.age,
-          height: girl.height,
-          weight: girl.weight,
-          bust: girl.bust,
-          description,
-          online: girl.online,
-          badge_type: girl.badge_type
-        };
-      })
-      .filter(Boolean); // Remove nulls
+          // Get description in requested language
+          const descriptionKey = `description_${lang}` as keyof typeof girl;
+          const description = girl[descriptionKey] as string || girl.bio as string || '';
+
+          return {
+            id: girl.id,
+            name: girl.name,
+            slug: girl.slug,
+            status,
+            shift: {
+              from: shiftFrom,
+              to: shiftTo
+            },
+            location: girl.location || 'Praha 2',
+            photos,
+            age: girl.age,
+            height: girl.height,
+            weight: girl.weight,
+            bust: girl.bust,
+            description,
+            online: girl.online,
+            badge_type: girl.badge_type
+          };
+        })
+    );
+
+    const filteredGirls = girls.filter(Boolean); // Remove nulls
 
     // 4. Sort by status: working first, then later
-    girls.sort((a, b) => {
+    filteredGirls.sort((a, b) => {
       if (a!.status === 'working' && b!.status !== 'working') return -1;
       if (a!.status !== 'working' && b!.status === 'working') return 1;
       return 0;
@@ -119,7 +124,7 @@ export async function GET(request: NextRequest) {
       current_time: currentTime,
       day: dayName,
       timezone: pragueTz,
-      girls
+      girls: filteredGirls
     });
   } catch (error) {
     console.error('Schedule API error:', error);
