@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') || 'active';
     const online = searchParams.get('online');
     const lang = searchParams.get('lang') || 'cs';
+    const service = searchParams.get('service'); // Filter by service ID
 
     let sql = `
       SELECT
@@ -65,7 +66,7 @@ export async function GET(request: NextRequest) {
     const result = await db.execute({ sql, args });
 
     // For each girl, fetch their primary photo
-    const girlsWithPhotos = await Promise.all(
+    let girlsWithPhotos = await Promise.all(
       result.rows.map(async (row) => {
         const photoResult = await db.execute({
           sql: `
@@ -94,6 +95,13 @@ export async function GET(request: NextRequest) {
         };
       })
     );
+
+    // Filter by service if specified (client-side filtering since services is JSON)
+    if (service) {
+      girlsWithPhotos = girlsWithPhotos.filter(girl =>
+        girl.services && girl.services.includes(service)
+      );
+    }
 
     return NextResponse.json({
       success: true,
