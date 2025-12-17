@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getBasicServices, getExtraServices } from '@/lib/services';
+import { HASHTAGS, Hashtag } from '@/lib/hashtags';
 import SEOFieldsSection from '@/components/SEOFieldsSection';
 
 interface PageProps {
@@ -43,6 +44,7 @@ export default function EditGirlPage({ params }: PageProps) {
     piercing_description: '',
     languages: ['cs'],
     services: [] as string[],
+    hashtags: [] as string[],
     is_new: false,
     is_top: false,
     is_featured: false,
@@ -117,6 +119,7 @@ export default function EditGirlPage({ params }: PageProps) {
             piercing_description: girl.piercing_description || '',
             languages: girl.languages || ['cs'],
             services: girl.services || [],
+            hashtags: girl.hashtags || [],
             is_new: girl.is_new || false,
             is_top: girl.is_top || false,
             is_featured: girl.is_featured || false,
@@ -209,6 +212,20 @@ export default function EditGirlPage({ params }: PageProps) {
       setFormData({
         ...formData,
         services: [...formData.services, serviceId]
+      });
+    }
+  };
+
+  const handleHashtagToggle = (hashtagId: string) => {
+    if (formData.hashtags.includes(hashtagId)) {
+      setFormData({
+        ...formData,
+        hashtags: formData.hashtags.filter(h => h !== hashtagId)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        hashtags: [...formData.hashtags, hashtagId]
       });
     }
   };
@@ -497,6 +514,27 @@ export default function EditGirlPage({ params }: PageProps) {
                 </label>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Hashtags Section */}
+        <div className="form-section">
+          <h2 className="section-title">Hashtags</h2>
+          <p style={{ marginBottom: '1rem', color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem' }}>
+            Vyberte hashtags které se zobrazí na profilu dívky
+          </p>
+
+          <div className="services-grid">
+            {HASHTAGS.map((hashtag) => (
+              <label key={hashtag.id} className="service-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.hashtags.includes(hashtag.id)}
+                  onChange={() => handleHashtagToggle(hashtag.id)}
+                />
+                <span>#{hashtag.translations.cs}</span>
+              </label>
+            ))}
           </div>
         </div>
 

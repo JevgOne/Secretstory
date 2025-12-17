@@ -56,6 +56,11 @@ export async function PATCH(
       args.push(JSON.stringify(body.services));
     }
 
+    if (body.hashtags !== undefined) {
+      updates.push('hashtags = ?');
+      args.push(JSON.stringify(body.hashtags));
+    }
+
     if (body.languages !== undefined) {
       updates.push('languages = ?');
       args.push(JSON.stringify(body.languages));
@@ -186,6 +191,7 @@ export async function GET(
       girl: {
         ...girl,
         services: girl.services ? JSON.parse(girl.services as string) : [],
+        hashtags: girl.hashtags ? JSON.parse(girl.hashtags as string) : [],
         languages: girl.languages ? JSON.parse(girl.languages as string) : ['cs'],
         verified: Boolean(girl.verified),
         online: Boolean(girl.online),

@@ -2685,6 +2685,34 @@ footer {
     font-weight: 500;
 }
 
+/* Hashtags Section */
+.hashtags-section {
+    margin: 1.5rem 0;
+    padding: 1rem 0;
+}
+
+.hashtags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .hashtags {
+        gap: 0.4rem;
+    }
+
+    .hashtag {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.7rem !important;
+    }
+
+    .hashtags-section {
+        margin: 1rem 0;
+        padding: 0.75rem 0;
+    }
+}
+
 /* Service Cards - New Design */
 .services-section {
     margin-bottom: 1.5rem;

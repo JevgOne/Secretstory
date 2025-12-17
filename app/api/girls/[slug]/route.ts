@@ -32,6 +32,7 @@ export async function GET(
           reviews_count,
           bookings_count,
           services,
+          hashtags,
           bio,
           tattoo_percentage,
           tattoo_description,
@@ -107,6 +108,7 @@ export async function GET(
       girl: {
         ...girl,
         services: girl.services ? JSON.parse(girl.services as string) : [],
+        hashtags: girl.hashtags ? JSON.parse(girl.hashtags as string) : [],
         verified: Boolean(girl.verified),
         online: Boolean(girl.online),
         piercing: Boolean(girl.piercing),

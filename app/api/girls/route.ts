@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     const online = searchParams.get('online');
     const lang = searchParams.get('lang') || 'cs';
     const service = searchParams.get('service'); // Filter by service ID
+    const hashtag = searchParams.get('hashtag'); // Filter by hashtag ID
 
     let sql = `
       SELECT
@@ -44,6 +45,7 @@ export async function GET(request: NextRequest) {
         g.featured_section,
         g.location,
         g.services,
+        g.hashtags,
         g.created_at,
         g.updated_at
       FROM girls g
@@ -59,6 +61,11 @@ export async function GET(request: NextRequest) {
     if (online !== null && online !== undefined) {
       sql += ' AND g.online = ?';
       args.push(online === 'true' ? 1 : 0);
+    }
+
+    if (hashtag) {
+      sql += ' AND g.hashtags LIKE ?';
+      args.push(`%"${hashtag}"%`);
     }
 
     sql += ' ORDER BY g.online DESC, g.rating DESC, g.created_at DESC';
@@ -80,10 +87,12 @@ export async function GET(request: NextRequest) {
 
         const primaryPhoto = photoResult.rows[0];
         const services = row.services ? JSON.parse(row.services as string) : [];
+        const hashtags = row.hashtags ? JSON.parse(row.hashtags as string) : [];
 
         return {
           ...row,
           services,
+          hashtags,
           verified: Boolean(row.verified),
           online: Boolean(row.online),
           piercing: Boolean(row.piercing),

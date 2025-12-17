@@ -19,6 +19,7 @@ import ReviewsList from '@/components/ReviewsList';
 import ReviewForm from '@/components/ReviewForm';
 import ReviewStars from '@/components/ReviewStars';
 import { getBasicServices, getExtraServices, getServiceName, getServiceById } from '@/lib/services';
+import { getHashtagById, getHashtagName } from '@/lib/hashtags';
 
 const cormorant = Cormorant({
   subsets: ['latin', 'latin-ext'],
@@ -121,6 +122,7 @@ interface Girl {
   rating: number;
   reviews_count: number;
   services: string[];
+  hashtags?: string[]; // Array of hashtag IDs
   bio: string;
   tattoo_percentage?: number;
   tattoo_description?: string;
@@ -501,75 +503,26 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               </div>
             </div>
 
-            {/* Services - Basic & Extra */}
-            {profile.services && profile.services.length > 0 && (() => {
-              const basicServicesList = getBasicServices();
-              const extraServicesList = getExtraServices();
-
-              // Filter valid services only
-              const validServices = profile.services.filter(sid =>
-                getServiceById(sid) !== undefined
-              );
-
-              const userBasicServices = validServices.filter(sid =>
-                basicServicesList.some(s => s.id === sid)
-              );
-              const userExtraServices = validServices.filter(sid =>
-                extraServicesList.some(s => s.id === sid)
-              );
-
-              return (
-                <>
-                  {/* Basic Services */}
-                  {userBasicServices.length > 0 && (
-                    <div className="services-section">
-                      <div className="services-grid">
-                        {userBasicServices.map((serviceId) => (
-                          <Link
-                            href={`/${locale}/praktiky/${serviceId}`}
-                            key={serviceId}
-                            className="service-card basic-service"
-                          >
-                            <div className="service-icon">
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                              </svg>
-                            </div>
-                            <span className="service-name">{getServiceName(serviceId, locale)}</span>
-                            <span className="service-label included">V ceně</span>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Extra Services */}
-                  {userExtraServices.length > 0 && (
-                    <div className="services-section">
-                      <h3 className="services-section-title">Extra služby</h3>
-                      <div className="services-grid">
-                        {userExtraServices.map((serviceId) => (
-                          <Link
-                            href={`/${locale}/praktiky/${serviceId}`}
-                            key={serviceId}
-                            className="service-card extra-service"
-                          >
-                            <div className="service-icon">
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                              </svg>
-                            </div>
-                            <span className="service-name">{getServiceName(serviceId, locale)}</span>
-                            <span className="service-label extra">Za příplatek</span>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </>
-              );
-            })()}
+            {/* Hashtags */}
+            {profile.hashtags && profile.hashtags.length > 0 && (
+              <div className="hashtags-section">
+                <div className="hashtags">
+                  {profile.hashtags.map((hashtagId) => {
+                    const hashtag = getHashtagById(hashtagId);
+                    if (!hashtag) return null;
+                    return (
+                      <Link
+                        href={`/${locale}/hashtag/${hashtagId}`}
+                        key={hashtagId}
+                        className="hashtag"
+                      >
+                        #{getHashtagName(hashtagId, locale)}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Location */}
             <div className="location-row">

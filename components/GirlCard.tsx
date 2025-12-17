@@ -57,12 +57,7 @@ export default function GirlCard({
     return cups[bust] || 2;
   };
 
-  const getTimeRange = (): string => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "10:00 - 18:00";
-    if (hour < 18) return "12:00 - 20:00";
-    return "14:00 - 22:00";
-  };
+  // Removed fake time - real schedule should come from database
 
   const getLocation = (): string => {
     if (locationNames.length === 0) return primaryLocation?.display_name || 'Praha 2';
