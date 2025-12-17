@@ -19,6 +19,7 @@ import ReviewsList from '@/components/ReviewsList';
 import ReviewForm from '@/components/ReviewForm';
 import ReviewStars from '@/components/ReviewStars';
 import { getHashtagById, getHashtagName } from '@/lib/hashtags';
+import { SERVICES } from '@/lib/services-data';
 
 const cormorant = Cormorant({
   subsets: ['latin', 'latin-ext'],
@@ -573,6 +574,25 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               </div>
             </div>
 
+            {/* Hashtags */}
+            {profile.hashtags && profile.hashtags.length > 0 && (
+              <div className="profile-hashtags">
+                {profile.hashtags.map((tag: string) => {
+                  const hashtag = getHashtagById(tag);
+                  if (!hashtag) return null;
+                  return (
+                    <Link
+                      href={`/${locale}/hashtag/${tag}`}
+                      key={tag}
+                      className="profile-hashtag"
+                    >
+                      #{getHashtagName(tag, locale)}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+
             {/* About Me - Modern Design */}
             <div className="profile-section">
               <h3 className={`section-title ${cormorant.className}`}>{t('profile.about_me')}</h3>
@@ -627,6 +647,31 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               </div>
             ) : null}
 
+            {/* Services Section */}
+            {profile.services && profile.services.length > 0 && (
+              <div className="profile-section">
+                <h3 className={`section-title ${cormorant.className}`}>{t('profile.services')}</h3>
+                <div className="services-grid">
+                  {profile.services.map((serviceId: string) => {
+                    const service = SERVICES.find(s => s.id === serviceId);
+                    if (!service) return null;
+
+                    const isExtra = service.category === 'extras' || service.category === 'special';
+
+                    return (
+                      <div key={serviceId} className={`service-card ${isExtra ? 'extra' : 'basic'}`}>
+                        <div className="service-name">
+                          {service.name[locale as 'cs' | 'en' | 'de' | 'uk']}
+                        </div>
+                        {isExtra && (
+                          <span className="service-badge">Extra</span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* CTA */}
             <div className="profile-cta">
@@ -1416,7 +1461,32 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           display: flex;
           align-items: center;
           gap: 0.75rem;
-          margin-bottom: 2.5rem;
+          margin-bottom: 1.25rem;
+        }
+
+        /* Hashtags */
+        .profile-hashtags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-bottom: 2rem;
+        }
+
+        .profile-hashtag {
+          font-size: 0.8rem;
+          color: var(--wine-light);
+          background: rgba(139, 41, 66, 0.1);
+          border: 1px solid rgba(139, 41, 66, 0.2);
+          padding: 0.4rem 0.8rem;
+          border-radius: 20px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+        }
+
+        .profile-hashtag:hover {
+          background: rgba(139, 41, 66, 0.2);
+          border-color: rgba(139, 41, 66, 0.4);
+          transform: scale(1.05);
         }
 
         .location-icon {
@@ -1601,25 +1671,46 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           gap: 0.75rem;
         }
 
-        .service-item {
+        .service-card {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 1rem 1.25rem;
-          background: var(--bg);
+          padding: 0.85rem 1.1rem;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
           border-radius: 10px;
-          transition: all 0.3s;
+          transition: all 0.3s ease;
         }
 
-        .service-item:hover {
-          background: rgba(255,255,255,0.05);
+        .service-card.basic {
+          border-left: 3px solid rgba(139, 41, 66, 0.5);
         }
 
-        .service-name {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
+        .service-card.extra {
+          border-left: 3px solid rgba(251, 146, 60, 0.6);
+          background: rgba(251, 146, 60, 0.05);
+        }
+
+        .service-card:hover {
+          background: rgba(255,255,255,0.06);
+          transform: translateX(4px);
+        }
+
+        .service-card .service-name {
           font-size: 0.9rem;
+          color: var(--white);
+          flex: 1;
+        }
+
+        .service-badge {
+          font-size: 0.65rem;
+          background: rgba(251, 146, 60, 0.2);
+          color: #fb923c;
+          padding: 0.25rem 0.6rem;
+          border-radius: 4px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
         }
 
         .service-icon {
