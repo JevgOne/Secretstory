@@ -36,6 +36,13 @@ export async function GET(request: NextRequest) {
         g.piercing,
         g.piercing_description,
         g.languages,
+        g.is_new,
+        g.is_top,
+        g.is_featured,
+        g.badge_type,
+        g.featured_section,
+        g.location,
+        g.services,
         g.created_at,
         g.updated_at
       FROM girls g

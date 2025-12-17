@@ -43,6 +43,8 @@ interface Girl {
   is_featured?: boolean;
   badge_type?: string;
   featured_section?: string;
+  primary_photo?: string;
+  thumbnail?: string;
 }
 
 interface Location {
@@ -99,8 +101,8 @@ export default function Home() {
         if (data.success) {
           const allGirls = data.girls;
 
-          // Find featured girl for "New Girl" section (homepage_new)
-          const newGirl = allGirls.find((g: Girl) => g.featured_section === 'homepage_new');
+          // Find first NEW girl for "New Girl" section
+          const newGirl = allGirls.find((g: Girl) => g.is_new === true);
           if (newGirl) {
             setFeaturedGirl(newGirl);
           }
@@ -236,7 +238,11 @@ export default function Home() {
               <div className="new-label">✦ {tHome('new_label')}</div>
               <div className="new-girl-card">
                 <div className="new-girl-img">
-                  <div className="placeholder">FOTO</div>
+                  {featuredGirl.primary_photo ? (
+                    <img src={featuredGirl.primary_photo} alt={featuredGirl.name} />
+                  ) : (
+                    <div className="placeholder">FOTO</div>
+                  )}
                   <span className="new-badge">{tHome('new_badge')}</span>
                 </div>
                 <div className="new-girl-info">
