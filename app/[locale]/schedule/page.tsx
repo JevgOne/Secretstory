@@ -49,14 +49,11 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
   const [currentTime, setCurrentTime] = useState("");
   const [selectedDate, setSelectedDate] = useState(0); // 0 = today, 1 = tomorrow, etc.
 
-  // Helper function for breast size
-  const getBreastSize = (bust: number) => {
-    if (bust < 75) return 'A';
-    if (bust < 80) return 'B';
-    if (bust < 85) return 'C';
-    if (bust < 90) return 'D';
-    if (bust < 95) return 'DD';
-    return 'E+';
+  // Helper function for breast size - returns number (1, 2, 3)
+  const getBreastSize = (bust: number): number => {
+    if (bust < 80) return 1;
+    if (bust < 90) return 2;
+    return 3;
   };
 
   // Generate days from today until end of week (Sunday)
