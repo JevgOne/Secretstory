@@ -68,7 +68,11 @@ export async function GET(request: NextRequest) {
         // Parse photos
         let photos = [];
         try {
-          photos = girl.photos ? JSON.parse(girl.photos as string) : [];
+          const parsedPhotos = girl.photos ? JSON.parse(girl.photos as string) : [];
+          // Photos may be stored as [{data: "url"}] or as ["url"]
+          photos = parsedPhotos.map((p: any) =>
+            typeof p === 'string' ? p : (p.data || p.url || '')
+          ).filter(Boolean);
         } catch (e) {
           console.error(`Failed to parse photos for girl ${girl.id}:`, e);
         }
@@ -86,7 +90,7 @@ export async function GET(request: NextRequest) {
             from: shiftFrom,
             to: shiftTo
           },
-          location: girl.location || 'Praha',
+          location: girl.location || 'Praha 2',
           photos,
           age: girl.age,
           height: girl.height,
