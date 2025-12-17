@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
-import { getServiceById, getServiceName } from "@/lib/services";
+import { getServiceById, getServiceName, SERVICES } from "@/lib/services";
 import { useFavorites } from '@/contexts/FavoritesContext';
 
 interface Girl {
@@ -98,13 +98,31 @@ export default function PraktikaDetailPage() {
         padding: "2rem",
         borderRadius: "12px",
         marginTop: "2rem",
-        marginBottom: "3rem"
+        marginBottom: "2rem"
       }}>
         <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>O této praktice</h2>
         <p style={{ lineHeight: "1.8", color: "rgba(255,255,255,0.8)" }}>
           {serviceName} je jedna z praktik které nabízejí naše escort dívky.
           Níže najdete profily všech holek, které tuto službu poskytují.
         </p>
+      </div>
+
+      {/* All Services Hashtags */}
+      <div style={{ marginBottom: "3rem" }}>
+        <h3 style={{ fontSize: "1.2rem", marginBottom: "1rem", color: "rgba(255,255,255,0.9)" }}>
+          Všechny praktiky
+        </h3>
+        <div className="hashtags">
+          {SERVICES.map((service) => (
+            <Link
+              href={`/${locale}/praktiky/${service.id}`}
+              key={service.id}
+              className={`hashtag ${service.id === slug ? 'active' : ''}`}
+            >
+              #{getServiceName(service.id, locale)}
+            </Link>
+          ))}
+        </div>
       </div>
 
       <div>

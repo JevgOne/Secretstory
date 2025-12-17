@@ -2679,6 +2679,12 @@ footer {
     color: white;
 }
 
+.hashtag.active {
+    background: var(--wine);
+    color: white;
+    font-weight: 500;
+}
+
 /* Service Cards - New Design */
 .services-section {
     margin-bottom: 1.5rem;
