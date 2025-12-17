@@ -495,12 +495,21 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                     tSchedule('days.sun')
                   ];
                   // Determine if this is today
-                  const today = new Date().getDay();
+                  const now = new Date();
+                  const today = now.getDay();
                   const todayIndex = today === 0 ? 6 : today - 1;
                   const isToday = item.day_of_week === todayIndex;
 
+                  // Check if closed for today
+                  const currentTime = now.toLocaleTimeString('cs-CZ', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                  });
+                  const isClosedNow = isToday && currentTime > item.end_time;
+
                   return (
-                    <div className={`schedule-card ${isToday ? 'today' : ''}`} key={index}>
+                    <div className={`schedule-card ${isToday ? 'today' : ''} ${isClosedNow ? 'closed' : ''}`} key={index}>
                       <div className="schedule-card-header">
                         <span className="schedule-card-day">{dayNames[item.day_of_week]}</span>
                         {isToday && <span className="today-badge">{tSchedule('today')}</span>}
@@ -510,7 +519,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                           <circle cx="12" cy="12" r="10"/>
                           <path d="M12 6v6l4 2"/>
                         </svg>
-                        {item.start_time} – {item.end_time}
+                        {isClosedNow ? t('girls.closed') : `${item.start_time} – ${item.end_time}`}
                       </div>
                       <div className="schedule-card-location">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1222,6 +1231,19 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         .schedule-card.today {
           background: rgba(139, 41, 66, 0.15);
           border-color: rgba(139, 41, 66, 0.4);
+        }
+
+        .schedule-card.closed {
+          background: rgba(255, 255, 255, 0.02);
+          border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .schedule-card.closed .schedule-card-time {
+          color: var(--gray);
+        }
+
+        .schedule-card.closed .schedule-card-time svg {
+          color: var(--gray);
         }
 
         .schedule-card-header {
