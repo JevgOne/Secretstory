@@ -13,7 +13,6 @@ export interface Service {
 
 export const SERVICES: Service[] = [
   // BASIC SERVICES - Every girl offers these (mandatory)
-  { id: 'basic', category: 'basic', translations: { cs: 'Základní', en: 'Basic', de: 'Basic', uk: 'Basic' } },
   { id: 'classic', category: 'basic', translations: { cs: 'Klasika', en: 'Classic', de: 'Klassisch', uk: 'Класичний' } },
   { id: 'blowjob_condom', category: 'basic', translations: { cs: 'Blowjob s kondomen', en: 'Blowjob with condom', de: 'Blowjob mit Kondom', uk: 'Мінет з презервативом' } },
   { id: 'massage', category: 'basic', translations: { cs: 'Masáž', en: 'Massage', de: 'Massage', uk: 'Масаж' } },

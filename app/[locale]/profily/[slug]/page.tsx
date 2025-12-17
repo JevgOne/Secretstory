@@ -1136,9 +1136,18 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          background: rgba(34, 197, 94, 0.1);
           padding: 0.4rem 0.8rem;
           border-radius: 100px;
+        }
+
+        /* Online status - green */
+        .profile-status:has(.online-dot) {
+          background: rgba(34, 197, 94, 0.1);
+        }
+
+        /* Offline status - red (when no .online-dot exists) */
+        .profile-status:not(:has(.online-dot)) {
+          background: rgba(239, 68, 68, 0.1);
         }
 
         .online-dot {
@@ -1157,8 +1166,17 @@ Mluvím plynule česky a anglicky. Těším se na vás.`}
 
         .status-text {
           font-size: 0.75rem;
-          color: var(--green);
           font-weight: 500;
+        }
+
+        /* Green text for online */
+        .profile-status:has(.online-dot) .status-text {
+          color: var(--green);
+        }
+
+        /* Red text for offline */
+        .profile-status:not(:has(.online-dot)) .status-text {
+          color: #ef4444;
         }
 
         .profile-time {
