@@ -94,47 +94,6 @@ export default async function HashtagPage({ params }: PageProps) {
         </div>
       )}
 
-      <style jsx>{`
-        .page-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 2rem 1rem;
-        }
-
-        .page-header {
-          text-align: center;
-          margin-bottom: 3rem;
-        }
-
-        .page-title {
-          font-size: 2.5rem;
-          font-weight: 600;
-          color: var(--wine-light);
-          margin-bottom: 0.5rem;
-        }
-
-        .page-subtitle {
-          font-size: 1.1rem;
-          color: var(--gray);
-        }
-
-        .girls-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-          .page-title {
-            font-size: 2rem;
-          }
-
-          .girls-grid {
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-          }
-        }
-      `}</style>
     </div>
   );
 }
