@@ -218,6 +218,34 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
     return null; // No schedule for today
   };
 
+  // Check if girl is working right now based on schedule
+  const isWorkingNow = () => {
+    if (!profile.schedule || profile.schedule.length === 0) {
+      return false;
+    }
+
+    const now = new Date();
+    const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const currentTime = now.toLocaleTimeString('cs-CZ', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+
+    const todaySchedule = profile.schedule.find(s => {
+      // Convert day_of_week (0=Monday) to JS day (0=Sunday)
+      const scheduleDayJS = s.day_of_week === 6 ? 0 : s.day_of_week + 1;
+      return scheduleDayJS === today;
+    });
+
+    if (!todaySchedule) {
+      return false; // No schedule for today
+    }
+
+    // Compare times (HH:MM format)
+    return currentTime >= todaySchedule.start_time && currentTime <= todaySchedule.end_time;
+  };
+
   const getBreastSize = (): string => {
     if (!profile.bust) return '2';
     if (profile.bust.includes('-')) {
@@ -457,8 +485,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             <div className="profile-header">
               <div className="profile-top-row">
                 <div className="profile-status">
-                  {profile.online && <span className="online-dot"></span>}
-                  <span className="status-text">{profile.online ? t('girls.online') : t('girls.offline')}</span>
+                  {isWorkingNow() && <span className="online-dot"></span>}
+                  <span className="status-text">{isWorkingNow() ? t('girls.online') : t('girls.offline')}</span>
                 </div>
                 {getTodayTimeRange() && (
                   <div className="profile-time">
