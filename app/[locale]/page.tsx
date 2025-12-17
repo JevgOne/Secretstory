@@ -10,6 +10,7 @@ import MobileMenu from '@/components/MobileMenu';
 import BottomCTA from '@/components/BottomCTA';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { LocalBusinessSchema, OrganizationSchema, WebSiteSchema } from '@/components/JsonLd';
+import { HASHTAGS, getHashtagName } from '@/lib/hashtags';
 
 const cormorant = Cormorant({
   subsets: ['latin'],
@@ -363,6 +364,27 @@ export default function Home() {
             );
           })
           )}
+        </div>
+      </section>
+
+      {/* POPULAR HASHTAGS */}
+      <section style={{ padding: '4rem 0', background: 'rgba(139, 41, 66, 0.03)' }}>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <h2 className="section-title">Populární vyhledávání</h2>
+            <p className="section-subtitle">Najděte holky podle vašich preferencí</p>
+          </div>
+          <div className="hashtags" style={{ justifyContent: 'center' }}>
+            {HASHTAGS.map((hashtag) => (
+              <Link
+                href={`/${locale}/hashtag/${hashtag.id}`}
+                key={hashtag.id}
+                className="hashtag"
+              >
+                #{getHashtagName(hashtag.id, locale)}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
