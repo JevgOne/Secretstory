@@ -16,6 +16,7 @@ export default function NewGirlPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    password: '',
     age: '',
     nationality: 'Česká',
     height: '',
@@ -178,12 +179,25 @@ export default function NewGirlPage() {
             </div>
 
             <div className="form-group">
-              <label>Email</label>
+              <label>Email *</label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="email@example.com"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Heslo *</label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                placeholder="Minimálně 6 znaků"
+                required
+                minLength={6}
               />
             </div>
 

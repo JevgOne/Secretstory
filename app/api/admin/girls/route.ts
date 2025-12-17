@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth-helpers';
+import bcrypt from 'bcryptjs';
 
 // POST /api/admin/girls - Create new girl profile (admin only)
 export async function POST(request: NextRequest) {
