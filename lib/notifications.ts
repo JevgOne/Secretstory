@@ -20,8 +20,8 @@ export async function createNotification(params: CreateNotificationParams) {
       args: [userId, type, title, message, link || null]
     })
   } catch (error) {
-    console.error('Failed to create notification:', error)
-    throw error
+    console.error('Failed to create notification (table may not exist):', error)
+    // Don't throw - notifications are not critical for review submission
   }
 }
 

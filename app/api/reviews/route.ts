@@ -101,22 +101,28 @@ export async function POST(request: NextRequest) {
 
     const reviewId = Number(result.lastInsertRowid);
 
-    // Create notification for all admin users
-    const adminUsers = await db.execute({
+    // Create notification for all admin users (non-blocking)
+    db.execute({
       sql: 'SELECT id, email FROM users WHERE role = ?',
       args: ['admin']
-    });
-
-    // Create in-app notification for each admin
-    for (const admin of adminUsers.rows) {
-      await createNotification({
-        userId: (admin as any).id,
-        type: 'review_new',
-        title: 'Nová recenze čeká na schválení',
-        message: `Nová recenze od ${author_name} čeká na schválení.`,
-        link: `/admin/reviews`
+    }).then(adminUsers => {
+      // Create in-app notification for each admin
+      adminUsers.rows.forEach(async (admin) => {
+        try {
+          await createNotification({
+            userId: (admin as any).id,
+            type: 'review_new',
+            title: 'Nová recenze čeká na schválení',
+            message: `Nová recenze od ${author_name} čeká na schválení.`,
+            link: `/admin/reviews`
+          });
+        } catch (error) {
+          console.error('Failed to create notification for admin:', error);
+        }
       });
-    }
+    }).catch(error => {
+      console.error('Failed to fetch admin users for notifications:', error);
+    });
 
     // Send email notifications ONLY to admins (non-blocking, runs in background)
     Promise.all([
@@ -124,10 +130,15 @@ export async function POST(request: NextRequest) {
       db.execute({
         sql: 'SELECT name FROM girls WHERE id = ?',
         args: [girl_id]
+      }),
+      // Get admin emails
+      db.execute({
+        sql: 'SELECT id, email FROM users WHERE role = ?',
+        args: ['admin']
       })
-    ]).then(([girlResult]) => {
+    ]).then(([girlResult, adminUsersResult]) => {
       const girl = girlResult.rows[0];
-      const adminEmails = adminUsers.rows
+      const adminEmails = adminUsersResult.rows
         .map(admin => (admin as any).email)
         .filter(Boolean);
 
