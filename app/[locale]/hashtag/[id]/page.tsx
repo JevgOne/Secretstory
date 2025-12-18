@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const hashtagName = getHashtagName(id, locale);
 
   return {
-    title: `#${hashtagName} - Lovely Girls Prague`,
-    description: `Prohlédněte si dívky označené jako #${hashtagName}`,
+    title: `${hashtagName} - Lovely Girls Prague`,
+    description: `Prohlédněte si dívky: ${hashtagName}`,
   };
 }
 
@@ -62,10 +62,10 @@ export default async function HashtagPage({ params }: PageProps) {
   }));
 
   return (
-    <main className="main-content">
+    <>
       <div className="page-container">
         <div className="page-header">
-          <h1 className="page-title">#{hashtagName}</h1>
+          <h1 className="page-title">{hashtagName}</h1>
           <p className="page-subtitle">
             {girls.length === 0 && 'Žádné dívky s tímto hashtagem'}
             {girls.length === 1 && '1 dívka'}
@@ -95,6 +95,6 @@ export default async function HashtagPage({ params }: PageProps) {
           </div>
         )}
       </div>
-    </main>
+    </>
   );
 }
