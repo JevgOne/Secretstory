@@ -693,32 +693,61 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             ) : null}
 
             {/* Services Section */}
-            {profile.services && profile.services.length > 0 && (
-              <div className="profile-section">
-                <h3 className={`section-title ${cormorant.className}`}>{t('profile.services')}</h3>
-                <div className="services-grid">
-                  {profile.services.map((serviceSlug: string) => {
-                    // Normalize old JSON slugs to new slugs
-                    const normalizedSlug = normalizeServiceSlug(serviceSlug);
-                    const service = SERVICES.find(s => s.slug === normalizedSlug || s.id === normalizedSlug);
-                    if (!service) return null;
+            {profile.services && profile.services.length > 0 && (() => {
+              // Separate services into included and extra
+              const includedServices: any[] = [];
+              const extraServices: any[] = [];
 
-                    const isExtra = service.category === 'extras' || service.category === 'special';
+              profile.services.forEach((serviceSlug: string) => {
+                const normalizedSlug = normalizeServiceSlug(serviceSlug);
+                const service = SERVICES.find(s => s.slug === normalizedSlug || s.id === normalizedSlug);
+                if (!service) return;
 
-                    return (
-                      <div key={serviceSlug} className={`service-card ${isExtra ? 'extra' : 'basic'}`}>
-                        <div className="service-name">
-                          {service.name[locale as 'cs' | 'en' | 'de' | 'uk']}
-                        </div>
-                        {isExtra && (
-                          <span className="service-badge">Extra</span>
-                        )}
+                const isExtra = service.category === 'extras' || service.category === 'special';
+                if (isExtra) {
+                  extraServices.push({ slug: serviceSlug, service });
+                } else {
+                  includedServices.push({ slug: serviceSlug, service });
+                }
+              });
+
+              return (
+                <>
+                  {/* Included Services */}
+                  {includedServices.length > 0 && (
+                    <div className="profile-section">
+                      <h3 className={`section-title ${cormorant.className}`}>{t('profile.services')}</h3>
+                      <div className="services-grid">
+                        {includedServices.map(({ slug, service }) => (
+                          <div key={slug} className="service-card basic">
+                            <div className="service-name">
+                              {service.name[locale as 'cs' | 'en' | 'de' | 'uk']}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+                    </div>
+                  )}
+
+                  {/* Extra Services */}
+                  {extraServices.length > 0 && (
+                    <div className="profile-section">
+                      <h3 className={`section-title ${cormorant.className}`}>{t('profile.extra_services')}</h3>
+                      <div className="services-grid">
+                        {extraServices.map(({ slug, service }) => (
+                          <div key={slug} className="service-card extra">
+                            <div className="service-name">
+                              {service.name[locale as 'cs' | 'en' | 'de' | 'uk']}
+                            </div>
+                            <span className="service-badge">Extra</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
 
             {/* CTA */}
             <div className="profile-cta">
