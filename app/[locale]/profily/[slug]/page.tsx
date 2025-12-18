@@ -20,6 +20,7 @@ import ReviewForm from '@/components/ReviewForm';
 import ReviewStars from '@/components/ReviewStars';
 import { getHashtagById, getHashtagName } from '@/lib/hashtags';
 import { SERVICES } from '@/lib/services-data';
+import { normalizeServiceSlug } from '@/lib/service-slug-mapping';
 
 const cormorant = Cormorant({
   subsets: ['latin', 'latin-ext'],
@@ -697,7 +698,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                 <h3 className={`section-title ${cormorant.className}`}>{t('profile.services')}</h3>
                 <div className="services-grid">
                   {profile.services.map((serviceSlug: string) => {
-                    const service = SERVICES.find(s => s.slug === serviceSlug || s.id === serviceSlug);
+                    // Normalize old JSON slugs to new slugs
+                    const normalizedSlug = normalizeServiceSlug(serviceSlug);
+                    const service = SERVICES.find(s => s.slug === normalizedSlug || s.id === normalizedSlug);
                     if (!service) return null;
 
                     const isExtra = service.category === 'extras' || service.category === 'special';
