@@ -19,8 +19,11 @@ export async function GET(
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-          'X-Cache': 'HIT'
+          'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=240, max-age=60',
+          'CDN-Cache-Control': 'public, s-maxage=240',
+          'Vercel-CDN-Cache-Control': 'public, s-maxage=240',
+          'X-Cache': 'HIT',
+          'X-Content-Type-Options': 'nosniff'
         }
       });
     }
@@ -153,8 +156,11 @@ export async function GET(
 
     return NextResponse.json(responseData, {
       headers: {
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-        'X-Cache': 'MISS'
+        'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=240, max-age=60',
+        'CDN-Cache-Control': 'public, s-maxage=240',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=240',
+        'X-Cache': 'MISS',
+        'X-Content-Type-Options': 'nosniff'
       }
     });
   } catch (error) {

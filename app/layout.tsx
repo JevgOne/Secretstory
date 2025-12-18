@@ -95,6 +95,10 @@ export default function RootLayout({
   return (
     <html lang="cs">
       <head>
+        {/* Preconnect to external domains for faster resource loading */}
+        <link rel="dns-prefetch" href="https://qktyf1ozcve7804i.public.blob.vercel-storage.com" />
+        <link rel="preconnect" href="https://qktyf1ozcve7804i.public.blob.vercel-storage.com" crossOrigin="anonymous" />
+
         {/* Google Analytics - will activate when NEXT_PUBLIC_GA_MEASUREMENT_ID is set */}
         <GoogleAnalytics />
       </head>
