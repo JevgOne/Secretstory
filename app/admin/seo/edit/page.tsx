@@ -264,9 +264,28 @@ function EditSEOForm() {
               style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', color: '#fff' }}
               placeholder="https://www.eroticreviews.uk/og-image.jpg"
             />
-            <small style={{ color: '#9ca3af', fontSize: '0.85rem' }}>
+            <small style={{ color: '#9ca3af', fontSize: '0.85rem', display: 'block', marginBottom: '0.5rem' }}>
               Obrázek 1200x630px pro sdílení
             </small>
+            {formData.og_image && (
+              <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>
+                <div style={{ fontSize: '0.85rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Preview:</div>
+                <img
+                  src={formData.og_image}
+                  alt="OG Image Preview"
+                  style={{
+                    width: '100%',
+                    maxWidth: '600px',
+                    height: 'auto',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
