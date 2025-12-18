@@ -11,6 +11,7 @@ import BottomCTA from '@/components/BottomCTA';
 import Stories from '@/components/Stories';
 import ActivityTimeline from '@/components/ActivityTimeline';
 import ReviewsSection from '@/components/ReviewsSection';
+import BigFooter from '@/components/BigFooter';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { LocalBusinessSchema, OrganizationSchema, WebSiteSchema } from '@/components/JsonLd';
 import { HASHTAGS, getHashtagName } from '@/lib/hashtags';
@@ -497,53 +498,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER - COMPACT */}
-      <footer style={{ background: 'rgba(0, 0, 0, 0.3)', borderTop: '1px solid rgba(255, 255, 255, 0.1)', padding: '2rem 0 1rem' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
-            {/* Brand */}
-            <div>
-              <Link href={`/${locale}`} className="footer-logo" style={{ fontSize: '1.5rem', fontWeight: '600', color: '#fff', textDecoration: 'none', display: 'inline-block', marginBottom: '0.5rem' }}>
-                <span style={{ color: '#d4af37' }}>L</span>ovely Girls
-              </Link>
-              <p style={{ color: '#9ca3af', fontSize: '0.875rem', lineHeight: '1.5' }}>{t('footer.tagline')}</p>
-            </div>
-
-            {/* Quick Links */}
-            <div>
-              <h4 style={{ color: '#fff', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.75rem' }}>{t('footer.practices')}</h4>
-              <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <Link href={`/${locale}/divky`} style={{ color: '#9ca3af', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.3s' }}>{tNav('girls')}</Link>
-                <Link href={`/${locale}/cenik`} style={{ color: '#9ca3af', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.3s' }}>{tNav('pricing')}</Link>
-                <Link href={`/${locale}/faq`} style={{ color: '#9ca3af', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.3s' }}>{tNav('faq')}</Link>
-              </nav>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h4 style={{ color: '#fff', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.75rem' }}>{t('footer.contact')}</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <a href="tel:+420734332131" style={{ color: '#9ca3af', fontSize: '0.875rem', textDecoration: 'none' }}>+420 734 332 131</a>
-                <a href="https://wa.me/420734332131" style={{ color: '#9ca3af', fontSize: '0.875rem', textDecoration: 'none' }}>WhatsApp</a>
-                <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>{t('footer.hours_value')}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <div style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-              <span>{t('footer.copyright')}</span>
-              <span style={{ margin: '0 0.5rem' }}>•</span>
-              <span>{t('common.adults_only')}</span>
-            </div>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <Link href={`/${locale}/podminky`} style={{ color: '#6b7280', fontSize: '0.875rem', textDecoration: 'none' }}>{t('footer.terms')}</Link>
-              <Link href={`/${locale}/soukromi`} style={{ color: '#6b7280', fontSize: '0.875rem', textDecoration: 'none' }}>{t('footer.privacy')}</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* BIG FOOTER */}
+      <BigFooter />
 
         {/* MOBILE BOTTOM CTA */}
         <BottomCTA
