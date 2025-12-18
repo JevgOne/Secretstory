@@ -9,34 +9,42 @@ interface Review {
   girl_id: number;
   girl_name?: string;
   girl_slug?: string;
-  reviewer_name: string;
+  author_name: string;
   rating: number;
-  comment: string;
-  date: string;
-  is_verified: number;
+  title?: string;
+  content: string;
+  created_at: string;
+  status: string;
 }
 
-export default function ReviewsSection() {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState(true);
+interface ReviewsSectionProps {
+  initialReviews?: Review[];
+}
+
+export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionProps) {
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
+  const [loading, setLoading] = useState(initialReviews.length === 0);
   const locale = useLocale();
 
   useEffect(() => {
-    async function fetchReviews() {
-      try {
-        const response = await fetch('/api/reviews?limit=6&featured=true');
-        const data = await response.json();
-        if (data.success) {
-          setReviews(data.reviews);
+    // Only fetch if no initial data
+    if (initialReviews.length === 0) {
+      async function fetchReviews() {
+        try {
+          const response = await fetch('/api/reviews?status=approved&limit=6');
+          const data = await response.json();
+          if (data.success) {
+            setReviews(data.reviews);
+          }
+        } catch (error) {
+          console.error('Error fetching reviews:', error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-      } finally {
-        setLoading(false);
       }
+      fetchReviews();
     }
-    fetchReviews();
-  }, []);
+  }, [initialReviews.length]);
 
   if (loading) {
     return (
@@ -112,17 +120,17 @@ export default function ReviewsSection() {
                     fontWeight: '700',
                     fontSize: '16px'
                   }}>
-                    {review.reviewer_name.charAt(0).toUpperCase()}
+                    {review.author_name.charAt(0).toUpperCase()}
                   </div>
                   <div>
                     <div style={{ color: '#fff', fontWeight: '600', fontSize: '15px' }}>
-                      {review.reviewer_name}
-                      {review.is_verified === 1 && (
-                        <span style={{ marginLeft: '6px', color: '#10b981', fontSize: '14px' }}>✓</span>
+                      {review.author_name}
+                      {review.status === 'approved' && (
+                        <span style={{ marginLeft: '6px', color: '#10b981', fontSize: '14px' }} title="Ověřeno">✓</span>
                       )}
                     </div>
                     <div style={{ color: '#9ca3af', fontSize: '12px' }}>
-                      {formatDate(review.date)}
+                      {formatDate(review.created_at)}
                     </div>
                   </div>
                 </div>
@@ -130,6 +138,17 @@ export default function ReviewsSection() {
                   {renderStars(review.rating)}
                 </div>
               </div>
+
+              {review.title && (
+                <h3 style={{
+                  color: '#fff',
+                  fontSize: '15px',
+                  fontWeight: '600',
+                  marginBottom: '8px'
+                }}>
+                  {review.title}
+                </h3>
+              )}
 
               <p style={{
                 color: '#e5e7eb',
@@ -141,7 +160,7 @@ export default function ReviewsSection() {
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden'
               }}>
-                {review.comment}
+                {review.content}
               </p>
 
               {review.girl_slug && (
