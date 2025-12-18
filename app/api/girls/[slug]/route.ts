@@ -113,7 +113,7 @@ export async function GET(
         FROM services s
         INNER JOIN girl_services gs ON s.id = gs.service_id
         WHERE gs.girl_id = ?
-        ORDER BY s.display_order, s.id
+        ORDER BY s.id
       `,
       args: [girl.id]
     });
