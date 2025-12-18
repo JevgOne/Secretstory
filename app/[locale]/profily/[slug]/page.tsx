@@ -791,6 +791,32 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             }}
           />
         </div>
+
+        {/* Write Review Form */}
+        <div style={{ marginTop: '3rem' }}>
+          <ReviewForm
+            girlId={profile.id}
+            girlName={profile.name}
+            translations={{
+              title: 'Napište recenzi',
+              subtitle: `Sdílejte svou zkušenost s ${profile.name}`,
+              your_name: 'Vaše jméno',
+              your_name_placeholder: 'Jak vám máme říkat?',
+              your_email: 'Email',
+              your_email_placeholder: 'Pro možnost úpravy (nepovinné)',
+              email_optional: '(nepovinné)',
+              rating_label: 'Hodnocení',
+              review_title: 'Nadpis',
+              review_title_placeholder: 'Shrňte svou zkušenost',
+              review_content: 'Vaše recenze',
+              review_content_placeholder: 'Popište svou zkušenost podrobněji (min. 10 znaků)',
+              submit: 'Odeslat recenzi',
+              submitting: 'Odesílání...',
+              success_message: 'Děkujeme! Vaše recenze byla odeslána a čeká na schválení.',
+              error_message: 'Něco se pokazilo. Zkuste to prosím znovu.'
+            }}
+          />
+        </div>
       </section>
 
       {/* Online Girls Section */}
