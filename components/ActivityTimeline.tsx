@@ -30,14 +30,34 @@ const activityColors = {
   service_changed: '#10b981'
 };
 
-export default function ActivityTimeline() {
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [loading, setLoading] = useState(true);
+interface ActivityTimelineProps {
+  initialActivities?: Activity[];
+}
+
+export default function ActivityTimeline({ initialActivities = [] }: ActivityTimelineProps) {
+  const [activities, setActivities] = useState<Activity[]>(initialActivities);
   const [showAll, setShowAll] = useState(false);
   const locale = useLocale();
 
   useEffect(() => {
-    async function fetchActivities() {
+    // Only fetch if no initial data provided
+    if (initialActivities.length === 0) {
+      async function fetchActivities() {
+        try {
+          const response = await fetch('/api/activity-log?limit=50');
+          const data = await response.json();
+          if (data.success) {
+            setActivities(data.activities);
+          }
+        } catch (error) {
+          console.error('Error fetching activities:', error);
+        }
+      }
+      fetchActivities();
+    }
+
+    // Auto-refresh every 5 minutes
+    const interval = setInterval(async () => {
       try {
         const response = await fetch('/api/activity-log?limit=50');
         const data = await response.json();
@@ -46,26 +66,11 @@ export default function ActivityTimeline() {
         }
       } catch (error) {
         console.error('Error fetching activities:', error);
-      } finally {
-        setLoading(false);
       }
-    }
-    fetchActivities();
+    }, 5 * 60 * 1000);
 
-    // Auto-refresh every 5 minutes
-    const interval = setInterval(fetchActivities, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
-
-  if (loading) {
-    return (
-      <section style={{ padding: '4rem 0' }}>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ textAlign: 'center', color: '#9ca3af' }}>Načítání...</div>
-        </div>
-      </section>
-    );
-  }
+  }, [initialActivities.length]);
 
   if (activities.length === 0) {
     return null;

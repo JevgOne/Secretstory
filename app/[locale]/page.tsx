@@ -71,6 +71,8 @@ export default function Home() {
   const [girls, setGirls] = useState<Girl[]>([]);
   const [featuredGirl, setFeaturedGirl] = useState<Girl | null>(null);
   const [locations, setLocations] = useState<Location[]>([]);
+  const [stories, setStories] = useState<any[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const t = useTranslations();
   const tHome = useTranslations('home');
@@ -99,47 +101,26 @@ export default function Home() {
     }
   };
 
-  // Fetch girls from API
+  // ONE OPTIMIZED API CALL - fetch everything at once!
   useEffect(() => {
-    async function fetchGirls() {
+    async function fetchHomepageData() {
       try {
-        const response = await fetch('/api/girls?status=active');
+        const response = await fetch('/api/homepage');
         const data = await response.json();
         if (data.success) {
-          const allGirls = data.girls;
-
-          // Find first NEW girl for "New Girl" section
-          const newGirl = allGirls.find((g: Girl) => g.is_new === true);
-          if (newGirl) {
-            setFeaturedGirl(newGirl);
-          }
-
-          // Show first 4 girls in grid (or all if less than 4)
-          setGirls(allGirls.slice(0, 4));
+          setGirls(data.girls);
+          setFeaturedGirl(data.featuredGirl);
+          setLocations(data.locations);
+          setStories(data.stories);
+          setActivities(data.activities);
         }
       } catch (error) {
-        console.error('Error fetching girls:', error);
+        console.error('Error fetching homepage data:', error);
       } finally {
         setLoading(false);
       }
     }
-    fetchGirls();
-  }, []);
-
-  // Fetch locations from API
-  useEffect(() => {
-    async function fetchLocations() {
-      try {
-        const response = await fetch('/api/admin/locations?active=true');
-        const data = await response.json();
-        if (data.success) {
-          setLocations(data.locations);
-        }
-      } catch (error) {
-        console.error('Error fetching locations:', error);
-      }
-    }
-    fetchLocations();
+    fetchHomepageData();
   }, []);
 
   const denyAge = () => {
@@ -265,7 +246,7 @@ export default function Home() {
       </section>
 
       {/* STORIES */}
-      <Stories />
+      <Stories initialStories={stories} />
 
       {/* PROFILES */}
       <section className="profiles" id="profiles">
@@ -378,7 +359,7 @@ export default function Home() {
       </section>
 
       {/* ACTIVITY TIMELINE */}
-      <ActivityTimeline />
+      <ActivityTimeline initialActivities={activities} />
 
       {/* REVIEWS */}
       <ReviewsSection />

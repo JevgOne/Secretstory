@@ -21,13 +21,33 @@ interface GirlStories {
   stories: Story[];
 }
 
-export default function Stories() {
-  const [storiesData, setStoriesData] = useState<GirlStories[]>([]);
-  const [loading, setLoading] = useState(true);
+interface StoriesProps {
+  initialStories?: GirlStories[];
+}
+
+export default function Stories({ initialStories = [] }: StoriesProps) {
+  const [storiesData, setStoriesData] = useState<GirlStories[]>(initialStories);
   const locale = useLocale();
 
   useEffect(() => {
-    async function fetchStories() {
+    // Only fetch if no initial data provided
+    if (initialStories.length === 0) {
+      async function fetchStories() {
+        try {
+          const response = await fetch('/api/stories');
+          const data = await response.json();
+          if (data.success) {
+            setStoriesData(data.stories);
+          }
+        } catch (error) {
+          console.error('Error fetching stories:', error);
+        }
+      }
+      fetchStories();
+    }
+
+    // Auto-refresh every 10 minutes
+    const interval = setInterval(async () => {
       try {
         const response = await fetch('/api/stories');
         const data = await response.json();
@@ -36,26 +56,11 @@ export default function Stories() {
         }
       } catch (error) {
         console.error('Error fetching stories:', error);
-      } finally {
-        setLoading(false);
       }
-    }
-    fetchStories();
+    }, 10 * 60 * 1000);
 
-    // Auto-refresh every 10 minutes
-    const interval = setInterval(fetchStories, 10 * 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
-
-  if (loading) {
-    return (
-      <section style={{ padding: '4rem 0', background: 'rgba(0, 0, 0, 0.2)' }}>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ textAlign: 'center', color: '#9ca3af' }}>Načítání stories...</div>
-        </div>
-      </section>
-    );
-  }
+  }, [initialStories.length]);
 
   if (storiesData.length === 0) {
     return null;
