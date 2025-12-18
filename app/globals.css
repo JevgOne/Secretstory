@@ -7082,7 +7082,7 @@ body > div > button[title*="Next"],
 
 .working-today-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
 }
 
@@ -7105,7 +7105,7 @@ body > div > button[title*="Next"],
 .working-girl-image {
   position: relative;
   width: 100%;
-  padding-bottom: 133%; /* 3:4 aspect ratio */
+  padding-bottom: 75%; /* 4:3 aspect ratio - wider and lower */
   background: rgba(255, 255, 255, 0.05);
   overflow: hidden;
 }
