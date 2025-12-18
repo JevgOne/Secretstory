@@ -696,14 +696,14 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               <div className="profile-section">
                 <h3 className={`section-title ${cormorant.className}`}>{t('profile.services')}</h3>
                 <div className="services-grid">
-                  {profile.services.map((serviceId: string) => {
-                    const service = SERVICES.find(s => s.id === serviceId);
+                  {profile.services.map((serviceSlug: string) => {
+                    const service = SERVICES.find(s => s.slug === serviceSlug || s.id === serviceSlug);
                     if (!service) return null;
 
                     const isExtra = service.category === 'extras' || service.category === 'special';
 
                     return (
-                      <div key={serviceId} className={`service-card ${isExtra ? 'extra' : 'basic'}`}>
+                      <div key={serviceSlug} className={`service-card ${isExtra ? 'extra' : 'basic'}`}>
                         <div className="service-name">
                           {service.name[locale as 'cs' | 'en' | 'de' | 'uk']}
                         </div>

@@ -106,12 +106,26 @@ export async function GET(
       args: [girl.id]
     });
 
+    // Fetch girl's services from girl_services table
+    const servicesResult = await db.execute({
+      sql: `
+        SELECT s.slug
+        FROM services s
+        INNER JOIN girl_services gs ON s.id = gs.service_id
+        WHERE gs.girl_id = ? AND s.is_active = 1
+        ORDER BY s.display_order, s.id
+      `,
+      args: [girl.id]
+    });
+
+    const servicesSlugs = servicesResult.rows.map((row: any) => row.slug);
+
     return NextResponse.json(
       {
         success: true,
         girl: {
           ...girl,
-          services: girl.services ? JSON.parse(girl.services as string) : [],
+          services: servicesSlugs.length > 0 ? servicesSlugs : (girl.services ? JSON.parse(girl.services as string) : []),
           hashtags: girl.hashtags ? JSON.parse(girl.hashtags as string) : [],
           verified: Boolean(girl.verified),
           online: Boolean(girl.online),
