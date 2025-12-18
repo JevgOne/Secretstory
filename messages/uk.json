@@ -711,6 +711,21 @@
     "no_reviews": "Поки що немає відгуків. Будьте першими!",
     "verified_booking": "Перевірене бронювання",
     "reviewed_on": "Оцінено",
-    "reviews_count": "відгуків"
+    "reviews_count": "відгуків",
+    "write_title": "Написати відгук",
+    "write_subtitle": "Поділіться своїм досвідом з {name}",
+    "your_name": "Ваше ім'я",
+    "your_name_placeholder": "Як до вас звертатися?",
+    "rating_label": "Оцінка",
+    "vibe_label": "Яка була загальна атмосфера?",
+    "review_title": "Заголовок відгуку",
+    "review_title_placeholder": "Підсумуйте свій досвід",
+    "review_content": "Ваш відгук",
+    "review_content_placeholder": "Опишіть свій досвід детальніше (мін. 10 символів)",
+    "submit": "Надіслати відгук",
+    "submitting": "Надсилання...",
+    "success_message": "Дякуємо! Ваш відгук надіслано і очікує на схвалення.",
+    "error_message": "Щось пішло не так. Спробуйте ще раз.",
+    "write_another": "Написати ще один відгук"
   }
 }

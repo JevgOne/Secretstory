@@ -732,6 +732,21 @@
     "no_reviews": "Zatím žádné recenze. Buďte první!",
     "verified_booking": "Ověřená rezervace",
     "reviewed_on": "Hodnoceno",
-    "reviews_count": "recenzí"
+    "reviews_count": "recenzí",
+    "write_title": "Napište recenzi",
+    "write_subtitle": "Sdílejte svou zkušenost s {name}",
+    "your_name": "Vaše jméno",
+    "your_name_placeholder": "Jak vám máme říkat?",
+    "rating_label": "Hodnocení",
+    "vibe_label": "Jak byla celková vibe?",
+    "review_title": "Nadpis recenze",
+    "review_title_placeholder": "Shrňte svou zkušenost",
+    "review_content": "Vaše recenze",
+    "review_content_placeholder": "Popište svou zkušenost podrobněji (min. 10 znaků)",
+    "submit": "Odeslat recenzi",
+    "submitting": "Odesílání...",
+    "success_message": "Děkujeme! Vaše recenze byla odeslána a čeká na schválení.",
+    "error_message": "Něco se pokazilo. Zkuste to prosím znovu.",
+    "write_another": "Napsat další recenzi"
   }
 }

@@ -704,6 +704,21 @@
     "no_reviews": "Noch keine Bewertungen. Seien Sie der Erste!",
     "verified_booking": "Verifizierte Buchung",
     "reviewed_on": "Bewertet am",
-    "reviews_count": "Bewertungen"
+    "reviews_count": "Bewertungen",
+    "write_title": "Bewertung schreiben",
+    "write_subtitle": "Teilen Sie Ihre Erfahrung mit {name}",
+    "your_name": "Ihr Name",
+    "your_name_placeholder": "Wie sollen wir Sie nennen?",
+    "rating_label": "Bewertung",
+    "vibe_label": "Wie war die Atmosphäre?",
+    "review_title": "Bewertungstitel",
+    "review_title_placeholder": "Fassen Sie Ihre Erfahrung zusammen",
+    "review_content": "Ihre Bewertung",
+    "review_content_placeholder": "Beschreiben Sie Ihre Erfahrung im Detail (min. 10 Zeichen)",
+    "submit": "Bewertung abschicken",
+    "submitting": "Wird gesendet...",
+    "success_message": "Vielen Dank! Ihre Bewertung wurde gesendet und wartet auf Genehmigung.",
+    "error_message": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "write_another": "Weitere Bewertung schreiben"
   }
 }

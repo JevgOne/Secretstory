@@ -703,6 +703,21 @@
     "no_reviews": "No reviews yet. Be the first!",
     "verified_booking": "Verified Booking",
     "reviewed_on": "Reviewed on",
-    "reviews_count": "reviews"
+    "reviews_count": "reviews",
+    "write_title": "Write a Review",
+    "write_subtitle": "Share your experience with {name}",
+    "your_name": "Your Name",
+    "your_name_placeholder": "What should we call you?",
+    "rating_label": "Rating",
+    "vibe_label": "How was the overall vibe?",
+    "review_title": "Review Title",
+    "review_title_placeholder": "Summarize your experience",
+    "review_content": "Your Review",
+    "review_content_placeholder": "Describe your experience in detail (min. 10 characters)",
+    "submit": "Submit Review",
+    "submitting": "Submitting...",
+    "success_message": "Thank you! Your review has been submitted and is awaiting approval.",
+    "error_message": "Something went wrong. Please try again.",
+    "write_another": "Write Another Review"
   }
 }
