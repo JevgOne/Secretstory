@@ -722,5 +722,15 @@
     "success_message": "Vielen Dank! Ihre Bewertung wurde gesendet und wartet auf Genehmigung.",
     "error_message": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
     "write_another": "Weitere Bewertung schreiben"
+  },
+  "disclaimer": {
+    "title": "Haftungsausschluss",
+    "intro": "Die folgenden Seiten können sexuell explizite Bilder oder verbales Material enthalten. Lesen Sie daher vor dem Betreten die folgenden Nutzungsbedingungen. Durch Klicken auf die Schaltfläche „Ich stimme zu" bestätigen Sie Ihre vollständige und bedingungslose Zustimmung zu den folgenden Bedingungen:",
+    "term_1": "Ich bin ein Erwachsener im Alter von 18 Jahren oder älter, falls dies nach den Gesetzen des Staates erforderlich ist, in dem ich mich befinde.",
+    "term_2": "Mir ist bewusst, dass ich auf Websites mit sexuell explizitem Material zugreife.",
+    "term_3": "Durch mein Verhalten werde ich niemandem, der nicht berechtigt oder minderjährig ist, Zugang zu den hierin enthaltenen Daten gewähren.",
+    "term_4": "Mein Interesse an allen hierin enthaltenen Informationen ist rein privat und dient nur meiner eigenen Verwendung.",
+    "term_5": "Ich erkenne an, dass alle Bild- und Textmaterialien urheberrechtlich geschützt sind.",
+    "agree_button": "Ich stimme zu und bestätige das Vorstehende"
   }
 }

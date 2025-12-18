@@ -6936,6 +6936,130 @@ body > div > button[title*="Next"],
     }
 }
 
+/* Age Verification Modal */
+.age-verification-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+}
+
+.age-verification-modal {
+  background: linear-gradient(135deg, #1a1416 0%, #2d1a24 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.age-verification-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.age-verification-content {
+  margin-bottom: 2rem;
+}
+
+.age-verification-intro {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.age-verification-terms {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.age-verification-terms ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.age-verification-terms li {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.age-verification-terms li:last-child {
+  margin-bottom: 0;
+}
+
+.age-verification-terms li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--wine, #8b2942);
+  font-size: 1.2rem;
+}
+
+.age-verification-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: var(--wine, #8b2942);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.age-verification-button:hover {
+  background: #a33350;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(139, 41, 66, 0.3);
+}
+
+.age-verification-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .age-verification-modal {
+    padding: 2rem 1.5rem;
+  }
+
+  .age-verification-title {
+    font-size: 1.5rem;
+  }
+
+  .age-verification-intro {
+    font-size: 0.9rem;
+  }
+
+  .age-verification-terms li {
+    font-size: 0.85rem;
+  }
+
+  .age-verification-button {
+    font-size: 1rem;
+  }
+}
+
 /* Working Today Section */
 .working-today-section {
   margin-top: 2rem;

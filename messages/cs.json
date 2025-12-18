@@ -750,5 +750,15 @@
     "success_message": "Děkujeme! Vaše recenze byla odeslána a čeká na schválení.",
     "error_message": "Něco se pokazilo. Zkuste to prosím znovu.",
     "write_another": "Napsat další recenzi"
+  },
+  "disclaimer": {
+    "title": "Prohlášení",
+    "intro": "Následující stránky mohou obsahovat sexuálně explicitní obrazový nebo slovní materiál. Proto si před vstupem přečtěte následující podmínky použití. Kliknutím na tlačítko „Souhlasím" potvrzujete svůj úplný a nepodmíněný souhlas s následujícími podmínkami:",
+    "term_1": "Jsem dospělá osoba ve věku 18 let nebo starší, pokud to vyžadují zákony státu, ve kterém se nacházím.",
+    "term_2": "Jsem si vědom(a), že přistupuji na stránky obsahující sexuálně explicitní materiál.",
+    "term_3": "Svým chováním nedovolím nikomu nezpůsobilému nebo nezletilému přístup k údajům zde obsaženým.",
+    "term_4": "Můj zájem o veškeré zde obsažené informace je čistě soukromý a slouží pouze k mému vlastnímu použití.",
+    "term_5": "Beru na vědomí, že veškeré obrazové a textové materiály jsou chráněny autorským právem.",
+    "agree_button": "Souhlasím a potvrzuji výše uvedené"
   }
 }
