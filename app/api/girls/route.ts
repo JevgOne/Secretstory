@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { cache } from '@/lib/cache';
 
 // Revalidate every 60 seconds (ISR)
 export const revalidate = 60;
@@ -8,6 +9,18 @@ export const revalidate = 60;
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
+
+    // Create cache key from query params
+    const cacheKey = `girls-${searchParams.toString() || 'all'}`;
+    const cached = cache.get(cacheKey, 60000); // 60s cache
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+          'X-Cache': 'HIT'
+        }
+      });
+    }
     const status = searchParams.get('status') || 'active';
     const online = searchParams.get('online');
     const lang = searchParams.get('lang') || 'cs';
@@ -185,17 +198,20 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        girls: girlsWithPhotos
-      },
-      {
-        headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
-        }
+    const responseData = {
+      success: true,
+      girls: girlsWithPhotos
+    };
+
+    // Cache the response
+    cache.set(cacheKey, responseData);
+
+    return NextResponse.json(responseData, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'X-Cache': 'MISS'
       }
-    );
+    });
   } catch (error) {
     console.error('Get girls error:', error);
     return NextResponse.json(

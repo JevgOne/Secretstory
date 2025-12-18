@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { cache } from '@/lib/cache';
 
 // Revalidate every 60 seconds
 export const revalidate = 60;
@@ -11,6 +12,18 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
+
+    // Check cache first
+    const cacheKey = `girl-profile-${slug}`;
+    const cached = cache.get(cacheKey, 60000); // 60s cache
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+          'X-Cache': 'HIT'
+        }
+      });
+    }
 
     const result = await db.execute({
       sql: `
@@ -120,27 +133,30 @@ export async function GET(
 
     const servicesSlugs = servicesResult.rows.map((row: any) => row.slug);
 
-    return NextResponse.json(
-      {
-        success: true,
-        girl: {
-          ...girl,
-          services: servicesSlugs.length > 0 ? servicesSlugs : (girl.services ? JSON.parse(girl.services as string) : []),
-          hashtags: girl.hashtags ? JSON.parse(girl.hashtags as string) : [],
-          verified: Boolean(girl.verified),
-          online: Boolean(girl.online),
-          piercing: Boolean(girl.piercing),
-          schedule: weekSchedule,
-          photos: photosResult.rows,
-          videos: videosResult.rows
-        }
-      },
-      {
-        headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
-        }
+    const responseData = {
+      success: true,
+      girl: {
+        ...girl,
+        services: servicesSlugs.length > 0 ? servicesSlugs : (girl.services ? JSON.parse(girl.services as string) : []),
+        hashtags: girl.hashtags ? JSON.parse(girl.hashtags as string) : [],
+        verified: Boolean(girl.verified),
+        online: Boolean(girl.online),
+        piercing: Boolean(girl.piercing),
+        schedule: weekSchedule,
+        photos: photosResult.rows,
+        videos: videosResult.rows
       }
-    );
+    };
+
+    // Cache the response
+    cache.set(cacheKey, responseData);
+
+    return NextResponse.json(responseData, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'X-Cache': 'MISS'
+      }
+    });
   } catch (error) {
     console.error('Get girl error:', error);
     return NextResponse.json(
