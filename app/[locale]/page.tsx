@@ -264,6 +264,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* STORIES */}
+      <Stories />
+
       {/* PROFILES */}
       <section className="profiles" id="profiles">
         <div className="profiles-header">
@@ -373,9 +376,6 @@ export default function Home() {
           )}
         </div>
       </section>
-
-      {/* STORIES */}
-      <Stories />
 
       {/* ACTIVITY TIMELINE */}
       <ActivityTimeline />
