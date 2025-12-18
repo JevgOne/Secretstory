@@ -73,6 +73,7 @@ export default function Home() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [stories, setStories] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const t = useTranslations();
   const tHome = useTranslations('home');
@@ -113,6 +114,7 @@ export default function Home() {
           setLocations(data.locations);
           setStories(data.stories);
           setActivities(data.activities);
+          setReviews(data.reviews);
         }
       } catch (error) {
         console.error('Error fetching homepage data:', error);
@@ -362,7 +364,7 @@ export default function Home() {
       <ActivityTimeline initialActivities={activities} />
 
       {/* REVIEWS */}
-      <ReviewsSection />
+      <ReviewsSection initialReviews={reviews} />
 
       {/* POPULAR HASHTAGS */}
       <section style={{ padding: '4rem 0', background: 'rgba(139, 41, 66, 0.03)' }}>
@@ -502,7 +504,7 @@ export default function Home() {
             {/* Brand */}
             <div>
               <Link href={`/${locale}`} className="footer-logo" style={{ fontSize: '1.5rem', fontWeight: '600', color: '#fff', textDecoration: 'none', display: 'inline-block', marginBottom: '0.5rem' }}>
-                <span style={{ color: '#8b2942' }}>L</span>ovely Girls
+                <span style={{ color: '#d4af37' }}>L</span>ovely Girls
               </Link>
               <p style={{ color: '#9ca3af', fontSize: '0.875rem', lineHeight: '1.5' }}>{t('footer.tagline')}</p>
             </div>

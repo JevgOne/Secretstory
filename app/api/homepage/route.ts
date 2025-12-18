@@ -125,6 +125,20 @@ export async function GET() {
       args: []
     });
 
+    // 7. Get approved reviews (for Reviews Section)
+    const reviewsResult = await db.execute({
+      sql: `
+        SELECT r.id, r.girl_id, r.author_name, r.rating, r.title, r.content, r.created_at,
+               g.name as girl_name, g.slug as girl_slug
+        FROM reviews r
+        JOIN girls g ON r.girl_id = g.id
+        WHERE r.status = 'approved'
+        ORDER BY r.created_at DESC
+        LIMIT 6
+      `,
+      args: []
+    });
+
     // Map girls with photos and schedules
     const girlsWithData = girls.map((girl: any) => {
       const photo = photoMap.get(girl.id);
@@ -170,7 +184,8 @@ export async function GET() {
         featuredGirl,
         locations: locationsResult.rows,
         stories: Object.values(storiesByGirl),
-        activities: activitiesResult.rows
+        activities: activitiesResult.rows,
+        reviews: reviewsResult.rows
       },
       {
         headers: {
