@@ -19,8 +19,8 @@ import ReviewsList from '@/components/ReviewsList';
 import ReviewForm from '@/components/ReviewForm';
 import ReviewStars from '@/components/ReviewStars';
 import { getHashtagById, getHashtagName } from '@/lib/hashtags';
-import { SERVICES } from '@/lib/services-data';
-import { normalizeServiceSlug } from '@/lib/service-slug-mapping';
+import { SERVICES, getServiceName } from '@/lib/services';
+import type { Service } from '@/lib/services';
 
 const cormorant = Cormorant({
   subsets: ['latin', 'latin-ext'],
@@ -694,34 +694,32 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
             {/* Services Section */}
             {profile.services && profile.services.length > 0 && (() => {
-              // Separate services into included and extra
-              const includedServices: any[] = [];
-              const extraServices: any[] = [];
+              // Separate services into basic (included) and extra
+              const basicServices: Service[] = [];
+              const extraServices: Service[] = [];
 
-              profile.services.forEach((serviceSlug: string) => {
-                const normalizedSlug = normalizeServiceSlug(serviceSlug);
-                const service = SERVICES.find(s => s.slug === normalizedSlug || s.id === normalizedSlug);
+              profile.services.forEach((serviceId: string) => {
+                const service = SERVICES.find(s => s.id === serviceId);
                 if (!service) return;
 
-                const isExtra = service.category === 'extras' || service.category === 'special';
-                if (isExtra) {
-                  extraServices.push({ slug: serviceSlug, service });
+                if (service.category === 'extra') {
+                  extraServices.push(service);
                 } else {
-                  includedServices.push({ slug: serviceSlug, service });
+                  basicServices.push(service);
                 }
               });
 
               return (
                 <>
-                  {/* Included Services */}
-                  {includedServices.length > 0 && (
+                  {/* Basic Services (Included in price) */}
+                  {basicServices.length > 0 && (
                     <div className="profile-section">
                       <h3 className={`section-title ${cormorant.className}`}>{t('profile.services')}</h3>
                       <div className="services-grid">
-                        {includedServices.map(({ slug, service }) => (
-                          <div key={slug} className="service-card basic">
+                        {basicServices.map((service) => (
+                          <div key={service.id} className="service-card basic">
                             <div className="service-name">
-                              {service.name[locale as 'cs' | 'en' | 'de' | 'uk']}
+                              {service.translations[locale as 'cs' | 'en' | 'de' | 'uk']}
                             </div>
                           </div>
                         ))}
@@ -734,10 +732,10 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                     <div className="profile-section">
                       <h3 className={`section-title ${cormorant.className}`}>{t('profile.extra_services')}</h3>
                       <div className="services-grid">
-                        {extraServices.map(({ slug, service }) => (
-                          <div key={slug} className="service-card extra">
+                        {extraServices.map((service) => (
+                          <div key={service.id} className="service-card extra">
                             <div className="service-name">
-                              {service.name[locale as 'cs' | 'en' | 'de' | 'uk']}
+                              {service.translations[locale as 'cs' | 'en' | 'de' | 'uk']}
                             </div>
                             <span className="service-badge">Extra</span>
                           </div>
