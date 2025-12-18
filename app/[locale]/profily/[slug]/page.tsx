@@ -537,14 +537,18 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             )}
 
             {/* Working Today Section */}
-            {onlineGirls.length > 0 && (
-              <div className="working-today-section">
-                <h3 className="working-today-title">
-                  {t('profile.working_today_title') || 'Dnes také pracují'}
-                </h3>
-                <p className="working-today-subtitle">
-                  {t('profile.working_today_subtitle') || 'Další dívky dostupné ve stejný den'}
+            <div className="working-today-section">
+              <h3 className="working-today-title">
+                {t('profile.working_today_title') || 'Dnes také pracují'}
+              </h3>
+              <p className="working-today-subtitle">
+                {t('profile.working_today_subtitle') || 'Další dívky dostupné ve stejný den'}
+              </p>
+              {onlineGirls.length === 0 ? (
+                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem' }}>
+                  Právě teď nejsou k dispozici žádné další dívky
                 </p>
+              ) : (
                 <div className="working-today-grid">
                   {onlineGirls.map((girl) => (
                     <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} className="working-girl-card">
@@ -578,8 +582,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                     </Link>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           {/* Header - Separate element for flexible ordering */}
