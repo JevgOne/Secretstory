@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { cache } from '@/lib/cache';
 
 // Edge runtime for maximum performance
 export const runtime = 'edge';
@@ -7,6 +8,16 @@ export const revalidate = 30; // Cache for 30 seconds
 
 export async function GET() {
   try {
+    // Check in-memory cache first (30s TTL)
+    const cached = cache.get('homepage-data', 30000);
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+          'X-Cache': 'HIT'
+        }
+      });
+    }
     const now = new Date();
     const pragueTz = 'Europe/Prague';
     const currentTime = new Intl.DateTimeFormat('cs-CZ', {
@@ -181,26 +192,30 @@ export async function GET() {
     // Featured girl (first NEW girl)
     const featuredGirl = girlsWithData.find((g: any) => g.is_new) || null;
 
+    // Prepare response data
+    const responseData = {
+      success: true,
+      girls: girlsWithData.slice(0, 4), // Only 4 for grid
+      featuredGirl,
+      locations: locationsResult.rows,
+      stories: Object.values(storiesByGirl),
+      activities: activitiesResult.rows,
+      reviews: reviewsResult.rows
+    };
+
+    // Store in cache for 30 seconds
+    cache.set('homepage-data', responseData);
+
     // Return everything in ONE response
-    return NextResponse.json(
-      {
-        success: true,
-        girls: girlsWithData.slice(0, 4), // Only 4 for grid
-        featuredGirl,
-        locations: locationsResult.rows,
-        stories: Object.values(storiesByGirl),
-        activities: activitiesResult.rows,
-        reviews: reviewsResult.rows
-      },
-      {
-        headers: {
-          // Aggressive caching for performance
-          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
-          'CDN-Cache-Control': 'public, s-maxage=60',
-          'Vercel-CDN-Cache-Control': 'public, s-maxage=60'
-        }
+    return NextResponse.json(responseData, {
+      headers: {
+        // Aggressive caching for performance
+        'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+        'CDN-Cache-Control': 'public, s-maxage=60',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=60',
+        'X-Cache': 'MISS'
       }
-    );
+    });
 
   } catch (error: any) {
     console.error('Homepage API Error:', error);
