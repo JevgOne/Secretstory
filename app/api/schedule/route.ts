@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { cache } from '@/lib/cache';
 
-// Revalidate every 60 seconds (ISR)
-export const revalidate = 60;
+// Revalidate every 5 minutes (ISR)
+export const revalidate = 300;
 
 // GET /api/schedule - Get girls available on specified date with their schedule
 export async function GET(request: NextRequest) {
@@ -10,6 +11,21 @@ export async function GET(request: NextRequest) {
     const { searchParams } = request.nextUrl;
     const lang = searchParams.get('lang') || 'cs';
     const dateParam = searchParams.get('date'); // YYYY-MM-DD format
+
+    // Create cache key from query params
+    const cacheKey = `schedule-${dateParam || 'today'}-${lang}`;
+    const cached = cache.get(cacheKey, 300000); // 5min cache
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600, max-age=120',
+          'CDN-Cache-Control': 'public, s-maxage=600',
+          'Vercel-CDN-Cache-Control': 'public, s-maxage=600',
+          'X-Cache': 'HIT',
+          'X-Content-Type-Options': 'nosniff'
+        }
+      });
+    }
 
     // 1. Get current time and target date in Prague timezone
     const now = new Date();
@@ -133,17 +149,26 @@ export async function GET(request: NextRequest) {
     const dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     const dayName = dayNames[dayOfWeek];
 
+    const responseData = {
+      success: true,
+      current_time: currentTime,
+      day: dayName,
+      timezone: pragueTz,
+      girls: filteredGirls
+    };
+
+    // Cache the response
+    cache.set(cacheKey, responseData);
+
     return NextResponse.json(
-      {
-        success: true,
-        current_time: currentTime,
-        day: dayName,
-        timezone: pragueTz,
-        girls: filteredGirls
-      },
+      responseData,
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120'
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600, max-age=120',
+          'CDN-Cache-Control': 'public, s-maxage=600',
+          'Vercel-CDN-Cache-Control': 'public, s-maxage=600',
+          'X-Cache': 'MISS',
+          'X-Content-Type-Options': 'nosniff'
         }
       }
     );
