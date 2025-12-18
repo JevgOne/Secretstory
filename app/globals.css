@@ -6717,6 +6717,19 @@ body > div > button[title*="Next"],
     overflow: hidden !important;
 }
 
+/* Smaller screens (iPhone 6, SE, etc.) */
+@media (max-width: 375px) {
+    .mobile-menu-link {
+        padding: 0.6rem 1rem !important;
+        font-size: 0.95rem !important;
+    }
+
+    .mobile-menu-nav {
+        padding: 0.5rem 1rem !important;
+        gap: 0.25rem !important;
+    }
+}
+
 .mobile-menu-link::before {
     content: '' !important;
     position: absolute !important;
