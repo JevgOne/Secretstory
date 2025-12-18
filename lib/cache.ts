@@ -8,7 +8,7 @@ interface CacheEntry<T> {
 
 class MemoryCache {
   private cache: Map<string, CacheEntry<any>> = new Map();
-  private defaultTTL = 60 * 1000; // 60 seconds default
+  private defaultTTL = 300 * 1000; // 5 minutes default (increased from 60s)
 
   get<T>(key: string, ttl?: number): T | null {
     const entry = this.cache.get(key);
@@ -43,6 +43,14 @@ class MemoryCache {
   // Get cache size for monitoring
   size(): number {
     return this.cache.size;
+  }
+
+  // Get cache stats
+  getStats() {
+    return {
+      size: this.cache.size,
+      keys: Array.from(this.cache.keys())
+    };
   }
 }
 
