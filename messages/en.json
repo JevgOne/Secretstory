@@ -712,6 +712,8 @@
     "your_name_placeholder": "What should we call you?",
     "rating_label": "Rating",
     "vibe_label": "How was the overall vibe?",
+    "tags_label": "Tags",
+    "tags_max_info": "Select up to 4 tags that best describe your experience",
     "review_title": "Review Title",
     "review_title_placeholder": "Summarize your experience",
     "review_content": "Your Review",
@@ -720,7 +722,9 @@
     "submitting": "Submitting...",
     "success_message": "Thank you! Your review has been submitted and is awaiting approval.",
     "error_message": "Something went wrong. Please try again.",
-    "write_another": "Write Another Review"
+    "write_another": "Write Another Review",
+    "helpful": "Helpful",
+    "helpful_votes": "people found this helpful"
   },
   "disclaimer": {
     "title": "Disclaimer",

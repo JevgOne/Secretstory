@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { createNotification } from '@/lib/notifications';
+import { isValidVibe, validateTags, calculateReviewSummary } from '@/lib/review-constants';
 
 // GET /api/reviews - Get all reviews (with filters)
 export async function GET(request: NextRequest) {
@@ -57,21 +58,39 @@ export async function POST(request: NextRequest) {
       author_name,
       rating,
       title,
-      content
+      content,
+      vibe,
+      tags = []
     } = body;
 
-    // Validate required fields
-    if (!girl_id || !author_name || !rating || !content) {
+    // Validate required fields - vibe is now optional but rating is still required for backward compatibility
+    if (!girl_id || !author_name || !content) {
       return NextResponse.json(
         { error: 'Chybí povinné údaje' },
         { status: 400 }
       );
     }
 
-    // Validate rating range
-    if (rating < 1 || rating > 5) {
+    // Validate rating range if provided
+    if (rating && (rating < 1 || rating > 5)) {
       return NextResponse.json(
         { error: 'Hodnocení musí být 1-5' },
+        { status: 400 }
+      );
+    }
+
+    // Validate vibe if provided
+    if (vibe && !isValidVibe(vibe)) {
+      return NextResponse.json(
+        { error: 'Neplatný vibe. Povolené hodnoty: unforgettable, magical, great, nice, meh' },
+        { status: 400 }
+      );
+    }
+
+    // Validate tags
+    if (!validateTags(tags)) {
+      return NextResponse.json(
+        { error: 'Neplatné tagy. Maximálně 4 tagy ze seznamu.' },
         { status: 400 }
       );
     }
@@ -85,16 +104,18 @@ export async function POST(request: NextRequest) {
       sql: `
         INSERT INTO reviews (
           girl_id, booking_id, author_name,
-          rating, title, content, status, ip_address
-        ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)
+          rating, title, content, vibe, tags, status, ip_address, helpful_count
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, 0)
       `,
       args: [
         girl_id,
         booking_id || null,
         author_name,
-        rating,
+        rating || null,
         title || null,
         content,
+        vibe || null,
+        JSON.stringify(tags),
         ip
       ]
     });

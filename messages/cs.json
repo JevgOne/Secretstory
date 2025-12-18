@@ -741,6 +741,8 @@
     "your_name_placeholder": "Jak vám máme říkat?",
     "rating_label": "Hodnocení",
     "vibe_label": "Jak byla celková vibe?",
+    "tags_label": "Tagy",
+    "tags_max_info": "Vyberte maximálně 4 tagy, které nejlépe popisují vaši zkušenost",
     "review_title": "Nadpis recenze",
     "review_title_placeholder": "Shrňte svou zkušenost",
     "review_content": "Vaše recenze",
@@ -749,7 +751,9 @@
     "submitting": "Odesílání...",
     "success_message": "Děkujeme! Vaše recenze byla odeslána a čeká na schválení.",
     "error_message": "Něco se pokazilo. Zkuste to prosím znovu.",
-    "write_another": "Napsat další recenzi"
+    "write_another": "Napsat další recenzi",
+    "helpful": "Užitečné",
+    "helpful_votes": "lidí považuje za užitečné"
   },
   "disclaimer": {
     "title": "Prohlášení",

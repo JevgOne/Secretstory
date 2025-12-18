@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import ReviewStars from './ReviewStars';
+import { VIBE_OPTIONS, TAG_OPTIONS, type VibeId, type TagId } from '@/lib/review-constants';
 
 interface ReviewFormProps {
   girlId: number;
   girlName: string;
   onSuccess?: () => void;
+  locale?: 'cs' | 'en' | 'de' | 'uk';
   translations: {
     title: string;
     subtitle: string;
@@ -14,6 +16,8 @@ interface ReviewFormProps {
     your_name_placeholder: string;
     rating_label: string;
     vibe_label: string;
+    tags_label?: string;
+    tags_max_info?: string;
     review_title: string;
     review_title_placeholder: string;
     review_content: string;
@@ -30,6 +34,7 @@ export default function ReviewForm({
   girlId,
   girlName,
   onSuccess,
+  locale = 'cs',
   translations
 }: ReviewFormProps) {
   const [formData, setFormData] = useState({
@@ -37,25 +42,33 @@ export default function ReviewForm({
     rating: 0,
     title: '',
     content: '',
-    vibe: ''
+    vibe: '' as VibeId | '',
+    tags: [] as TagId[]
   });
   const [loading, setLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  // Vibe options with emojis
-  const vibes = [
-    { id: 'amazing', emoji: '🤩', label: 'Úžasné', color: '#10b981' },
-    { id: 'great', emoji: '😊', label: 'Skvělé', color: '#3b82f6' },
-    { id: 'good', emoji: '🙂', label: 'Dobré', color: '#8b5cf6' },
-    { id: 'okay', emoji: '😐', label: 'Ujde', color: '#f59e0b' },
-    { id: 'meh', emoji: '😕', label: 'Slabé', color: '#ef4444' }
-  ];
+  // Helper to toggle tag selection (max 4)
+  const toggleTag = (tagId: TagId) => {
+    setFormData(prev => {
+      const currentTags = prev.tags;
+      if (currentTags.includes(tagId)) {
+        return { ...prev, tags: currentTags.filter(t => t !== tagId) };
+      } else if (currentTags.length < 4) {
+        return { ...prev, tags: [...currentTags, tagId] };
+      }
+      return prev;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Prevent duplicate submissions
+    if (loading) return;
 
     if (!formData.author_name || !formData.rating || !formData.content) {
       setError(translations.error_message);
@@ -80,9 +93,11 @@ export default function ReviewForm({
         body: JSON.stringify({
           girl_id: girlId,
           author_name: formData.author_name,
-          rating: formData.rating,
-          title: formData.title || `${formData.vibe ? vibes.find(v => v.id === formData.vibe)?.label + ' zážitek' : ''}`,
-          content: formData.content
+          rating: formData.rating || 5, // Default to 5 if not provided
+          title: formData.title,
+          content: formData.content,
+          vibe: formData.vibe || null,
+          tags: formData.tags
         })
       });
 
@@ -97,7 +112,8 @@ export default function ReviewForm({
             rating: 0,
             title: '',
             content: '',
-            vibe: ''
+            vibe: '' as VibeId | '',
+            tags: []
           });
           if (onSuccess) onSuccess();
         }, 300);
@@ -223,25 +239,63 @@ export default function ReviewForm({
         <div className="vibe-group">
           <label>{translations.vibe_label} ✨</label>
           <div className="vibe-picker">
-          {vibes.map((vibe) => (
-            <button
-              key={vibe.id}
-              type="button"
-              className={`vibe-option ${formData.vibe === vibe.id ? 'active' : ''}`}
-              style={{
-                borderColor: formData.vibe === vibe.id ? vibe.color : 'rgba(255, 255, 255, 0.1)',
-                background: formData.vibe === vibe.id ? `${vibe.color}20` : 'rgba(255, 255, 255, 0.03)'
-              }}
-              onClick={() => setFormData({ ...formData, vibe: vibe.id })}
-            >
-              <span className="vibe-emoji">{vibe.emoji}</span>
-              <span className="vibe-label" style={{ color: formData.vibe === vibe.id ? vibe.color : '#9ca3af' }}>
-                {vibe.label}
-              </span>
-            </button>
-          ))}
+          {Object.entries(VIBE_OPTIONS).map(([key, vibe]) => {
+            const vibeId = key as VibeId;
+            const label = vibe[`label_${locale}`] || vibe.label_cs;
+            const isSelected = formData.vibe === vibeId;
+
+            return (
+              <button
+                key={vibeId}
+                type="button"
+                className={`vibe-option ${isSelected ? 'active' : ''}`}
+                style={{
+                  borderColor: isSelected ? vibe.color : 'rgba(255, 255, 255, 0.1)',
+                  background: isSelected ? `${vibe.color}20` : 'rgba(255, 255, 255, 0.03)'
+                }}
+                onClick={() => setFormData({ ...formData, vibe: vibeId })}
+              >
+                <span className="vibe-emoji">{vibe.emoji}</span>
+                <span className="vibe-label" style={{ color: isSelected ? vibe.color : '#9ca3af' }}>
+                  {label}
+                </span>
+              </button>
+            );
+          })}
           </div>
         </div>
+      </div>
+
+      {/* TAG SELECTOR */}
+      <div className="form-group">
+        <label>
+          {translations.tags_label || 'Tagy'}
+          <span className="tag-info"> ({formData.tags.length}/4)</span>
+        </label>
+        <div className="tag-picker">
+          {Object.entries(TAG_OPTIONS).map(([key, tag]) => {
+            const tagId = key as TagId;
+            const label = tag[`label_${locale}`] || tag.label_cs;
+            const isSelected = formData.tags.includes(tagId);
+            const isDisabled = !isSelected && formData.tags.length >= 4;
+
+            return (
+              <button
+                key={tagId}
+                type="button"
+                className={`tag-option ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`}
+                onClick={() => !isDisabled && toggleTag(tagId)}
+                disabled={isDisabled}
+              >
+                <span className="tag-emoji">{tag.emoji}</span>
+                <span className="tag-label">{label}</span>
+              </button>
+            );
+          })}
+        </div>
+        {translations.tags_max_info && (
+          <p className="tag-max-info">{translations.tags_max_info}</p>
+        )}
       </div>
 
       <div className="form-group">
@@ -463,6 +517,71 @@ export default function ReviewForm({
           font-weight: 600;
           transition: color 0.3s;
           white-space: nowrap;
+        }
+
+        /* TAG PICKER STYLES */
+        .tag-info {
+          color: rgba(255, 255, 255, 0.5);
+          font-size: 0.85rem;
+          font-weight: normal;
+        }
+
+        .tag-picker {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          gap: 0.75rem;
+        }
+
+        @media (max-width: 640px) {
+          .tag-picker {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        .tag-option {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1rem;
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.03);
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .tag-option:hover:not(.disabled) {
+          transform: translateY(-2px);
+          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .tag-option.selected {
+          background: rgba(139, 21, 56, 0.2);
+          border-color: var(--wine);
+          box-shadow: 0 0 0 1px rgba(139, 21, 56, 0.3);
+        }
+
+        .tag-option.disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+
+        .tag-emoji {
+          font-size: 1.25rem;
+          line-height: 1;
+        }
+
+        .tag-label {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: var(--white);
+        }
+
+        .tag-max-info {
+          margin-top: 0.5rem;
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.5);
         }
 
         .progress-bar {

@@ -246,13 +246,19 @@ export default function AdminReviewsPage() {
                         className="action-btn approve"
                         onClick={() => handleApprove(review.id)}
                       >
-                        ✓ Schválit
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Schválit
                       </button>
                       <button
                         className="action-btn reject"
                         onClick={() => handleReject(review.id)}
                       >
-                        ✕ Zamítnout
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                        Zamítnout
                       </button>
                     </>
                   )}
@@ -260,6 +266,9 @@ export default function AdminReviewsPage() {
                     className="action-btn delete"
                     onClick={() => handleDelete(review.id)}
                   >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                    </svg>
                     Smazat
                   </button>
                 </div>
@@ -436,40 +445,59 @@ export default function AdminReviewsPage() {
         }
 
         .action-btn {
-          padding: 6px 12px;
-          border-radius: 6px;
-          font-size: 0.85rem;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-size: 0.875rem;
           font-weight: 500;
           cursor: pointer;
-          border: none;
-          transition: all 0.3s;
+          border: 1px solid transparent;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .action-btn svg {
+          flex-shrink: 0;
         }
 
         .action-btn.approve {
-          background: rgba(34, 197, 94, 0.2);
+          background: rgba(34, 197, 94, 0.15);
           color: #22c55e;
+          border-color: rgba(34, 197, 94, 0.3);
         }
 
         .action-btn.approve:hover {
-          background: rgba(34, 197, 94, 0.3);
+          background: rgba(34, 197, 94, 0.25);
+          border-color: rgba(34, 197, 94, 0.5);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
         }
 
         .action-btn.reject {
-          background: rgba(251, 191, 36, 0.2);
+          background: rgba(251, 191, 36, 0.15);
           color: #fbbf24;
+          border-color: rgba(251, 191, 36, 0.3);
         }
 
         .action-btn.reject:hover {
-          background: rgba(251, 191, 36, 0.3);
+          background: rgba(251, 191, 36, 0.25);
+          border-color: rgba(251, 191, 36, 0.5);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
         }
 
         .action-btn.delete {
-          background: rgba(239, 68, 68, 0.2);
+          background: rgba(239, 68, 68, 0.15);
           color: #ef4444;
+          border-color: rgba(239, 68, 68, 0.3);
         }
 
         .action-btn.delete:hover {
-          background: rgba(239, 68, 68, 0.3);
+          background: rgba(239, 68, 68, 0.25);
+          border-color: rgba(239, 68, 68, 0.5);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
         }
 
         .empty-state {

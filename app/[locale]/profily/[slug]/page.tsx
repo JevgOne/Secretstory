@@ -828,8 +828,23 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           )}
         </div>
 
-        {/* Write Review Form - MOVED UP */}
-        <div style={{ marginBottom: '3rem' }}>
+        {/* Existing Reviews First */}
+        <div className="reviews-grid" style={{ marginBottom: '3rem' }}>
+          <ReviewsList
+            girlId={profile.id}
+            limit={3}
+            translations={{
+              title: t('reviews.title') || 'Recenze od klientů',
+              no_reviews: t('reviews.no_reviews') || 'Zatím žádné recenze. Buďte první!',
+              loading: t('reviews.loading'),
+              verified_booking: t('reviews.verified_booking') || 'Ověřená rezervace',
+              reviewed_on: t('reviews.reviewed_on') || 'Hodnoceno'
+            }}
+          />
+        </div>
+
+        {/* Write Review Form - Now Below Reviews */}
+        <div>
           <ReviewForm
             girlId={profile.id}
             girlName={profile.name}
@@ -849,20 +864,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               success_message: t('reviews.success_message') || 'Děkujeme! Vaše recenze byla odeslána a čeká na schválení.',
               error_message: t('reviews.error_message') || 'Něco se pokazilo. Zkuste to prosím znovu.',
               write_another: t('reviews.write_another') || 'Napsat další recenzi'
-            }}
-          />
-        </div>
-
-        <div className="reviews-grid">
-          <ReviewsList
-            girlId={profile.id}
-            limit={3}
-            translations={{
-              title: t('reviews.title') || 'Recenze od klientů',
-              no_reviews: t('reviews.no_reviews') || 'Zatím žádné recenze. Buďte první!',
-              loading: t('reviews.loading'),
-              verified_booking: t('reviews.verified_booking') || 'Ověřená rezervace',
-              reviewed_on: t('reviews.reviewed_on') || 'Hodnoceno'
             }}
           />
         </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import ReviewStars from './ReviewStars';
+import { VIBE_OPTIONS, TAG_OPTIONS, type VibeId, type TagId } from '@/lib/review-constants';
 
 interface Review {
   id: number;
@@ -9,6 +10,9 @@ interface Review {
   rating: number;
   title?: string;
   content: string;
+  vibe?: string;
+  tags?: string;
+  helpful_count?: number;
   created_at: string;
   girl_name?: string;
 }
@@ -16,23 +20,27 @@ interface Review {
 interface ReviewsListProps {
   girlId?: number;
   limit?: number;
+  locale?: 'cs' | 'en' | 'de' | 'uk';
   translations: {
     title: string;
     no_reviews: string;
     loading: string;
     verified_booking: string;
     reviewed_on: string;
+    helpful?: string;
   };
 }
 
 export default function ReviewsList({
   girlId,
   limit,
+  locale = 'cs',
   translations
 }: ReviewsListProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [votingReview, setVotingReview] = useState<number | null>(null);
 
   useEffect(() => {
     fetchReviews();
@@ -58,6 +66,35 @@ export default function ReviewsList({
       setError('Failed to load reviews');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleHelpfulVote = async (reviewId: number) => {
+    if (votingReview) return;
+
+    setVotingReview(reviewId);
+
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/helpful`, {
+        method: 'POST'
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Update the review's helpful count in state
+        setReviews(prev => prev.map(review =>
+          review.id === reviewId
+            ? { ...review, helpful_count: data.helpful_count }
+            : review
+        ));
+      } else {
+        console.error('Failed to vote:', data.error);
+      }
+    } catch (err) {
+      console.error('Error voting helpful:', err);
+    } finally {
+      setVotingReview(null);
     }
   };
 
@@ -121,34 +158,90 @@ export default function ReviewsList({
       <h3 className="reviews-title">{translations.title}</h3>
 
       <div className="reviews-grid">
-        {reviews.map((review) => (
-          <div key={review.id} className="review-card">
-            <div className="review-header">
-              <div className="review-author">
-                <div className="author-avatar">
-                  {review.author_name.charAt(0).toUpperCase()}
+        {reviews.map((review) => {
+          const vibe = review.vibe && VIBE_OPTIONS[review.vibe as VibeId];
+          const vibeLabel = vibe ? (vibe[`label_${locale}`] || vibe.label_cs) : null;
+
+          let reviewTags: TagId[] = [];
+          try {
+            reviewTags = review.tags ? JSON.parse(review.tags) : [];
+          } catch (e) {
+            reviewTags = [];
+          }
+
+          return (
+            <div key={review.id} className="review-card">
+              <div className="review-header">
+                <div className="review-author">
+                  <div className="author-avatar">
+                    {review.author_name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="author-info">
+                    <div className="author-name">{review.author_name}</div>
+                    <div className="review-date">{formatDate(review.created_at)}</div>
+                  </div>
                 </div>
-                <div className="author-info">
-                  <div className="author-name">{review.author_name}</div>
-                  <div className="review-date">{formatDate(review.created_at)}</div>
+                <div className="header-right">
+                  {vibe && (
+                    <div
+                      className="vibe-badge"
+                      style={{
+                        background: `${vibe.color}20`,
+                        border: `1px solid ${vibe.color}40`
+                      }}
+                    >
+                      <span className="vibe-emoji">{vibe.emoji}</span>
+                      <span className="vibe-label" style={{ color: vibe.color }}>
+                        {vibeLabel}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
-              <ReviewStars rating={review.rating} size="small" />
+
+              {review.title && (
+                <h4 className="review-title">{review.title}</h4>
+              )}
+
+              <p className="review-content">{review.content}</p>
+
+              {reviewTags.length > 0 && (
+                <div className="review-tags">
+                  {reviewTags.map((tagId) => {
+                    const tag = TAG_OPTIONS[tagId];
+                    if (!tag) return null;
+                    const tagLabel = tag[`label_${locale}`] || tag.label_cs;
+                    return (
+                      <div key={tagId} className="review-tag">
+                        <span className="tag-emoji">{tag.emoji}</span>
+                        <span className="tag-text">{tagLabel}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="review-footer">
+                {review.girl_name && (
+                  <div className="review-girl">
+                    Recenze na: <strong>{review.girl_name}</strong>
+                  </div>
+                )}
+                <button
+                  className={`helpful-button ${votingReview === review.id ? 'voting' : ''}`}
+                  onClick={() => handleHelpfulVote(review.id)}
+                  disabled={votingReview === review.id}
+                >
+                  <span className="helpful-icon">👍</span>
+                  <span className="helpful-text">{translations.helpful || 'Užitečné'}</span>
+                  {review.helpful_count !== undefined && review.helpful_count > 0 && (
+                    <span className="helpful-count">{review.helpful_count}</span>
+                  )}
+                </button>
+              </div>
             </div>
-
-            {review.title && (
-              <h4 className="review-title">{review.title}</h4>
-            )}
-
-            <p className="review-content">{review.content}</p>
-
-            {review.girl_name && (
-              <div className="review-girl">
-                Recenze na: <strong>{review.girl_name}</strong>
-              </div>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <style jsx>{`
@@ -253,10 +346,161 @@ export default function ReviewsList({
           color: var(--white);
         }
 
+        /* VIBE BADGE */
+        .header-right {
+          display: flex;
+          align-items: center;
+        }
+
+        .vibe-badge {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 0.875rem;
+          border-radius: 20px;
+          font-size: 0.875rem;
+          font-weight: 500;
+        }
+
+        .vibe-emoji {
+          font-size: 1.25rem;
+          line-height: 1;
+        }
+
+        .vibe-label {
+          font-weight: 600;
+        }
+
+        /* REVIEW TAGS */
+        .review-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-top: 1rem;
+        }
+
+        .review-tag {
+          display: flex;
+          align-items: center;
+          gap: 0.375rem;
+          padding: 0.375rem 0.75rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 6px;
+          font-size: 0.8rem;
+        }
+
+        .tag-emoji {
+          font-size: 1rem;
+        }
+
+        .tag-text {
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* REVIEW FOOTER */
+        .review-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          gap: 1rem;
+        }
+
+        .helpful-button {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          color: var(--white);
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .helpful-button:hover:not(:disabled) {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+
+        .helpful-button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .helpful-button.voting {
+          opacity: 0.8;
+        }
+
+        .helpful-icon {
+          font-size: 1rem;
+        }
+
+        .helpful-text {
+          font-weight: 500;
+        }
+
+        .helpful-count {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 0.125rem 0.5rem;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+
         @media (max-width: 768px) {
           .review-header {
             flex-direction: column;
             gap: 12px;
+            align-items: stretch;
+          }
+
+          .header-right {
+            justify-content: flex-start;
+          }
+
+          .review-footer {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .helpful-button {
+            justify-content: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .review-card {
+            padding: 1.25rem;
+          }
+
+          .vibe-badge {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.8rem;
+          }
+
+          .vibe-emoji {
+            font-size: 1.125rem;
+          }
+
+          .review-tags {
+            gap: 0.375rem;
+          }
+
+          .review-tag {
+            padding: 0.25rem 0.625rem;
+            font-size: 0.75rem;
+          }
+
+          .helpful-button {
+            padding: 0.625rem 0.875rem;
+            font-size: 0.8rem;
           }
         }
       `}</style>

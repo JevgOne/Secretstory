@@ -318,7 +318,8 @@
     "no_girls": "Heute sind keine Mädchen verfügbar",
     "closed_today": "Wir haben heute geschlossen. Kommen Sie morgen wieder!",
     "today": "Heute",
-    "weekly_schedule": "Wochenplan",    "status": {
+    "weekly_schedule": "Wochenplan",
+    "status": {
       "online": "Online",
       "available_from": "Ab {time}",
       "not_available": "Frei"
@@ -721,7 +722,11 @@
     "submitting": "Wird gesendet...",
     "success_message": "Vielen Dank! Ihre Bewertung wurde gesendet und wartet auf Genehmigung.",
     "error_message": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
-    "write_another": "Weitere Bewertung schreiben"
+    "write_another": "Weitere Bewertung schreiben",
+    "tags_label": "Tags",
+    "tags_max_info": "Wählen Sie bis zu 4 Tags, die Ihre Erfahrung am besten beschreiben",
+    "helpful": "Hilfreich",
+    "helpful_votes": "Personen fanden dies hilfreich"
   },
   "disclaimer": {
     "title": "Haftungsausschluss",
