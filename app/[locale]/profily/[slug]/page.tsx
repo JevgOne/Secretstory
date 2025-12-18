@@ -383,34 +383,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
       {/* Detail Section */}
       <section className="detail">
         <div className="detail-grid">
-          {/* Header - Mobile First */}
-          <div className="profile-header-mobile">
-            <div className="profile-top-row">
-              <div className="profile-status">
-                {isWorkingNow() && <span className="online-dot"></span>}
-                <span className="status-text">
-                  {isWorkingNow()
-                    ? t('girls.online')
-                    : isClosedToday()
-                      ? t('girls.closed')
-                      : t('girls.offline')
-                  }
-                </span>
-              </div>
-              {getTodayTimeRange() && !isClosedToday() && (
-                <div className="profile-time">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 6v6l4 2"/>
-                  </svg>
-                  {getTodayTimeRange()}
-                </div>
-              )}
-            </div>
-            <h1 className={`profile-name ${cormorant.className}`}>{profile.name}</h1>
-            <p className="profile-tagline">{t('detail.tagline')}</p>
-          </div>
-
           {/* Gallery - Sticky */}
           <div className="gallery">
             <div className="gallery-main">
@@ -564,36 +536,36 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             )}
           </div>
 
+          {/* Header - Separate element for flexible ordering */}
+          <div className="profile-header">
+            <div className="profile-top-row">
+              <div className="profile-status">
+                {isWorkingNow() && <span className="online-dot"></span>}
+                <span className="status-text">
+                  {isWorkingNow()
+                    ? t('girls.online')
+                    : isClosedToday()
+                      ? t('girls.closed')
+                      : t('girls.offline')
+                  }
+                </span>
+              </div>
+              {getTodayTimeRange() && !isClosedToday() && (
+                <div className="profile-time">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                  </svg>
+                  {getTodayTimeRange()}
+                </div>
+              )}
+            </div>
+            <h1 className={`profile-name ${cormorant.className}`}>{profile.name}</h1>
+            <p className="profile-tagline">{t('detail.tagline')}</p>
+          </div>
+
           {/* Profile Content - Scrollable */}
           <div className="profile-content">
-            {/* Header */}
-            <div className="profile-header">
-              <div className="profile-top-row">
-                <div className="profile-status">
-                  {isWorkingNow() && <span className="online-dot"></span>}
-                  <span className="status-text">
-                    {isWorkingNow()
-                      ? t('girls.online')
-                      : isClosedToday()
-                        ? t('girls.closed')
-                        : t('girls.offline')
-                    }
-                  </span>
-                </div>
-                {getTodayTimeRange() && !isClosedToday() && (
-                  <div className="profile-time">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <circle cx="12" cy="12" r="10"/>
-                      <path d="M12 6v6l4 2"/>
-                    </svg>
-                    {getTodayTimeRange()}
-                  </div>
-                )}
-              </div>
-              <h1 className={`profile-name ${cormorant.className}`}>{profile.name}</h1>
-              <p className="profile-tagline">{t('detail.tagline')}</p>
-            </div>
-
             {/* Stats + Languages */}
             <div className="stats-section">
               <div className="stats-row">
@@ -1046,14 +1018,25 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         .detail-grid {
           display: grid;
           grid-template-columns: 500px 1fr;
-          gap: 3rem;
+          grid-template-areas:
+            "gallery header"
+            "gallery content";
+          gap: 0 3rem;
           max-width: 1200px;
           margin: 0 auto;
         }
 
-        /* Mobile Header - Hidden on desktop */
-        .profile-header-mobile {
-          display: none;
+        .gallery {
+          grid-area: gallery;
+        }
+
+        .profile-header {
+          grid-area: header;
+          padding-top: 2rem;
+        }
+
+        .profile-content {
+          grid-area: content;
         }
 
         /* Gallery - Sticky */
@@ -2099,22 +2082,25 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         @media (max-width: 1024px) {
           .detail-grid {
             grid-template-columns: 1fr;
+            grid-template-areas:
+              "header"
+              "gallery"
+              "content";
             gap: 2rem;
           }
 
-          /* Show mobile header, hide desktop header */
-          .profile-header-mobile {
-            display: block;
+          .profile-header {
             padding: 0 4%;
-            margin-bottom: 1.5rem;
-          }
-          .profile-content .profile-header {
-            display: none;
+            padding-top: 0;
           }
 
           .gallery {
             position: relative;
             top: 0;
+          }
+
+          .profile-content {
+            padding-top: 0;
           }
           .reviews-grid {
             grid-template-columns: repeat(2, 1fr);
