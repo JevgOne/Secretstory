@@ -383,6 +383,34 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
       {/* Detail Section */}
       <section className="detail">
         <div className="detail-grid">
+          {/* Header - Mobile First */}
+          <div className="profile-header-mobile">
+            <div className="profile-top-row">
+              <div className="profile-status">
+                {isWorkingNow() && <span className="online-dot"></span>}
+                <span className="status-text">
+                  {isWorkingNow()
+                    ? t('girls.online')
+                    : isClosedToday()
+                      ? t('girls.closed')
+                      : t('girls.offline')
+                  }
+                </span>
+              </div>
+              {getTodayTimeRange() && !isClosedToday() && (
+                <div className="profile-time">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                  </svg>
+                  {getTodayTimeRange()}
+                </div>
+              )}
+            </div>
+            <h1 className={`profile-name ${cormorant.className}`}>{profile.name}</h1>
+            <p className="profile-tagline">{t('detail.tagline')}</p>
+          </div>
+
           {/* Gallery - Sticky */}
           <div className="gallery">
             <div className="gallery-main">
@@ -1021,6 +1049,11 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           gap: 3rem;
           max-width: 1200px;
           margin: 0 auto;
+        }
+
+        /* Mobile Header - Hidden on desktop */
+        .profile-header-mobile {
+          display: none;
         }
 
         /* Gallery - Sticky */
@@ -2068,6 +2101,17 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             grid-template-columns: 1fr;
             gap: 2rem;
           }
+
+          /* Show mobile header, hide desktop header */
+          .profile-header-mobile {
+            display: block;
+            padding: 0 4%;
+            margin-bottom: 1.5rem;
+          }
+          .profile-content .profile-header {
+            display: none;
+          }
+
           .gallery {
             position: relative;
             top: 0;
