@@ -55,7 +55,6 @@ export async function POST(request: NextRequest) {
       girl_id,
       booking_id,
       author_name,
-      author_email,
       rating,
       title,
       content
@@ -77,22 +76,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get IP address from request headers
+    const forwarded = request.headers.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown';
+
     // Insert review with status 'pending' (needs admin approval)
     const result = await db.execute({
       sql: `
         INSERT INTO reviews (
-          girl_id, booking_id, author_name, author_email,
-          rating, title, content, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')
+          girl_id, booking_id, author_name,
+          rating, title, content, status, ip_address
+        ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)
       `,
       args: [
         girl_id,
         booking_id || null,
         author_name,
-        author_email || null,
         rating,
         title || null,
-        content
+        content,
+        ip
       ]
     });
 

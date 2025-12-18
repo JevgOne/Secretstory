@@ -12,10 +12,8 @@ interface ReviewFormProps {
     subtitle: string;
     your_name: string;
     your_name_placeholder: string;
-    your_email: string;
-    your_email_placeholder: string;
-    email_optional: string;
     rating_label: string;
+    vibe_label: string;
     review_title: string;
     review_title_placeholder: string;
     review_content: string;
@@ -24,6 +22,7 @@ interface ReviewFormProps {
     submitting: string;
     success_message: string;
     error_message: string;
+    write_another: string;
   };
 }
 
@@ -35,11 +34,10 @@ export default function ReviewForm({
 }: ReviewFormProps) {
   const [formData, setFormData] = useState({
     author_name: '',
-    author_email: '',
     rating: 0,
     title: '',
     content: '',
-    vibe: '' // New: Overall vibe/mood
+    vibe: ''
   });
   const [loading, setLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -82,7 +80,6 @@ export default function ReviewForm({
         body: JSON.stringify({
           girl_id: girlId,
           author_name: formData.author_name,
-          author_email: formData.author_email || null,
           rating: formData.rating,
           title: formData.title || `${formData.vibe ? vibes.find(v => v.id === formData.vibe)?.label + ' zážitek' : ''}`,
           content: formData.content
@@ -97,7 +94,6 @@ export default function ReviewForm({
           setSuccess(true);
           setFormData({
             author_name: '',
-            author_email: '',
             rating: 0,
             title: '',
             content: '',
@@ -132,7 +128,7 @@ export default function ReviewForm({
           className="btn"
           onClick={() => setSuccess(false)}
         >
-          Napsat další recenzi
+          {translations.write_another}
         </button>
 
         <style jsx>{`
@@ -200,48 +196,33 @@ export default function ReviewForm({
         </div>
       )}
 
-      <div className="form-row">
-        <div className="form-group">
-          <label htmlFor="author_name">{translations.your_name} *</label>
-          <input
-            type="text"
-            id="author_name"
-            value={formData.author_name}
-            onChange={(e) => setFormData({ ...formData, author_name: e.target.value })}
-            placeholder={translations.your_name_placeholder}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="author_email">
-            {translations.your_email}
-            <span className="optional"> ({translations.email_optional})</span>
-          </label>
-          <input
-            type="email"
-            id="author_email"
-            value={formData.author_email}
-            onChange={(e) => setFormData({ ...formData, author_email: e.target.value })}
-            placeholder={translations.your_email_placeholder}
-          />
-        </div>
-      </div>
-
       <div className="form-group">
-        <label>{translations.rating_label} *</label>
-        <ReviewStars
-          rating={formData.rating}
-          size="large"
-          interactive
-          onChange={(rating) => setFormData({ ...formData, rating })}
+        <label htmlFor="author_name">{translations.your_name} *</label>
+        <input
+          type="text"
+          id="author_name"
+          value={formData.author_name}
+          onChange={(e) => setFormData({ ...formData, author_name: e.target.value })}
+          placeholder={translations.your_name_placeholder}
+          required
         />
       </div>
 
-      {/* VIBE PICKER - NEW! */}
-      <div className="form-group">
-        <label>Jak byla celková vibe? ✨</label>
-        <div className="vibe-picker">
+      {/* RATING & VIBE IN ONE ROW */}
+      <div className="rating-vibe-section">
+        <div className="rating-group">
+          <label>{translations.rating_label} *</label>
+          <ReviewStars
+            rating={formData.rating}
+            size="large"
+            interactive
+            onChange={(rating) => setFormData({ ...formData, rating })}
+          />
+        </div>
+
+        <div className="vibe-group">
+          <label>{translations.vibe_label} ✨</label>
+          <div className="vibe-picker">
           {vibes.map((vibe) => (
             <button
               key={vibe.id}
@@ -259,13 +240,14 @@ export default function ReviewForm({
               </span>
             </button>
           ))}
+          </div>
         </div>
       </div>
 
       <div className="form-group">
         <label htmlFor="title">
           {translations.review_title}
-          <span className="optional"> ({translations.email_optional})</span>
+          <span className="optional"> (nepovinné)</span>
         </label>
         <input
           type="text"
@@ -339,17 +321,29 @@ export default function ReviewForm({
           margin-bottom: 1.5rem;
         }
 
-        .form-row {
+        .rating-vibe-section {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1rem;
+          grid-template-columns: 200px 1fr;
+          gap: 2rem;
           margin-bottom: 1.5rem;
+          padding: 1.5rem;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
         }
 
         @media (max-width: 768px) {
-          .form-row {
+          .rating-vibe-section {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
           }
+        }
+
+        .rating-group,
+        .vibe-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
         }
 
         .form-group {
@@ -416,56 +410,59 @@ export default function ReviewForm({
         }
 
         .vibe-picker {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 0.75rem;
-          margin-top: 0.5rem;
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
         }
 
         @media (max-width: 768px) {
           .vibe-picker {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-
-        @media (max-width: 480px) {
-          .vibe-picker {
-            grid-template-columns: repeat(2, 1fr);
+            justify-content: space-between;
           }
         }
 
         .vibe-option {
           display: flex;
-          flex-direction: column;
           align-items: center;
           gap: 0.5rem;
-          padding: 1rem 0.5rem;
+          padding: 0.75rem 1rem;
           border: 2px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
+          border-radius: 10px;
           background: rgba(255, 255, 255, 0.03);
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          flex: 1;
+          min-width: fit-content;
+        }
+
+        @media (max-width: 768px) {
+          .vibe-option {
+            flex: 1 1 calc(50% - 0.25rem);
+          }
         }
 
         .vibe-option:hover {
           transform: translateY(-2px);
           background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(255, 255, 255, 0.2);
         }
 
         .vibe-option.active {
-          transform: translateY(-4px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          transform: scale(1.05);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25),
+                      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
         }
 
         .vibe-emoji {
-          font-size: 2rem;
+          font-size: 1.5rem;
           line-height: 1;
         }
 
         .vibe-label {
-          font-size: 0.85rem;
-          font-weight: 500;
+          font-size: 0.9rem;
+          font-weight: 600;
           transition: color 0.3s;
+          white-space: nowrap;
         }
 
         .progress-bar {
