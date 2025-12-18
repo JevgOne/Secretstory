@@ -41,6 +41,10 @@ export default function Stories() {
       }
     }
     fetchStories();
+
+    // Auto-refresh every 10 minutes
+    const interval = setInterval(fetchStories, 10 * 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {

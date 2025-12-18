@@ -33,12 +33,13 @@ const activityColors = {
 export default function ActivityTimeline() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const locale = useLocale();
 
   useEffect(() => {
     async function fetchActivities() {
       try {
-        const response = await fetch('/api/activity-log?limit=8');
+        const response = await fetch('/api/activity-log?limit=50');
         const data = await response.json();
         if (data.success) {
           setActivities(data.activities);
@@ -50,6 +51,10 @@ export default function ActivityTimeline() {
       }
     }
     fetchActivities();
+
+    // Auto-refresh every 5 minutes
+    const interval = setInterval(fetchActivities, 5 * 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -65,6 +70,9 @@ export default function ActivityTimeline() {
   if (activities.length === 0) {
     return null;
   }
+
+  // Show only first 8 activities by default
+  const displayedActivities = showAll ? activities : activities.slice(0, 8);
 
   const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -91,9 +99,10 @@ export default function ActivityTimeline() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: '20px'
+          gap: '20px',
+          marginBottom: activities.length > 8 ? '2rem' : '0'
         }}>
-          {activities.map((activity) => (
+          {displayedActivities.map((activity) => (
             <Link
               key={activity.id}
               href={`/${locale}/profily/${activity.girl_slug}`}
@@ -164,6 +173,36 @@ export default function ActivityTimeline() {
             </Link>
           ))}
         </div>
+
+        {/* Show More Button */}
+        {activities.length > 8 && (
+          <div style={{ textAlign: 'center' }}>
+            <button
+              onClick={() => setShowAll(!showAll)}
+              style={{
+                padding: '12px 32px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '8px',
+                color: '#fff',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                fontSize: '14px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                e.currentTarget.style.borderColor = '#d4af37';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              }}
+            >
+              {showAll ? `Zobrazit méně ↑` : `Zobrazit všech (${activities.length}) ↓`}
+            </button>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
