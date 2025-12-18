@@ -184,7 +184,9 @@
     "lang_en": "English",
     "lang_de": "Deutsch",
     "lang_uk": "Українська",
-    "lang_ru": "Русский"
+    "lang_ru": "Русский",
+    "working_today_title": "Dnes také pracují",
+    "working_today_subtitle": "Další dívky dostupné ve stejný den"
   },
   "register": {
     "title": "Registrace nové slečny",

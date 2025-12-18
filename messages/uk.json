@@ -175,7 +175,9 @@
     "call": "Подзвонити",
     "not_found": "Профіль не знайдено",
     "back_to_list": "Назад до списку",
-    "main_photo_video": "Головне фото/відео"
+    "main_photo_video": "Головне фото/відео",
+    "working_today_title": "Також працюють сьогодні",
+    "working_today_subtitle": "Інші дівчата доступні того ж дня"
   },
   "register": {
     "title": "Реєстрація нової дівчини",

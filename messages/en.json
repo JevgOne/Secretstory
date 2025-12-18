@@ -174,7 +174,9 @@
     "call": "Call now",
     "not_found": "Profile not found",
     "back_to_list": "Back to list",
-    "main_photo_video": "Main photo/video"
+    "main_photo_video": "Main photo/video",
+    "working_today_title": "Also Working Today",
+    "working_today_subtitle": "Other girls available on the same day"
   },
   "register": {
     "title": "Register as a New Girl",

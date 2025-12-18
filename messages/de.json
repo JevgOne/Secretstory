@@ -175,7 +175,9 @@
     "call": "Anrufen",
     "not_found": "Profil nicht gefunden",
     "back_to_list": "Zurück zur Liste",
-    "main_photo_video": "Hauptfoto/-video"
+    "main_photo_video": "Hauptfoto/-video",
+    "working_today_title": "Arbeiten heute auch",
+    "working_today_subtitle": "Andere Mädchen am selben Tag verfügbar"
   },
   "register": {
     "title": "Registrierung eines neuen Mädchens",
