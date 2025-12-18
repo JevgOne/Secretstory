@@ -19,78 +19,110 @@ export async function GET() {
     const jsDay = now.getDay();
     const dayOfWeek = jsDay === 0 ? 6 : jsDay - 1;
 
-    // 1. Get ONLY first 4-5 girls (not all!)
-    const girlsResult = await db.execute({
-      sql: `
-        SELECT
-          g.id, g.name, g.slug, g.age, g.height, g.weight, g.bust,
-          g.online, g.status, g.color, g.location, g.is_new, g.badge_type
-        FROM girls g
-        WHERE g.status = 'active'
-        ORDER BY g.is_new DESC, g.online DESC, g.rating DESC
-        LIMIT 5
-      `,
-      args: []
-    });
+    // Run ALL queries in PARALLEL for maximum speed
+    const [
+      girlsResult,
+      locationsResult,
+      storiesResult,
+      activitiesResult,
+      reviewsResult
+    ] = await Promise.all([
+      // 1. Girls
+      db.execute({
+        sql: `
+          SELECT
+            g.id, g.name, g.slug, g.age, g.height, g.weight, g.bust,
+            g.online, g.status, g.color, g.location, g.is_new, g.badge_type
+          FROM girls g
+          WHERE g.status = 'active'
+          ORDER BY g.is_new DESC, g.online DESC, g.rating DESC
+          LIMIT 5
+        `,
+        args: []
+      }),
+      // 2. Locations
+      db.execute({
+        sql: 'SELECT * FROM locations WHERE is_active = 1 ORDER BY is_primary DESC LIMIT 3',
+        args: []
+      }),
+      // 3. Stories
+      db.execute({
+        sql: `
+          SELECT s.id, s.girl_id, s.media_url, s.media_type, s.thumbnail_url,
+                 s.duration, s.views_count, s.created_at,
+                 g.name as girl_name, g.slug as girl_slug
+          FROM stories s
+          JOIN girls g ON s.girl_id = g.id
+          WHERE s.is_active = 1
+          AND (s.expires_at IS NULL OR s.expires_at > datetime('now'))
+          ORDER BY s.created_at DESC
+          LIMIT 10
+        `,
+        args: []
+      }),
+      // 4. Activities
+      db.execute({
+        sql: `
+          SELECT a.id, a.girl_id, a.activity_type, a.title, a.description,
+                 a.created_at, g.name as girl_name, g.slug as girl_slug
+          FROM activity_log a
+          JOIN girls g ON a.girl_id = g.id
+          WHERE a.is_visible = 1
+          ORDER BY a.created_at DESC
+          LIMIT 10
+        `,
+        args: []
+      }),
+      // 5. Reviews
+      db.execute({
+        sql: `
+          SELECT r.id, r.girl_id, r.author_name, r.rating, r.title, r.content, r.created_at,
+                 g.name as girl_name, g.slug as girl_slug
+          FROM reviews r
+          JOIN girls g ON r.girl_id = g.id
+          WHERE r.status = 'approved'
+          ORDER BY r.created_at DESC
+          LIMIT 6
+        `,
+        args: []
+      })
+    ]);
 
     const girls = girlsResult.rows;
     const girlIds = girls.map((g: any) => g.id);
 
-    // 2. Get photos for these girls ONLY
-    let photoMap = new Map();
-    if (girlIds.length > 0) {
-      const placeholders = girlIds.map(() => '?').join(',');
-      const photosResult = await db.execute({
+    // Get photos and schedules in PARALLEL
+    const [photosResult, schedulesResult] = await Promise.all([
+      girlIds.length > 0 ? db.execute({
         sql: `SELECT girl_id, url, thumbnail_url FROM girl_photos
-              WHERE girl_id IN (${placeholders}) AND is_primary = 1`,
+              WHERE girl_id IN (${girlIds.map(() => '?').join(',')}) AND is_primary = 1`,
         args: girlIds
-      });
-      photosResult.rows.forEach((row: any) => {
-        photoMap.set(row.girl_id, {
-          url: row.url,
-          thumbnail_url: row.thumbnail_url
-        });
-      });
-    }
-
-    // 3. Get schedules for these girls ONLY
-    let scheduleMap = new Map();
-    if (girlIds.length > 0) {
-      const placeholders = girlIds.map(() => '?').join(',');
-      const schedulesResult = await db.execute({
+      }) : Promise.resolve({ rows: [] }),
+      girlIds.length > 0 ? db.execute({
         sql: `SELECT girl_id, start_time, end_time FROM girl_schedules
-              WHERE girl_id IN (${placeholders}) AND day_of_week = ? AND is_active = 1`,
+              WHERE girl_id IN (${girlIds.map(() => '?').join(',')}) AND day_of_week = ? AND is_active = 1`,
         args: [...girlIds, dayOfWeek]
-      });
-      schedulesResult.rows.forEach((row: any) => {
-        scheduleMap.set(row.girl_id, {
-          start_time: row.start_time,
-          end_time: row.end_time
-        });
-      });
-    }
+      }) : Promise.resolve({ rows: [] })
+    ]);
 
-    // 4. Get locations
-    const locationsResult = await db.execute({
-      sql: 'SELECT * FROM locations WHERE is_active = 1 ORDER BY is_primary DESC',
-      args: []
+    // Map photos and schedules
+    const photoMap = new Map();
+    photosResult.rows.forEach((row: any) => {
+      photoMap.set(row.girl_id, {
+        url: row.url,
+        thumbnail_url: row.thumbnail_url
+      });
     });
 
-    // 5. Get stories (for Stories component)
-    const storiesResult = await db.execute({
-      sql: `
-        SELECT s.*, g.name as girl_name, g.slug as girl_slug
-        FROM stories s
-        JOIN girls g ON s.girl_id = g.id
-        WHERE s.is_active = 1
-        AND (s.expires_at IS NULL OR s.expires_at > datetime('now'))
-        ORDER BY s.created_at DESC
-        LIMIT 20
-      `,
-      args: []
+    const scheduleMap = new Map();
+    schedulesResult.rows.forEach((row: any) => {
+      scheduleMap.set(row.girl_id, {
+        start_time: row.start_time,
+        end_time: row.end_time
+      });
     });
 
-    // Group stories by girl
+    // Group stories by girl (simplified)
     const storiesByGirl: Record<number, any> = {};
     storiesResult.rows.forEach((row: any) => {
       if (!storiesByGirl[row.girl_id]) {
@@ -110,33 +142,6 @@ export async function GET() {
         views_count: row.views_count,
         created_at: row.created_at
       });
-    });
-
-    // 6. Get recent activities (for Activity Timeline)
-    const activitiesResult = await db.execute({
-      sql: `
-        SELECT a.*, g.name as girl_name, g.slug as girl_slug
-        FROM activity_log a
-        JOIN girls g ON a.girl_id = g.id
-        WHERE a.is_visible = 1
-        ORDER BY a.created_at DESC
-        LIMIT 50
-      `,
-      args: []
-    });
-
-    // 7. Get approved reviews (for Reviews Section)
-    const reviewsResult = await db.execute({
-      sql: `
-        SELECT r.id, r.girl_id, r.author_name, r.rating, r.title, r.content, r.created_at,
-               g.name as girl_name, g.slug as girl_slug
-        FROM reviews r
-        JOIN girls g ON r.girl_id = g.id
-        WHERE r.status = 'approved'
-        ORDER BY r.created_at DESC
-        LIMIT 6
-      `,
-      args: []
     });
 
     // Map girls with photos and schedules

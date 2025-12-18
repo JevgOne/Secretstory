@@ -59,16 +59,50 @@ export async function GET(
 
     const girl = result.rows[0];
 
-    // Fetch girl's schedule for remaining days of the week
-    const scheduleResult = await db.execute({
-      sql: `
-        SELECT day_of_week, start_time, end_time
-        FROM girl_schedules
-        WHERE girl_id = ? AND is_active = 1
-        ORDER BY day_of_week
-      `,
-      args: [girl.id]
-    });
+    // Run ALL queries in PARALLEL for maximum speed
+    const [scheduleResult, photosResult, videosResult, servicesResult] = await Promise.all([
+      // Schedule
+      db.execute({
+        sql: `
+          SELECT day_of_week, start_time, end_time
+          FROM girl_schedules
+          WHERE girl_id = ? AND is_active = 1
+          ORDER BY day_of_week
+        `,
+        args: [girl.id]
+      }),
+      // Photos
+      db.execute({
+        sql: `
+          SELECT id, url, thumbnail_url, is_primary, display_order
+          FROM girl_photos
+          WHERE girl_id = ?
+          ORDER BY display_order ASC, created_at ASC
+        `,
+        args: [girl.id]
+      }),
+      // Videos
+      db.execute({
+        sql: `
+          SELECT id, url, thumbnail_url, display_order, duration
+          FROM girl_videos
+          WHERE girl_id = ?
+          ORDER BY display_order ASC, created_at ASC
+        `,
+        args: [girl.id]
+      }),
+      // Services
+      db.execute({
+        sql: `
+          SELECT s.slug
+          FROM services s
+          INNER JOIN girl_services gs ON s.id = gs.service_id
+          WHERE gs.girl_id = ?
+          ORDER BY s.id
+        `,
+        args: [girl.id]
+      })
+    ]);
 
     // Get current day of week (0 = Monday, ... 6 = Sunday)
     const now = new Date();
@@ -83,40 +117,6 @@ export async function GET(
         start_time: s.start_time.substring(0, 5),
         end_time: s.end_time.substring(0, 5)
       }));
-
-    // Fetch girl's photos
-    const photosResult = await db.execute({
-      sql: `
-        SELECT id, url, thumbnail_url, is_primary, display_order
-        FROM girl_photos
-        WHERE girl_id = ?
-        ORDER BY display_order ASC, created_at ASC
-      `,
-      args: [girl.id]
-    });
-
-    // Fetch girl's videos
-    const videosResult = await db.execute({
-      sql: `
-        SELECT id, url, thumbnail_url, display_order, duration
-        FROM girl_videos
-        WHERE girl_id = ?
-        ORDER BY display_order ASC, created_at ASC
-      `,
-      args: [girl.id]
-    });
-
-    // Fetch girl's services from girl_services table
-    const servicesResult = await db.execute({
-      sql: `
-        SELECT s.slug
-        FROM services s
-        INNER JOIN girl_services gs ON s.id = gs.service_id
-        WHERE gs.girl_id = ?
-        ORDER BY s.id
-      `,
-      args: [girl.id]
-    });
 
     const servicesSlugs = servicesResult.rows.map((row: any) => row.slug);
 
