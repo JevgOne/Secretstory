@@ -230,7 +230,13 @@ export default function Home() {
               <div className="new-girl-card">
                 <div className="new-girl-img">
                   {featuredGirl.primary_photo ? (
-                    <img src={featuredGirl.primary_photo} alt={featuredGirl.name} />
+                    <img
+                      src={featuredGirl.primary_photo}
+                      alt={featuredGirl.name}
+                      loading="eager"
+                      decoding="async"
+                      fetchPriority="high"
+                    />
                   ) : (
                     <div className="placeholder">FOTO</div>
                   )}
@@ -302,7 +308,13 @@ export default function Home() {
                       <span className={`badge ${badgeClass}`}>{badgeText}</span>
                     )}
                     {girl.primary_photo || girl.thumbnail ? (
-                      <img src={girl.thumbnail || girl.primary_photo} alt={girl.name} className="card-image" />
+                      <img
+                        src={girl.thumbnail || girl.primary_photo}
+                        alt={girl.name}
+                        className="card-image"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     ) : (
                       <div className="card-placeholder">FOTO</div>
                     )}

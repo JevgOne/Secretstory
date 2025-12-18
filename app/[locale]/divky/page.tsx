@@ -195,6 +195,7 @@ export default function GirlsPage() {
                             alt={girl.name}
                             className="card-image"
                             loading="lazy"
+                            decoding="async"
                           />
                         ) : (
                           <div className="card-placeholder">{tCommon('photo')}</div>
