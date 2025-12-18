@@ -4,18 +4,18 @@ import { cache } from '@/lib/cache';
 
 // Edge runtime for maximum performance
 export const runtime = 'edge';
-export const revalidate = 30; // Cache for 30 seconds
+export const revalidate = 300; // Cache for 5 minutes
 
 export async function GET() {
   try {
-    // Check in-memory cache first (30s TTL)
-    const cached = cache.get('homepage-data', 30000);
+    // Check in-memory cache first (5min TTL)
+    const cached = cache.get('homepage-data', 300000);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120, max-age=30',
-          'CDN-Cache-Control': 'public, s-maxage=120',
-          'Vercel-CDN-Cache-Control': 'public, s-maxage=120',
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600, max-age=120',
+          'CDN-Cache-Control': 'public, s-maxage=600',
+          'Vercel-CDN-Cache-Control': 'public, s-maxage=600',
           'X-Cache': 'HIT',
           'X-Content-Type-Options': 'nosniff'
         }
@@ -70,7 +70,7 @@ export async function GET() {
           WHERE s.is_active = 1
           AND (s.expires_at IS NULL OR s.expires_at > datetime('now'))
           ORDER BY s.created_at DESC
-          LIMIT 10
+          LIMIT 5
         `,
         args: []
       }),
@@ -83,7 +83,7 @@ export async function GET() {
           JOIN girls g ON a.girl_id = g.id
           WHERE a.is_visible = 1
           ORDER BY a.created_at DESC
-          LIMIT 10
+          LIMIT 5
         `,
         args: []
       }),
@@ -96,7 +96,7 @@ export async function GET() {
           JOIN girls g ON r.girl_id = g.id
           WHERE r.status = 'approved'
           ORDER BY r.created_at DESC
-          LIMIT 6
+          LIMIT 3
         `,
         args: []
       })
@@ -206,16 +206,16 @@ export async function GET() {
       reviews: reviewsResult.rows
     };
 
-    // Store in cache for 30 seconds
+    // Store in cache for 5 minutes
     cache.set('homepage-data', responseData);
 
     // Return everything in ONE response
     return NextResponse.json(responseData, {
       headers: {
         // Aggressive caching for performance
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120, max-age=30',
-        'CDN-Cache-Control': 'public, s-maxage=120',
-        'Vercel-CDN-Cache-Control': 'public, s-maxage=120',
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600, max-age=120',
+        'CDN-Cache-Control': 'public, s-maxage=600',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=600',
         'X-Cache': 'MISS',
         'X-Content-Type-Options': 'nosniff'
       }
