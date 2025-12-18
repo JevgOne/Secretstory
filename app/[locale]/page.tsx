@@ -276,8 +276,8 @@ export default function Home() {
               {tCommon('loading')}
             </div>
           ) : girls.length === 0 ? (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
-              {tGirls('no_girls_available')}
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e', fontSize: '1.2rem' }}>
+              {tHome('closed_today')}
             </div>
           ) : (
             girls.map((girl) => {

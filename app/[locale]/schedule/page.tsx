@@ -182,7 +182,7 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
 
         {!loading && !error && girls.length === 0 && (
           <div className="text-center py-8">
-            <p>{t('no_girls')}</p>
+            <p style={{ fontSize: '1.2rem', color: '#9a8a8e' }}>{t('closed_today')}</p>
           </div>
         )}
 
