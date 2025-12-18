@@ -64,38 +64,35 @@ export default function Stories() {
   return (
     <section style={{
       padding: '3rem 0',
-      background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(139, 41, 66, 0.05) 100%)',
+      background: 'rgba(0, 0, 0, 0.2)',
       position: 'relative',
       overflow: 'hidden'
     }}>
-      {/* Ambient glow effect */}
+      {/* Subtle ambient effect */}
       <div style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '600px',
-        height: '600px',
-        background: 'radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%)',
+        width: '800px',
+        height: '400px',
+        background: 'radial-gradient(ellipse, rgba(139, 41, 66, 0.08) 0%, transparent 70%)',
         pointerEvents: 'none',
-        filter: 'blur(60px)'
+        filter: 'blur(80px)'
       }} />
 
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 style={{
-            fontSize: '2rem',
+            fontSize: '1.75rem',
             fontWeight: '600',
             color: '#fff',
             marginBottom: '0.5rem',
-            background: 'linear-gradient(135deg, #fff 0%, #d4af37 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
+            letterSpacing: '-0.02em'
           }}>
-            ✨ Stories
+            Stories
           </h2>
-          <p style={{ color: '#9ca3af', fontSize: '0.95rem' }}>Nové momenty našich modelek</p>
+          <p style={{ color: '#9ca3af', fontSize: '0.9rem' }}>Nové momenty našich modelek</p>
         </div>
 
         <div style={{
@@ -137,10 +134,10 @@ export default function Stories() {
                   height: '90px',
                   borderRadius: '50%',
                   padding: '3px',
-                  background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%)',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(139, 41, 66, 0.4) 50%, rgba(255, 255, 255, 0.3) 100%)',
                   backgroundSize: '200% 200%',
                   position: 'relative',
-                  boxShadow: '0 8px 32px rgba(212, 175, 55, 0.3)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                   animation: 'gradientShift 3s ease infinite'
                 }}>
                   {/* Inner circle with glassmorphism */}
@@ -174,41 +171,22 @@ export default function Stories() {
                       position: 'absolute',
                       bottom: '-2px',
                       right: '-2px',
-                      background: 'linear-gradient(135deg, #d4af37, #f4d03f)',
-                      color: '#1f1f23',
+                      background: 'rgba(139, 41, 66, 0.95)',
+                      color: '#fff',
                       borderRadius: '50%',
-                      width: '28px',
-                      height: '28px',
+                      width: '26px',
+                      height: '26px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '12px',
-                      fontWeight: '700',
-                      border: '3px solid #1f1f23',
+                      fontSize: '11px',
+                      fontWeight: '600',
+                      border: '2px solid #1f1f23',
                       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
                     }}>
                       {girlStories.stories.length}
                     </div>
                   )}
-
-                  {/* New indicator */}
-                  <div style={{
-                    position: 'absolute',
-                    top: '-8px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    background: 'linear-gradient(135deg, #f4d03f, #d4af37)',
-                    color: '#1f1f23',
-                    padding: '2px 8px',
-                    borderRadius: '12px',
-                    fontSize: '10px',
-                    fontWeight: '700',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                    boxShadow: '0 2px 8px rgba(212, 175, 55, 0.4)'
-                  }}>
-                    NEW
-                  </div>
                 </div>
 
                 {/* Name with glow effect */}
