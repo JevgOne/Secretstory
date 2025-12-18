@@ -112,7 +112,7 @@ export async function GET(
         SELECT s.slug
         FROM services s
         INNER JOIN girl_services gs ON s.id = gs.service_id
-        WHERE gs.girl_id = ? AND s.is_active = 1
+        WHERE gs.girl_id = ?
         ORDER BY s.display_order, s.id
       `,
       args: [girl.id]
