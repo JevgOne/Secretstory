@@ -38,11 +38,22 @@ export default function ReviewForm({
     author_email: '',
     rating: 0,
     title: '',
-    content: ''
+    content: '',
+    vibe: '' // New: Overall vibe/mood
   });
   const [loading, setLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  // Vibe options with emojis
+  const vibes = [
+    { id: 'amazing', emoji: '🤩', label: 'Úžasné', color: '#10b981' },
+    { id: 'great', emoji: '😊', label: 'Skvělé', color: '#3b82f6' },
+    { id: 'good', emoji: '🙂', label: 'Dobré', color: '#8b5cf6' },
+    { id: 'okay', emoji: '😐', label: 'Ujde', color: '#f59e0b' },
+    { id: 'meh', emoji: '😕', label: 'Slabé', color: '#ef4444' }
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +65,15 @@ export default function ReviewForm({
     }
 
     setLoading(true);
+    setLoadingProgress(0);
+
+    // Simulate progress for better UX
+    const progressInterval = setInterval(() => {
+      setLoadingProgress(prev => {
+        if (prev >= 90) return prev;
+        return prev + 10;
+      });
+    }, 200);
 
     try {
       const response = await fetch('/api/reviews', {
@@ -64,23 +84,27 @@ export default function ReviewForm({
           author_name: formData.author_name,
           author_email: formData.author_email || null,
           rating: formData.rating,
-          title: formData.title || null,
+          title: formData.title || `${formData.vibe ? vibes.find(v => v.id === formData.vibe)?.label + ' zážitek' : ''}`,
           content: formData.content
         })
       });
 
+      setLoadingProgress(100);
       const data = await response.json();
 
       if (data.success) {
-        setSuccess(true);
-        setFormData({
-          author_name: '',
-          author_email: '',
-          rating: 0,
-          title: '',
-          content: ''
-        });
-        if (onSuccess) onSuccess();
+        setTimeout(() => {
+          setSuccess(true);
+          setFormData({
+            author_name: '',
+            author_email: '',
+            rating: 0,
+            title: '',
+            content: '',
+            vibe: ''
+          });
+          if (onSuccess) onSuccess();
+        }, 300);
       } else {
         setError(data.error || translations.error_message);
       }
@@ -88,7 +112,11 @@ export default function ReviewForm({
       console.error('Review submission error:', err);
       setError(translations.error_message);
     } finally {
-      setLoading(false);
+      clearInterval(progressInterval);
+      setTimeout(() => {
+        setLoading(false);
+        setLoadingProgress(0);
+      }, 500);
     }
   };
 
@@ -210,6 +238,30 @@ export default function ReviewForm({
         />
       </div>
 
+      {/* VIBE PICKER - NEW! */}
+      <div className="form-group">
+        <label>Jak byla celková vibe? ✨</label>
+        <div className="vibe-picker">
+          {vibes.map((vibe) => (
+            <button
+              key={vibe.id}
+              type="button"
+              className={`vibe-option ${formData.vibe === vibe.id ? 'active' : ''}`}
+              style={{
+                borderColor: formData.vibe === vibe.id ? vibe.color : 'rgba(255, 255, 255, 0.1)',
+                background: formData.vibe === vibe.id ? `${vibe.color}20` : 'rgba(255, 255, 255, 0.03)'
+              }}
+              onClick={() => setFormData({ ...formData, vibe: vibe.id })}
+            >
+              <span className="vibe-emoji">{vibe.emoji}</span>
+              <span className="vibe-label" style={{ color: formData.vibe === vibe.id ? vibe.color : '#9ca3af' }}>
+                {vibe.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="form-group">
         <label htmlFor="title">
           {translations.review_title}
@@ -241,7 +293,17 @@ export default function ReviewForm({
         className="submit-btn"
         disabled={loading}
       >
-        {loading ? translations.submitting : translations.submit}
+        {loading ? (
+          <>
+            <span>{translations.submitting}</span>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${loadingProgress}%` }}></div>
+            </div>
+            <span className="progress-percent">{loadingProgress}%</span>
+          </>
+        ) : (
+          translations.submit
+        )}
       </button>
 
       <style jsx>{`
@@ -351,6 +413,89 @@ export default function ReviewForm({
         .submit-btn:disabled {
           opacity: 0.6;
           cursor: not-allowed;
+        }
+
+        .vibe-picker {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 0.75rem;
+          margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+          .vibe-picker {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        @media (max-width: 480px) {
+          .vibe-picker {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        .vibe-option {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 1rem 0.5rem;
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.03);
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .vibe-option:hover {
+          transform: translateY(-2px);
+          background: rgba(255, 255, 255, 0.06);
+        }
+
+        .vibe-option.active {
+          transform: translateY(-4px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .vibe-emoji {
+          font-size: 2rem;
+          line-height: 1;
+        }
+
+        .vibe-label {
+          font-size: 0.85rem;
+          font-weight: 500;
+          transition: color 0.3s;
+        }
+
+        .progress-bar {
+          position: relative;
+          width: 100%;
+          height: 4px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 2px;
+          margin: 0.5rem 0;
+          overflow: hidden;
+        }
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--wine), #c41e3a);
+          border-radius: 2px;
+          transition: width 0.3s ease;
+        }
+
+        .progress-percent {
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.7);
+          font-weight: 500;
+        }
+
+        .submit-btn {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.25rem;
         }
       `}</style>
     </form>
