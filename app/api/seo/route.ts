@@ -32,6 +32,14 @@ export async function GET(request: NextRequest) {
 
     const result = await db.execute({ sql, args });
 
+    // If querying for a specific page_path, return single object instead of array
+    if (pagePath) {
+      return NextResponse.json({
+        success: true,
+        metadata: result.rows.length > 0 ? result.rows[0] : null
+      });
+    }
+
     return NextResponse.json({
       success: true,
       metadata: result.rows

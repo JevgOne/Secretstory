@@ -405,41 +405,43 @@ export default function AdminSEOPage() {
 
         <style jsx>{`
           .admin-container {
-            padding: 2rem;
+            padding: 24px;
             max-width: 1600px;
             margin: 0 auto;
+            background: #1f1f23;
+            min-height: 100vh;
           }
 
           .admin-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 2rem;
+            margin-bottom: 24px;
           }
 
           .admin-subtitle {
-            color: var(--gray);
-            margin-top: 0.5rem;
+            color: #9ca3af;
+            font-size: 0.875rem;
+            margin-top: 4px;
           }
 
           .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 10px 20px;
             border-radius: 8px;
             font-weight: 500;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             border: none;
           }
 
           .btn-primary {
             background: #d4af37;
-            color: #1a1a1a;
+            color: #1f1f23;
           }
 
           .btn-primary:hover:not(:disabled) {
             background: #c9a532;
-            transform: translateY(-2px);
           }
 
           .btn-primary:disabled {
@@ -450,15 +452,15 @@ export default function AdminSEOPage() {
           .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 16px;
+            margin-bottom: 24px;
           }
 
           .stat-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 24px;
             text-align: center;
           }
 
@@ -466,30 +468,30 @@ export default function AdminSEOPage() {
             font-size: 2.5rem;
             font-weight: 700;
             color: #d4af37;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
           }
 
           .stat-label {
             font-size: 0.9rem;
-            color: var(--gray);
+            color: #9ca3af;
             text-transform: uppercase;
             letter-spacing: 0.05em;
           }
 
           .search-bar {
-            margin-bottom: 1.5rem;
+            margin-bottom: 16px;
           }
 
           .search-input {
             width: 100%;
             max-width: 600px;
-            padding: 0.75rem 1rem;
+            padding: 12px 16px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            color: var(--white);
+            color: #fff;
             font-size: 0.95rem;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
           }
 
           .search-input:focus {
@@ -499,13 +501,13 @@ export default function AdminSEOPage() {
           }
 
           .search-input::placeholder {
-            color: var(--gray);
+            color: #9ca3af;
           }
 
           .filters {
             display: flex;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 16px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
           }
 
@@ -517,19 +519,19 @@ export default function AdminSEOPage() {
 
           .filter-group label {
             font-size: 0.9rem;
-            color: var(--gray);
+            color: #9ca3af;
             white-space: nowrap;
           }
 
           .filter-group select {
-            padding: 0.5rem 1rem;
+            padding: 8px 16px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            color: var(--white);
+            color: #fff;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
           }
 
           .filter-group select:focus {
@@ -540,8 +542,8 @@ export default function AdminSEOPage() {
 
           .loading {
             text-align: center;
-            padding: 3rem;
-            color: var(--gray);
+            padding: 48px;
+            color: #9ca3af;
           }
 
           .seo-table {
@@ -561,19 +563,19 @@ export default function AdminSEOPage() {
           }
 
           th {
-            padding: 1rem;
+            padding: 16px;
             text-align: left;
             font-size: 0.85rem;
             font-weight: 600;
-            color: var(--gray);
+            color: #9ca3af;
             text-transform: uppercase;
             letter-spacing: 0.05em;
           }
 
           td {
-            padding: 1rem;
+            padding: 16px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            color: var(--white);
+            color: #fff;
             vertical-align: middle;
           }
 
@@ -592,12 +594,12 @@ export default function AdminSEOPage() {
 
           .meta-length {
             font-size: 0.75rem;
-            color: var(--gray);
+            color: #9ca3af;
             margin-top: 4px;
           }
 
           .not-set {
-            color: var(--gray);
+            color: #9ca3af;
             font-style: italic;
             font-size: 0.9rem;
           }
@@ -619,7 +621,7 @@ export default function AdminSEOPage() {
             cursor: pointer;
             border: none;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             display: inline-block;
           }
 
@@ -630,13 +632,12 @@ export default function AdminSEOPage() {
 
           .action-btn.edit:hover {
             background: rgba(59, 130, 246, 0.3);
-            transform: translateY(-2px);
           }
 
           .empty-state {
             text-align: center;
-            padding: 3rem;
-            color: var(--gray);
+            padding: 48px;
+            color: #9ca3af;
           }
 
           @media (max-width: 1400px) {

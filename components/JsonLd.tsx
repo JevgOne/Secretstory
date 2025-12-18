@@ -166,3 +166,78 @@ export function FAQPageSchema({ faqs }: { faqs: Array<{ question: string; answer
     />
   );
 }
+
+interface PersonSchemaProps {
+  name: string;
+  age?: number;
+  nationality?: string;
+  image?: string;
+  description?: string;
+  url: string;
+}
+
+export function PersonSchema({
+  name,
+  age,
+  nationality,
+  image,
+  description,
+  url
+}: PersonSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name,
+    ...(age && { age }),
+    ...(nationality && { nationality }),
+    ...(image && { image }),
+    ...(description && { description }),
+    url,
+    memberOf: {
+      '@type': 'Organization',
+      name: 'LovelyGirls Prague',
+      url: 'https://www.eroticreviews.uk'
+    }
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+interface ItemListSchemaProps {
+  items: Array<{
+    name: string;
+    url: string;
+    image?: string;
+    description?: string;
+  }>;
+}
+
+export function ItemListSchema({ items }: ItemListSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Person',
+        name: item.name,
+        url: item.url,
+        ...(item.image && { image: item.image }),
+        ...(item.description && { description: item.description })
+      }
+    }))
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
