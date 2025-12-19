@@ -5,10 +5,11 @@ import { calculateReviewSummary } from '@/lib/review-constants';
 // GET /api/reviews/[girl_id]/summary - Get aggregated review summary
 export async function GET(
   request: NextRequest,
-  { params }: { params: { girl_id: string } }
+  { params }: { params: Promise<{ girl_id: string }> }
 ) {
   try {
-    const girlId = parseInt(params.girl_id);
+    const { girl_id } = await params;
+    const girlId = parseInt(girl_id);
 
     if (isNaN(girlId)) {
       return NextResponse.json(
