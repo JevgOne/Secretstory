@@ -174,8 +174,11 @@ export async function GET() {
         if (scheduleFrom && scheduleTo) {
           if (currentTime >= scheduleFrom && currentTime <= scheduleTo) {
             scheduleStatus = 'working';
-          } else {
+          } else if (currentTime < scheduleFrom) {
             scheduleStatus = 'later';
+          } else {
+            // currentTime > scheduleTo - shift has ended, don't show this girl
+            scheduleStatus = 'finished';
           }
         }
       }
@@ -192,13 +195,16 @@ export async function GET() {
       };
     });
 
-    // Featured girl (first NEW girl)
-    const featuredGirl = girlsWithData.find((g: any) => g.is_new) || null;
+    // Filter out girls whose shift has ended
+    const activeGirls = girlsWithData.filter((g: any) => g.schedule_status !== 'finished');
+
+    // Featured girl (first NEW girl from active girls)
+    const featuredGirl = activeGirls.find((g: any) => g.is_new) || null;
 
     // Prepare response data
     const responseData = {
       success: true,
-      girls: girlsWithData.slice(0, 4), // Only 4 for grid
+      girls: activeGirls.slice(0, 4), // Only 4 for grid, excluding finished shifts
       featuredGirl,
       locations: locationsResult.rows,
       stories: Object.values(storiesByGirl),

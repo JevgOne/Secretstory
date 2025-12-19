@@ -170,8 +170,11 @@ export async function GET(request: NextRequest) {
         if (scheduleFrom && scheduleTo) {
           if (currentTime >= scheduleFrom && currentTime <= scheduleTo) {
             scheduleStatus = 'working';
-          } else {
+          } else if (currentTime < scheduleFrom) {
             scheduleStatus = 'later';
+          } else {
+            // currentTime > scheduleTo - shift has ended
+            scheduleStatus = 'finished';
           }
         }
       }
@@ -200,6 +203,9 @@ export async function GET(request: NextRequest) {
         girl.services && girl.services.includes(service)
       );
     }
+
+    // Filter out girls whose shift has ended
+    girlsWithPhotos = girlsWithPhotos.filter(girl => girl.schedule_status !== 'finished');
 
     const responseData = {
       success: true,
