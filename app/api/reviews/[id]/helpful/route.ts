@@ -5,10 +5,11 @@ import { generateFingerprint } from '@/lib/review-constants';
 // POST /api/reviews/[id]/helpful - Vote review as helpful
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const reviewId = parseInt(params.id);
+    const { id } = await params;
+    const reviewId = parseInt(id);
 
     if (isNaN(reviewId)) {
       return NextResponse.json(
@@ -87,10 +88,11 @@ export async function POST(
 // DELETE /api/reviews/[id]/helpful - Remove helpful vote (optional)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const reviewId = parseInt(params.id);
+    const { id } = await params;
+    const reviewId = parseInt(id);
 
     if (isNaN(reviewId)) {
       return NextResponse.json(
