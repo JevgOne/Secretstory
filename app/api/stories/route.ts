@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@libsql/client';
-
-const db = createClient({
-  url: process.env.DATABASE_URL || 'libsql://lg-jevgone.aws-ap-south-1.turso.io',
-  authToken: process.env.TURSO_AUTH_TOKEN || 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NjU3NDkzMjUsImlkIjoiNjQwZWQxZTktNGU4My00MTM5LWE0OWYtNDQwMmI3NTQ5ZGZlIiwicmlkIjoiZTU3MWYzN2ItNGUxYS00ZDlkLTg5MTUtMDFmMDk2OTY2YTQzIn0.I9PeGSQo286itiWpa9Fn-8Vw00KiZcxLjJ7jKOyvQa4PIvuQtQWb10E_HSQZ5Zxfd3UEDL1JaaSqIk3QF18-Ag',
-});
+import { db } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
   try {
@@ -68,7 +63,7 @@ export async function GET(request: NextRequest) {
   } catch (error: any) {
     console.error('Stories API Error:', error);
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: error.message || 'Failed to fetch stories' },
       { status: 500 }
     );
   }

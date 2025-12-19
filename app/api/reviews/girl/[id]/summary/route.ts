@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { calculateReviewSummary } from '@/lib/review-constants';
 
-// GET /api/reviews/[girl_id]/summary - Get aggregated review summary
+// GET /api/reviews/girl/[id]/summary - Get aggregated review summary
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ girl_id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { girl_id } = await params;
-    const girlId = parseInt(girl_id);
+    const { id } = await params;
+    const girlId = parseInt(id);
 
     if (isNaN(girlId)) {
       return NextResponse.json(
