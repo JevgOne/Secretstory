@@ -204,8 +204,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Filter out girls whose shift has ended
-    girlsWithPhotos = girlsWithPhotos.filter(girl => girl.schedule_status !== 'finished');
+    // Filter out girls whose shift has ended (keep only non-finished)
+    girlsWithPhotos = girlsWithPhotos.filter(girl => girl.schedule_status === null || girl.schedule_status === 'working' || girl.schedule_status === 'later');
 
     const responseData = {
       success: true,
