@@ -97,14 +97,17 @@ export async function GET(request: NextRequest) {
 
         // Determine status (only for today)
         let status = 'later'; // Default: not working yet
+        let isFinished = false;
 
         const isToday = targetDate.toDateString() === now.toDateString();
 
         if (isToday) {
           if (currentTime >= shiftFrom && currentTime <= shiftTo) {
             status = 'working'; // Currently working
+          } else if (currentTime > shiftTo) {
+            status = 'finished'; // Shift has ended
+            isFinished = true;
           }
-          // Don't filter out girls whose shift ended - show all girls with schedule
         }
 
         // Get photo from pre-fetched map
@@ -134,9 +137,15 @@ export async function GET(request: NextRequest) {
           online: girl.online,
           badge_type: girl.badge_type
         };
+      })
+      .filter((girl) => {
+        // Remove nulls AND girls with finished shifts (only for today)
+        if (!girl) return false;
+        if (girl.status === 'finished') return false;
+        return true;
       });
 
-    const filteredGirls = girls.filter(Boolean); // Remove nulls
+    const filteredGirls = girls as any[];
 
     // 4. Sort by status: working first, then later
     filteredGirls.sort((a, b) => {

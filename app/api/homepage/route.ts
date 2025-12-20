@@ -195,7 +195,8 @@ export async function GET() {
       };
     });
 
-    // Filter out girls whose shift has ended
+    // Filter out ONLY girls whose shift has ended (keep working, later, and null status)
+    // This ensures homepage always shows available girls or those without schedule
     const activeGirls = girlsWithData.filter((g: any) => g.schedule_status !== 'finished');
 
     // Featured girl (first NEW girl from active girls)
