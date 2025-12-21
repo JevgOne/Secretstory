@@ -152,6 +152,12 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
 
       {/* Date Selector */}
       <section className="date-selector">
+        <button className="nav-arrow">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+
         <div className="date-tabs">
           {getDays().map((day) => (
             <button
@@ -160,10 +166,26 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
               onClick={() => setSelectedDate(day.index)}
             >
               <span className="date-day">{day.dayName}</span>
-              <span className="date-num">{day.dayNum}</span>
+              <div className="date-num-box">
+                <span className="date-num">{day.dayNum}</span>
+                {day.available > 0 && (
+                  <div className="availability-dots">
+                    {[...Array(Math.min(day.available, 3))].map((_, i) => (
+                      <span key={i} className="availability-dot"></span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {day.index === 0 && <span className="today-label">{t('today')}</span>}
             </button>
           ))}
         </div>
+
+        <button className="nav-arrow">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
       </section>
 
       {/* Schedule Grid */}

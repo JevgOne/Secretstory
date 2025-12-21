@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   try {
     const result = await db.execute({
-      sql: `SELECT name, age, height, weight, bust, bio, nationality, meta_title, meta_description, og_image FROM girls WHERE slug = ? AND status = 'active'`,
+      sql: `SELECT name, age, height, weight, bust, bio, nationality, meta_title, meta_description, og_title, og_description, og_image FROM girls WHERE slug = ? AND status = 'active'`,
       args: [slug]
     })
 
@@ -34,14 +34,18 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
     const url = `https://lovelygirls.cz/${locale}/profily/${slug}`
 
+    // Separate OG title and description
+    const ogTitle = girl.og_title || title
+    const ogDesc = girl.og_description || description
+
     return {
       title,
       description,
       keywords: `${girl.name}, escort prague, premium escort, ${girl.nationality} escort, erotic massage prague, VIP escort czech`,
       authors: [{ name: 'LovelyGirls Prague' }],
       openGraph: {
-        title,
-        description,
+        title: ogTitle,
+        description: ogDesc,
         url,
         siteName: 'LovelyGirls Prague',
         locale: locale,
@@ -57,8 +61,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       },
       twitter: {
         card: 'summary_large_image',
-        title,
-        description,
+        title: ogTitle,
+        description: ogDesc,
         images: [ogImage]
       },
       alternates: {

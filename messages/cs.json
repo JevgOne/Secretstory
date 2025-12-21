@@ -8,7 +8,14 @@
     "success": "Úspěch",
     "photo": "Foto",
     "profile": "Profil",
-    "asian": "Asiatka"
+    "asian": "Asiatka",
+    "languages": {
+      "cs": "Čeština",
+      "en": "Angličtina",
+      "de": "Němčina",
+      "uk": "Ukrajinština",
+      "ru": "Ruština"
+    }
   },
   "home": {
     "age_modal_title": "18+",
@@ -186,12 +193,23 @@
     "lang_uk": "Українська",
     "lang_ru": "Русский",
     "working_today_title": "Dnes také pracují",
-    "working_today_subtitle": "Další dívky dostupné ve stejný den"
+    "working_today_subtitle": "Další dívky dostupné ve stejný den",
+    "stats": {
+      "verified": "Ověřená",
+      "reviews_count": "{count} recenzí"
+    },
+    "availability": {
+      "available_today": "Dnes k dispozici",
+      "book_now": "Rezervovat"
+    }
   },
   "register": {
     "title": "Registrace nové slečny",
     "subtitle": "LovelyGirls.cz • Krok {step} z 3",
     "step_of": "Krok {step} z {total}",
+    "step_1": "Osobní údaje",
+    "step_2": "Profil",
+    "step_3": "Dokončení",
     "personal_info": "👤 Osobní údaje",
     "profile_info": "📝 Profilové údaje",
     "completion": "✅ Dokončení registrace",
@@ -359,6 +377,13 @@
       "fri": "Pá",
       "sat": "So",
       "sun": "Ne"
+    },
+    "filters": {
+      "all_girls": "Všechny dívky"
+    },
+    "booking": {
+      "duration": "Délka trvání",
+      "total_price": "Celková cena"
     },
     "legend": {
       "available": "Právě k dispozici",

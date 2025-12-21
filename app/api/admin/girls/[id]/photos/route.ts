@@ -115,6 +115,28 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       ]
     });
 
+    // Get girl name for activity log
+    const girlData = await db.execute({
+      sql: 'SELECT name FROM girls WHERE id = ?',
+      args: [girlId]
+    });
+    const girlName = girlData.rows[0]?.name || 'Unknown';
+
+    // Log activity
+    await db.execute({
+      sql: `INSERT INTO activity_log
+            (girl_id, activity_type, title, description, media_url, is_visible)
+            VALUES (?, ?, ?, ?, ?, ?)`,
+      args: [
+        girlId,
+        'photo_added',
+        `${girlName} přidala novou fotku`,
+        `${girlName} přidala novou fotku do galerie`,
+        url,
+        1
+      ]
+    });
+
     return NextResponse.json({
       success: true,
       photo: {

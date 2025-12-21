@@ -19,8 +19,10 @@ export default function EditGirlPage({ params }: PageProps) {
   const [error, setError] = useState('');
   const [photos, setPhotos] = useState<any[]>([]);
   const [videos, setVideos] = useState<any[]>([]);
+  const [stories, setStories] = useState<any[]>([]);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [uploadingStory, setUploadingStory] = useState(false);
 
   const basicServices = getBasicServices();
   const extraServices = getExtraServices();
@@ -38,6 +40,9 @@ export default function EditGirlPage({ params }: PageProps) {
     eyes: 'Modré',
     color: 'rose',
     bio: '',
+    bio_cs: '',
+    bio_de: '',
+    bio_uk: '',
     tattoo_percentage: '0',
     tattoo_description: '',
     piercing: false,
@@ -52,6 +57,8 @@ export default function EditGirlPage({ params }: PageProps) {
     badge_type: '',
     meta_title: '',
     meta_description: '',
+    og_title: '',
+    og_description: '',
     og_image: ''
   });
 
@@ -81,6 +88,19 @@ export default function EditGirlPage({ params }: PageProps) {
     }
   };
 
+  // Load stories
+  const loadStories = async (id: string) => {
+    try {
+      const response = await fetch(`/api/admin/girls/${id}/stories`);
+      const data = await response.json();
+      if (data.success) {
+        setStories(data.stories);
+      }
+    } catch (error) {
+      console.error('Error loading stories:', error);
+    }
+  };
+
   // Load girl data
   useEffect(() => {
     async function loadGirl() {
@@ -94,10 +114,11 @@ export default function EditGirlPage({ params }: PageProps) {
         if (data.success && data.girl) {
           const girl = data.girl;
 
-          // Load photos and videos
+          // Load photos, videos and stories
           await Promise.all([
             loadPhotos(resolvedParams.id),
-            loadVideos(resolvedParams.id)
+            loadVideos(resolvedParams.id),
+            loadStories(resolvedParams.id)
           ]);
 
           setFormData({
@@ -113,6 +134,9 @@ export default function EditGirlPage({ params }: PageProps) {
             eyes: girl.eyes || 'Modré',
             color: girl.color || 'rose',
             bio: girl.bio || '',
+            bio_cs: girl.bio_cs || '',
+            bio_de: girl.bio_de || '',
+            bio_uk: girl.bio_uk || '',
             tattoo_percentage: girl.tattoo_percentage?.toString() || '0',
             tattoo_description: girl.tattoo_description || '',
             piercing: girl.piercing || false,
@@ -127,6 +151,8 @@ export default function EditGirlPage({ params }: PageProps) {
             badge_type: girl.badge_type || '',
             meta_title: girl.meta_title || '',
             meta_description: girl.meta_description || '',
+            og_title: girl.og_title || '',
+            og_description: girl.og_description || '',
             og_image: girl.og_image || ''
           });
         } else {
@@ -747,17 +773,225 @@ export default function EditGirlPage({ params }: PageProps) {
               </p>
             )}
           </div>
+
+          {/* Stories */}
+          <div style={{ marginTop: '2rem' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.75rem', color: 'var(--white)' }}>
+              Stories (24h stories jako Instagram)
+            </h3>
+
+            {/* Story Upload */}
+            <div style={{ marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <label style={{ color: 'var(--white)', fontSize: '0.875rem' }}>
+                  Doba zobrazení (sekundy):
+                  <input
+                    type="number"
+                    id="story-duration"
+                    defaultValue="5"
+                    min="3"
+                    max="15"
+                    style={{
+                      marginLeft: '0.5rem',
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '4px',
+                      border: '1px solid var(--gray)',
+                      background: 'var(--dark-bg)',
+                      color: 'var(--white)',
+                      width: '80px'
+                    }}
+                  />
+                </label>
+                <label style={{ color: 'var(--white)', fontSize: '0.875rem' }}>
+                  Vyprší za (hodin):
+                  <input
+                    type="number"
+                    id="story-expires"
+                    defaultValue="24"
+                    min="1"
+                    max="168"
+                    style={{
+                      marginLeft: '0.5rem',
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '4px',
+                      border: '1px solid var(--gray)',
+                      background: 'var(--dark-bg)',
+                      color: 'var(--white)',
+                      width: '80px'
+                    }}
+                  />
+                </label>
+              </div>
+              <input
+                type="file"
+                accept="image/*,video/*"
+                multiple
+                onChange={async (e) => {
+                  const files = e.target.files;
+                  if (!files || files.length === 0) return;
+
+                  const duration = (document.getElementById('story-duration') as HTMLInputElement)?.value || '5';
+                  const expiresIn = (document.getElementById('story-expires') as HTMLInputElement)?.value || '24';
+
+                  setUploadingStory(true);
+                  for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('duration', duration);
+                    formData.append('expiresIn', expiresIn);
+
+                    try {
+                      const response = await fetch(`/api/admin/girls/${girlId}/stories`, {
+                        method: 'POST',
+                        body: formData
+                      });
+
+                      if (response.ok) {
+                        await loadStories(girlId);
+                      } else {
+                        const data = await response.json();
+                        alert(`Chyba při nahrávání ${file.name}: ${data.error || 'Neznámá chyba'}`);
+                      }
+                    } catch (error) {
+                      console.error('Upload error:', error);
+                      alert(`Chyba při nahrávání ${file.name}`);
+                    }
+                  }
+                  setUploadingStory(false);
+                  e.target.value = '';
+                }}
+              />
+            </div>
+
+            {/* Stories Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
+              {stories.map((story) => (
+                <div key={story.id} style={{ position: 'relative' }}>
+                  {story.media_type === 'image' ? (
+                    <img
+                      src={story.media_url}
+                      alt=""
+                      style={{
+                        width: '100%',
+                        height: '200px',
+                        objectFit: 'cover',
+                        borderRadius: '8px'
+                      }}
+                    />
+                  ) : (
+                    <video
+                      src={story.media_url}
+                      controls
+                      style={{
+                        width: '100%',
+                        height: '200px',
+                        objectFit: 'cover',
+                        borderRadius: '8px',
+                        background: '#000'
+                      }}
+                    />
+                  )}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '8px',
+                    left: '8px',
+                    background: 'rgba(0, 0, 0, 0.7)',
+                    color: 'white',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    fontSize: '0.75rem'
+                  }}>
+                    {story.duration}s
+                  </div>
+                  {story.expires_at && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '8px',
+                      left: '8px',
+                      background: 'rgba(234, 179, 8, 0.9)',
+                      color: 'white',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '0.75rem'
+                    }}>
+                      Vyprší {new Date(story.expires_at).toLocaleString('cs-CZ')}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (confirm('Smazat tuto story?')) {
+                        await fetch(`/api/admin/girls/${girlId}/stories?storyId=${story.id}`, {
+                          method: 'DELETE'
+                        });
+                        await loadStories(girlId);
+                      }
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      background: 'rgba(239, 68, 68, 0.9)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      padding: '4px 8px',
+                      cursor: 'pointer',
+                      fontSize: '0.75rem'
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {uploadingStory && <p style={{ color: 'var(--gray)', marginTop: '1rem' }}>Nahrávání...</p>}
+            {stories.length === 0 && !uploadingStory && (
+              <p style={{ color: 'var(--gray)', textAlign: 'center', padding: '2rem' }}>
+                Zatím žádné stories
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="form-section">
           <h2 className="section-title">Popis profilu</h2>
           <div className="form-group">
-            <label>Bio</label>
+            <label>Bio EN (English)</label>
             <textarea
               value={formData.bio}
               onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-              rows={8}
-              placeholder="Popis dívky, její osobnost, co nabízí..."
+              rows={6}
+              placeholder="Profile description in English..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Bio CS (Čeština)</label>
+            <textarea
+              value={formData.bio_cs}
+              onChange={(e) => setFormData({ ...formData, bio_cs: e.target.value })}
+              rows={6}
+              placeholder="Popis profilu v češtině..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Bio DE (Deutsch)</label>
+            <textarea
+              value={formData.bio_de}
+              onChange={(e) => setFormData({ ...formData, bio_de: e.target.value })}
+              rows={6}
+              placeholder="Profilbeschreibung auf Deutsch..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Bio UK (Українська)</label>
+            <textarea
+              value={formData.bio_uk}
+              onChange={(e) => setFormData({ ...formData, bio_uk: e.target.value })}
+              rows={6}
+              placeholder="Опис профілю українською..."
             />
           </div>
         </div>
@@ -840,6 +1074,8 @@ export default function EditGirlPage({ params }: PageProps) {
         <SEOFieldsSection
           metaTitle={formData.meta_title}
           metaDescription={formData.meta_description}
+          ogTitle={formData.og_title}
+          ogDescription={formData.og_description}
           ogImage={formData.og_image}
           girlName={formData.name}
           onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}

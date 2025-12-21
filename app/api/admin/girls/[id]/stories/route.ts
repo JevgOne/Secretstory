@@ -13,31 +13,31 @@ interface RouteParams {
   }>;
 }
 
-// GET - List all videos for a girl
+// GET - List all stories for a girl
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const resolvedParams = await params;
     const girlId = parseInt(resolvedParams.id);
 
     const result = await db.execute({
-      sql: 'SELECT * FROM girl_videos WHERE girl_id = ? ORDER BY display_order ASC, created_at ASC',
+      sql: 'SELECT * FROM stories WHERE girl_id = ? ORDER BY order_index ASC, created_at DESC',
       args: [girlId]
     });
 
     return NextResponse.json({
       success: true,
-      videos: result.rows
+      stories: result.rows
     });
   } catch (error) {
-    console.error('Error fetching videos:', error);
+    console.error('Error fetching stories:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch videos' },
+      { success: false, error: 'Failed to fetch stories' },
       { status: 500 }
     );
   }
 }
 
-// POST - Upload a new video
+// POST - Upload a new story
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const resolvedParams = await params;
@@ -58,6 +58,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
+    const duration = formData.get('duration') as string;
+    const expiresIn = formData.get('expiresIn') as string; // hours
 
     if (!file) {
       return NextResponse.json(
@@ -66,10 +68,13 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Validate file type
-    if (!file.type.startsWith('video/')) {
+    // Validate file type (image or video)
+    const isImage = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+
+    if (!isImage && !isVideo) {
       return NextResponse.json(
-        { success: false, error: 'File must be a video' },
+        { success: false, error: 'File must be an image or video' },
         { status: 400 }
       );
     }
@@ -77,7 +82,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     // Generate unique filename
     const timestamp = Date.now();
     const ext = file.name.split('.').pop();
-    const filename = `girls/${girlId}/videos/${timestamp}.${ext}`;
+    const filename = `girls/${girlId}/stories/${timestamp}.${ext}`;
 
     // Upload to Vercel Blob
     const { url } = await put(filename, file, {
@@ -85,25 +90,34 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       addRandomSuffix: false
     });
 
-    // Get current max display_order
+    // Get current max order_index
     const maxOrderResult = await db.execute({
-      sql: 'SELECT MAX(display_order) as max_order FROM girl_videos WHERE girl_id = ?',
+      sql: 'SELECT MAX(order_index) as max_order FROM stories WHERE girl_id = ?',
       args: [girlId]
     });
     const nextOrder = (maxOrderResult.rows[0]?.max_order as number || -1) + 1;
 
+    // Calculate expiration time if provided
+    let expiresAt = null;
+    if (expiresIn) {
+      const hours = parseInt(expiresIn);
+      const expireDate = new Date();
+      expireDate.setHours(expireDate.getHours() + hours);
+      expiresAt = expireDate.toISOString();
+    }
+
     // Insert into database
     const insertResult = await db.execute({
-      sql: `INSERT INTO girl_videos
-            (girl_id, filename, url, display_order, file_size, mime_type)
+      sql: `INSERT INTO stories
+            (girl_id, media_url, media_type, duration, order_index, expires_at)
             VALUES (?, ?, ?, ?, ?, ?)`,
       args: [
         girlId,
-        filename,
         url,
+        isImage ? 'image' : 'video',
+        duration ? parseInt(duration) : 5,
         nextOrder,
-        file.size,
-        file.type
+        expiresAt
       ]
     });
 
@@ -121,9 +135,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
             VALUES (?, ?, ?, ?, ?, ?)`,
       args: [
         girlId,
-        'video_added',
-        `${girlName} přidala nové video`,
-        `${girlName} přidala nové video do galerie`,
+        'story_added',
+        `${girlName} přidala novou story`,
+        `${girlName} přidala novou story`,
         url,
         1
       ]
@@ -131,59 +145,59 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({
       success: true,
-      video: {
+      story: {
         id: insertResult.lastInsertRowid,
         girl_id: girlId,
-        filename,
-        url,
-        display_order: nextOrder,
-        file_size: file.size,
-        mime_type: file.type
+        media_url: url,
+        media_type: isImage ? 'image' : 'video',
+        duration: duration ? parseInt(duration) : 5,
+        order_index: nextOrder,
+        expires_at: expiresAt
       }
     });
   } catch (error) {
-    console.error('Error uploading video:', error);
+    console.error('Error uploading story:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to upload video' },
+      { success: false, error: 'Failed to upload story' },
       { status: 500 }
     );
   }
 }
 
-// DELETE - Delete a specific video
+// DELETE - Delete a specific story
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const resolvedParams = await params;
     const girlId = parseInt(resolvedParams.id);
 
     const { searchParams } = new URL(request.url);
-    const videoId = searchParams.get('videoId');
+    const storyId = searchParams.get('storyId');
 
-    if (!videoId) {
+    if (!storyId) {
       return NextResponse.json(
-        { success: false, error: 'Video ID required' },
+        { success: false, error: 'Story ID required' },
         { status: 400 }
       );
     }
 
-    // Verify video exists and belongs to this girl
-    const videoResult = await db.execute({
-      sql: 'SELECT * FROM girl_videos WHERE id = ? AND girl_id = ?',
-      args: [parseInt(videoId), girlId]
+    // Verify story exists and belongs to this girl
+    const storyResult = await db.execute({
+      sql: 'SELECT * FROM stories WHERE id = ? AND girl_id = ?',
+      args: [parseInt(storyId), girlId]
     });
 
-    if (videoResult.rows.length === 0) {
+    if (storyResult.rows.length === 0) {
       return NextResponse.json(
-        { success: false, error: 'Video not found' },
+        { success: false, error: 'Story not found' },
         { status: 404 }
       );
     }
 
-    const video = videoResult.rows[0];
+    const story = storyResult.rows[0];
 
     // Delete from Blob storage
     try {
-      await del(video.url as string);
+      await del(story.media_url as string);
     } catch (error) {
       console.error('Error deleting from Blob:', error);
       // Continue even if blob deletion fails
@@ -191,18 +205,18 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     // Delete from database
     await db.execute({
-      sql: 'DELETE FROM girl_videos WHERE id = ?',
-      args: [parseInt(videoId)]
+      sql: 'DELETE FROM stories WHERE id = ?',
+      args: [parseInt(storyId)]
     });
 
     return NextResponse.json({
       success: true,
-      message: 'Video deleted successfully'
+      message: 'Story deleted successfully'
     });
   } catch (error) {
-    console.error('Error deleting video:', error);
+    console.error('Error deleting story:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to delete video' },
+      { success: false, error: 'Failed to delete story' },
       { status: 500 }
     );
   }

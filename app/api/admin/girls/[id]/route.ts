@@ -33,10 +33,10 @@ export async function PATCH(
     const allowedFields = [
       'name', 'email', 'phone', 'age', 'nationality', 'height', 'weight',
       'bust', 'hair', 'eyes', 'color', 'status', 'verified', 'online',
-      'bio', 'tattoo_percentage', 'tattoo_description', 'piercing', 'piercing_description',
+      'bio', 'bio_cs', 'bio_de', 'bio_uk', 'tattoo_percentage', 'tattoo_description', 'piercing', 'piercing_description',
       'description_cs', 'description_en', 'description_de', 'description_uk', 'location',
       'is_new', 'is_top', 'is_featured', 'featured_section', 'badge_type',
-      'meta_title', 'meta_description', 'og_image'
+      'meta_title', 'meta_description', 'og_title', 'og_description', 'og_image'
     ];
 
     for (const field of allowedFields) {

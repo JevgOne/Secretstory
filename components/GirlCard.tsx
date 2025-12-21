@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useLocations } from '@/lib/hooks/useLocations';
 
 interface GirlCardProps {
@@ -44,6 +44,7 @@ export default function GirlCard({
   showQuickActions = true
 }: GirlCardProps) {
   const locale = useLocale();
+  const t = useTranslations('common');
   const { locationNames, primaryLocation } = useLocations();
 
   const getBreastSize = (bust: string): number => {
@@ -69,14 +70,7 @@ export default function GirlCard({
   };
 
   const getLanguageName = (code: string): string => {
-    const names: Record<string, Record<string, string>> = {
-      cs: { cs: 'Čeština', en: 'Czech', de: 'Tschechisch', uk: 'Чеська' },
-      en: { cs: 'Angličtina', en: 'English', de: 'Englisch', uk: 'Англійська' },
-      de: { cs: 'Němčina', en: 'German', de: 'Deutsch', uk: 'Німецька' },
-      uk: { cs: 'Ukrajinština', en: 'Ukrainian', de: 'Ukrainisch', uk: 'Українська' },
-      ru: { cs: 'Ruština', en: 'Russian', de: 'Russisch', uk: 'Російська' }
-    };
-    return names[code]?.[locale] || code;
+    return t(`languages.${code}` as any) || code;
   };
 
   const handleWhatsApp = (e: React.MouseEvent) => {

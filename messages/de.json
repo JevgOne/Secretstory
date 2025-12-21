@@ -8,7 +8,14 @@
     "success": "Erfolg",
     "photo": "Foto",
     "profile": "Profil",
-    "asian": "Asiatin"
+    "asian": "Asiatin",
+    "languages": {
+      "cs": "Tschechisch",
+      "en": "Englisch",
+      "de": "Deutsch",
+      "uk": "Ukrainisch",
+      "ru": "Russisch"
+    }
   },
   "home": {
     "age_modal_title": "18+",
@@ -177,11 +184,22 @@
     "back_to_list": "Zurück zur Liste",
     "main_photo_video": "Hauptfoto/-video",
     "working_today_title": "Arbeiten heute auch",
-    "working_today_subtitle": "Andere Mädchen am selben Tag verfügbar"
+    "working_today_subtitle": "Andere Mädchen am selben Tag verfügbar",
+    "stats": {
+      "verified": "Verifiziert",
+      "reviews_count": "{count} Bewertungen"
+    },
+    "availability": {
+      "available_today": "Heute verfügbar",
+      "book_now": "Jetzt buchen"
+    }
   },
   "register": {
     "title": "Registrierung eines neuen Mädchens",
     "step_of": "Schritt {step} von {total}",
+    "step_1": "Persönliche Informationen",
+    "step_2": "Profildetails",
+    "step_3": "Fertigstellung",
     "personal_info": "Persönliche Informationen",
     "profile_info": "Profilinformationen",
     "completion": "Registrierung abschließen",
@@ -333,6 +351,13 @@
       "friday": "Freitag",
       "saturday": "Samstag",
       "sunday": "Sonntag"
+    },
+    "filters": {
+      "all_girls": "Alle Mädchen"
+    },
+    "booking": {
+      "duration": "Dauer",
+      "total_price": "Gesamtpreis"
     },
     "legend": {
       "available": "Jetzt verfügbar",

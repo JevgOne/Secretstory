@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
+import StoryUpload from "@/components/StoryUpload";
 
 interface Booking {
   id: number;
@@ -98,6 +99,9 @@ export default function ManagerDashboardPage() {
 
       {/* CONTENT */}
       <main className="app-content">
+
+        {/* STORY UPLOAD */}
+        <StoryUpload />
 
         {/* ALERTS */}
         {pendingBookings.length > 0 && (

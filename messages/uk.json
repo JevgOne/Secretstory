@@ -8,7 +8,14 @@
     "success": "Успіх",
     "photo": "Фото",
     "profile": "Профіль",
-    "asian": "Азіатка"
+    "asian": "Азіатка",
+    "languages": {
+      "cs": "Чеська",
+      "en": "Англійська",
+      "de": "Німецька",
+      "uk": "Українська",
+      "ru": "Російська"
+    }
   },
   "home": {
     "age_modal_title": "18+",
@@ -177,11 +184,22 @@
     "back_to_list": "Назад до списку",
     "main_photo_video": "Головне фото/відео",
     "working_today_title": "Також працюють сьогодні",
-    "working_today_subtitle": "Інші дівчата доступні того ж дня"
+    "working_today_subtitle": "Інші дівчата доступні того ж дня",
+    "stats": {
+      "verified": "Верифікована",
+      "reviews_count": "{count} відгуків"
+    },
+    "availability": {
+      "available_today": "Доступна сьогодні",
+      "book_now": "Забронювати"
+    }
   },
   "register": {
     "title": "Реєстрація нової дівчини",
     "step_of": "Крок {step} з {total}",
+    "step_1": "Особисті дані",
+    "step_2": "Деталі профілю",
+    "step_3": "Завершення",
     "personal_info": "Особисті дані",
     "profile_info": "Дані профілю",
     "completion": "Завершення реєстрації",
@@ -340,6 +358,13 @@
       "fri": "Пт",
       "sat": "Сб",
       "sun": "Нд"
+    },
+    "filters": {
+      "all_girls": "Всі дівчата"
+    },
+    "booking": {
+      "duration": "Тривалість",
+      "total_price": "Загальна ціна"
     },
     "legend": {
       "available": "Доступна зараз",

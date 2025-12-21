@@ -5,8 +5,10 @@ import { useState } from 'react';
 interface SEOFieldsSectionProps {
   metaTitle: string;
   metaDescription: string;
+  ogTitle: string;
+  ogDescription: string;
   ogImage: string;
-  onChange: (field: 'meta_title' | 'meta_description' | 'og_image', value: string) => void;
+  onChange: (field: 'meta_title' | 'meta_description' | 'og_title' | 'og_description' | 'og_image', value: string) => void;
   onGenerate?: () => void;
   girlName?: string;
 }
@@ -14,22 +16,28 @@ interface SEOFieldsSectionProps {
 export default function SEOFieldsSection({
   metaTitle,
   metaDescription,
+  ogTitle,
+  ogDescription,
   ogImage,
   onChange,
   onGenerate,
   girlName
 }: SEOFieldsSectionProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const generateSEOData = () => {
     if (girlName) {
       // Auto-generate SEO fields based on girl's name
       const generatedTitle = `${girlName} - Escort Praha | LovelyGirls`;
       const generatedDescription = `Seznamte se s ${girlName}, profesionální escort v Praze. Ověřený profil, aktuální fotografie a recenze klientů na LovelyGirls.cz`;
+      const generatedOGTitle = `${girlName} - Profesionální Escort Praha`;
+      const generatedOGDescription = `Profesionální escort ${girlName} v Praze. Ověřený profil s aktuálními fotografiemi a recenzemi. Rezervujte si schůzku ještě dnes!`;
       const generatedOGImage = `/girls/${girlName.toLowerCase().replace(/\s+/g, '-')}-og.jpg`;
 
       onChange('meta_title', generatedTitle);
       onChange('meta_description', generatedDescription);
+      onChange('og_title', generatedOGTitle);
+      onChange('og_description', generatedOGDescription);
       onChange('og_image', generatedOGImage);
 
       if (onGenerate) {
@@ -178,6 +186,96 @@ export default function SEOFieldsSection({
               }}
             />
             {metaDescription.length > 0 && metaDescription.length < 150 && (
+              <p style={{ fontSize: '0.75rem', color: '#f59e0b', marginTop: '4px', marginBottom: 0 }}>
+                ⚠️ Příliš krátký (doporučeno 150-160 znaků)
+              </p>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div style={{
+            borderTop: '1px solid #e5e7eb',
+            margin: '24px 0',
+            paddingTop: '20px'
+          }}>
+            <h4 style={{
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              color: '#111827',
+              marginBottom: '16px'
+            }}>
+              🔗 Open Graph (Facebook, Twitter, LinkedIn)
+            </h4>
+          </div>
+
+          {/* OG Title */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{
+              display: 'block',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              color: '#374151',
+              marginBottom: '8px'
+            }}>
+              OG Title
+              <span style={{ color: '#6b7280', fontWeight: '400', marginLeft: '8px' }}>
+                ({ogTitle.length}/60 znaků)
+              </span>
+            </label>
+            <input
+              type="text"
+              value={ogTitle}
+              onChange={(e) => onChange('og_title', e.target.value)}
+              placeholder="Nadpis při sdílení na sociálních sítích (50-60 znaků)"
+              maxLength={60}
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                border: '1px solid #d1d5db',
+                borderRadius: '8px',
+                fontSize: '0.875rem',
+                color: '#111827'
+              }}
+            />
+            {ogTitle.length > 0 && ogTitle.length < 50 && (
+              <p style={{ fontSize: '0.75rem', color: '#f59e0b', marginTop: '4px', marginBottom: 0 }}>
+                ⚠️ Příliš krátký (doporučeno 50-60 znaků)
+              </p>
+            )}
+          </div>
+
+          {/* OG Description */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{
+              display: 'block',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              color: '#374151',
+              marginBottom: '8px'
+            }}>
+              OG Description
+              <span style={{ color: '#6b7280', fontWeight: '400', marginLeft: '8px' }}>
+                ({ogDescription.length}/160 znaků)
+              </span>
+            </label>
+            <textarea
+              value={ogDescription}
+              onChange={(e) => onChange('og_description', e.target.value)}
+              placeholder="Popis při sdílení na sociálních sítích (150-160 znaků)"
+              maxLength={160}
+              rows={3}
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                border: '1px solid #d1d5db',
+                borderRadius: '8px',
+                fontSize: '0.875rem',
+                color: '#111827',
+                resize: 'vertical',
+                fontFamily: 'inherit'
+              }}
+            />
+            {ogDescription.length > 0 && ogDescription.length < 150 && (
               <p style={{ fontSize: '0.75rem', color: '#f59e0b', marginTop: '4px', marginBottom: 0 }}>
                 ⚠️ Příliš krátký (doporučeno 150-160 znaků)
               </p>

@@ -25,6 +25,8 @@ interface ReviewFormProps {
     submit: string;
     submitting: string;
     success_message: string;
+    approval_pending: string;
+    optional: string;
     error_message: string;
     write_another: string;
   };
@@ -138,7 +140,7 @@ export default function ReviewForm({
         <div className="success-icon">✓</div>
         <div className="success-title">{translations.success_message}</div>
         <p className="success-text">
-          Vaše recenze čeká na schválení administrátorem. Děkujeme!
+          {translations.approval_pending}
         </p>
         <button
           className="btn"
@@ -301,7 +303,7 @@ export default function ReviewForm({
       <div className="form-group">
         <label htmlFor="title">
           {translations.review_title}
-          <span className="optional"> (nepovinné)</span>
+          <span className="optional"> ({translations.optional})</span>
         </label>
         <input
           type="text"

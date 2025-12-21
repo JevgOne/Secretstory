@@ -25,6 +25,9 @@ export async function POST(request: NextRequest) {
       color,
       services,
       bio,
+      bio_cs,
+      bio_de,
+      bio_uk,
       tattoo_percentage,
       tattoo_description,
       piercing,
@@ -71,10 +74,10 @@ export async function POST(request: NextRequest) {
       sql: `
         INSERT INTO girls (
           name, slug, email, phone, age, nationality, height, weight,
-          bust, hair, eyes, color, status, services, bio,
+          bust, hair, eyes, color, status, services, bio, bio_cs, bio_de, bio_uk,
           tattoo_percentage, tattoo_description, piercing, piercing_description, languages,
           is_new, is_top, is_featured, featured_section, badge_type
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         name,
@@ -91,6 +94,9 @@ export async function POST(request: NextRequest) {
         color || 'rose',
         services ? JSON.stringify(services) : null,
         bio || null,
+        bio_cs || null,
+        bio_de || null,
+        bio_uk || null,
         tattoo_percentage || 0,
         tattoo_description || null,
         piercing ? 1 : 0,

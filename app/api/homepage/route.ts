@@ -41,16 +41,17 @@ export async function GET() {
       activitiesResult,
       reviewsResult
     ] = await Promise.all([
-      // 1. Girls
+      // 1. Girls (load more to ensure new girls are included)
       db.execute({
         sql: `
           SELECT
             g.id, g.name, g.slug, g.age, g.height, g.weight, g.bust,
-            g.online, g.status, g.color, g.location, g.is_new, g.badge_type
+            g.online, g.status, g.color, g.location, g.is_new, g.badge_type,
+            g.created_at
           FROM girls g
           WHERE g.status = 'active'
           ORDER BY g.is_new DESC, g.online DESC, g.rating DESC
-          LIMIT 5
+          LIMIT 20
         `,
         args: []
       }),
@@ -183,10 +184,15 @@ export async function GET() {
         }
       }
 
+      // Check if girl is new (created within last 14 days)
+      const createdAt = new Date(girl.created_at);
+      const daysSinceCreated = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+      const isActuallyNew = girl.is_new && daysSinceCreated <= 14;
+
       return {
         ...girl,
         online: Boolean(girl.online),
-        is_new: Boolean(girl.is_new),
+        is_new: isActuallyNew,
         primary_photo: photo?.url || null,
         thumbnail: photo?.thumbnail_url || null,
         schedule_status: scheduleStatus,
@@ -195,18 +201,22 @@ export async function GET() {
       };
     });
 
+    // New girls section - all girls with is_new = true (ALWAYS show, regardless of schedule)
+    const newGirls = girlsWithData.filter((g: any) => g.is_new);
+
     // Filter out ONLY girls whose shift has ended (keep working, later, and null status)
     // This ensures homepage always shows available girls or those without schedule
     const activeGirls = girlsWithData.filter((g: any) => g.schedule_status !== 'finished');
 
-    // Featured girl (first NEW girl from active girls)
-    const featuredGirl = activeGirls.find((g: any) => g.is_new) || null;
+    // Featured girl (first NEW girl, prefer from active girls, fallback to any new girl)
+    const featuredGirl = activeGirls.find((g: any) => g.is_new) || newGirls[0] || null;
 
     // Prepare response data
     const responseData = {
       success: true,
       girls: activeGirls.slice(0, 4), // Only 4 for grid, excluding finished shifts
       featuredGirl,
+      newGirls, // Add new girls array
       locations: locationsResult.rows,
       stories: Object.values(storiesByGirl),
       activities: activitiesResult.rows,

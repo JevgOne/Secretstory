@@ -10,6 +10,7 @@ interface Review {
   girl_name: string;
   author_name: string;
   author_email?: string;
+  ip_address?: string;
   rating: number;
   title?: string;
   content: string;
@@ -216,6 +217,9 @@ export default function AdminReviewsPage() {
                       {review.author_email && (
                         <div className="author-email">{review.author_email}</div>
                       )}
+                      {review.ip_address && (
+                        <div className="author-ip">IP: {review.ip_address}</div>
+                      )}
                     </div>
                   </div>
                   <div className="review-girl">
@@ -393,6 +397,17 @@ export default function AdminReviewsPage() {
         .author-email {
           font-size: 0.85rem;
           color: #9ca3af;
+        }
+
+        .author-ip {
+          font-size: 0.75rem;
+          color: #6b7280;
+          font-family: monospace;
+          background: rgba(107, 114, 128, 0.1);
+          padding: 2px 6px;
+          border-radius: 4px;
+          display: inline-block;
+          margin-top: 4px;
         }
 
         .review-girl {

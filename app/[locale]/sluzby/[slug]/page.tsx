@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { getServiceBySlug, SERVICES } from '@/lib/services-data';
-import ReactMarkdown from 'react-markdown';
+import { parseMarkdown } from '@/lib/markdown';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
 import { useLocations } from '@/lib/hooks/useLocations';
@@ -119,7 +119,7 @@ export default function ServicePage() {
           <div className="container">
             <div className="content-grid">
               <div className="main-content">
-                <ReactMarkdown>{serviceContent}</ReactMarkdown>
+                {parseMarkdown(serviceContent)}
               </div>
 
               <aside className="sidebar">

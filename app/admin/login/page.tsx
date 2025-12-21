@@ -41,6 +41,13 @@ export default function AdminLoginPage() {
         return;
       }
 
+      // Get user data and save to localStorage
+      const userResponse = await fetch('/api/auth/user');
+      if (userResponse.ok) {
+        const userData = await userResponse.json();
+        localStorage.setItem('userId', userData.userId.toString());
+      }
+
       // Success - redirect to admin dashboard
       router.push('/admin/dashboard');
       router.refresh();

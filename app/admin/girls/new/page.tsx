@@ -25,12 +25,15 @@ export default function NewGirlPage() {
     hair: 'Blond',
     eyes: 'Modré',
     bio: '',
+    bio_cs: '',
+    bio_de: '',
+    bio_uk: '',
     tattoo_percentage: '0',
     tattoo_description: '',
     piercing: false,
     piercing_description: '',
     languages: ['cs'],
-    services: [] as string[],
+    services: basicServices.map(s => s.id),
     is_new: false,
     is_top: false,
     is_featured: false,
@@ -445,12 +448,39 @@ export default function NewGirlPage() {
         <div className="form-section">
           <h2 className="section-title">Popis profilu</h2>
           <div className="form-group">
-            <label>Bio</label>
+            <label>Bio EN (English)</label>
             <textarea
               value={formData.bio}
               onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-              rows={8}
-              placeholder="Popis dívky, její osobnost, co nabízí..."
+              rows={6}
+              placeholder="Profile description in English..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Bio CS (Čeština)</label>
+            <textarea
+              value={formData.bio_cs}
+              onChange={(e) => setFormData({ ...formData, bio_cs: e.target.value })}
+              rows={6}
+              placeholder="Popis profilu v češtině..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Bio DE (Deutsch)</label>
+            <textarea
+              value={formData.bio_de}
+              onChange={(e) => setFormData({ ...formData, bio_de: e.target.value })}
+              rows={6}
+              placeholder="Profilbeschreibung auf Deutsch..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Bio UK (Українська)</label>
+            <textarea
+              value={formData.bio_uk}
+              onChange={(e) => setFormData({ ...formData, bio_uk: e.target.value })}
+              rows={6}
+              placeholder="Опис профілю українською..."
             />
           </div>
         </div>

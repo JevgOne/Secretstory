@@ -8,7 +8,14 @@
     "success": "Success",
     "photo": "Photo",
     "profile": "Profile",
-    "asian": "Asian"
+    "asian": "Asian",
+    "languages": {
+      "cs": "Czech",
+      "en": "English",
+      "de": "German",
+      "uk": "Ukrainian",
+      "ru": "Russian"
+    }
   },
   "home": {
     "age_modal_title": "18+",
@@ -176,11 +183,22 @@
     "back_to_list": "Back to list",
     "main_photo_video": "Main photo/video",
     "working_today_title": "Also Working Today",
-    "working_today_subtitle": "Other girls available on the same day"
+    "working_today_subtitle": "Other girls available on the same day",
+    "stats": {
+      "verified": "Verified",
+      "reviews_count": "{count} reviews"
+    },
+    "availability": {
+      "available_today": "Available today",
+      "book_now": "Book now"
+    }
   },
   "register": {
     "title": "Register as a New Girl",
     "step_of": "Step {step} of {total}",
+    "step_1": "Personal Info",
+    "step_2": "Profile Details",
+    "step_3": "Completion",
     "personal_info": "Personal Information",
     "profile_info": "Profile Information",
     "completion": "Complete Registration",
@@ -317,7 +335,15 @@
     "no_girls": "No girls available today",
     "closed_today": "We're closed for today. Come back tomorrow!",
     "today": "Today",
-    "weekly_schedule": "Weekly Schedule",    "status": {
+    "weekly_schedule": "Weekly Schedule",
+    "filters": {
+      "all_girls": "All girls"
+    },
+    "booking": {
+      "duration": "Duration",
+      "total_price": "Total price"
+    },
+    "status": {
       "online": "Online",
       "available_from": "From {time}",
       "not_available": "Off"

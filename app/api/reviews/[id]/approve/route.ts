@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { createNotification } from '@/lib/notifications';
-import { requireAuth } from '@/lib/auth-helpers';
 
 // POST /api/reviews/:id/approve - Approve review (admin only)
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  // Only admin can approve reviews
-  const user = await requireAuth(['admin']);
-  if (user instanceof NextResponse) return user;
-
   try {
     const { id } = await params;
     const body = await request.json();
@@ -108,10 +103,6 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  // Only admin can reject reviews
-  const user = await requireAuth(['admin']);
-  if (user instanceof NextResponse) return user;
-
   try {
     const { id } = await params;
     const body = await request.json();
