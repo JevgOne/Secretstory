@@ -9,6 +9,7 @@ interface Review {
   girl_id: number;
   girl_name?: string;
   girl_slug?: string;
+  girl_photo?: string;
   author_name: string;
   rating: number;
   title?: string;
@@ -106,30 +107,47 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
                 e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
               }}
             >
-              {/* Girl name at the top */}
+              {/* Girl name with photo at the top */}
               {review.girl_name && (
                 <Link
                   href={`/${locale}/profily/${review.girl_slug}`}
                   style={{
-                    display: 'block',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
                     marginBottom: '16px',
                     textDecoration: 'none'
                   }}
                 >
-                  <div style={{
-                    fontSize: '18px',
-                    fontWeight: '700',
-                    color: '#fff',
-                    marginBottom: '4px'
-                  }}>
-                    {review.girl_name}
-                  </div>
-                  <div style={{
-                    fontSize: '12px',
-                    color: '#d4af37',
-                    fontWeight: '500'
-                  }}>
-                    Zobrazit profil →
+                  {review.girl_photo && (
+                    <img
+                      src={review.girl_photo}
+                      alt={review.girl_name}
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        border: '2px solid var(--wine)'
+                      }}
+                    />
+                  )}
+                  <div>
+                    <div style={{
+                      fontSize: '18px',
+                      fontWeight: '700',
+                      color: '#fff',
+                      marginBottom: '4px'
+                    }}>
+                      {review.girl_name}
+                    </div>
+                    <div style={{
+                      fontSize: '12px',
+                      color: 'var(--wine)',
+                      fontWeight: '500'
+                    }}>
+                      Zobrazit profil →
+                    </div>
                   </div>
                 </Link>
               )}

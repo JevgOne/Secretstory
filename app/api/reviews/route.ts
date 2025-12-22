@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
         r.*,
         g.name as girl_name,
         g.slug as girl_slug,
-        g.color as girl_color
+        g.color as girl_color,
+        (SELECT url FROM girl_photos WHERE girl_id = g.id AND is_primary = 1 LIMIT 1) as girl_photo
       FROM reviews r
       LEFT JOIN girls g ON r.girl_id = g.id
       WHERE 1=1
