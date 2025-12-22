@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
+import { VIBE_OPTIONS, TAG_OPTIONS } from '@/lib/review-constants';
 
 interface Review {
   id: number;
@@ -16,6 +17,8 @@ interface Review {
   content: string;
   created_at: string;
   status: string;
+  vibe?: string;
+  tags?: string;
 }
 
 interface ReviewsSectionProps {
@@ -200,6 +203,7 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
                 color: '#e5e7eb',
                 fontSize: '14px',
                 lineHeight: '1.6',
+                marginBottom: '12px',
                 display: '-webkit-box',
                 WebkitLineClamp: 4,
                 WebkitBoxOrient: 'vertical',
@@ -207,6 +211,49 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
               }}>
                 {review.content}
               </p>
+
+              {/* Vibe and Tags */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+                {/* Vibe emoji */}
+                {review.vibe && VIBE_OPTIONS[review.vibe as keyof typeof VIBE_OPTIONS] && (
+                  <div style={{
+                    fontSize: '20px',
+                    padding: '4px 8px',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '6px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    {VIBE_OPTIONS[review.vibe as keyof typeof VIBE_OPTIONS].emoji}
+                  </div>
+                )}
+
+                {/* Tags */}
+                {review.tags && JSON.parse(review.tags).map((tagId: string) => {
+                  const tag = TAG_OPTIONS[tagId as keyof typeof TAG_OPTIONS];
+                  if (!tag) return null;
+                  return (
+                    <span
+                      key={tagId}
+                      style={{
+                        fontSize: '12px',
+                        padding: '4px 10px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '12px',
+                        color: '#9ca3af',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <span>{tag.emoji}</span>
+                      <span>{tag.label_cs}</span>
+                    </span>
+                  );
+                })}
+              </div>
             </div>
           ))}
         </div>
