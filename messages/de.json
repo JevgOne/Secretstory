@@ -350,7 +350,14 @@
       "thursday": "Donnerstag",
       "friday": "Freitag",
       "saturday": "Samstag",
-      "sunday": "Sonntag"
+      "sunday": "Sonntag",
+      "mon": "Mo",
+      "tue": "Di",
+      "wed": "Mi",
+      "thu": "Do",
+      "fri": "Fr",
+      "sat": "Sa",
+      "sun": "So"
     },
     "filters": {
       "all_girls": "Alle Mädchen"

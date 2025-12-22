@@ -59,11 +59,25 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
   // Generate next 7 days starting from today
   const getDays = () => {
     const days = [];
+    const dayNames = [
+      t('days.mon'),
+      t('days.tue'),
+      t('days.wed'),
+      t('days.thu'),
+      t('days.fri'),
+      t('days.sat'),
+      t('days.sun')
+    ];
+
     for (let i = 0; i < 7; i++) {
       const date = new Date();
       date.setDate(date.getDate() + i);
+      const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+      const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Convert to Monday = 0, Sunday = 6
+
       days.push({
         index: i,
+        dayName: dayNames[dayIndex],
         dayNum: date.getDate(),
         date: date,
         isToday: i === 0
@@ -145,11 +159,11 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
               className={`date-tab ${selectedDate === day.index ? 'active' : ''}`}
               onClick={() => setSelectedDate(day.index)}
             >
-              {day.isToday && <span className="date-day" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888' }}>DNES</span>}
+              <span className="date-day">{day.dayName}</span>
               <div className="date-num-box">
                 <span className="date-num">{day.dayNum}</span>
               </div>
-              {day.isToday && <span className="today-label">DNES</span>}
+              {day.isToday && <span className="today-label" style={{ color: 'var(--wine)', fontWeight: '600' }}>DNES</span>}
             </button>
           ))}
         </div>
