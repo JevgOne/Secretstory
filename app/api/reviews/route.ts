@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
       SELECT
         r.*,
         g.name as girl_name,
+        g.slug as girl_slug,
         g.color as girl_color
       FROM reviews r
       LEFT JOIN girls g ON r.girl_id = g.id

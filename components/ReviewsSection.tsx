@@ -106,6 +106,34 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
                 e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
               }}
             >
+              {/* Girl name at the top */}
+              {review.girl_name && (
+                <Link
+                  href={`/${locale}/profily/${review.girl_slug}`}
+                  style={{
+                    display: 'block',
+                    marginBottom: '16px',
+                    textDecoration: 'none'
+                  }}
+                >
+                  <div style={{
+                    fontSize: '18px',
+                    fontWeight: '700',
+                    color: '#fff',
+                    marginBottom: '4px'
+                  }}>
+                    {review.girl_name}
+                  </div>
+                  <div style={{
+                    fontSize: '12px',
+                    color: '#d4af37',
+                    fontWeight: '500'
+                  }}>
+                    Zobrazit profil →
+                  </div>
+                </Link>
+              )}
+
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <div style={{
@@ -154,7 +182,6 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
                 color: '#e5e7eb',
                 fontSize: '14px',
                 lineHeight: '1.6',
-                marginBottom: '12px',
                 display: '-webkit-box',
                 WebkitLineClamp: 4,
                 WebkitBoxOrient: 'vertical',
@@ -162,23 +189,6 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
               }}>
                 {review.content}
               </p>
-
-              {review.girl_slug && (
-                <Link
-                  href={`/${locale}/profily/${review.girl_slug}`}
-                  style={{
-                    color: '#d4af37',
-                    fontSize: '13px',
-                    textDecoration: 'none',
-                    fontWeight: '500',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                >
-                  Profil {review.girl_name} →
-                </Link>
-              )}
             </div>
           ))}
         </div>
