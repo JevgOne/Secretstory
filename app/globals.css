@@ -7108,6 +7108,19 @@ body > div > button[title*="Next"],
   font-size: 1.2rem;
 }
 
+.age-verification-legal-notice {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.age-verification-legal-notice p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
 .age-verification-button {
   width: 100%;
   padding: 1rem 2rem;

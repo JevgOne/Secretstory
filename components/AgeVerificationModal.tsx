@@ -42,6 +42,10 @@ export default function AgeVerificationModal() {
               <li>{t('term_5')}</li>
             </ul>
           </div>
+
+          <div className="age-verification-legal-notice">
+            <p>{t('legal_notice')}</p>
+          </div>
         </div>
 
         <button
