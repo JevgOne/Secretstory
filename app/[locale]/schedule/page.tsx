@@ -199,7 +199,7 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
                     textTransform: 'uppercase',
                     letterSpacing: '0.5px'
                   }}>
-                    DNES
+                    {t('days.today_short').toUpperCase()}
                   </span>
                   <span style={{
                     fontSize: '32px',
