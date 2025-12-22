@@ -56,32 +56,17 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
     return 3;
   };
 
-  // Generate days from today until end of week (Sunday)
+  // Generate next 7 days starting from today
   const getDays = () => {
     const days = [];
-    const dayNames = [t('days.mon'), t('days.tue'), t('days.wed'), t('days.thu'), t('days.fri'), t('days.sat'), t('days.sun')];
-
-    const today = new Date();
-    const currentDayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-
-    // Convert to our format: 0 = Monday, 6 = Sunday
-    const currentDay = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
-
-    // Calculate how many days until Sunday
-    const daysUntilSunday = 6 - currentDay;
-
-    // Generate days from today to Sunday
-    for (let i = 0; i <= daysUntilSunday; i++) {
+    for (let i = 0; i < 7; i++) {
       const date = new Date();
       date.setDate(date.getDate() + i);
-      const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1;
-
       days.push({
         index: i,
-        dayName: i === 0 ? t('days.today_short') : dayNames[dayOfWeek],
         dayNum: date.getDate(),
         date: date,
-        available: 0 // Number of girls available - will be updated later
+        isToday: i === 0
       });
     }
     return days;
@@ -145,14 +130,8 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
         </div>
       </nav>
 
-      {/* Page Header */}
-      <section className="page-header">
-        <h1 className="page-title">{t('title')}</h1>
-        <p className="page-subtitle">{t('subtitle')}</p>
-      </section>
-
-      {/* Date Selector */}
-      <section className="date-selector">
+      {/* Date Selector - Clean version without page header */}
+      <section className="date-selector" style={{ marginTop: '4rem' }}>
         <button className="nav-arrow">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/>
@@ -163,21 +142,14 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
           {getDays().map((day) => (
             <button
               key={day.index}
-              className={`date-tab ${selectedDate === day.index ? 'active' : ''} ${day.index === 0 ? 'today' : ''}`}
+              className={`date-tab ${selectedDate === day.index ? 'active' : ''}`}
               onClick={() => setSelectedDate(day.index)}
             >
-              <span className="date-day">{day.dayName}</span>
+              {day.isToday && <span className="date-day" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888' }}>DNES</span>}
               <div className="date-num-box">
                 <span className="date-num">{day.dayNum}</span>
-                {day.available > 0 && (
-                  <div className="availability-dots">
-                    {[...Array(Math.min(day.available, 3))].map((_, i) => (
-                      <span key={i} className="availability-dot"></span>
-                    ))}
-                  </div>
-                )}
               </div>
-              {day.index === 0 && <span className="today-label">{t('today')}</span>}
+              {day.isToday && <span className="today-label">DNES</span>}
             </button>
           ))}
         </div>
@@ -188,6 +160,34 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
           </svg>
         </button>
       </section>
+
+      {/* No girls available message */}
+      {!loading && !error && girls.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--gray)' }}>
+          <p>Dnes už máme zavřeno. Přijďte zítra!</p>
+        </div>
+      )}
+
+      {/* Availability legend */}
+      {!loading && !error && girls.length > 0 && (
+        <div style={{
+          textAlign: 'center',
+          padding: '1rem',
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '2rem',
+          fontSize: '0.9rem'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', display: 'inline-block' }}></span>
+            <span style={{ color: 'var(--gray)' }}>Právě k dispozici</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#6b7280', display: 'inline-block' }}></span>
+            <span style={{ color: 'var(--gray)' }}>Později / Volno</span>
+          </div>
+        </div>
+      )}
 
       {/* Schedule Grid */}
       <section className="schedule">
