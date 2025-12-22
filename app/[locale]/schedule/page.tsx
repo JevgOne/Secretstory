@@ -80,7 +80,8 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
         index: i,
         dayName: i === 0 ? t('days.today_short') : dayNames[dayOfWeek],
         dayNum: date.getDate(),
-        date: date
+        date: date,
+        available: 0 // Number of girls available - will be updated later
       });
     }
     return days;
