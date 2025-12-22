@@ -354,22 +354,38 @@ function EditSEOForm() {
             </div>
 
             {formData.og_image && (
-              <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>
-                <div style={{ fontSize: '0.85rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Preview:</div>
-                <img
-                  src={formData.og_image}
-                  alt="OG Image Preview"
-                  style={{
-                    width: '100%',
-                    maxWidth: '600px',
-                    height: 'auto',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
+              <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0, 0, 0, 0.3)', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                <div style={{ fontSize: '0.85rem', color: '#9ca3af', marginBottom: '0.75rem', fontWeight: '600' }}>Preview:</div>
+                <div style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  padding: '1rem',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  minHeight: '200px'
+                }}>
+                  <img
+                    src={formData.og_image}
+                    alt="OG Image Preview"
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '400px',
+                      height: 'auto',
+                      borderRadius: '8px',
+                      border: '2px solid rgba(255, 255, 255, 0.2)',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+                    }}
+                    onError={(e) => {
+                      const img = e.target as HTMLImageElement;
+                      img.style.display = 'none';
+                      const parent = img.parentElement;
+                      if (parent) {
+                        parent.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 2rem;">❌ Nepodařilo se načíst obrázek</div>';
+                      }
+                    }}
+                  />
+                </div>
               </div>
             )}
           </div>
