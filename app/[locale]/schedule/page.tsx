@@ -148,14 +148,15 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
       {/* Date Selector - Clean minimal design */}
       <section style={{
         maxWidth: '1200px',
-        margin: '80px auto 0',
+        margin: '120px auto 0',
         padding: '0 24px'
       }}>
         <div style={{
           display: 'flex',
           gap: '16px',
           justifyContent: 'center',
-          marginBottom: '48px'
+          marginBottom: '48px',
+          flexWrap: 'wrap'
         }}>
           {getDays().map((day) => (
             <button
@@ -169,7 +170,7 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
                   ? '2px solid var(--wine)'
                   : '1px solid rgba(139, 58, 74, 0.2)',
                 borderRadius: '12px',
-                padding: '12px 16px',
+                padding: day.index === 0 ? '8px 16px' : '12px 16px',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 display: 'flex',
@@ -189,30 +190,61 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
                 }
               }}
             >
-              {day.index === 0 && (
+              {day.index === 0 ? (
+                <>
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    color: 'var(--wine)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    DNES
+                  </span>
+                  <span style={{
+                    fontSize: '32px',
+                    fontWeight: '700',
+                    color: '#fff',
+                    lineHeight: '1'
+                  }}>
+                    {day.dayNum}
+                  </span>
+                </>
+              ) : (
                 <span style={{
-                  fontSize: '11px',
+                  fontSize: '32px',
                   fontWeight: '700',
-                  color: 'var(--wine)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                  marginBottom: '4px'
+                  color: '#fff',
+                  lineHeight: '1'
                 }}>
-                  DNES
+                  {day.dayNum}
                 </span>
               )}
-              <span style={{
-                fontSize: '32px',
-                fontWeight: '700',
-                color: '#fff',
-                lineHeight: '1'
-              }}>
-                {day.dayNum}
-              </span>
             </button>
           ))}
         </div>
       </section>
+
+      <style jsx>{`
+        @media (max-width: 768px) {
+          section {
+            margin: 80px auto 0 !important;
+          }
+          section > div {
+            gap: 8px !important;
+          }
+          section button {
+            min-width: 60px !important;
+            padding: 8px 12px !important;
+          }
+          section button span {
+            font-size: 24px !important;
+          }
+          section button span:first-child {
+            font-size: 9px !important;
+          }
+        }
+      `}</style>
 
       {/* Schedule Grid */}
       <section className="schedule">
