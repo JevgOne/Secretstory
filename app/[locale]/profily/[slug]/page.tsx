@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Head from "next/head";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -132,6 +133,11 @@ interface Girl {
   tattoo_description?: string;
   piercing?: boolean;
   piercing_description?: string;
+  meta_title?: string;
+  meta_description?: string;
+  og_title?: string;
+  og_description?: string;
+  og_image?: string;
   languages?: string; // JSON array: ["cs", "en", "de", "uk"]
   is_new?: boolean;
   is_top?: boolean;
@@ -341,6 +347,25 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
   return (
     <>
+      <Head>
+        <title>{profile.meta_title || `${profile.name}, ${profile.age} | LovelyGirls`}</title>
+        <meta name="description" content={profile.meta_description || `${profile.name} - ${profile.age} let, ${profile.nationality}. ${profile.bio || ''}`} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="profile" />
+        <meta property="og:title" content={profile.og_title || profile.meta_title || `${profile.name}, ${profile.age} | LovelyGirls`} />
+        <meta property="og:description" content={profile.og_description || profile.meta_description || `${profile.name} - ${profile.age} let, ${profile.nationality}.`} />
+        {profile.og_image && <meta property="og:image" content={profile.og_image} />}
+        {!profile.og_image && profile.photos && profile.photos[0] && (
+          <meta property="og:image" content={profile.photos[0].url} />
+        )}
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={profile.og_title || profile.meta_title || `${profile.name}, ${profile.age} | LovelyGirls`} />
+        <meta name="twitter:description" content={profile.og_description || profile.meta_description || `${profile.name} - ${profile.age} let, ${profile.nationality}.`} />
+      </Head>
+
       <PersonSchema girl={profile} locale={locale} />
       <BreadcrumbSchema items={breadcrumbItems} />
 

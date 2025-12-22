@@ -61,6 +61,11 @@ export async function GET(
           piercing,
           piercing_description,
           languages,
+          meta_title,
+          meta_description,
+          og_title,
+          og_description,
+          og_image,
           created_at,
           updated_at
         FROM girls
