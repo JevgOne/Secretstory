@@ -85,6 +85,11 @@ export default function BigFooter() {
             <Link href={`/${locale}/soukromi`}>{tFooter('privacy')}</Link>
           </div>
         </div>
+
+        {/* Legal Disclaimer */}
+        <div className="footer-disclaimer">
+          <p>{tFooter('disclaimer')}</p>
+        </div>
       </div>
     </footer>
   );

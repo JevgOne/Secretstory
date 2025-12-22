@@ -985,6 +985,21 @@ footer {
     color: var(--white);
 }
 
+.footer-disclaimer {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+}
+
+.footer-disclaimer p {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.35);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 /* Footer Responsive */
 @media (max-width: 968px) {
     .footer-main {
