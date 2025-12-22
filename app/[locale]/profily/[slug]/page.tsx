@@ -125,6 +125,9 @@ interface Girl {
   services: string[];
   hashtags?: string[]; // Array of hashtag IDs
   bio: string;
+  bio_cs?: string;
+  bio_de?: string;
+  bio_uk?: string;
   tattoo_percentage?: number;
   tattoo_description?: string;
   piercing?: boolean;
@@ -693,7 +696,17 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               <div className="about-me-card">
                 <div className="about-me-content">
                   <p className="profile-description">
-                    {profile.bio || t('profile.default_bio', { name: profile.name, age: profile.age })}
+                    {(() => {
+                      // Select bio based on current locale with fallback
+                      const bioMap: Record<string, string | undefined> = {
+                        cs: profile.bio_cs || profile.bio,
+                        en: profile.bio || profile.bio_cs,
+                        de: profile.bio_de || profile.bio_cs || profile.bio,
+                        uk: profile.bio_uk || profile.bio_cs || profile.bio
+                      };
+                      const localeBio = bioMap[locale] || profile.bio;
+                      return localeBio || t('profile.default_bio', { name: profile.name, age: profile.age });
+                    })()}
                   </p>
                 </div>
               </div>
