@@ -9,6 +9,8 @@ export default function NewGirlPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [photos, setPhotos] = useState<Array<{file: File, preview: string}>>([]);
+  const [videos, setVideos] = useState<Array<{file: File, preview: string}>>([]);
 
   const basicServices = getBasicServices();
   const extraServices = getExtraServices();
@@ -77,6 +79,7 @@ export default function NewGirlPage() {
     try {
       const autoColor = await getAutoColor(); // Get sequential color
 
+      // Step 1: Create girl profile
       const response = await fetch('/api/admin/girls', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -93,11 +96,42 @@ export default function NewGirlPage() {
 
       const data = await response.json();
 
-      if (data.success) {
-        router.push(`/admin/girls`);
-      } else {
+      if (!data.success) {
         setError(data.error || 'Chyba při vytváření profilu');
+        setLoading(false);
+        return;
       }
+
+      const girlId = data.girl_id;
+
+      // Step 2: Upload photos if any
+      if (photos.length > 0) {
+        for (const photo of photos) {
+          const formData = new FormData();
+          formData.append('file', photo.file);
+
+          try {
+            const photoResponse = await fetch(`/api/admin/girls/${girlId}/photos`, {
+              method: 'POST',
+              body: formData
+            });
+
+            if (!photoResponse.ok) {
+              console.error(`Failed to upload photo: ${photo.file.name}`);
+            }
+          } catch (error) {
+            console.error(`Error uploading photo: ${photo.file.name}`, error);
+          }
+        }
+      }
+
+      // Step 3: Upload videos if any
+      if (videos.length > 0) {
+        // Video upload will be implemented later
+        console.log('Video upload not yet implemented');
+      }
+
+      router.push(`/admin/girls`);
     } catch (err) {
       console.error('Error creating girl:', err);
       setError('Chyba při vytváření profilu');
@@ -132,6 +166,50 @@ export default function NewGirlPage() {
         services: [...formData.services, serviceId]
       });
     }
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach(file => {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setPhotos(prev => [...prev, {
+            file,
+            preview: event.target?.result as string
+          }]);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach(file => {
+      if (file.type.startsWith('video/')) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setVideos(prev => [...prev, {
+            file,
+            preview: event.target?.result as string
+          }]);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeVideo = (index: number) => {
+    setVideos(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -400,48 +478,192 @@ export default function NewGirlPage() {
 
         <div className="form-section">
           <h2 className="section-title">Fotky & Videa</h2>
-          <p style={{ color: 'var(--gray)', marginBottom: '1rem', fontSize: '0.9rem' }}>
-            ⚠️ Upload fotek a videí bude dostupný po implementaci backend API
-          </p>
 
           <div style={{ marginBottom: '1.5rem' }}>
             <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.75rem', color: 'var(--white)' }}>
               📸 Fotky
             </h3>
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '2px dashed rgba(255, 255, 255, 0.1)',
-              borderRadius: '12px',
-              padding: '3rem 2rem',
-              textAlign: 'center',
-              color: 'var(--gray)',
-              opacity: 0.5,
-              cursor: 'not-allowed'
-            }}>
+
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handlePhotoUpload}
+              style={{ display: 'none' }}
+              id="photo-upload"
+            />
+
+            <label
+              htmlFor="photo-upload"
+              style={{
+                display: 'block',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '2px dashed rgba(255, 255, 255, 0.1)',
+                borderRadius: '12px',
+                padding: '3rem 2rem',
+                textAlign: 'center',
+                color: 'var(--gray)',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                marginBottom: '1rem'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.borderColor = 'var(--wine)';
+                e.currentTarget.style.background = 'rgba(139, 41, 66, 0.1)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+              }}
+            >
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📷</div>
               <div>Přetáhněte fotky sem nebo klikněte pro výběr</div>
-              <div style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>(Backend API zatím není k dispozici)</div>
-            </div>
+              <div style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>
+                {photos.length} {photos.length === 1 ? 'fotka' : photos.length < 5 ? 'fotky' : 'fotek'} nahráno
+              </div>
+            </label>
+
+            {photos.length > 0 && (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+                gap: '1rem'
+              }}>
+                {photos.map((photo, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      position: 'relative',
+                      aspectRatio: '3/4',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: '#1a1416'
+                    }}
+                  >
+                    <img
+                      src={photo.preview}
+                      alt={`Photo ${index + 1}`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(index)}
+                      style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        background: 'rgba(239, 68, 68, 0.9)',
+                        border: 'none',
+                        borderRadius: '6px',
+                        padding: '6px 10px',
+                        color: 'white',
+                        fontSize: '0.7rem',
+                        cursor: 'pointer',
+                        fontWeight: '600'
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
             <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.75rem', color: 'var(--white)' }}>
               🎥 Videa
             </h3>
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '2px dashed rgba(255, 255, 255, 0.1)',
-              borderRadius: '12px',
-              padding: '3rem 2rem',
-              textAlign: 'center',
-              color: 'var(--gray)',
-              opacity: 0.5,
-              cursor: 'not-allowed'
-            }}>
+
+            <input
+              type="file"
+              accept="video/*"
+              multiple
+              onChange={handleVideoUpload}
+              style={{ display: 'none' }}
+              id="video-upload"
+            />
+
+            <label
+              htmlFor="video-upload"
+              style={{
+                display: 'block',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '2px dashed rgba(255, 255, 255, 0.1)',
+                borderRadius: '12px',
+                padding: '3rem 2rem',
+                textAlign: 'center',
+                color: 'var(--gray)',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                marginBottom: '1rem'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.borderColor = 'var(--wine)';
+                e.currentTarget.style.background = 'rgba(139, 41, 66, 0.1)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+              }}
+            >
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎬</div>
               <div>Přetáhněte videa sem nebo klikněte pro výběr</div>
-              <div style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>(Backend API zatím není k dispozici)</div>
-            </div>
+              <div style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>
+                {videos.length} {videos.length === 1 ? 'video' : videos.length < 5 ? 'videa' : 'videí'} nahráno
+              </div>
+            </label>
+
+            {videos.length > 0 && (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gap: '1rem'
+              }}>
+                {videos.map((video, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      position: 'relative',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: '#1a1416',
+                      padding: '1rem'
+                    }}
+                  >
+                    <div style={{ color: 'var(--white)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                      🎬 Video {index + 1}
+                    </div>
+                    <div style={{ color: 'var(--gray)', fontSize: '0.8rem', marginBottom: '1rem' }}>
+                      {video.file.name}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeVideo(index)}
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.2)',
+                        border: '1px solid rgba(239, 68, 68, 0.5)',
+                        borderRadius: '6px',
+                        padding: '8px 16px',
+                        color: '#ef4444',
+                        fontSize: '0.85rem',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        width: '100%'
+                      }}
+                    >
+                      Odstranit
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
