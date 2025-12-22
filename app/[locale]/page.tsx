@@ -385,8 +385,8 @@ export default function Home() {
       <section style={{ padding: '4rem 0', background: 'rgba(139, 41, 66, 0.03)' }}>
         <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <h2 className="section-title">Populární vyhledávání</h2>
-            <p className="section-subtitle">Najděte holky podle vašich preferencí</p>
+            <h2 className="section-title">{tHome('popular_searches_title')}</h2>
+            <p className="section-subtitle">{tHome('popular_searches_subtitle')}</p>
           </div>
           <div className="hashtags" style={{ justifyContent: 'center' }}>
             {HASHTAGS.map((hashtag) => (

@@ -77,7 +77,14 @@
     "cta_whatsapp": "WhatsApp",
     "cta_telegram": "Telegram",
     "cta_call": "Anrufen",
-    "default_location": "Prag 2"
+    "default_location": "Prag 2",
+    "stories_title": "Stories",
+    "stories_subtitle": "Neue Momente unserer Models",
+    "reviews_title": "Was unsere Kunden sagen",
+    "reviews_subtitle": "Verifizierte Bewertungen von echten Kunden",
+    "reviews_all": "Alle Bewertungen",
+    "popular_searches_title": "Beliebte Suchbegriffe",
+    "popular_searches_subtitle": "Finden Sie Mädchen nach Ihren Vorlieben"
   },
   "nav": {
     "home": "Home",

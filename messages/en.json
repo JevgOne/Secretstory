@@ -77,7 +77,14 @@
     "cta_whatsapp": "WhatsApp",
     "cta_telegram": "Telegram",
     "cta_call": "Call",
-    "default_location": "Prague 2"
+    "default_location": "Prague 2",
+    "stories_title": "Stories",
+    "stories_subtitle": "New moments from our models",
+    "reviews_title": "What Our Clients Say",
+    "reviews_subtitle": "Verified reviews from real customers",
+    "reviews_all": "All reviews",
+    "popular_searches_title": "Popular Searches",
+    "popular_searches_subtitle": "Find girls by your preferences"
   },
   "nav": {
     "home": "Home",

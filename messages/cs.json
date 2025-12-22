@@ -77,7 +77,14 @@
     "cta_whatsapp": "WhatsApp",
     "cta_telegram": "Telegram",
     "cta_call": "Zavolat",
-    "default_location": "Praha 2"
+    "default_location": "Praha 2",
+    "stories_title": "Stories",
+    "stories_subtitle": "Nové momenty našich modelek",
+    "reviews_title": "Co říkají naši klienti",
+    "reviews_subtitle": "Ověřené recenze od skutečných zákazníků",
+    "reviews_all": "Všechny recenze",
+    "popular_searches_title": "Populární vyhledávání",
+    "popular_searches_subtitle": "Najděte holky podle vašich preferencí"
   },
   "nav": {
     "home": "Domů",

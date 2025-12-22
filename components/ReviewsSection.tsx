@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { VIBE_OPTIONS, TAG_OPTIONS } from '@/lib/review-constants';
 
 interface Review {
@@ -29,6 +29,7 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [loading, setLoading] = useState(initialReviews.length === 0);
   const locale = useLocale();
+  const t = useTranslations('home');
 
   useEffect(() => {
     // Only fetch if no initial data
@@ -81,8 +82,8 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
     <section style={{ padding: '4rem 0', background: 'rgba(0, 0, 0, 0.2)' }}>
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h2 className="section-title">Co říkají naši klienti</h2>
-          <p className="section-subtitle">Ověřené recenze od skutečných zákazníků</p>
+          <h2 className="section-title">{t('reviews_title')}</h2>
+          <p className="section-subtitle">{t('reviews_subtitle')}</p>
         </div>
 
         <div style={{
@@ -257,7 +258,7 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
               transition: 'all 0.3s ease'
             }}
           >
-            Všechny recenze
+            {t('reviews_all')}
           </Link>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface Story {
   id: number;
@@ -28,6 +28,7 @@ interface StoriesProps {
 export default function Stories({ initialStories = [] }: StoriesProps) {
   const [storiesData, setStoriesData] = useState<GirlStories[]>(initialStories);
   const locale = useLocale();
+  const t = useTranslations('home');
 
   useEffect(() => {
     // Only fetch if no initial data provided
@@ -95,9 +96,9 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
             marginBottom: '0.5rem',
             letterSpacing: '-0.02em'
           }}>
-            Stories
+            {t('stories_title')}
           </h2>
-          <p style={{ color: '#9ca3af', fontSize: '0.9rem' }}>Nové momenty našich modelek</p>
+          <p style={{ color: '#9ca3af', fontSize: '0.9rem' }}>{t('stories_subtitle')}</p>
         </div>
 
         <div style={{

@@ -77,7 +77,14 @@
     "cta_whatsapp": "WhatsApp",
     "cta_telegram": "Telegram",
     "cta_call": "Подзвонити",
-    "default_location": "Прага 2"
+    "default_location": "Прага 2",
+    "stories_title": "Stories",
+    "stories_subtitle": "Нові моменти наших моделей",
+    "reviews_title": "Що кажуть наші клієнти",
+    "reviews_subtitle": "Верифіковані відгуки від справжніх клієнтів",
+    "reviews_all": "Всі відгуки",
+    "popular_searches_title": "Популярні пошуки",
+    "popular_searches_subtitle": "Знайдіть дівчат за вашими уподобаннями"
   },
   "nav": {
     "home": "Головна",
