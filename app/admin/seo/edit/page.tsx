@@ -13,6 +13,7 @@ function EditSEOForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [formData, setFormData] = useState({
     meta_title: '',
     meta_description: '',
@@ -58,6 +59,50 @@ function EditSEOForm() {
 
     loadData();
   }, [pagePath]);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Soubor musí být obrázek');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Velikost souboru nesmí přesáhnout 5MB');
+      return;
+    }
+
+    setUploadingImage(true);
+    setError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/admin/seo/upload-image', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setFormData(prev => ({ ...prev, og_image: data.url }));
+        setSuccess('✅ Obrázek nahrán!');
+        setTimeout(() => setSuccess(''), 3000);
+      } else {
+        setError(data.error || 'Chyba při nahrávání');
+      }
+    } catch (err: any) {
+      setError('Chyba: ' + err.message);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,18 +300,59 @@ function EditSEOForm() {
 
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', color: '#9ca3af' }}>
-              OG Image URL
+              OG Image
             </label>
-            <input
-              type="url"
-              value={formData.og_image}
-              onChange={(e) => setFormData({ ...formData, og_image: e.target.value })}
-              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', color: '#fff' }}
-              placeholder="https://www.eroticreviews.uk/og-image.jpg"
-            />
-            <small style={{ color: '#9ca3af', fontSize: '0.85rem', display: 'block', marginBottom: '0.5rem' }}>
-              Obrázek 1200x630px pro sdílení
+            <small style={{ color: '#9ca3af', fontSize: '0.85rem', display: 'block', marginBottom: '0.75rem' }}>
+              Doporučená velikost: 1200x630px pro optimální sdílení na sociálních sítích
             </small>
+
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={uploadingImage}
+                  style={{ display: 'none' }}
+                  id="og-image-upload"
+                />
+                <label
+                  htmlFor="og-image-upload"
+                  style={{
+                    display: 'inline-block',
+                    padding: '10px 20px',
+                    background: uploadingImage ? '#6b7280' : 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '8px',
+                    color: '#fff',
+                    cursor: uploadingImage ? 'not-allowed' : 'pointer',
+                    fontWeight: '500',
+                    fontSize: '14px'
+                  }}
+                >
+                  {uploadingImage ? 'Nahrávám...' : '📁 Nahrát obrázek'}
+                </label>
+              </div>
+
+              {formData.og_image && (
+                <input
+                  type="url"
+                  value={formData.og_image}
+                  onChange={(e) => setFormData({ ...formData, og_image: e.target.value })}
+                  style={{
+                    flex: 1,
+                    padding: '0.5rem 0.75rem',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '8px',
+                    color: '#9ca3af',
+                    fontSize: '13px'
+                  }}
+                  placeholder="URL obrázku"
+                />
+              )}
+            </div>
+
             {formData.og_image && (
               <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>
                 <div style={{ fontSize: '0.85rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Preview:</div>
