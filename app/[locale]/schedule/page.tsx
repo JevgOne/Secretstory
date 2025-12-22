@@ -145,48 +145,73 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
         </div>
       </nav>
 
-      {/* Page Header */}
-      <section className="page-header">
-        <h1 className="page-title">{t('title')}</h1>
-        <p className="page-subtitle">{t('subtitle')}</p>
-      </section>
-
-      {/* Date Selector */}
-      <section className="date-selector">
-        <button className="nav-arrow">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/>
-          </svg>
-        </button>
-
-        <div className="date-tabs">
+      {/* Date Selector - Clean minimal design */}
+      <section style={{
+        maxWidth: '1200px',
+        margin: '80px auto 0',
+        padding: '0 24px'
+      }}>
+        <div style={{
+          display: 'flex',
+          gap: '16px',
+          justifyContent: 'center',
+          marginBottom: '48px'
+        }}>
           {getDays().map((day) => (
             <button
               key={day.index}
-              className={`date-tab ${selectedDate === day.index ? 'active' : ''} ${day.index === 0 ? 'today' : ''}`}
               onClick={() => setSelectedDate(day.index)}
+              style={{
+                background: selectedDate === day.index
+                  ? 'linear-gradient(135deg, rgba(139, 58, 74, 0.4), rgba(139, 58, 74, 0.2))'
+                  : '#1a1a1a',
+                border: selectedDate === day.index
+                  ? '2px solid var(--wine)'
+                  : '1px solid rgba(139, 58, 74, 0.2)',
+                borderRadius: '12px',
+                padding: '12px 16px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '4px',
+                minWidth: '80px'
+              }}
+              onMouseEnter={(e) => {
+                if (selectedDate !== day.index) {
+                  e.currentTarget.style.borderColor = 'var(--wine)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedDate !== day.index) {
+                  e.currentTarget.style.borderColor = 'rgba(139, 58, 74, 0.2)';
+                }
+              }}
             >
-              <span className="date-day">{day.dayName}</span>
-              <div className="date-num-box">
-                <span className="date-num">{day.dayNum}</span>
-                {day.available > 0 && (
-                  <div className="availability-dots">
-                    {[...Array(Math.min(day.available, 3))].map((_, i) => (
-                      <span key={i} className="availability-dot"></span>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {day.index === 0 && <span className="today-label">{t('today')}</span>}
+              {day.index === 0 && (
+                <span style={{
+                  fontSize: '11px',
+                  fontWeight: '700',
+                  color: 'var(--wine)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                  marginBottom: '4px'
+                }}>
+                  DNES
+                </span>
+              )}
+              <span style={{
+                fontSize: '32px',
+                fontWeight: '700',
+                color: '#fff',
+                lineHeight: '1'
+              }}>
+                {day.dayNum}
+              </span>
             </button>
           ))}
         </div>
-
-        <button className="nav-arrow">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
-          </svg>
-        </button>
       </section>
 
       {/* Schedule Grid */}

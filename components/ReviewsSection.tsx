@@ -156,31 +156,14 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
               )}
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #d4af37, #f4d03f)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#1f1f23',
-                    fontWeight: '700',
-                    fontSize: '16px'
-                  }}>
-                    {review.author_name.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <div style={{ color: '#fff', fontWeight: '600', fontSize: '15px' }}>
-                      {review.author_name}
-                      {review.status === 'approved' && (
-                        <span style={{ marginLeft: '6px', color: '#10b981', fontSize: '14px' }} title="Ověřeno">✓</span>
-                      )}
-                    </div>
-                    <div style={{ color: '#9ca3af', fontSize: '12px' }}>
-                      {formatDate(review.created_at)}
-                    </div>
+                <div>
+                  <div style={{ color: '#9ca3af', fontWeight: '500', fontSize: '13px' }}>
+                    {review.author_name}
+                    {review.status === 'approved' && (
+                      <span style={{ marginLeft: '6px', color: '#10b981', fontSize: '13px' }} title="Ověřeno">✓</span>
+                    )}
+                    <span style={{ margin: '0 8px', color: '#4b5563' }}>•</span>
+                    {formatDate(review.created_at)}
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '2px' }}>
