@@ -900,6 +900,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               submit: t('reviews.submit') || 'Odeslat recenzi',
               submitting: t('reviews.submitting') || 'Odesílání...',
               success_message: t('reviews.success_message') || 'Děkujeme! Vaše recenze byla odeslána a čeká na schválení.',
+              approval_pending: t('reviews.approval_pending') || 'Vaše recenze čeká na schválení',
+              optional: t('reviews.optional') || 'nepovinné',
               error_message: t('reviews.error_message') || 'Něco se pokazilo. Zkuste to prosím znovu.',
               write_another: t('reviews.write_another') || 'Napsat další recenzi'
             }}
