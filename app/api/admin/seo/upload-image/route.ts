@@ -30,9 +30,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate unique filename
+    // Generate unique filename with proper extension
     const timestamp = Date.now();
-    const ext = file.name.split('.').pop();
+
+    // Get extension from file name, or derive from MIME type
+    let ext = file.name.includes('.') ? file.name.split('.').pop() : null;
+
+    // Fallback: get extension from MIME type
+    if (!ext) {
+      const mimeToExt: { [key: string]: string } = {
+        'image/jpeg': 'jpg',
+        'image/jpg': 'jpg',
+        'image/png': 'png',
+        'image/gif': 'gif',
+        'image/webp': 'webp',
+        'image/svg+xml': 'svg'
+      };
+      ext = mimeToExt[file.type] || 'jpg';
+    }
+
     const filename = `seo/og-images/${timestamp}.${ext}`;
 
     // Upload to Vercel Blob
