@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { translateReviewText } from '@/lib/review-translation';
 
 interface Activity {
   id: number;
@@ -38,7 +37,6 @@ interface ActivityTimelineProps {
 export default function ActivityTimeline({ initialActivities = [] }: ActivityTimelineProps) {
   const [activities, setActivities] = useState<Activity[]>(initialActivities);
   const [showAll, setShowAll] = useState(false);
-  const [isTranslating, setIsTranslating] = useState(false);
   const locale = useLocale();
   const t = useTranslations('home');
 
@@ -47,7 +45,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
     if (initialActivities.length === 0) {
       async function fetchActivities() {
         try {
-          const response = await fetch('/api/activity-log?limit=50');
+          const response = await fetch(`/api/activity-log?limit=50&locale=${locale}`);
           const data = await response.json();
           if (data.success) {
             setActivities(data.activities);
@@ -62,7 +60,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
     // Auto-refresh every 5 minutes
     const interval = setInterval(async () => {
       try {
-        const response = await fetch('/api/activity-log?limit=50');
+        const response = await fetch(`/api/activity-log?limit=50&locale=${locale}`);
         const data = await response.json();
         if (data.success) {
           setActivities(data.activities);
@@ -73,74 +71,8 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
     }, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [initialActivities.length]);
+  }, [initialActivities.length, locale]);
 
-  // Auto-translate activity descriptions when locale changes or activities are loaded
-  useEffect(() => {
-    console.log('[ActivityTimeline] useEffect triggered', {
-      locale,
-      activitiesCount: activities.length,
-      isTranslating,
-      firstDescription: activities[0]?.description
-    });
-
-    if (locale === 'cs') {
-      console.log('[ActivityTimeline] Skipping translation: locale is CS');
-      return;
-    }
-
-    if (activities.length === 0) {
-      console.log('[ActivityTimeline] Skipping translation: no activities');
-      return;
-    }
-
-    if (isTranslating) {
-      console.log('[ActivityTimeline] Skipping translation: already translating');
-      return;
-    }
-
-    // Check if activities are already translated (avoid re-translating)
-    const firstActivity = activities[0];
-    const isCzech = firstActivity.description.includes('Přidala') ||
-                    firstActivity.description.includes('Sdílela') ||
-                    firstActivity.description.includes('Upravila');
-
-    if (!isCzech) {
-      console.log('[ActivityTimeline] Skipping translation: already translated', firstActivity.description);
-      return;
-    }
-
-    console.log('[ActivityTimeline] Starting translation to', locale);
-
-    async function translateActivities() {
-      setIsTranslating(true);
-      try {
-        console.log('[ActivityTimeline] Translating', activities.length, 'activities');
-        const translated = await Promise.all(
-          activities.map(async (activity) => {
-            const translatedDescription = await translateReviewText(
-              activity.description,
-              locale,
-              'cs'
-            );
-            console.log('[ActivityTimeline] Translated:', activity.description, '→', translatedDescription);
-            return {
-              ...activity,
-              description: translatedDescription
-            };
-          })
-        );
-        setActivities(translated);
-        console.log('[ActivityTimeline] Translation complete');
-      } catch (error) {
-        console.error('[ActivityTimeline] Translation error:', error);
-      } finally {
-        setIsTranslating(false);
-      }
-    }
-
-    translateActivities();
-  }, [locale, activities]);
 
   if (activities.length === 0) {
     return null;

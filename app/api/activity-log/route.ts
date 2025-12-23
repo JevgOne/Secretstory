@@ -10,10 +10,25 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '10');
+    const locale = searchParams.get('locale') || 'cs';
+
+    // Select appropriate description column based on locale
+    let descriptionColumn = 'a.description';
+    if (locale === 'en') descriptionColumn = 'COALESCE(a.description_en, a.description)';
+    if (locale === 'de') descriptionColumn = 'COALESCE(a.description_de, a.description)';
+    if (locale === 'uk') descriptionColumn = 'COALESCE(a.description_uk, a.description)';
 
     const sql = `
       SELECT
-        a.*,
+        a.id,
+        a.girl_id,
+        a.activity_type,
+        a.title,
+        ${descriptionColumn} as description,
+        a.metadata,
+        a.media_url,
+        a.is_visible,
+        a.created_at,
         g.name as girl_name,
         g.slug as girl_slug
       FROM activity_log a
