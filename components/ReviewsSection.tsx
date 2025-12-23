@@ -181,7 +181,7 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
                       color: 'var(--wine)',
                       fontWeight: '500'
                     }}>
-                      Zobrazit profil →
+                      {t('view_profile')}
                     </div>
                   </div>
                 </Link>
