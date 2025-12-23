@@ -74,9 +74,17 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
     return () => clearInterval(interval);
   }, [initialActivities.length]);
 
-  // Auto-translate activity descriptions when locale changes
+  // Auto-translate activity descriptions when locale changes or activities are loaded
   useEffect(() => {
     if (locale === 'cs' || activities.length === 0) return;
+
+    // Check if activities are already translated (avoid re-translating)
+    const firstActivity = activities[0];
+    const isCzech = firstActivity.description.includes('Přidala') ||
+                    firstActivity.description.includes('Sdílela') ||
+                    firstActivity.description.includes('Upravila');
+
+    if (!isCzech) return; // Already translated
 
     async function translateActivities() {
       const translated = await Promise.all(
@@ -96,7 +104,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
     }
 
     translateActivities();
-  }, [locale]);
+  }, [locale, activities]);
 
   if (activities.length === 0) {
     return null;
