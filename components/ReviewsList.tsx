@@ -123,16 +123,15 @@ export default function ReviewsList({
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return 'Dnes';
-    if (diffDays === 1) return 'Včera';
-    if (diffDays < 7) return `Před ${diffDays} dny`;
-    if (diffDays < 30) return `Před ${Math.floor(diffDays / 7)} týdny`;
-    if (diffDays < 365) return `Před ${Math.floor(diffDays / 30)} měsíci`;
-    return date.toLocaleDateString('cs-CZ');
+    // Map locale to proper locale code
+    const localeMap: Record<string, string> = {
+      cs: 'cs-CZ',
+      en: 'en-US',
+      de: 'de-DE',
+      uk: 'uk-UA'
+    };
+    const localeCode = localeMap[locale] || 'cs-CZ';
+    return date.toLocaleDateString(localeCode, { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   if (loading) {

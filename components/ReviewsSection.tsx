@@ -98,7 +98,15 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' });
+    // Map locale to proper locale code
+    const localeMap: Record<string, string> = {
+      cs: 'cs-CZ',
+      en: 'en-US',
+      de: 'de-DE',
+      uk: 'uk-UA'
+    };
+    const localeCode = localeMap[locale] || 'cs-CZ';
+    return date.toLocaleDateString(localeCode, { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
   return (
