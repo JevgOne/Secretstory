@@ -203,6 +203,7 @@
   },
   "register": {
     "title": "Registrierung eines neuen Mädchens",
+    "subtitle": "LovelyGirls.cz • Schritt {step} von 3",
     "step_of": "Schritt {step} von {total}",
     "step_1": "Persönliche Informationen",
     "step_2": "Profildetails",
@@ -235,6 +236,10 @@
     "bio_placeholder": "Schreiben Sie etwas über sich...",
     "languages": "Sprachen",
     "select_services": "Services auswählen",
+    "services_selected": "{count} {label} ausgewählt",
+    "services_label_1": "Service",
+    "services_label_2_4": "Services",
+    "services_label_5_plus": "Services",
     "tattoo_slider": "Tattoo (% des Körpers)",
     "tattoo_description_placeholder": "Tattoo-Beschreibung (z.B. 'Ärmel mit Blumen am Arm, kleines Tattoo am Knöchel')",
     "has_piercing": "Ich habe Piercings",
@@ -251,7 +256,12 @@
     "must_agree": "Sie müssen den Bedingungen zustimmen!",
     "success": "Registrierung erfolgreich! Ihr Profil wartet auf die Genehmigung durch den Administrator.",
     "error_prefix": "Fehler:",
-    "error_generic": "Fehler bei der Registrierung. Bitte versuchen Sie es erneut."
+    "error_generic": "Fehler bei der Registrierung. Bitte versuchen Sie es erneut.",
+    "lang_cs": "Tschechisch",
+    "lang_en": "Englisch",
+    "lang_de": "Deutsch",
+    "lang_uk": "Ukrainisch",
+    "lang_ru": "Russisch"
   },
   "pricing": {
     "title": "Preisliste",
