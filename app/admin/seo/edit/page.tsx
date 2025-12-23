@@ -38,6 +38,12 @@ function EditSEOForm() {
         const data = await res.json();
 
         if (data.success && data.metadata) {
+          // Auto-fix Vercel Blob URLs without file extension
+          let ogImage = data.metadata.og_image || '';
+          if (ogImage && ogImage.includes('blob.vercel-storage.com') && !ogImage.match(/\.(png|jpg|jpeg|gif|webp|svg)$/i)) {
+            ogImage = ogImage + '.png';
+          }
+
           setFormData({
             meta_title: data.metadata.meta_title || '',
             meta_description: data.metadata.meta_description || '',
@@ -45,7 +51,7 @@ function EditSEOForm() {
             focus_keyword: data.metadata.focus_keyword || '',
             og_title: data.metadata.og_title || '',
             og_description: data.metadata.og_description || '',
-            og_image: data.metadata.og_image || '',
+            og_image: ogImage,
             canonical_url: data.metadata.canonical_url || '',
           });
         }
