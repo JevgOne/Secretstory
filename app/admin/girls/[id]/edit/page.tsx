@@ -23,6 +23,7 @@ export default function EditGirlPage({ params }: PageProps) {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
   const [uploadingStory, setUploadingStory] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
 
   const basicServices = getBasicServices();
   const extraServices = getExtraServices();
@@ -958,6 +959,104 @@ export default function EditGirlPage({ params }: PageProps) {
 
         <div className="form-section">
           <h2 className="section-title">Popis profilu</h2>
+          <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <button
+              type="button"
+              onClick={async () => {
+                if (!formData.bio_cs) {
+                  alert('Nejdříve vyplň české bio (Bio CS)');
+                  return;
+                }
+
+                setIsTranslating(true);
+                try {
+                  // Translate to EN
+                  const enResponse = await fetch('/api/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      text: formData.bio_cs,
+                      targetLang: 'en',
+                      sourceLang: 'cs'
+                    })
+                  });
+                  const enData = await enResponse.json();
+
+                  // Translate to DE
+                  const deResponse = await fetch('/api/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      text: formData.bio_cs,
+                      targetLang: 'de',
+                      sourceLang: 'cs'
+                    })
+                  });
+                  const deData = await deResponse.json();
+
+                  // Translate to UK
+                  const ukResponse = await fetch('/api/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      text: formData.bio_cs,
+                      targetLang: 'uk',
+                      sourceLang: 'cs'
+                    })
+                  });
+                  const ukData = await ukResponse.json();
+
+                  if (enData.success && deData.success && ukData.success) {
+                    setFormData({
+                      ...formData,
+                      bio: enData.translatedText,
+                      bio_de: deData.translatedText,
+                      bio_uk: ukData.translatedText
+                    });
+                    alert('✅ Bio bylo úspěšně přeloženo do všech jazyků!');
+                  } else {
+                    alert('❌ Chyba při překladu');
+                  }
+                } catch (error) {
+                  console.error('Translation error:', error);
+                  alert('❌ Chyba při překladu');
+                } finally {
+                  setIsTranslating(false);
+                }
+              }}
+              disabled={isTranslating || !formData.bio_cs}
+              style={{
+                padding: '10px 20px',
+                background: isTranslating ? '#6b7280' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: isTranslating ? 'not-allowed' : 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                opacity: isTranslating || !formData.bio_cs ? 0.6 : 1
+              }}
+            >
+              {isTranslating ? (
+                <>
+                  <span style={{ animation: 'spin 1s linear infinite' }}>⏳</span>
+                  Překládám...
+                </>
+              ) : (
+                <>
+                  🔄 Auto-přeložit z češtiny
+                </>
+              )}
+            </button>
+            {!formData.bio_cs && (
+              <span style={{ color: '#9ca3af', fontSize: '14px' }}>
+                Nejdříve vyplň české bio (Bio CS) →
+              </span>
+            )}
+          </div>
           <div className="form-group">
             <label>Bio EN (English)</label>
             <textarea
