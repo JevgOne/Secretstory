@@ -797,5 +797,134 @@
     "term_5": "Beru na vědomí, že veškeré obrazové a textové materiály jsou chráněny autorským právem.",
     "legal_notice": "Veškeré informace umístěné na těchto webových stránkách jsou zveřejňovány pro reklamní účely poskytovatelů služeb. Provozovatel této webové stránky neodpovídá za správnost a aktuálnost zveřejněných informací ani za poskytované služby. Podmínkou inzerátu je pronájem pokoje.",
     "agree_button": "Souhlasím a potvrzuji výše uvedené"
+  },
+  "admin": {
+    "common": {
+      "loading": "Načítání...",
+      "delete": "Smazat",
+      "cancel": "Zrušit",
+      "add": "Přidat",
+      "edit": "Upravit",
+      "save": "Uložit",
+      "today": "Dnes",
+      "week": "Týden",
+      "month": "Měsíc",
+      "year": "Rok"
+    },
+    "auth": {
+      "must_login": "Musíte být přihlášeni",
+      "login_button": "Přihlásit se",
+      "login_error": "Chyba při přihlašování"
+    },
+    "booking": {
+      "delete": "🗑️ Smazat rezervaci",
+      "delete_confirmation": "Opravdu chcete smazat tuto rezervaci?",
+      "delete_success": "Rezervace byla úspěšně smazána",
+      "delete_error": "Chyba při mazání rezervace",
+      "count": "{count} rezervací",
+      "recent": "Poslední rezervace",
+      "search_placeholder": "Hledat podle jména nebo telefonu...",
+      "empty": "Zatím žádné rezervace",
+      "empty_search": "Žádné výsledky",
+      "status": {
+        "completed": "Proběhlo",
+        "confirmed": "Potvrzeno",
+        "pending": "Čeká",
+        "cancelled": "Zrušeno",
+        "no_show": "Nedorazil"
+      }
+    },
+    "schedule": {
+      "title": "Správa rozvrhů",
+      "working_hours": "Pracovní doba dívek",
+      "working_hours_desc": "Definujte, kdy jsou dívky k dispozici pro rezervace",
+      "add": "Přidat rozvrh",
+      "filter": "Filtr podle dívky",
+      "all": "Všechny ({count})",
+      "select_girl": "Vyberte dívku",
+      "select_days": "Vyberte dny (můžete vybrat více)",
+      "days_count_1": "{count} den",
+      "days_count_2_4": "{count} dny",
+      "days_count_5_plus": "{count} dnů",
+      "location": "Pobočka",
+      "morning": "Ranní",
+      "afternoon": "Odpolední",
+      "fullday": "Celodenní",
+      "from": "Od",
+      "to": "Do",
+      "delete_confirmation": "Opravdu smazat tento rozvrh?",
+      "delete_error": "Chyba při mazání rozvrhu",
+      "create_success": "✅ Všechny rozvrhy ({count}) byly úspěšně vytvořeny",
+      "create_partial": "⚠️ {created} z {total} rozvrhů bylo vytvořeno. {failed} se nepodařilo vytvořit",
+      "create_error": "❌ Nepodařilo se vytvořit žádný rozvrh",
+      "empty": "Žádné rozvrhy",
+      "empty_for_girl": "Žádné rozvrhy pro tuto dívku",
+      "count_for_girl": "{count} rozvrh(ů)"
+    },
+    "girls": {
+      "title": "Správa dívek",
+      "subtitle": "Přidávejte a upravujte profily dívek",
+      "add_new": "+ Přidat novou dívku",
+      "all": "Všechny",
+      "active_profiles": "Aktivních profilů",
+      "status_error": "Chyba při změně statusu",
+      "delete_confirmation": "Opravdu chcete smazat profil {name}? Tato akce je nevratná.",
+      "delete_error": "Chyba při mazání profilu",
+      "edit_title": "Upravit dívku",
+      "edit_subtitle": "Upravte profil dívky",
+      "create_error": "Chyba při vytváření profilu",
+      "update_error": "Chyba při aktualizaci profilu",
+      "load_error": "Chyba při načítání dívek",
+      "upload_error": "Chyba při nahrávání {filename}",
+      "upload_error_detailed": "Chyba při nahrávání {filename}: {error}",
+      "delete_photo_confirmation": "Smazat tuto fotku?",
+      "delete_video_confirmation": "Smazat toto video?",
+      "delete_story_confirmation": "Smazat tuto story?",
+      "status": {
+        "active": "Aktivní",
+        "pending": "Čeká",
+        "inactive": "Neaktivní"
+      }
+    },
+    "reviews": {
+      "approve_error": "Chyba při schvalování recenze",
+      "reject_confirmation": "Opravdu chcete zamítnout tuto recenzi?",
+      "reject_error": "Chyba při zamítání recenze",
+      "delete_confirmation": "Opravdu chcete smazat tuto recenzi? Tato akce je nevratná.",
+      "delete_error": "Chyba při mazání recenze",
+      "status": {
+        "approved": "Schváleno",
+        "pending": "Čeká",
+        "rejected": "Zamítnuto"
+      }
+    },
+    "blog": {
+      "delete_confirmation": "Opravdu chcete smazat článek \"{title}\"? Tato akce je nevratná.",
+      "delete_error": "Chyba při mazání článku",
+      "create_error": "Chyba při vytváření článku",
+      "load_error": "Chyba při načítání článku",
+      "update_error": "Chyba při aktualizaci článku",
+      "edit_subtitle": "Upravte existující blogový příspěvek"
+    },
+    "locations": {
+      "load_error": "Chyba při načítání poboček",
+      "create_error": "Chyba při vytváření pobočky",
+      "update_error": "Chyba při aktualizaci pobočky",
+      "delete_confirmation": "Opravdu chcete smazat tuto pobočku?",
+      "delete_error": "Chyba při mazání pobočky"
+    },
+    "activity": {
+      "recent": "Poslední aktivita"
+    },
+    "seo": {
+      "scan_error": "Chyba při skenování webu",
+      "load_error": "Chyba při načítání: {error}",
+      "upload_error": "Chyba při nahrávání",
+      "save_error": "Chyba při ukládání",
+      "missing_path_error": "Chyba: Chybí parametr 'path' v URL"
+    },
+    "users": {
+      "logout_all_confirmation": "Opravdu chcete odhlásit všechny uživatele?"
+    }
   }
 }
