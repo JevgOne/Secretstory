@@ -84,7 +84,18 @@
     "reviews_subtitle": "Ověřené recenze od skutečných zákazníků",
     "reviews_all": "Všechny recenze",
     "popular_searches_title": "Populární vyhledávání",
-    "popular_searches_subtitle": "Najděte holky podle vašich preferencí"
+    "popular_searches_subtitle": "Najděte holky podle vašich preferencí",
+    "activity_title": "Nejnovější aktivity",
+    "activity_subtitle": "Co se děje u našich modelek",
+    "activity_show_more": "Zobrazit všech ({count})",
+    "activity_show_less": "Zobrazit méně",
+    "activity_time_now": "právě teď",
+    "activity_time_mins_1": "před {count} minutou",
+    "activity_time_mins_other": "před {count} minutami",
+    "activity_time_hours_1": "před {count} hodinou",
+    "activity_time_hours_other": "před {count} hodinami",
+    "activity_time_days_1": "před {count} dnem",
+    "activity_time_days_other": "před {count} dny"
   },
   "nav": {
     "home": "Domů",

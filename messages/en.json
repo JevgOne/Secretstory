@@ -84,7 +84,18 @@
     "reviews_subtitle": "Verified reviews from real customers",
     "reviews_all": "All reviews",
     "popular_searches_title": "Popular Searches",
-    "popular_searches_subtitle": "Find girls by your preferences"
+    "popular_searches_subtitle": "Find girls by your preferences",
+    "activity_title": "Latest Activity",
+    "activity_subtitle": "What's happening with our models",
+    "activity_show_more": "Show all ({count})",
+    "activity_show_less": "Show less",
+    "activity_time_now": "just now",
+    "activity_time_mins_1": "{count} minute ago",
+    "activity_time_mins_other": "{count} minutes ago",
+    "activity_time_hours_1": "{count} hour ago",
+    "activity_time_hours_other": "{count} hours ago",
+    "activity_time_days_1": "{count} day ago",
+    "activity_time_days_other": "{count} days ago"
   },
   "nav": {
     "home": "Home",

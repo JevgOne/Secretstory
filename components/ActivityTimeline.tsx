@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface Activity {
   id: number;
@@ -38,6 +38,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
   const [activities, setActivities] = useState<Activity[]>(initialActivities);
   const [showAll, setShowAll] = useState(false);
   const locale = useLocale();
+  const t = useTranslations('home');
 
   useEffect(() => {
     // Only fetch if no initial data provided
@@ -87,18 +88,24 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffDays > 0) return `před ${diffDays} ${diffDays === 1 ? 'dnem' : 'dny'}`;
-    if (diffHours > 0) return `před ${diffHours} ${diffHours === 1 ? 'hodinou' : 'hodinami'}`;
-    if (diffMins > 0) return `před ${diffMins} ${diffMins === 1 ? 'minutou' : 'minutami'}`;
-    return 'právě teď';
+    if (diffDays > 0) {
+      return t(diffDays === 1 ? 'activity_time_days_1' : 'activity_time_days_other', { count: diffDays });
+    }
+    if (diffHours > 0) {
+      return t(diffHours === 1 ? 'activity_time_hours_1' : 'activity_time_hours_other', { count: diffHours });
+    }
+    if (diffMins > 0) {
+      return t(diffMins === 1 ? 'activity_time_mins_1' : 'activity_time_mins_other', { count: diffMins });
+    }
+    return t('activity_time_now');
   };
 
   return (
     <section style={{ padding: '4rem 0', background: 'rgba(139, 41, 66, 0.03)' }}>
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h2 className="section-title">Nejnovější aktivity</h2>
-          <p className="section-subtitle">Co se děje u našich modelek</p>
+          <h2 className="section-title">{t('activity_title')}</h2>
+          <p className="section-subtitle">{t('activity_subtitle')}</p>
         </div>
 
         <div style={{
@@ -204,7 +211,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
                 e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
               }}
             >
-              {showAll ? `Zobrazit méně ↑` : `Zobrazit všech (${activities.length}) ↓`}
+              {showAll ? `${t('activity_show_less')} ↑` : `${t('activity_show_more', { count: activities.length })} ↓`}
             </button>
           </div>
         )}

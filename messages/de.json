@@ -84,7 +84,18 @@
     "reviews_subtitle": "Verifizierte Bewertungen von echten Kunden",
     "reviews_all": "Alle Bewertungen",
     "popular_searches_title": "Beliebte Suchbegriffe",
-    "popular_searches_subtitle": "Finden Sie Mädchen nach Ihren Vorlieben"
+    "popular_searches_subtitle": "Finden Sie Mädchen nach Ihren Vorlieben",
+    "activity_title": "Neueste Aktivitäten",
+    "activity_subtitle": "Was passiert bei unseren Models",
+    "activity_show_more": "Alle anzeigen ({count})",
+    "activity_show_less": "Weniger anzeigen",
+    "activity_time_now": "gerade eben",
+    "activity_time_mins_1": "vor {count} Minute",
+    "activity_time_mins_other": "vor {count} Minuten",
+    "activity_time_hours_1": "vor {count} Stunde",
+    "activity_time_hours_other": "vor {count} Stunden",
+    "activity_time_days_1": "vor {count} Tag",
+    "activity_time_days_other": "vor {count} Tagen"
   },
   "nav": {
     "home": "Home",

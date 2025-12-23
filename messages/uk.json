@@ -84,7 +84,18 @@
     "reviews_subtitle": "Верифіковані відгуки від справжніх клієнтів",
     "reviews_all": "Всі відгуки",
     "popular_searches_title": "Популярні пошуки",
-    "popular_searches_subtitle": "Знайдіть дівчат за вашими уподобаннями"
+    "popular_searches_subtitle": "Знайдіть дівчат за вашими уподобаннями",
+    "activity_title": "Остання активність",
+    "activity_subtitle": "Що відбувається з нашими моделями",
+    "activity_show_more": "Показати всі ({count})",
+    "activity_show_less": "Показати менше",
+    "activity_time_now": "щойно",
+    "activity_time_mins_1": "{count} хвилину тому",
+    "activity_time_mins_other": "{count} хвилин тому",
+    "activity_time_hours_1": "{count} годину тому",
+    "activity_time_hours_other": "{count} годин тому",
+    "activity_time_days_1": "{count} день тому",
+    "activity_time_days_other": "{count} днів тому"
   },
   "nav": {
     "home": "Головна",
