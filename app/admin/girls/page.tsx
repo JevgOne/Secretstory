@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AdminHeader from '@/components/AdminHeader';
+import { useTranslations } from 'next-intl';
 
 interface Girl {
   id: number;
@@ -20,6 +21,7 @@ interface Girl {
 
 export default function AdminGirlsPage() {
   const router = useRouter();
+  const t = useTranslations('admin');
   const [girls, setGirls] = useState<Girl[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
@@ -59,11 +61,11 @@ export default function AdminGirlsPage() {
       if (data.success) {
         fetchGirls();
       } else {
-        alert(data.error || 'Chyba při změně statusu');
+        alert(data.error || t('girls.status_error'));
       }
     } catch (err) {
       console.error('Error updating status:', err);
-      alert('Chyba při změně statusu');
+      alert(t('girls.status_error'));
     }
   };
 
@@ -86,7 +88,7 @@ export default function AdminGirlsPage() {
   };
 
   const handleDelete = async (girlId: number, girlName: string) => {
-    if (!confirm(`Opravdu chcete smazat profil ${girlName}? Tato akce je nevratná.`)) {
+    if (!confirm(t('girls.delete_confirmation', { name: girlName }))) {
       return;
     }
 
@@ -100,11 +102,11 @@ export default function AdminGirlsPage() {
       if (data.success) {
         fetchGirls();
       } else {
-        alert(data.error || 'Chyba při mazání profilu');
+        alert(data.error || t('girls.delete_error'));
       }
     } catch (err) {
       console.error('Error deleting girl:', err);
-      alert('Chyba při mazání profilu');
+      alert(t('girls.delete_error'));
     }
   };
 
@@ -116,9 +118,9 @@ export default function AdminGirlsPage() {
     };
 
     const labels = {
-      active: 'Aktivní',
-      pending: 'Čeká',
-      inactive: 'Neaktivní'
+      active: t('girls.status.active'),
+      pending: t('girls.status.pending'),
+      inactive: t('girls.status.inactive')
     };
 
     return (
@@ -130,14 +132,14 @@ export default function AdminGirlsPage() {
 
   return (
     <>
-      <AdminHeader title="Správa dívek" showBack={true} />
+      <AdminHeader title={t('girls.title')} showBack={true} />
       <div className="admin-container">
         <div className="admin-header">
           <div>
-            <p className="admin-subtitle">Přidávejte a upravujte profily dívek</p>
+            <p className="admin-subtitle">{t('girls.subtitle')}</p>
           </div>
           <Link href="/admin/girls/new" className="btn btn-primary">
-            + Přidat novou dívku
+            {t('girls.add_new')}
           </Link>
         </div>
 
@@ -146,44 +148,44 @@ export default function AdminGirlsPage() {
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
-          Všechny ({girls.length})
+          {t('girls.all_count', { count: girls.length })}
         </button>
         <button
           className={`filter-btn ${filter === 'active' ? 'active' : ''}`}
           onClick={() => setFilter('active')}
         >
-          Aktivní
+          {t('girls.active')}
         </button>
         <button
           className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
           onClick={() => setFilter('pending')}
         >
-          Čekající
+          {t('girls.pending')}
         </button>
         <button
           className={`filter-btn ${filter === 'inactive' ? 'active' : ''}`}
           onClick={() => setFilter('inactive')}
         >
-          Neaktivní
+          {t('girls.inactive')}
         </button>
       </div>
 
       {loading ? (
-        <div className="loading">Načítání...</div>
+        <div className="loading">{t('common.loading')}</div>
       ) : (
         <div className="girls-table">
           <table>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Jméno</th>
-                <th>Věk</th>
-                <th>Status</th>
-                <th>Online</th>
-                <th>Hodnocení</th>
-                <th>Recenze</th>
-                <th>Vytvořeno</th>
-                <th>Akce</th>
+                <th>{t('girls.table.id')}</th>
+                <th>{t('girls.table.name')}</th>
+                <th>{t('girls.table.age')}</th>
+                <th>{t('girls.table.status')}</th>
+                <th>{t('girls.table.online')}</th>
+                <th>{t('girls.table.rating')}</th>
+                <th>{t('girls.table.reviews')}</th>
+                <th>{t('girls.table.created')}</th>
+                <th>{t('girls.table.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -206,7 +208,7 @@ export default function AdminGirlsPage() {
                       className={`toggle-btn ${girl.online ? 'online' : 'offline'}`}
                       onClick={() => handleToggleOnline(girl.id, girl.online)}
                     >
-                      {girl.online ? 'Online' : 'Offline'}
+                      {girl.online ? t('girls.online_status.online') : t('girls.online_status.offline')}
                     </button>
                   </td>
                   <td>{girl.rating > 0 ? girl.rating.toFixed(1) : '-'}</td>
@@ -218,20 +220,20 @@ export default function AdminGirlsPage() {
                         <button
                           className="icon-btn approve"
                           onClick={() => handleStatusChange(girl.id, 'active')}
-                          title="Schválit profil"
+                          title={t('girls.actions.approve')}
                         >
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <polyline points="20 6 9 17 4 12"></polyline>
                           </svg>
                         </button>
                       )}
-                      <Link href={`/admin/girls/${girl.id}/edit`} className="icon-btn edit" title="Upravit profil">
+                      <Link href={`/admin/girls/${girl.id}/edit`} className="icon-btn edit" title={t('girls.actions.edit')}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                         </svg>
                       </Link>
-                      <Link href={`/cs/profily/${girl.slug}`} className="icon-btn view" target="_blank" title="Zobrazit profil">
+                      <Link href={`/cs/profily/${girl.slug}`} className="icon-btn view" target="_blank" title={t('girls.actions.view')}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                           <circle cx="12" cy="12" r="3"></circle>
@@ -240,7 +242,7 @@ export default function AdminGirlsPage() {
                       <button
                         className="icon-btn delete"
                         onClick={() => handleDelete(girl.id, girl.name)}
-                        title="Smazat profil"
+                        title={t('girls.actions.delete')}
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <polyline points="3 6 5 6 21 6"></polyline>
@@ -256,7 +258,7 @@ export default function AdminGirlsPage() {
 
           {girls.length === 0 && (
             <div className="empty-state">
-              <p>Žádné dívky nenalezeny</p>
+              <p>{t('girls.empty')}</p>
             </div>
           )}
         </div>

@@ -880,6 +880,10 @@
       "new_profile": "Nový profil",
       "profiles_count": "{count} profilů",
       "all": "Všechny",
+      "all_count": "Všechny ({count})",
+      "active": "Aktivní",
+      "pending": "Čekající",
+      "inactive": "Neaktivní",
       "active_profiles": "Aktivních profilů",
       "status_error": "Chyba při změně statusu",
       "delete_confirmation": "Opravdu chcete smazat profil {name}? Tato akce je nevratná.",
@@ -894,6 +898,28 @@
       "delete_photo_confirmation": "Smazat tuto fotku?",
       "delete_video_confirmation": "Smazat toto video?",
       "delete_story_confirmation": "Smazat tuto story?",
+      "empty": "Žádné dívky nenalezeny",
+      "table": {
+        "id": "ID",
+        "name": "Jméno",
+        "age": "Věk",
+        "status": "Status",
+        "online": "Online",
+        "rating": "Hodnocení",
+        "reviews": "Recenze",
+        "created": "Vytvořeno",
+        "actions": "Akce"
+      },
+      "online_status": {
+        "online": "Online",
+        "offline": "Offline"
+      },
+      "actions": {
+        "approve": "Schválit profil",
+        "edit": "Upravit profil",
+        "view": "Zobrazit profil",
+        "delete": "Smazat profil"
+      },
       "status": {
         "active": "Aktivní",
         "pending": "Čeká",
