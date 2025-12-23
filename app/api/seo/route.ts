@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
       og_title,
       og_description,
       og_image,
+      og_image_alt,
       og_type,
       twitter_card,
       twitter_title,
@@ -116,6 +117,7 @@ export async function POST(request: NextRequest) {
           og_title = ?,
           og_description = ?,
           og_image = ?,
+          og_image_alt = ?,
           og_type = ?,
           twitter_card = ?,
           twitter_title = ?,
@@ -132,7 +134,7 @@ export async function POST(request: NextRequest) {
         WHERE page_path = ?`,
         args: [
           page_type, locale, meta_title, meta_description, meta_keywords,
-          og_title, og_description, og_image, og_type,
+          og_title, og_description, og_image, og_image_alt, og_type,
           twitter_card, twitter_title, twitter_description, twitter_image,
           schema_type, schema_data, canonical_url,
           robots_index ?? 1, robots_follow ?? 1,
@@ -152,15 +154,15 @@ export async function POST(request: NextRequest) {
         sql: `INSERT INTO seo_metadata (
           page_path, page_type, locale,
           meta_title, meta_description, meta_keywords,
-          og_title, og_description, og_image, og_type,
+          og_title, og_description, og_image, og_image_alt, og_type,
           twitter_card, twitter_title, twitter_description, twitter_image,
           schema_type, schema_data, canonical_url,
           robots_index, robots_follow, focus_keyword, seo_score
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         args: [
           page_path, page_type, locale,
           meta_title, meta_description, meta_keywords,
-          og_title, og_description, og_image, og_type || 'website',
+          og_title, og_description, og_image, og_image_alt, og_type || 'website',
           twitter_card || 'summary_large_image', twitter_title, twitter_description, twitter_image,
           schema_type, schema_data, canonical_url,
           robots_index ?? 1, robots_follow ?? 1, focus_keyword, seo_score ?? 0

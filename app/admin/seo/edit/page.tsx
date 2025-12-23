@@ -22,6 +22,7 @@ function EditSEOForm() {
     og_title: '',
     og_description: '',
     og_image: '',
+    og_image_alt: '',
     canonical_url: '',
   });
 
@@ -52,6 +53,7 @@ function EditSEOForm() {
             og_title: data.metadata.og_title || '',
             og_description: data.metadata.og_description || '',
             og_image: ogImage,
+            og_image_alt: data.metadata.og_image_alt || '',
             canonical_url: data.metadata.canonical_url || '',
           });
         }
@@ -394,6 +396,30 @@ function EditSEOForm() {
                 </div>
               </div>
             )}
+
+            <div style={{ marginTop: '1rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#9ca3af' }}>
+                ALT Text (Popisek obrázku)
+              </label>
+              <input
+                type="text"
+                value={formData.og_image_alt}
+                onChange={(e) => setFormData({ ...formData, og_image_alt: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  color: '#fff',
+                  fontSize: '14px'
+                }}
+                placeholder="Stručný popis obrázku pro přístupnost a SEO"
+              />
+              <small style={{ color: '#6b7280', fontSize: '0.8rem', marginTop: '0.5rem', display: 'block' }}>
+                Doporučeno: 125 znaků. Popisuje obsah obrázku pro nevidomé uživatele a vyhledávače.
+              </small>
+            </div>
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
