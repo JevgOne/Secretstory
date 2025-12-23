@@ -140,7 +140,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
     }
 
     translateActivities();
-  }, [locale, activities, isTranslating]);
+  }, [locale, activities]);
 
   if (activities.length === 0) {
     return null;
