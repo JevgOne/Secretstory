@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { VIBE_OPTIONS, TAG_OPTIONS } from '@/lib/review-constants';
+import { translateReviews } from '@/lib/review-translation';
 
 interface Review {
   id: number;
@@ -28,6 +29,7 @@ interface ReviewsSectionProps {
 export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionProps) {
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [loading, setLoading] = useState(initialReviews.length === 0);
+  const [translating, setTranslating] = useState(false);
   const locale = useLocale();
   const t = useTranslations('home');
 
@@ -50,6 +52,27 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
       fetchReviews();
     }
   }, [initialReviews.length]);
+
+  // Auto-translate reviews when locale changes (only for non-Czech)
+  useEffect(() => {
+    async function translateReviewsData() {
+      if (locale === 'cs' || reviews.length === 0) {
+        return; // No translation needed for Czech
+      }
+
+      setTranslating(true);
+      try {
+        const translated = await translateReviews(reviews, locale);
+        setReviews(translated);
+      } catch (error) {
+        console.error('Error translating reviews:', error);
+      } finally {
+        setTranslating(false);
+      }
+    }
+
+    translateReviewsData();
+  }, [locale]);
 
   if (loading) {
     return (

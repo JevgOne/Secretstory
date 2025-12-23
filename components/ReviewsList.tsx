@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import ReviewStars from './ReviewStars';
 import { VIBE_OPTIONS, TAG_OPTIONS, type VibeId, type TagId } from '@/lib/review-constants';
+import { translateReviews } from '@/lib/review-translation';
 
 interface Review {
   id: number;
@@ -41,6 +42,7 @@ export default function ReviewsList({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [votingReview, setVotingReview] = useState<number | null>(null);
+  const [translating, setTranslating] = useState(false);
 
   useEffect(() => {
     fetchReviews();
@@ -68,6 +70,27 @@ export default function ReviewsList({
       setLoading(false);
     }
   };
+
+  // Auto-translate reviews when locale changes (only for non-Czech)
+  useEffect(() => {
+    async function translateReviewsData() {
+      if (locale === 'cs' || reviews.length === 0) {
+        return; // No translation needed for Czech
+      }
+
+      setTranslating(true);
+      try {
+        const translated = await translateReviews(reviews, locale);
+        setReviews(translated);
+      } catch (error) {
+        console.error('Error translating reviews:', error);
+      } finally {
+        setTranslating(false);
+      }
+    }
+
+    translateReviewsData();
+  }, [locale, reviews.length]);
 
   const handleHelpfulVote = async (reviewId: number) => {
     if (votingReview) return;
