@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from 'next-intl';
 import AdminHeader from "@/components/AdminHeader";
 
 interface Booking {
@@ -32,6 +33,7 @@ type PeriodType = 'day' | 'week' | 'month' | 'year';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
+  const t = useTranslations('admin');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
     girlsCount: 0,
@@ -93,7 +95,7 @@ export default function AdminDashboardPage() {
   };
 
   const deleteBooking = async (bookingId: number) => {
-    if (!confirm('Opravdu chcete smazat tuto rezervaci?')) {
+    if (!confirm(t('booking.delete_confirmation'))) {
       return;
     }
 
@@ -106,13 +108,13 @@ export default function AdminDashboardPage() {
 
       if (data.success) {
         fetchBookings();
-        alert('Rezervace byla úspěšně smazána');
+        alert(t('booking.delete_success'));
       } else {
-        alert('Chyba při mazání rezervace: ' + data.error);
+        alert(t('booking.delete_error') + ': ' + data.error);
       }
     } catch (error) {
       console.error('Error deleting booking:', error);
-      alert('Chyba při mazání rezervace');
+      alert(t('booking.delete_error'));
     }
   };
 
@@ -278,10 +280,10 @@ export default function AdminDashboardPage() {
                 }
               }}
             >
-              {period === 'day' && 'Dnes'}
-              {period === 'week' && 'Týden'}
-              {period === 'month' && 'Měsíc'}
-              {period === 'year' && 'Rok'}
+              {period === 'day' && t('common.today')}
+              {period === 'week' && t('common.week')}
+              {period === 'month' && t('common.month')}
+              {period === 'year' && t('common.year')}
             </button>
           ))}
         </div>
@@ -302,10 +304,10 @@ export default function AdminDashboardPage() {
             letterSpacing: '0.05em',
             marginBottom: '16px'
           }}>
-            {selectedPeriod === 'day' && 'Dnes'}
-            {selectedPeriod === 'week' && 'Týden (7 dní)'}
-            {selectedPeriod === 'month' && 'Měsíc'}
-            {selectedPeriod === 'year' && 'Rok'}
+            {selectedPeriod === 'day' && t('common.today')}
+            {selectedPeriod === 'week' && t('common.week') + ' (7 dní)'}
+            {selectedPeriod === 'month' && t('common.month')}
+            {selectedPeriod === 'year' && t('common.year')}
           </div>
           <div style={{
             fontSize: '3rem',
@@ -322,10 +324,10 @@ export default function AdminDashboardPage() {
             fontSize: '1rem',
             color: '#6b7280'
           }}>
-            {selectedPeriod === 'day' && `${bookingStats.todayBookings.length} rezervací`}
-            {selectedPeriod === 'week' && `${bookingStats.weekBookings.length} rezervací`}
-            {selectedPeriod === 'month' && `${bookingStats.monthBookings.length} rezervací`}
-            {selectedPeriod === 'year' && `${bookingStats.yearBookings.length} rezervací`}
+            {selectedPeriod === 'day' && t('booking.count', { count: bookingStats.todayBookings.length })}
+            {selectedPeriod === 'week' && t('booking.count', { count: bookingStats.weekBookings.length })}
+            {selectedPeriod === 'month' && t('booking.count', { count: bookingStats.monthBookings.length })}
+            {selectedPeriod === 'year' && t('booking.count', { count: bookingStats.yearBookings.length })}
           </div>
         </div>
 
@@ -360,7 +362,7 @@ export default function AdminDashboardPage() {
               letterSpacing: '0.05em',
               marginBottom: '8px'
             }}>
-              Dívky
+              {t('girls.title')}
             </div>
             <div style={{
               fontSize: '2rem',
@@ -374,7 +376,7 @@ export default function AdminDashboardPage() {
               fontSize: '0.875rem',
               color: '#6b7280'
             }}>
-              Aktivních profilů
+              {t('girls.active_profiles')}
             </div>
           </div>
 
@@ -402,7 +404,7 @@ export default function AdminDashboardPage() {
               letterSpacing: '0.05em',
               marginBottom: '8px'
             }}>
-              Recenze
+              {t('reviews.title')}
             </div>
             <div style={{
               fontSize: '2rem',
@@ -416,7 +418,7 @@ export default function AdminDashboardPage() {
               fontSize: '0.875rem',
               color: '#6b7280'
             }}>
-              Schválených
+              {t('reviews.status.approved')}
             </div>
           </div>
 
@@ -444,7 +446,7 @@ export default function AdminDashboardPage() {
               letterSpacing: '0.05em',
               marginBottom: '8px'
             }}>
-              Uživatelé
+              {t('users.title')}
             </div>
             <div style={{
               fontSize: '2rem',
@@ -458,7 +460,7 @@ export default function AdminDashboardPage() {
               fontSize: '0.875rem',
               color: '#6b7280'
             }}>
-              Administrátoři
+              {t('users.administrators')}
             </div>
           </div>
         </div>
@@ -506,10 +508,10 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '2px' }}>
-                Správa dívek
+                {t('girls.title')}
               </div>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-                {stats.girlsCount} profilů
+                {t('girls.profiles_count', { count: stats.girlsCount })}
               </div>
             </div>
           </Link>
@@ -552,10 +554,10 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '2px' }}>
-                Kalendář
+                {t('calendar.title')}
               </div>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-                Rezervace
+                {t('calendar.bookings')}
               </div>
             </div>
           </Link>
@@ -596,10 +598,10 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '2px' }}>
-                Přidat dívku
+                {t('girls.add_new_girl')}
               </div>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-                Nový profil
+                {t('girls.new_profile')}
               </div>
             </div>
           </Link>
@@ -661,10 +663,10 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '2px' }}>
-                Reporty
+                {t('stats.reports')}
               </div>
               <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-                Statistiky
+                {t('stats.title')}
               </div>
             </div>
           </Link>
@@ -678,7 +680,7 @@ export default function AdminDashboardPage() {
             marginBottom: '16px',
             color: '#fff'
           }}>
-            Správa systému
+            {t('system.management')}
           </h2>
           <div className="admin-grid" style={{
             display: 'grid',
@@ -691,8 +693,8 @@ export default function AdminDashboardPage() {
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
                 </svg>,
-                title: 'Dívky',
-                count: `${stats.girlsCount} profilů`,
+                title: t('girls.title'),
+                count: t('girls.profiles_count', { count: stats.girlsCount }),
                 path: '/admin/girls',
                 color: '#8b5cf6'
               },
@@ -701,8 +703,8 @@ export default function AdminDashboardPage() {
                   <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
                   <polyline points="14 2 14 8 20 8"/>
                 </svg>,
-                title: 'Blog',
-                count: 'Články',
+                title: t('blog.title'),
+                count: t('blog.articles'),
                 path: '/admin/blog',
                 color: '#ec4899'
               },
@@ -711,8 +713,8 @@ export default function AdminDashboardPage() {
                   <circle cx="11" cy="11" r="8"/>
                   <path d="m21 21-4.35-4.35"/>
                 </svg>,
-                title: 'SEO',
-                count: 'Meta',
+                title: t('seo.title'),
+                count: t('seo.meta'),
                 path: '/admin/seo',
                 color: '#22c55e'
               },
@@ -721,8 +723,8 @@ export default function AdminDashboardPage() {
                   <circle cx="12" cy="12" r="10"/>
                   <polyline points="12 6 12 12 16 14"/>
                 </svg>,
-                title: 'Rozvrhy',
-                count: 'Časy',
+                title: t('schedule.title'),
+                count: t('schedule.times'),
                 path: '/admin/schedules',
                 color: '#3b82f6'
               },
@@ -731,8 +733,8 @@ export default function AdminDashboardPage() {
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                   <circle cx="12" cy="10" r="3"/>
                 </svg>,
-                title: 'Pobočky',
-                count: 'Lokace',
+                title: t('locations.title'),
+                count: t('locations.label'),
                 path: '/admin/locations',
                 color: '#eab308'
               },
@@ -740,8 +742,8 @@ export default function AdminDashboardPage() {
                 icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                 </svg>,
-                title: 'Recenze',
-                count: `${stats.reviewsCount} schválených`,
+                title: t('reviews.title'),
+                count: t('reviews.approved_count', { count: stats.reviewsCount }),
                 path: '/admin/reviews',
                 color: '#f59e0b'
               },
@@ -752,8 +754,8 @@ export default function AdminDashboardPage() {
                   <line x1="8" y1="2" x2="8" y2="6"/>
                   <line x1="3" y1="10" x2="21" y2="10"/>
                 </svg>,
-                title: 'Rezervace',
-                count: `${bookingStats.pendingBookings.length} čeká`,
+                title: t('calendar.bookings'),
+                count: t('booking.pending_count', { count: bookingStats.pendingBookings.length }),
                 path: '/manager/calendar',
                 color: '#06b6d4'
               },
@@ -764,8 +766,8 @@ export default function AdminDashboardPage() {
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                   <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>,
-                title: 'Uživatelé',
-                count: `${stats.usersCount} uživatelů`,
+                title: t('users.title'),
+                count: t('users.count', { count: stats.usersCount }),
                 path: '/admin/users',
                 color: '#8b5cf6'
               },
@@ -775,8 +777,8 @@ export default function AdminDashboardPage() {
                   <line x1="2" y1="12" x2="22" y2="12"/>
                   <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                 </svg>,
-                title: 'Služby',
-                count: `${stats.servicesCount} služeb`,
+                title: t('services.title'),
+                count: t('services.count', { count: stats.servicesCount }),
                 path: '/admin/services',
                 color: '#10b981'
               },
@@ -786,8 +788,8 @@ export default function AdminDashboardPage() {
                   <line x1="12" y1="20" x2="12" y2="4"/>
                   <line x1="6" y1="20" x2="6" y2="14"/>
                 </svg>,
-                title: 'Statistiky',
-                count: 'Reporty',
+                title: t('stats.title'),
+                count: t('stats.reports'),
                 path: '/admin/stats',
                 color: '#6366f1'
               },
@@ -796,8 +798,8 @@ export default function AdminDashboardPage() {
                   <circle cx="12" cy="12" r="3"/>
                   <path d="M12 1v6m0 6v6m8.66-14.66l-4.24 4.24m-4.24 4.24l-4.24 4.24M23 12h-6m-6 0H1m20.66 8.66l-4.24-4.24m-4.24-4.24l-4.24-4.24"/>
                 </svg>,
-                title: 'Nastavení',
-                count: 'Systém',
+                title: t('settings.title'),
+                count: t('settings.system'),
                 path: '/admin/settings',
                 color: '#d4af37'
               },
@@ -808,8 +810,8 @@ export default function AdminDashboardPage() {
                   <line x1="16" y1="13" x2="8" y2="13"/>
                   <line x1="16" y1="17" x2="8" y2="17"/>
                 </svg>,
-                title: 'Audit Log',
-                count: 'Historie',
+                title: t('audit.title'),
+                count: t('audit.history'),
                 path: '/admin/audit',
                 color: '#ef4444'
               }
@@ -883,7 +885,7 @@ export default function AdminDashboardPage() {
               marginBottom: '20px'
             }}>
               <h3 style={{ fontSize: '1rem', fontWeight: '600', color: '#fff' }}>
-                Poslední aktivita
+                {t('activity.recent')}
               </h3>
               <Link href="/admin/audit" style={{
                 fontSize: '0.875rem',
@@ -891,16 +893,16 @@ export default function AdminDashboardPage() {
                 textDecoration: 'none',
                 fontWeight: '500'
               }}>
-                Vše →
+                {t('activity.view_all')}
               </Link>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {[
-                { action: 'Admin se přihlásil', details: 'IP: 185.x.x.x', time: '5 min', icon: '→' },
-                { action: 'Profil aktualizován', details: 'Katy - změna cen', time: '23 min', icon: '✎' },
-                { action: 'Nový uživatel', details: 'nova@lovelygirls.cz', time: '1h', icon: '+' },
-                { action: 'Recenze smazána', details: 'Spam obsah', time: '3h', icon: '×' }
+                { action: t('activity.examples.admin_login'), details: t('activity.examples.admin_login_details'), time: t('activity.examples.admin_login_time'), icon: '→' },
+                { action: t('activity.examples.profile_updated'), details: t('activity.examples.profile_updated_details'), time: t('activity.examples.profile_updated_time'), icon: '✎' },
+                { action: t('activity.examples.new_user'), details: t('activity.examples.new_user_details'), time: t('activity.examples.new_user_time'), icon: '+' },
+                { action: t('activity.examples.review_deleted'), details: t('activity.examples.review_deleted_details'), time: t('activity.examples.review_deleted_time'), icon: '×' }
               ].map((item, i) => (
                 <div key={i} style={{
                   display: 'flex',
@@ -929,7 +931,7 @@ export default function AdminDashboardPage() {
                       {item.details}
                     </div>
                     <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
-                      před {item.time}
+                      {t('activity.examples.time_ago', { time: item.time })}
                     </div>
                   </div>
                 </div>
@@ -951,7 +953,7 @@ export default function AdminDashboardPage() {
               marginBottom: '20px'
             }}>
               <h3 style={{ fontSize: '1rem', fontWeight: '600', color: '#fff' }}>
-                Poslední rezervace
+                {t('booking.recent')}
               </h3>
               <Link href="/manager/calendar" style={{
                 fontSize: '0.875rem',
@@ -959,7 +961,7 @@ export default function AdminDashboardPage() {
                 textDecoration: 'none',
                 fontWeight: '500'
               }}>
-                Všechny →
+                {t('booking.view_all')}
               </Link>
             </div>
 
@@ -967,7 +969,7 @@ export default function AdminDashboardPage() {
             <div style={{ marginBottom: '20px', position: 'relative' }}>
               <input
                 type="text"
-                placeholder="Hledat podle jména nebo telefonu..."
+                placeholder={t('booking.search_placeholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
@@ -1009,7 +1011,7 @@ export default function AdminDashboardPage() {
                       fontWeight: '600',
                       color: '#9ca3af',
                       textTransform: 'uppercase'
-                    }}>Klient</th>
+                    }}>{t('booking.table.client')}</th>
                     <th style={{
                       padding: '12px',
                       textAlign: 'left',
@@ -1017,7 +1019,7 @@ export default function AdminDashboardPage() {
                       fontWeight: '600',
                       color: '#9ca3af',
                       textTransform: 'uppercase'
-                    }}>Telefon</th>
+                    }}>{t('booking.table.phone')}</th>
                     <th style={{
                       padding: '12px',
                       textAlign: 'left',
@@ -1025,7 +1027,7 @@ export default function AdminDashboardPage() {
                       fontWeight: '600',
                       color: '#9ca3af',
                       textTransform: 'uppercase'
-                    }}>Holka</th>
+                    }}>{t('booking.table.girl')}</th>
                     <th style={{
                       padding: '12px',
                       textAlign: 'left',
@@ -1033,7 +1035,7 @@ export default function AdminDashboardPage() {
                       fontWeight: '600',
                       color: '#9ca3af',
                       textTransform: 'uppercase'
-                    }}>Datum</th>
+                    }}>{t('booking.table.date')}</th>
                     <th style={{
                       padding: '12px',
                       textAlign: 'left',
@@ -1041,7 +1043,7 @@ export default function AdminDashboardPage() {
                       fontWeight: '600',
                       color: '#9ca3af',
                       textTransform: 'uppercase'
-                    }}>Status</th>
+                    }}>{t('booking.table.status')}</th>
                     <th style={{
                       padding: '12px',
                       textAlign: 'center',
@@ -1049,7 +1051,7 @@ export default function AdminDashboardPage() {
                       fontWeight: '600',
                       color: '#9ca3af',
                       textTransform: 'uppercase'
-                    }}>Akce</th>
+                    }}>{t('booking.table.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1092,11 +1094,11 @@ export default function AdminDashboardPage() {
                             booking.status === 'pending' ? '#eab308' :
                             '#ef4444'
                         }}>
-                          {booking.status === 'completed' ? 'Proběhlo' :
-                           booking.status === 'confirmed' ? 'Potvrzeno' :
-                           booking.status === 'pending' ? 'Čeká' :
-                           booking.status === 'cancelled' ? 'Zrušeno' :
-                           'Nedorazil'}
+                          {booking.status === 'completed' ? t('booking.status.completed') :
+                           booking.status === 'confirmed' ? t('booking.status.confirmed') :
+                           booking.status === 'pending' ? t('booking.status.pending') :
+                           booking.status === 'cancelled' ? t('booking.status.cancelled') :
+                           t('booking.status.no_show')}
                         </span>
                       </td>
                       <td style={{ padding: '12px', textAlign: 'center' }}>
@@ -1122,7 +1124,7 @@ export default function AdminDashboardPage() {
                             e.currentTarget.style.borderColor = '#ef444440';
                           }}
                         >
-                          Smazat
+                          {t('common.delete')}
                         </button>
                       </td>
                     </tr>
@@ -1138,7 +1140,7 @@ export default function AdminDashboardPage() {
                 color: '#6b7280'
               }}>
                 <div style={{ fontSize: '0.875rem' }}>
-                  {searchTerm ? 'Žádné výsledky' : 'Zatím žádné rezervace'}
+                  {searchTerm ? t('booking.empty_search') : t('booking.empty')}
                 </div>
               </div>
             )}

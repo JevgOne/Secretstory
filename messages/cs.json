@@ -826,6 +826,16 @@
       "search_placeholder": "Hledat podle jména nebo telefonu...",
       "empty": "Zatím žádné rezervace",
       "empty_search": "Žádné výsledky",
+      "view_all": "Všechny →",
+      "pending_count": "{count} čeká",
+      "table": {
+        "client": "Klient",
+        "phone": "Telefon",
+        "girl": "Holka",
+        "date": "Datum",
+        "status": "Status",
+        "actions": "Akce"
+      },
       "status": {
         "completed": "Proběhlo",
         "confirmed": "Potvrzeno",
@@ -835,7 +845,8 @@
       }
     },
     "schedule": {
-      "title": "Správa rozvrhů",
+      "title": "Rozvrhy",
+      "times": "Časy",
       "working_hours": "Pracovní doba dívek",
       "working_hours_desc": "Definujte, kdy jsou dívky k dispozici pro rezervace",
       "add": "Přidat rozvrh",
@@ -862,9 +873,12 @@
       "count_for_girl": "{count} rozvrh(ů)"
     },
     "girls": {
-      "title": "Správa dívek",
+      "title": "Dívky",
       "subtitle": "Přidávejte a upravujte profily dívek",
       "add_new": "+ Přidat novou dívku",
+      "add_new_girl": "Přidat dívku",
+      "new_profile": "Nový profil",
+      "profiles_count": "{count} profilů",
       "all": "Všechny",
       "active_profiles": "Aktivních profilů",
       "status_error": "Chyba při změně statusu",
@@ -887,18 +901,22 @@
       }
     },
     "reviews": {
+      "title": "Recenze",
+      "approved_count": "{count} schválených",
       "approve_error": "Chyba při schvalování recenze",
       "reject_confirmation": "Opravdu chcete zamítnout tuto recenzi?",
       "reject_error": "Chyba při zamítání recenze",
       "delete_confirmation": "Opravdu chcete smazat tuto recenzi? Tato akce je nevratná.",
       "delete_error": "Chyba při mazání recenze",
       "status": {
-        "approved": "Schváleno",
+        "approved": "Schválených",
         "pending": "Čeká",
         "rejected": "Zamítnuto"
       }
     },
     "blog": {
+      "title": "Blog",
+      "articles": "Články",
       "delete_confirmation": "Opravdu chcete smazat článek \"{title}\"? Tato akce je nevratná.",
       "delete_error": "Chyba při mazání článku",
       "create_error": "Chyba při vytváření článku",
@@ -907,6 +925,8 @@
       "edit_subtitle": "Upravte existující blogový příspěvek"
     },
     "locations": {
+      "title": "Pobočky",
+      "label": "Lokace",
       "load_error": "Chyba při načítání poboček",
       "create_error": "Chyba při vytváření pobočky",
       "update_error": "Chyba při aktualizaci pobočky",
@@ -914,9 +934,27 @@
       "delete_error": "Chyba při mazání pobočky"
     },
     "activity": {
-      "recent": "Poslední aktivita"
+      "recent": "Poslední aktivita",
+      "view_all": "Vše →",
+      "examples": {
+        "admin_login": "Admin se přihlásil",
+        "admin_login_details": "IP: 185.x.x.x",
+        "admin_login_time": "5 min",
+        "profile_updated": "Profil aktualizován",
+        "profile_updated_details": "Katy - změna cen",
+        "profile_updated_time": "23 min",
+        "new_user": "Nový uživatel",
+        "new_user_details": "nova@lovelygirls.cz",
+        "new_user_time": "1h",
+        "review_deleted": "Recenze smazána",
+        "review_deleted_details": "Spam obsah",
+        "review_deleted_time": "3h",
+        "time_ago": "před {time}"
+      }
     },
     "seo": {
+      "title": "SEO",
+      "meta": "Meta",
       "scan_error": "Chyba při skenování webu",
       "load_error": "Chyba při načítání: {error}",
       "upload_error": "Chyba při nahrávání",
@@ -924,7 +962,33 @@
       "missing_path_error": "Chyba: Chybí parametr 'path' v URL"
     },
     "users": {
+      "title": "Uživatelé",
+      "administrators": "Administrátoři",
+      "count": "{count} uživatelů",
       "logout_all_confirmation": "Opravdu chcete odhlásit všechny uživatele?"
+    },
+    "calendar": {
+      "title": "Kalendář",
+      "bookings": "Rezervace"
+    },
+    "services": {
+      "title": "Služby",
+      "count": "{count} služeb"
+    },
+    "stats": {
+      "title": "Statistiky",
+      "reports": "Reporty"
+    },
+    "settings": {
+      "title": "Nastavení",
+      "system": "Systém"
+    },
+    "audit": {
+      "title": "Audit Log",
+      "history": "Historie"
+    },
+    "system": {
+      "management": "Správa systému"
     }
   }
 }
