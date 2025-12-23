@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+import { translateReviewText } from '@/lib/review-translation';
 
 interface Activity {
   id: number;
@@ -72,6 +73,30 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
 
     return () => clearInterval(interval);
   }, [initialActivities.length]);
+
+  // Auto-translate activity descriptions when locale changes
+  useEffect(() => {
+    if (locale === 'cs' || activities.length === 0) return;
+
+    async function translateActivities() {
+      const translated = await Promise.all(
+        activities.map(async (activity) => {
+          const translatedDescription = await translateReviewText(
+            activity.description,
+            locale,
+            'cs'
+          );
+          return {
+            ...activity,
+            description: translatedDescription
+          };
+        })
+      );
+      setActivities(translated);
+    }
+
+    translateActivities();
+  }, [locale]);
 
   if (activities.length === 0) {
     return null;
