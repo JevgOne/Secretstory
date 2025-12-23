@@ -77,7 +77,27 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
 
   // Auto-translate activity descriptions when locale changes or activities are loaded
   useEffect(() => {
-    if (locale === 'cs' || activities.length === 0 || isTranslating) return;
+    console.log('[ActivityTimeline] useEffect triggered', {
+      locale,
+      activitiesCount: activities.length,
+      isTranslating,
+      firstDescription: activities[0]?.description
+    });
+
+    if (locale === 'cs') {
+      console.log('[ActivityTimeline] Skipping translation: locale is CS');
+      return;
+    }
+
+    if (activities.length === 0) {
+      console.log('[ActivityTimeline] Skipping translation: no activities');
+      return;
+    }
+
+    if (isTranslating) {
+      console.log('[ActivityTimeline] Skipping translation: already translating');
+      return;
+    }
 
     // Check if activities are already translated (avoid re-translating)
     const firstActivity = activities[0];
@@ -85,11 +105,17 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
                     firstActivity.description.includes('Sdílela') ||
                     firstActivity.description.includes('Upravila');
 
-    if (!isCzech) return; // Already translated
+    if (!isCzech) {
+      console.log('[ActivityTimeline] Skipping translation: already translated', firstActivity.description);
+      return;
+    }
+
+    console.log('[ActivityTimeline] Starting translation to', locale);
 
     async function translateActivities() {
       setIsTranslating(true);
       try {
+        console.log('[ActivityTimeline] Translating', activities.length, 'activities');
         const translated = await Promise.all(
           activities.map(async (activity) => {
             const translatedDescription = await translateReviewText(
@@ -97,6 +123,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
               locale,
               'cs'
             );
+            console.log('[ActivityTimeline] Translated:', activity.description, '→', translatedDescription);
             return {
               ...activity,
               description: translatedDescription
@@ -104,6 +131,9 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
           })
         );
         setActivities(translated);
+        console.log('[ActivityTimeline] Translation complete');
+      } catch (error) {
+        console.error('[ActivityTimeline] Translation error:', error);
       } finally {
         setIsTranslating(false);
       }
