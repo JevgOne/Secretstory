@@ -7052,7 +7052,11 @@ body > div > button[title*="Next"],
   padding: 3rem 2rem;
   max-width: 600px;
   width: 100%;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
 }
 
 .age-verification-title {
@@ -7065,6 +7069,8 @@ body > div > button[title*="Next"],
 
 .age-verification-content {
   margin-bottom: 2rem;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .age-verification-intro {
@@ -7132,6 +7138,8 @@ body > div > button[title*="Next"],
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
 .age-verification-button:hover {
