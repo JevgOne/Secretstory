@@ -199,7 +199,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           const onlineData = await onlineResponse.json();
           if (onlineData.success) {
             // Filter out current girl from online list
-            setOnlineGirls((onlineData.girls || []).filter(g => g.id !== profileData.girl.id));
+            setOnlineGirls((onlineData.girls || []).filter((g: Girl) => g.id !== profileData.girl.id));
           }
         }
       } else {
