@@ -182,34 +182,33 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   const fetchProfile = async () => {
     try {
       const resolvedParams = await params;
+      const response = await fetch(`/api/girls/${resolvedParams.slug}`);
+      const data = await response.json();
 
-      // PARALLEL FETCH - both requests at same time
-      const [profileResponse, onlineResponse] = await Promise.all([
-        fetch(`/api/girls/${resolvedParams.slug}`),
-        fetch(`/api/girls/online-today?limit=4`).catch(() => null)
-      ]);
-
-      const profileData = await profileResponse.json();
-
-      if (profileData.success) {
-        setProfile(profileData.girl);
-
-        // Process online girls if fetched
-        if (onlineResponse) {
-          const onlineData = await onlineResponse.json();
-          if (onlineData.success) {
-            // Filter out current girl from online list
-            setOnlineGirls((onlineData.girls || []).filter(g => g.id !== profileData.girl.id));
-          }
-        }
+      if (data.success) {
+        setProfile(data.girl);
+        // Fetch online girls (exclude current girl)
+        fetchOnlineGirls(data.girl.id);
       } else {
-        setError(profileData.error || t('detail.not_found'));
+        setError(data.error || t('detail.not_found'));
       }
     } catch (err) {
       console.error('Error fetching profile:', err);
       setError(t('detail.error'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchOnlineGirls = async (excludeId: number) => {
+    try {
+      const response = await fetch(`/api/girls/online-today?exclude=${excludeId}&limit=4`);
+      const data = await response.json();
+      if (data.success) {
+        setOnlineGirls(data.girls || []);
+      }
+    } catch (err) {
+      console.error('Error fetching online girls:', err);
     }
   };
 
