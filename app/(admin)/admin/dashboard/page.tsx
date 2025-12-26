@@ -59,7 +59,8 @@ export default function AdminDashboardPage() {
 
   const fetchBookings = async () => {
     try {
-      const response = await fetch('/api/bookings');
+      // Only fetch recent bookings (last 30 days) for faster load
+      const response = await fetch('/api/bookings?limit=50&recent=30');
       const data = await response.json();
       if (data.success) {
         setBookings(data.bookings);
@@ -73,10 +74,11 @@ export default function AdminDashboardPage() {
 
   const fetchStats = async () => {
     try {
+      // Fetch only counts, not full data for speed
       const [girlsRes, reviewsRes, usersRes] = await Promise.all([
-        fetch('/api/admin/girls'),
-        fetch('/api/reviews?status=approved'),
-        fetch('/api/admin/users')
+        fetch('/api/admin/girls?count=true'),
+        fetch('/api/reviews?status=approved&count=true'),
+        fetch('/api/admin/users?count=true')
       ]);
 
       const girlsData = await girlsRes.json();
@@ -84,7 +86,7 @@ export default function AdminDashboardPage() {
       const usersData = await usersRes.json();
 
       setStats({
-        girlsCount: girlsData.girls?.length || 0,
+        girlsCount: girlsData.count || girlsData.girls?.length || 0,
         reviewsCount: reviewsData.reviews?.length || 0,
         usersCount: usersData.users?.length || 0,
         servicesCount: 24
