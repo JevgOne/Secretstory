@@ -143,6 +143,7 @@ interface Girl {
   is_top?: boolean;
   is_featured?: boolean;
   badge_type?: string;
+  created_at?: string;
   schedule?: ScheduleItem[];
   photos?: Photo[];
   videos?: Video[];
@@ -444,11 +445,25 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           <div className="gallery">
             <div className="gallery-main">
               {profile.verified && <span className="gallery-badge verified">{t('girls.verified')}</span>}
-              {profile.badge_type && (
-                <span className={`gallery-badge badge-${profile.badge_type}`}>
-                  {profile.badge_type === 'new' ? t('girls.new') : profile.badge_type === 'top' ? t('girls.top_reviews') : profile.badge_type === 'recommended' ? t('girls.recommended') : tCommon('asian')}
-                </span>
-              )}
+              {(() => {
+                // Auto-detect if girl is new (within 10 days of creation)
+                const isNewlyCreated = profile.created_at ?
+                  (new Date().getTime() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24) <= 10
+                  : false;
+
+                // Determine badge: auto NEW for 10 days, then is_new checkbox, then badge_type dropdown
+                const badge = (isNewlyCreated || profile.is_new) ? 'new' : (profile.badge_type || null);
+
+                if (!badge) return null;
+
+                const badgeText = badge === 'new' ? t('girls.new') : badge === 'top' ? t('girls.top_reviews') : badge === 'recommended' ? t('girls.recommended') : tCommon('asian');
+
+                return (
+                  <span className={`gallery-badge badge-${badge}`}>
+                    {badgeText}
+                  </span>
+                );
+              })()}
               {activeGalleryMode === "photo" ? (
                 profile.photos && profile.photos.length > 0 && profile.photos[activeThumb] ? (
                   <img
