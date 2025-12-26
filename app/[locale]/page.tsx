@@ -49,6 +49,7 @@ interface Girl {
   badge_type?: string;
   featured_section?: string;
   primary_photo?: string;
+  secondary_photo?: string;
   thumbnail?: string;
   schedule_status?: 'working' | 'later' | null;
   schedule_from?: string | null;
@@ -309,17 +310,51 @@ export default function Home() {
                     {badge && (
                       <span className={`badge ${badgeClass}`}>{badgeText}</span>
                     )}
-                    {girl.primary_photo || girl.thumbnail ? (
-                      <img
-                        src={girl.thumbnail || girl.primary_photo}
-                        alt={girl.name}
-                        className="card-image"
-                        loading="lazy"
-                        decoding="async"
-                      />
+
+                    {/* 3D Flip Container */}
+                    {girl.secondary_photo ? (
+                      <div className="card-flip-inner">
+                        {/* Front Side */}
+                        <div className="card-flip-front">
+                          {girl.primary_photo || girl.thumbnail ? (
+                            <img
+                              src={girl.thumbnail || girl.primary_photo}
+                              alt={girl.name}
+                              className="card-image"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          ) : (
+                            <div className="card-placeholder">FOTO</div>
+                          )}
+                        </div>
+
+                        {/* Back Side */}
+                        <div className="card-flip-back">
+                          <img
+                            src={girl.secondary_photo}
+                            alt={`${girl.name} - back view`}
+                            className="card-image"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </div>
+                      </div>
                     ) : (
-                      <div className="card-placeholder">FOTO</div>
+                      // No secondary photo - just show primary
+                      girl.primary_photo || girl.thumbnail ? (
+                        <img
+                          src={girl.thumbnail || girl.primary_photo}
+                          alt={girl.name}
+                          className="card-image"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      ) : (
+                        <div className="card-placeholder">FOTO</div>
+                      )
                     )}
+
                     <div className="card-overlay"></div>
                     <div className="quick-actions">
                       <button

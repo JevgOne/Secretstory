@@ -110,8 +110,12 @@ export async function GET(request: NextRequest) {
 
     // Fetch ALL photos in one query (much faster!)
     let photoMap = new Map<number, { url: string; thumbnail_url: string }>();
+    let secondaryPhotoMap = new Map<number, { url: string; thumbnail_url: string }>();
+
     if (girlIds.length > 0) {
       const placeholders = girlIds.map(() => '?').join(',');
+
+      // Get primary photos
       const photosResult = await db.execute({
         sql: `
           SELECT girl_id, url, thumbnail_url
@@ -126,6 +130,30 @@ export async function GET(request: NextRequest) {
           url: row.url as string,
           thumbnail_url: row.thumbnail_url as string
         });
+      });
+
+      // Get secondary photos (first non-primary photo for flip effect)
+      const secondaryPhotosResult = await db.execute({
+        sql: `
+          SELECT girl_id, url, thumbnail_url
+          FROM girl_photos
+          WHERE girl_id IN (${placeholders}) AND is_primary = 0
+          ORDER BY display_order ASC
+        `,
+        args: girlIds
+      });
+
+      // Take only the first secondary photo for each girl
+      const processedGirls = new Set<number>();
+      secondaryPhotosResult.rows.forEach((row: any) => {
+        const girlId = row.girl_id as number;
+        if (!processedGirls.has(girlId)) {
+          secondaryPhotoMap.set(girlId, {
+            url: row.url as string,
+            thumbnail_url: row.thumbnail_url as string
+          });
+          processedGirls.add(girlId);
+        }
       });
     }
 
@@ -153,6 +181,7 @@ export async function GET(request: NextRequest) {
     // Map girls with their photos and schedules
     let girlsWithPhotos = result.rows.map((row: any) => {
       const primaryPhoto = photoMap.get(row.id as number);
+      const secondaryPhoto = secondaryPhotoMap.get(row.id as number);
       const schedule = scheduleMap.get(row.id as number);
 
       const services = row.services ? JSON.parse(row.services as string) : [];
@@ -190,6 +219,7 @@ export async function GET(request: NextRequest) {
         is_top: Boolean(row.is_top),
         is_featured: Boolean(row.is_featured),
         primary_photo: primaryPhoto?.url || null,
+        secondary_photo: secondaryPhoto?.url || null,
         thumbnail: primaryPhoto?.thumbnail_url || null,
         schedule_status: scheduleStatus,
         schedule_from: scheduleFrom,

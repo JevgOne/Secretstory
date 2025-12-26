@@ -6344,6 +6344,34 @@ body > div > button[title*="Next"],
     aspect-ratio: 2/3;
     overflow: hidden;
     background: linear-gradient(145deg, #1a1a24 0%, #0f0f15 100%);
+    perspective: 1000px;
+}
+
+/* 3D Flip Container */
+.card-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-style: preserve-3d;
+}
+
+.card:hover .card-flip-inner {
+    transform: rotateY(180deg);
+}
+
+/* Front and Back faces */
+.card-flip-front,
+.card-flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.card-flip-back {
+    transform: rotateY(180deg);
 }
 
 /* Actual girl photo in cards */
