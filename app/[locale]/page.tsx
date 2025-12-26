@@ -419,8 +419,8 @@ export default function Home() {
         <div style={{
           display: 'flex',
           justifyContent: 'center',
-          marginTop: '3rem',
-          paddingBottom: '2rem'
+          marginTop: '2rem',
+          paddingBottom: '0'
         }}>
           <Link
             href={`/${locale}/divky`}
@@ -443,9 +443,9 @@ export default function Home() {
       <ReviewsSection initialReviews={reviews} />
 
       {/* POPULAR HASHTAGS */}
-      <section style={{ padding: '4rem 0', background: 'rgba(139, 41, 66, 0.03)' }}>
+      <section style={{ padding: '2.5rem 0', background: 'rgba(139, 41, 66, 0.03)' }}>
         <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <h2 className="section-title">{tHome('popular_searches_title')}</h2>
             <p className="section-subtitle">{tHome('popular_searches_subtitle')}</p>
           </div>

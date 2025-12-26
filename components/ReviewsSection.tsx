@@ -110,9 +110,9 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
   };
 
   return (
-    <section style={{ padding: '4rem 0', background: 'rgba(0, 0, 0, 0.2)' }}>
+    <section style={{ padding: '2.5rem 0', background: 'rgba(0, 0, 0, 0.2)' }}>
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <h2 className="section-title">{t('reviews_title')}</h2>
           <p className="section-subtitle">{t('reviews_subtitle')}</p>
         </div>

@@ -167,9 +167,9 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
   };
 
   return (
-    <section style={{ padding: '4rem 0', background: 'rgba(139, 41, 66, 0.03)' }}>
+    <section style={{ padding: '2.5rem 0', background: 'rgba(139, 41, 66, 0.03)' }}>
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <h2 className="section-title">{t('activity_title')}</h2>
           <p className="section-subtitle">{t('activity_subtitle')}</p>
         </div>
