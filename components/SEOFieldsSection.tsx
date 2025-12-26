@@ -122,8 +122,14 @@ export default function SEOFieldsSection({
       {isExpanded && (
         <div>
           {/* Meta Title */}
-          <div className="form-group">
-            <label>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              color: 'var(--white)'
+            }}>
               Meta Title
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
                 ({metaTitle.length}/60 znaků)
@@ -135,6 +141,25 @@ export default function SEOFieldsSection({
               onChange={(e) => onChange('meta_title', e.target.value)}
               placeholder="SEO nadpis pro vyhledávače (50-60 znaků)"
               maxLength={60}
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                color: 'var(--white)',
+                fontSize: '0.95rem',
+                transition: 'all 0.2s ease',
+                outline: 'none'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+              }}
             />
             {metaTitle.length > 0 && metaTitle.length < 50 && (
               <p style={{ fontSize: '0.85rem', color: '#fbbf24', marginTop: '8px', marginBottom: 0 }}>
@@ -144,8 +169,14 @@ export default function SEOFieldsSection({
           </div>
 
           {/* Meta Description */}
-          <div className="form-group">
-            <label>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              color: 'var(--white)'
+            }}>
               Meta Description
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
                 ({metaDescription.length}/160 znaků)
@@ -157,6 +188,27 @@ export default function SEOFieldsSection({
               placeholder="Popis profilu pro vyhledávače a sociální sítě (150-160 znaků)"
               maxLength={160}
               rows={3}
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                color: 'var(--white)',
+                fontSize: '0.95rem',
+                transition: 'all 0.2s ease',
+                outline: 'none',
+                resize: 'vertical',
+                fontFamily: 'inherit'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+              }}
             />
             {metaDescription.length > 0 && metaDescription.length < 150 && (
               <p style={{ fontSize: '0.85rem', color: '#fbbf24', marginTop: '8px', marginBottom: 0 }}>
@@ -189,8 +241,14 @@ export default function SEOFieldsSection({
           </div>
 
           {/* OG Title */}
-          <div className="form-group">
-            <label>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              color: 'var(--white)'
+            }}>
               OG Title
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
                 ({ogTitle.length}/60 znaků)
@@ -202,6 +260,25 @@ export default function SEOFieldsSection({
               onChange={(e) => onChange('og_title', e.target.value)}
               placeholder="Nadpis při sdílení na sociálních sítích (50-60 znaků)"
               maxLength={60}
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                color: 'var(--white)',
+                fontSize: '0.95rem',
+                transition: 'all 0.2s ease',
+                outline: 'none'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+              }}
             />
             {ogTitle.length > 0 && ogTitle.length < 50 && (
               <p style={{ fontSize: '0.85rem', color: '#fbbf24', marginTop: '8px', marginBottom: 0 }}>
@@ -211,8 +288,14 @@ export default function SEOFieldsSection({
           </div>
 
           {/* OG Description */}
-          <div className="form-group">
-            <label>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              color: 'var(--white)'
+            }}>
               OG Description
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
                 ({ogDescription.length}/160 znaků)
@@ -224,6 +307,27 @@ export default function SEOFieldsSection({
               placeholder="Popis při sdílení na sociálních sítích (150-160 znaků)"
               maxLength={160}
               rows={3}
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                color: 'var(--white)',
+                fontSize: '0.95rem',
+                transition: 'all 0.2s ease',
+                outline: 'none',
+                resize: 'vertical',
+                fontFamily: 'inherit'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+              }}
             />
             {ogDescription.length > 0 && ogDescription.length < 150 && (
               <p style={{ fontSize: '0.85rem', color: '#fbbf24', marginTop: '8px', marginBottom: 0 }}>
@@ -233,8 +337,14 @@ export default function SEOFieldsSection({
           </div>
 
           {/* OG Image */}
-          <div className="form-group">
-            <label>
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              color: 'var(--white)'
+            }}>
               OG Image URL
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
                 (automaticky z galerie)
@@ -245,6 +355,25 @@ export default function SEOFieldsSection({
               value={ogImage}
               onChange={(e) => onChange('og_image', e.target.value)}
               placeholder="Automaticky použita primární fotka z galerie"
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                color: 'var(--white)',
+                fontSize: '0.95rem',
+                transition: 'all 0.2s ease',
+                outline: 'none'
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+              }}
             />
             {ogImage && (
               <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
