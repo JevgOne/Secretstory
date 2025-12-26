@@ -107,28 +107,35 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
       processed.add(activity.id);
       similar.forEach(s => processed.add(s.id));
 
+      // Determine the description text
+      let finalDescription = activity.description;
+
       if (similar.length > 0) {
-        // Create grouped activity
+        // Multiple similar activities - use grouped text
         const count = similar.length + 1;
-        let groupedDescription = activity.description;
 
         if (activity.activity_type === 'photo_added') {
-          groupedDescription = count === 2
-            ? t('activity_photo_added_2', { name: activity.girl_name })
-            : t('activity_photo_added_multiple', { name: activity.girl_name, count });
+          finalDescription = count === 2
+            ? t('activity_photo_added_2')
+            : t('activity_photo_added_multiple', { count });
         } else if (activity.activity_type === 'video_added') {
-          groupedDescription = count === 2
-            ? t('activity_video_added_2', { name: activity.girl_name })
-            : t('activity_video_added_multiple', { name: activity.girl_name, count });
+          finalDescription = count === 2
+            ? t('activity_video_added_2')
+            : t('activity_video_added_multiple', { count });
         }
-
-        grouped.push({
-          ...activity,
-          description: groupedDescription
-        });
       } else {
-        grouped.push(activity);
+        // Single activity - use singular text
+        if (activity.activity_type === 'photo_added') {
+          finalDescription = t('activity_photo_added_single');
+        } else if (activity.activity_type === 'video_added') {
+          finalDescription = t('activity_video_added_single');
+        }
       }
+
+      grouped.push({
+        ...activity,
+        description: finalDescription
+      });
     });
 
     return grouped;

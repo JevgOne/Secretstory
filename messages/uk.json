@@ -96,8 +96,10 @@
     "activity_time_hours_other": "{count} годин тому",
     "activity_time_days_1": "{count} день тому",
     "activity_time_days_other": "{count} днів тому",
+    "activity_photo_added_single": "додала нову фотографію до галереї",
     "activity_photo_added_2": "додала 2 нові фотографії до галереї",
     "activity_photo_added_multiple": "додала {count} нових фотографій до галереї",
+    "activity_video_added_single": "додала нове відео до галереї",
     "activity_video_added_2": "додала 2 нові відео до галереї",
     "activity_video_added_multiple": "додала {count} нових відео до галереї"
   },

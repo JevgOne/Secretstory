@@ -96,8 +96,10 @@
     "activity_time_hours_other": "před {count} hodinami",
     "activity_time_days_1": "před {count} dnem",
     "activity_time_days_other": "před {count} dny",
+    "activity_photo_added_single": "přidala novou fotku do galerie",
     "activity_photo_added_2": "přidala 2 nové fotky do galerie",
     "activity_photo_added_multiple": "přidala {count} nových fotek do galerie",
+    "activity_video_added_single": "přidala nové video do galerie",
     "activity_video_added_2": "přidala 2 nová videa do galerie",
     "activity_video_added_multiple": "přidala {count} nových videí do galerie"
   },
