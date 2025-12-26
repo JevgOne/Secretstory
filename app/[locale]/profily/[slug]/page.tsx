@@ -564,55 +564,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               </div>
             </div>
             )}
-
-            {/* Working Today Section */}
-            <div className="working-today-section">
-              <h3 className="working-today-title">
-                {t('profile.working_today_title') || 'Dnes také pracují'}
-              </h3>
-              <p className="working-today-subtitle">
-                {t('profile.working_today_subtitle') || 'Další dívky dostupné ve stejný den'}
-              </p>
-              {onlineGirls.length === 0 ? (
-                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem' }}>
-                  Právě teď nejsou k dispozici žádné další dívky
-                </p>
-              ) : (
-                <div className="working-today-grid">
-                  {onlineGirls.map((girl) => (
-                    <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} className="working-girl-card">
-                      <div className="working-girl-image">
-                        {girl.primary_photo ? (
-                          <img src={girl.primary_photo} alt={girl.name} />
-                        ) : (
-                          <div className="working-girl-placeholder">FOTO</div>
-                        )}
-                        {girl.verified && <span className="girl-badge verified">{t('girls.verified')}</span>}
-                        {girl.is_working_now && (
-                          <span className="girl-badge working">{t('profile.working_now')}</span>
-                        )}
-                      </div>
-                      <div className="working-girl-info">
-                        <h4 className="working-girl-name">{girl.name}</h4>
-                        <div className="working-girl-meta">
-                          {girl.age} {t('girls.age_years')} • {girl.height} {t('girls.height_cm')}
-                        </div>
-                        {girl.schedule_from && girl.schedule_to && (
-                          <div className="working-girl-schedule">
-                            <Clock size={14} />
-                            {girl.is_working_now ? (
-                              <span>{girl.schedule_from} – {girl.schedule_to}</span>
-                            ) : (
-                              <span>{t('profile.starts_at', { time: girl.schedule_from })}</span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
 
           {/* Header - Separate element for flexible ordering */}
@@ -853,6 +804,53 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           </div>
         </div>
       </section>
+
+      {/* Working Today Section */}
+      {onlineGirls.length > 0 && (
+        <section className="working-today-section">
+          <div className="working-today-container">
+            <h3 className={`working-today-title ${cormorant.className}`}>
+              {t('profile.working_today_title') || 'Dnes také pracují'}
+            </h3>
+            <p className="working-today-subtitle">
+              {t('profile.working_today_subtitle') || 'Další dívky dostupné ve stejný den'}
+            </p>
+            <div className="working-today-grid">
+              {onlineGirls.map((girl) => (
+                <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} className="working-girl-card">
+                  <div className="working-girl-image">
+                    {girl.primary_photo ? (
+                      <img src={girl.primary_photo} alt={girl.name} />
+                    ) : (
+                      <div className="working-girl-placeholder">FOTO</div>
+                    )}
+                    {girl.verified && <span className="girl-badge verified">{t('girls.verified')}</span>}
+                    {girl.is_working_now && (
+                      <span className="girl-badge working">{t('profile.working_now')}</span>
+                    )}
+                  </div>
+                  <div className="working-girl-info">
+                    <h4 className="working-girl-name">{girl.name}</h4>
+                    <div className="working-girl-meta">
+                      {girl.age} {t('girls.age_years')} • {girl.height} {t('girls.height_cm')}
+                    </div>
+                    {girl.schedule_from && girl.schedule_to && (
+                      <div className="working-girl-schedule">
+                        <Clock size={14} />
+                        {girl.is_working_now ? (
+                          <span>{girl.schedule_from} – {girl.schedule_to}</span>
+                        ) : (
+                          <span>{t('profile.starts_at', { time: girl.schedule_from })}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Reviews Section */}
       <section className="reviews-section">
@@ -1423,34 +1421,65 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
         /* Working Today Section */
         .working-today-section {
-          margin-top: 2rem;
-          padding-top: 2rem;
+          padding: 4rem 0;
+          background: rgba(0, 0, 0, 0.2);
           border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        .working-today-container {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 2rem;
+        }
+
         .working-today-title {
-          font-family: 'Cormorant', serif;
-          font-size: 1.5rem;
+          font-size: 2.5rem;
           font-weight: 400;
           margin-bottom: 0.5rem;
           color: var(--white);
+          text-align: center;
         }
 
         .working-today-subtitle {
-          font-size: 0.9rem;
+          font-size: 1.1rem;
           color: var(--gray);
-          margin-bottom: 1.5rem;
+          margin-bottom: 3rem;
+          text-align: center;
         }
 
         .working-today-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-          gap: 1rem;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 2rem;
+        }
+
+        @media (max-width: 1200px) {
+          .working-today-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
         }
 
         @media (max-width: 768px) {
+          .working-today-section {
+            padding: 3rem 0;
+          }
+
+          .working-today-container {
+            padding: 0 1.5rem;
+          }
+
+          .working-today-title {
+            font-size: 2rem;
+          }
+
+          .working-today-subtitle {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+          }
+
           .working-today-grid {
             grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
           }
         }
 
