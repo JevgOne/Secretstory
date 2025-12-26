@@ -9,6 +9,29 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const girlId = searchParams.get('girl_id');
     const status = searchParams.get('status');
+    const count = searchParams.get('count') === 'true';
+
+    // If only count is requested, return count for faster dashboard loading
+    if (count) {
+      let sql = 'SELECT COUNT(*) as count FROM reviews r WHERE 1=1';
+      const args: any[] = [];
+
+      if (girlId) {
+        sql += ' AND r.girl_id = ?';
+        args.push(parseInt(girlId));
+      }
+
+      if (status) {
+        sql += ' AND r.status = ?';
+        args.push(status);
+      }
+
+      const result = await db.execute({ sql, args });
+      return NextResponse.json({
+        success: true,
+        count: result.rows[0].count
+      });
+    }
 
     let sql = `
       SELECT

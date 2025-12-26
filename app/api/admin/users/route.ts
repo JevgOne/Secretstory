@@ -8,6 +8,18 @@ export async function GET(request: NextRequest) {
   if (user instanceof NextResponse) return user;
 
   try {
+    const searchParams = request.nextUrl.searchParams;
+    const count = searchParams.get('count') === 'true';
+
+    // If only count is requested, return count for faster dashboard loading
+    if (count) {
+      const result = await db.execute('SELECT COUNT(*) as count FROM users');
+      return NextResponse.json({
+        success: true,
+        count: result.rows[0].count
+      });
+    }
+
     // Get all users with left join to girls table for name
     const result = await db.execute(`
       SELECT

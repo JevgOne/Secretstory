@@ -86,9 +86,9 @@ export default function AdminDashboardPage() {
       const usersData = await usersRes.json();
 
       setStats({
-        girlsCount: girlsData.count || girlsData.girls?.length || 0,
-        reviewsCount: reviewsData.reviews?.length || 0,
-        usersCount: usersData.users?.length || 0,
+        girlsCount: girlsData.count || 0,
+        reviewsCount: reviewsData.count || 0,
+        usersCount: usersData.count || 0,
         servicesCount: 24
       });
     } catch (error) {

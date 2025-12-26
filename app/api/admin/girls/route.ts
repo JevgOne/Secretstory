@@ -134,6 +134,24 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status');
+    const count = searchParams.get('count') === 'true';
+
+    // If only count is requested, return count for faster dashboard loading
+    if (count) {
+      let sql = 'SELECT COUNT(*) as count FROM girls WHERE 1=1';
+      const args: any[] = [];
+
+      if (status) {
+        sql += ' AND status = ?';
+        args.push(status);
+      }
+
+      const result = await db.execute({ sql, args });
+      return NextResponse.json({
+        success: true,
+        count: result.rows[0].count
+      });
+    }
 
     let sql = 'SELECT * FROM girls WHERE 1=1';
     const args: any[] = [];
