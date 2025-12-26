@@ -816,37 +816,61 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               {t('profile.working_today_subtitle') || 'Další dívky dostupné ve stejný den'}
             </p>
             <div className="working-today-grid">
-              {onlineGirls.map((girl) => (
-                <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} className="working-girl-card">
-                  <div className="working-girl-image">
-                    {girl.primary_photo ? (
-                      <img src={girl.primary_photo} alt={girl.name} />
-                    ) : (
-                      <div className="working-girl-placeholder">FOTO</div>
-                    )}
-                    {girl.verified && <span className="girl-badge verified">{t('girls.verified')}</span>}
-                    {girl.is_working_now && (
-                      <span className="girl-badge working">{t('profile.working_now')}</span>
-                    )}
-                  </div>
-                  <div className="working-girl-info">
-                    <h4 className="working-girl-name">{girl.name}</h4>
-                    <div className="working-girl-meta">
-                      {girl.age} {t('girls.age_years')} • {girl.height} {t('girls.height_cm')}
-                    </div>
-                    {girl.schedule_from && girl.schedule_to && (
-                      <div className="working-girl-schedule">
-                        <Clock size={14} />
-                        {girl.is_working_now ? (
-                          <span>{girl.schedule_from} – {girl.schedule_to}</span>
+              {onlineGirls.map((girl) => {
+                // Calculate breast size from bust measurement
+                const getBreastSize = (bust: string): number => {
+                  if (!bust) return 2;
+                  if (bust.includes('-')) {
+                    const size = parseInt(bust.split('-')[0]);
+                    if (size >= 95) return 3;
+                    if (size >= 85) return 2;
+                    return 1;
+                  }
+                  const cups: Record<string, number> = { 'A': 1, 'B': 2, 'C': 3, 'D': 3, 'DD': 3 };
+                  return cups[bust] || 2;
+                };
+
+                const breastSize = getBreastSize(girl.bust);
+                const timeRange = girl.schedule_from && girl.schedule_to ? `${girl.schedule_from} - ${girl.schedule_to}` : null;
+                const isWorking = girl.is_working_now;
+
+                return (
+                  <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <article className="card">
+                      <div className="card-image-container">
+                        {girl.verified && <span className="badge badge-top">{t('girls.verified')}</span>}
+                        {girl.primary_photo ? (
+                          <img src={girl.primary_photo} alt={girl.name} className="card-image" />
                         ) : (
-                          <span>{t('profile.starts_at', { time: girl.schedule_from })}</span>
+                          <div className="card-placeholder">FOTO</div>
                         )}
+                        <div className="card-overlay"></div>
                       </div>
-                    )}
-                  </div>
-                </Link>
-              ))}
+                      <div className="card-info">
+                        <div className="card-header">
+                          <h3 className="card-name">
+                            {isWorking && <span className="online-dot"></span>}
+                            {girl.name}
+                          </h3>
+                          {timeRange && <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`}>{timeRange}</span>}
+                        </div>
+                        <div className="card-stats">
+                          <span className="stat"><span className="stat-value">{girl.age || '?'}</span><span className="stat-label">{t('girls.age_years')}</span></span>
+                          <span className="stat"><span className="stat-value">{girl.height || '?'}</span><span className="stat-label">cm</span></span>
+                          <span className="stat"><span className="stat-value">{girl.weight || '?'}</span><span className="stat-label">kg</span></span>
+                          <span className="stat"><span className="stat-value">{breastSize}</span><span className="stat-label">{t('girls.bust')}</span></span>
+                        </div>
+                        <div className="card-location-wrapper">
+                          <div className="card-location">
+                            <svg className="location-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            {t('home.default_location')}
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -1487,83 +1511,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           .working-today-grid {
             grid-template-columns: 1fr;
           }
-        }
-
-        .working-girl-card {
-          display: block;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 12px;
-          overflow: hidden;
-          transition: all 0.3s ease;
-          text-decoration: none;
-        }
-
-        .working-girl-card:hover {
-          background: rgba(255, 255, 255, 0.05);
-          border-color: rgba(139, 41, 66, 0.3);
-          transform: translateY(-4px);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .working-girl-image {
-          position: relative;
-          width: 100%;
-          padding-top: 133%;
-          background: rgba(255, 255, 255, 0.05);
-          overflow: hidden;
-        }
-
-        .working-girl-image img {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .working-girl-placeholder {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255, 255, 255, 0.05);
-          color: var(--gray);
-          font-size: 0.9rem;
-        }
-
-        .working-girl-info {
-          padding: 1rem;
-        }
-
-        .working-girl-name {
-          font-size: 1.1rem;
-          font-weight: 600;
-          margin-bottom: 0.25rem;
-          color: var(--white);
-        }
-
-        .working-girl-meta {
-          font-size: 0.85rem;
-          color: var(--gray);
-          margin-bottom: 0.5rem;
-        }
-
-        .working-girl-schedule {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          font-size: 0.85rem;
-          color: var(--wine-light);
-        }
-
-        .working-girl-schedule svg {
-          flex-shrink: 0;
         }
 
         /* Profile Content */
