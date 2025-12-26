@@ -280,7 +280,8 @@ export default function Home() {
             </div>
           ) : (
             girls.map((girl) => {
-            const badge = girl.badge_type || null;
+            // Determine badge: prioritize is_new checkbox, then badge_type dropdown
+            const badge = girl.is_new ? 'new' : (girl.badge_type || null);
             const badgeText = badge === 'new' ? tGirls('new') : badge === 'top' ? tGirls('top_reviews') : badge === 'recommended' ? tGirls('recommended') : badge === 'asian' ? 'Asian' : '';
             const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
 
