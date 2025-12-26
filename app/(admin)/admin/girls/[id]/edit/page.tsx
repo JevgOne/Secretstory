@@ -49,6 +49,7 @@ export default function EditGirlPage({ params }: PageProps) {
     piercing: false,
     piercing_description: '',
     languages: ['cs'],
+    location: 'Praha 2',
     services: [] as string[],
     hashtags: [] as string[],
     is_new: false,
@@ -143,6 +144,7 @@ export default function EditGirlPage({ params }: PageProps) {
             piercing: girl.piercing || false,
             piercing_description: girl.piercing_description || '',
             languages: girl.languages || ['cs'],
+            location: girl.location || 'Praha 2',
             services: girl.services || [],
             hashtags: girl.hashtags || [],
             is_new: girl.is_new || false,
@@ -332,6 +334,24 @@ export default function EditGirlPage({ params }: PageProps) {
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="+420 xxx xxx xxx"
               />
+            </div>
+
+            <div className="form-group">
+              <label>Pobočka / Lokace</label>
+              <select
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              >
+                <option value="Praha 2">Praha 2 — Nové Město</option>
+                <option value="Praha 3">Praha 3 — Žižkov</option>
+                <option value="Praha 1">Praha 1 — Staré Město</option>
+                <option value="Praha 5">Praha 5 — Smíchov</option>
+                <option value="Praha 6">Praha 6 — Dejvice</option>
+                <option value="Praha 7">Praha 7 — Holešovice</option>
+                <option value="Praha 8">Praha 8 — Karlín</option>
+                <option value="Praha 9">Praha 9 — Vysočany</option>
+                <option value="Praha 10">Praha 10 — Vršovice</option>
+              </select>
             </div>
 
             <div className="form-group">
