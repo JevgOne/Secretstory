@@ -24,6 +24,7 @@ export default function EditGirlPage({ params }: PageProps) {
   const [uploadingVideo, setUploadingVideo] = useState(false);
   const [uploadingStory, setUploadingStory] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [locations, setLocations] = useState<any[]>([]);
 
   const basicServices = getBasicServices();
   const extraServices = getExtraServices();
@@ -110,6 +111,13 @@ export default function EditGirlPage({ params }: PageProps) {
       setGirlId(resolvedParams.id);
 
       try {
+        // Load locations first
+        const locationsResponse = await fetch('/api/homepage');
+        const locationsData = await locationsResponse.json();
+        if (locationsData.success && locationsData.locations) {
+          setLocations(locationsData.locations);
+        }
+
         const response = await fetch(`/api/admin/girls/${resolvedParams.id}`);
         const data = await response.json();
 
@@ -342,15 +350,15 @@ export default function EditGirlPage({ params }: PageProps) {
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
               >
-                <option value="Praha 2">Praha 2 — Nové Město</option>
-                <option value="Praha 3">Praha 3 — Žižkov</option>
-                <option value="Praha 1">Praha 1 — Staré Město</option>
-                <option value="Praha 5">Praha 5 — Smíchov</option>
-                <option value="Praha 6">Praha 6 — Dejvice</option>
-                <option value="Praha 7">Praha 7 — Holešovice</option>
-                <option value="Praha 8">Praha 8 — Karlín</option>
-                <option value="Praha 9">Praha 9 — Vysočany</option>
-                <option value="Praha 10">Praha 10 — Vršovice</option>
+                {locations.length > 0 ? (
+                  locations.map((loc: any) => (
+                    <option key={loc.id} value={loc.display_name}>
+                      {loc.display_name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="Praha 2">Praha 2 (načítání...)</option>
+                )}
               </select>
             </div>
 
@@ -371,17 +379,20 @@ export default function EditGirlPage({ params }: PageProps) {
 
             <div className="form-group">
               <label>Barva kalendáře</label>
-              <select
+              <input
+                type="text"
                 value={formData.color}
-                onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-              >
-                <option value="rose">Růžová</option>
-                <option value="purple">Fialová</option>
-                <option value="blue">Modrá</option>
-                <option value="green">Zelená</option>
-                <option value="orange">Oranžová</option>
-                <option value="red">Červená</option>
-              </select>
+                disabled
+                style={{
+                  opacity: 0.7,
+                  cursor: 'not-allowed',
+                  textTransform: 'capitalize'
+                }}
+                placeholder="Automaticky z profilu"
+              />
+              <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.5rem' }}>
+                Barva se nastavuje automaticky podle profilu dívky
+              </p>
             </div>
           </div>
         </div>
