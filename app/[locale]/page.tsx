@@ -268,7 +268,6 @@ export default function Home() {
             <h2 className="section-title">{tHome('profiles_title')}</h2>
             <p className="section-subtitle">{tHome('profiles_subtitle')}</p>
           </div>
-          <Link href={`/${locale}/divky`} className="btn">{tHome('view_all')}</Link>
         </div>
         <div className="cards-grid">
           {loading ? (
@@ -414,6 +413,26 @@ export default function Home() {
             );
           })
           )}
+        </div>
+
+        {/* View All Button - Centered below profiles */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '3rem',
+          paddingBottom: '2rem'
+        }}>
+          <Link
+            href={`/${locale}/divky`}
+            className="btn"
+            style={{
+              padding: '14px 40px',
+              fontSize: '1.1rem',
+              fontWeight: '600'
+            }}
+          >
+            {tHome('view_all')}
+          </Link>
         </div>
       </section>
 
