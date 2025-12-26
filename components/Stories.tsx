@@ -69,7 +69,7 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
 
   return (
     <section style={{
-      padding: '3rem 0',
+      padding: '1.5rem 0 2.5rem',
       background: 'rgba(0, 0, 0, 0.2)',
       position: 'relative',
       overflow: 'hidden'
@@ -88,7 +88,7 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
       }} />
 
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <h2 style={{
             fontSize: '1.75rem',
             fontWeight: '600',

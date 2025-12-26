@@ -224,7 +224,7 @@ nav .nav-contact,
     min-height: 85vh;
     display: flex;
     align-items: center;
-    padding: 100px 4% 70px;
+    padding: 100px 4% 30px;
     position: relative;
     z-index: 1;
 }
@@ -1165,7 +1165,7 @@ footer {
     /* Hero Section */
     .hero {
         min-height: auto;
-        padding: 100px 4% 60px;
+        padding: 100px 4% 30px;
     }
     .hero-text h1 {
         font-size: clamp(1.75rem, 7vw, 2.5rem);
@@ -1270,7 +1270,7 @@ footer {
 @media (max-width: 480px) {
     /* Hero - Extra small screens */
     .hero {
-        padding: 90px 4% 40px;
+        padding: 90px 4% 25px;
     }
     .hero-text h1 {
         font-size: clamp(1.5rem, 8vw, 2rem);
@@ -6029,7 +6029,7 @@ footer {
 @media (max-width: 375px) {
     /* Hero - Very small screens */
     .hero {
-        padding: 85px 4% 35px;
+        padding: 85px 4% 20px;
     }
     .hero-text h1 {
         font-size: clamp(1.35rem, 9vw, 1.75rem);
