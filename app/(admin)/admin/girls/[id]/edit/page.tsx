@@ -1197,6 +1197,7 @@ export default function EditGirlPage({ params }: PageProps) {
           ogDescription={formData.og_description}
           ogImage={formData.og_image}
           girlName={formData.name}
+          primaryPhoto={photos.find(p => p.is_primary)?.url || null}
           onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
         />
 
