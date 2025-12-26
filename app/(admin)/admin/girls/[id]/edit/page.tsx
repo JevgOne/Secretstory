@@ -589,14 +589,52 @@ export default function EditGirlPage({ params }: PageProps) {
           <h2 className="section-title">Fotky & Videa</h2>
 
           {/* Photos */}
-          <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.75rem', color: 'var(--white)' }}>
-              Fotky
-            </h3>
+          <div style={{ marginBottom: '3rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '600', margin: 0, color: 'var(--white)' }}>
+                📸 Fotky
+              </h3>
+              <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
+                {photos.length} {photos.length === 1 ? 'fotka' : photos.length < 5 ? 'fotky' : 'fotek'}
+              </span>
+            </div>
 
-            {/* Photo Upload */}
-            <div>
+            {/* Photo Upload - Modern Drag & Drop */}
+            <label
+              htmlFor="photo-upload"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '3rem 2rem',
+                border: '2px dashed rgba(236, 72, 153, 0.5)',
+                borderRadius: '12px',
+                background: 'rgba(236, 72, 153, 0.05)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                marginBottom: '2rem'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary)';
+                e.currentTarget.style.background = 'rgba(236, 72, 153, 0.1)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(236, 72, 153, 0.5)';
+                e.currentTarget.style.background = 'rgba(236, 72, 153, 0.05)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📷</div>
+              <p style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--white)', marginBottom: '0.5rem' }}>
+                Klikni nebo přetáhni fotky sem
+              </p>
+              <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
+                Podporované formáty: JPG, PNG, WEBP (max. 10MB)
+              </p>
               <input
+                id="photo-upload"
                 type="file"
                 accept="image/*"
                 multiple
@@ -629,42 +667,80 @@ export default function EditGirlPage({ params }: PageProps) {
                   setUploadingPhoto(false);
                   e.target.value = '';
                 }}
-                style={{ marginBottom: '1rem' }}
+                style={{ display: 'none' }}
               />
-            </div>
+            </label>
 
             {/* Photos Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1.5rem' }}>
               {photos.map((photo) => (
-                <div key={photo.id} style={{ position: 'relative' }}>
+                <div
+                  key={photo.id}
+                  style={{
+                    position: 'relative',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    transition: 'all 0.3s ease',
+                    border: photo.is_primary ? '3px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.4)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                  }}
+                >
                   <img
                     src={photo.url}
                     alt=""
                     style={{
                       width: '100%',
-                      height: '150px',
+                      height: '200px',
                       objectFit: 'cover',
-                      borderRadius: '8px'
+                      display: 'block'
                     }}
                   />
+
+                  {/* Overlay Gradient */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: '60%',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
+                    pointerEvents: 'none'
+                  }} />
+
+                  {/* Primary Badge */}
                   {photo.is_primary && (
                     <div style={{
                       position: 'absolute',
-                      top: '8px',
-                      left: '8px',
-                      background: 'var(--wine)',
+                      top: '12px',
+                      left: '12px',
+                      background: 'var(--primary)',
                       color: 'white',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      fontSize: '0.75rem'
+                      padding: '6px 12px',
+                      borderRadius: '8px',
+                      fontSize: '0.85rem',
+                      fontWeight: '600',
+                      boxShadow: '0 2px 8px rgba(236, 72, 153, 0.4)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
                     }}>
-                      Hlavní
+                      ⭐ Hlavní
                     </div>
                   )}
+
+                  {/* Delete Button */}
                   <button
                     type="button"
                     onClick={async () => {
-                      if (confirm('Smazat tuto fotku?')) {
+                      if (confirm('Opravdu smazat tuto fotku?')) {
                         await fetch(`/api/admin/girls/${girlId}/photos?photoId=${photo.id}`, {
                           method: 'DELETE'
                         });
@@ -673,18 +749,29 @@ export default function EditGirlPage({ params }: PageProps) {
                     }}
                     style={{
                       position: 'absolute',
-                      top: '8px',
-                      right: '8px',
-                      background: 'rgba(239, 68, 68, 0.9)',
+                      top: '12px',
+                      right: '12px',
+                      background: 'rgba(239, 68, 68, 0.95)',
                       color: 'white',
                       border: 'none',
-                      borderRadius: '4px',
-                      padding: '4px 8px',
+                      borderRadius: '8px',
+                      padding: '8px 12px',
                       cursor: 'pointer',
-                      fontSize: '0.75rem'
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.background = 'rgba(220, 38, 38, 1)';
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.background = 'rgba(239, 68, 68, 0.95)';
+                      e.currentTarget.style.transform = 'scale(1)';
                     }}
                   >
-                    ✕
+                    🗑️
                   </button>
                 </div>
               ))}
@@ -700,13 +787,51 @@ export default function EditGirlPage({ params }: PageProps) {
 
           {/* Videos */}
           <div>
-            <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.75rem', color: 'var(--white)' }}>
-              Videa
-            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '600', margin: 0, color: 'var(--white)' }}>
+                🎥 Videa
+              </h3>
+              <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
+                {videos.length} {videos.length === 1 ? 'video' : videos.length < 5 ? 'videa' : 'videí'}
+              </span>
+            </div>
 
-            {/* Video Upload */}
-            <div>
+            {/* Video Upload - Modern Drag & Drop */}
+            <label
+              htmlFor="video-upload"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '3rem 2rem',
+                border: '2px dashed rgba(147, 51, 234, 0.5)',
+                borderRadius: '12px',
+                background: 'rgba(147, 51, 234, 0.05)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                marginBottom: '2rem'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.borderColor = 'rgb(147, 51, 234)';
+                e.currentTarget.style.background = 'rgba(147, 51, 234, 0.1)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(147, 51, 234, 0.5)';
+                e.currentTarget.style.background = 'rgba(147, 51, 234, 0.05)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎬</div>
+              <p style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--white)', marginBottom: '0.5rem' }}>
+                Klikni nebo přetáhni videa sem
+              </p>
+              <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
+                Podporované formáty: MP4, MOV, WEBM (max. 100MB)
+              </p>
               <input
+                id="video-upload"
                 type="file"
                 accept="video/*"
                 multiple
@@ -739,9 +864,9 @@ export default function EditGirlPage({ params }: PageProps) {
                   setUploadingVideo(false);
                   e.target.value = '';
                 }}
-                style={{ marginBottom: '1rem' }}
+                style={{ display: 'none' }}
               />
-            </div>
+            </label>
 
             {/* Videos Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
