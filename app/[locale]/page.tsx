@@ -54,6 +54,7 @@ interface Girl {
   schedule_status?: 'working' | 'later' | null;
   schedule_from?: string | null;
   schedule_to?: string | null;
+  created_at?: string;
 }
 
 interface Location {
