@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getBasicServices, getExtraServices } from '@/lib/services';
+import { HASHTAGS } from '@/lib/hashtags';
 
 export default function NewGirlPage() {
   const router = useRouter();
@@ -35,7 +36,9 @@ export default function NewGirlPage() {
     piercing: false,
     piercing_description: '',
     languages: ['cs'],
+    location: 'Praha 2',
     services: basicServices.map(s => s.id),
+    hashtags: [] as string[],
     is_new: false,
     is_top: false,
     is_featured: false,
@@ -168,6 +171,20 @@ export default function NewGirlPage() {
     }
   };
 
+  const handleHashtagToggle = (hashtagId: string) => {
+    if (formData.hashtags.includes(hashtagId)) {
+      setFormData({
+        ...formData,
+        hashtags: formData.hashtags.filter(h => h !== hashtagId)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        hashtags: [...formData.hashtags, hashtagId]
+      });
+    }
+  };
+
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -294,6 +311,24 @@ export default function NewGirlPage() {
                 <option>Ruska</option>
                 <option>Polka</option>
                 <option>Jiná</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Pobočka / Lokace</label>
+              <select
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              >
+                <option value="Praha 2">Praha 2 — Nové Město</option>
+                <option value="Praha 3">Praha 3 — Žižkov</option>
+                <option value="Praha 1">Praha 1 — Staré Město</option>
+                <option value="Praha 5">Praha 5 — Smíchov</option>
+                <option value="Praha 6">Praha 6 — Dejvice</option>
+                <option value="Praha 7">Praha 7 — Holešovice</option>
+                <option value="Praha 8">Praha 8 — Karlín</option>
+                <option value="Praha 9">Praha 9 — Vysočany</option>
+                <option value="Praha 10">Praha 10 — Vršovice</option>
               </select>
             </div>
           </div>
@@ -473,6 +508,25 @@ export default function NewGirlPage() {
                 </label>
               ))}
             </div>
+          </div>
+        </div>
+
+        <div className="form-section">
+          <h2 className="section-title">Hashtags</h2>
+          <p style={{ marginBottom: '1rem', color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem' }}>
+            Vyberte hashtags které se zobrazí na profilu dívky
+          </p>
+          <div className="services-grid">
+            {HASHTAGS.map((hashtag) => (
+              <label key={hashtag.id} className="service-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.hashtags.includes(hashtag.id)}
+                  onChange={() => handleHashtagToggle(hashtag.id)}
+                />
+                <span>#{hashtag.translations.cs}</span>
+              </label>
+            ))}
           </div>
         </div>
 
