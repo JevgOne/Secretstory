@@ -921,54 +921,91 @@ export default function EditGirlPage({ params }: PageProps) {
           </div>
 
           {/* Stories */}
-          <div style={{ marginTop: '2rem' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.75rem', color: 'var(--white)' }}>
-              Stories (24h stories jako Instagram)
-            </h3>
+          <div style={{ marginTop: '3rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '600', margin: 0, color: 'var(--white)' }}>
+                ⚡ Stories (24h jako Instagram)
+              </h3>
+              <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
+                {stories.length} {stories.length === 1 ? 'story' : stories.length < 5 ? 'stories' : 'stories'}
+              </span>
+            </div>
 
-            {/* Story Upload */}
-            <div style={{ marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <label style={{ color: 'var(--white)', fontSize: '0.875rem' }}>
-                  Doba zobrazení (sekundy):
-                  <input
-                    type="number"
-                    id="story-duration"
-                    defaultValue="5"
-                    min="3"
-                    max="15"
-                    style={{
-                      marginLeft: '0.5rem',
-                      padding: '0.25rem 0.5rem',
-                      borderRadius: '4px',
-                      border: '1px solid var(--gray)',
-                      background: 'var(--dark-bg)',
-                      color: 'var(--white)',
-                      width: '80px'
-                    }}
-                  />
+            {/* Story Settings */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '1rem',
+              marginBottom: '1.5rem',
+              padding: '1.5rem',
+              background: 'rgba(255,255,255,0.05)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontSize: '0.9rem' }}>
+                  ⏱️ Doba zobrazení (sekundy)
                 </label>
-                <label style={{ color: 'var(--white)', fontSize: '0.875rem' }}>
-                  Vyprší za (hodin):
-                  <input
-                    type="number"
-                    id="story-expires"
-                    defaultValue="24"
-                    min="1"
-                    max="168"
-                    style={{
-                      marginLeft: '0.5rem',
-                      padding: '0.25rem 0.5rem',
-                      borderRadius: '4px',
-                      border: '1px solid var(--gray)',
-                      background: 'var(--dark-bg)',
-                      color: 'var(--white)',
-                      width: '80px'
-                    }}
-                  />
-                </label>
+                <input
+                  type="number"
+                  id="story-duration"
+                  defaultValue="5"
+                  min="3"
+                  max="15"
+                  style={{ marginTop: '0.5rem' }}
+                />
               </div>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontSize: '0.9rem' }}>
+                  ⏰ Vyprší za (hodin)
+                </label>
+                <input
+                  type="number"
+                  id="story-expires"
+                  defaultValue="24"
+                  min="1"
+                  max="168"
+                  style={{ marginTop: '0.5rem' }}
+                />
+              </div>
+            </div>
+
+            {/* Story Upload - Modern Drag & Drop */}
+            <label
+              htmlFor="story-upload"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '3rem 2rem',
+                border: '2px dashed rgba(251, 191, 36, 0.5)',
+                borderRadius: '12px',
+                background: 'rgba(251, 191, 36, 0.05)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                marginBottom: '2rem'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.borderColor = 'rgb(251, 191, 36)';
+                e.currentTarget.style.background = 'rgba(251, 191, 36, 0.1)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(251, 191, 36, 0.5)';
+                e.currentTarget.style.background = 'rgba(251, 191, 36, 0.05)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚡</div>
+              <p style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--white)', marginBottom: '0.5rem' }}>
+                Klikni nebo přetáhni stories sem
+              </p>
+              <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
+                Fotky nebo videa • Automaticky zmizí po nastaveném čase
+              </p>
               <input
+                id="story-upload"
                 type="file"
                 accept="image/*,video/*"
                 multiple
@@ -1007,8 +1044,9 @@ export default function EditGirlPage({ params }: PageProps) {
                   setUploadingStory(false);
                   e.target.value = '';
                 }}
+                style={{ display: 'none' }}
               />
-            </div>
+            </label>
 
             {/* Stories Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
