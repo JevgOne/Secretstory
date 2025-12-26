@@ -112,7 +112,9 @@
     "faq": "FAQ",
     "phone": "+420 734 332 131",
     "telegram": "Telegram",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "call_us": "Зателефонувати",
+    "branches": "Філії"
   },
   "services": {
     "page_title": "Наші послуги",
