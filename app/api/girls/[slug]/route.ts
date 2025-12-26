@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
 
-// Revalidate every 5 minutes
-export const revalidate = 300;
+// Revalidate every 1 hour for better performance
+export const revalidate = 3600;
 
 // GET /api/girls/[slug] - Get girl by slug
 export async function GET(
@@ -13,15 +13,15 @@ export async function GET(
   try {
     const { slug } = await params;
 
-    // Check cache first
+    // Check cache first (1 hour cache)
     const cacheKey = `girl-profile-${slug}`;
-    const cached = cache.get(cacheKey, 300000); // 5min cache
+    const cached = cache.get(cacheKey, 3600000); // 1 hour cache
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
-          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600, max-age=120',
-          'CDN-Cache-Control': 'public, s-maxage=600',
-          'Vercel-CDN-Cache-Control': 'public, s-maxage=600',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200, max-age=1800',
+          'CDN-Cache-Control': 'public, s-maxage=7200',
+          'Vercel-CDN-Cache-Control': 'public, s-maxage=7200',
           'X-Cache': 'HIT',
           'X-Content-Type-Options': 'nosniff'
         }
@@ -164,9 +164,9 @@ export async function GET(
 
     return NextResponse.json(responseData, {
       headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600, max-age=120',
-        'CDN-Cache-Control': 'public, s-maxage=600',
-        'Vercel-CDN-Cache-Control': 'public, s-maxage=600',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200, max-age=1800',
+        'CDN-Cache-Control': 'public, s-maxage=7200',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=7200',
         'X-Cache': 'MISS',
         'X-Content-Type-Options': 'nosniff'
       }
