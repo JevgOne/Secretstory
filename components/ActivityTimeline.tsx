@@ -78,8 +78,66 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
     return null;
   }
 
+  // Group activities by girl, type, and time (within 1 hour)
+  const groupActivities = (activities: Activity[]): Activity[] => {
+    const grouped: Activity[] = [];
+    const processed = new Set<number>();
+
+    activities.forEach((activity, index) => {
+      if (processed.has(activity.id)) return;
+
+      // Find all similar activities within 1 hour
+      const similar = activities.filter((other, otherIndex) => {
+        if (processed.has(other.id) || otherIndex === index) return false;
+
+        const isSameGirl = other.girl_id === activity.girl_id;
+        const isSameType = other.activity_type === activity.activity_type;
+
+        // Check if within 1 hour
+        const activityTime = new Date(activity.created_at).getTime();
+        const otherTime = new Date(other.created_at).getTime();
+        const diffMs = Math.abs(activityTime - otherTime);
+        const diffHours = diffMs / (1000 * 60 * 60);
+        const isWithinHour = diffHours <= 1;
+
+        return isSameGirl && isSameType && isWithinHour;
+      });
+
+      // Mark as processed
+      processed.add(activity.id);
+      similar.forEach(s => processed.add(s.id));
+
+      if (similar.length > 0) {
+        // Create grouped activity
+        const count = similar.length + 1;
+        let groupedDescription = activity.description;
+
+        if (activity.activity_type === 'photo_added') {
+          groupedDescription = count === 2
+            ? t('activity_photo_added_2', { name: activity.girl_name })
+            : t('activity_photo_added_multiple', { name: activity.girl_name, count });
+        } else if (activity.activity_type === 'video_added') {
+          groupedDescription = count === 2
+            ? t('activity_video_added_2', { name: activity.girl_name })
+            : t('activity_video_added_multiple', { name: activity.girl_name, count });
+        }
+
+        grouped.push({
+          ...activity,
+          description: groupedDescription
+        });
+      } else {
+        grouped.push(activity);
+      }
+    });
+
+    return grouped;
+  };
+
+  const groupedActivities = groupActivities(activities);
+
   // Show only first 8 activities by default
-  const displayedActivities = showAll ? activities : activities.slice(0, 8);
+  const displayedActivities = showAll ? groupedActivities : groupedActivities.slice(0, 8);
 
   const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -113,7 +171,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
           gap: '20px',
-          marginBottom: activities.length > 8 ? '2rem' : '0'
+          marginBottom: groupedActivities.length > 8 ? '2rem' : '0'
         }}>
           {displayedActivities.map((activity) => (
             <Link
@@ -188,7 +246,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
         </div>
 
         {/* Show More Button */}
-        {activities.length > 8 && (
+        {groupedActivities.length > 8 && (
           <div style={{ textAlign: 'center' }}>
             <button
               onClick={() => setShowAll(!showAll)}
@@ -212,7 +270,7 @@ export default function ActivityTimeline({ initialActivities = [] }: ActivityTim
                 e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
               }}
             >
-              {showAll ? `${t('activity_show_less')} ↑` : `${t('activity_show_more', { count: activities.length })} ↓`}
+              {showAll ? `${t('activity_show_less')} ↑` : `${t('activity_show_more', { count: groupedActivities.length })} ↓`}
             </button>
           </div>
         )}

@@ -95,7 +95,11 @@
     "activity_time_hours_1": "{count} hour ago",
     "activity_time_hours_other": "{count} hours ago",
     "activity_time_days_1": "{count} day ago",
-    "activity_time_days_other": "{count} days ago"
+    "activity_time_days_other": "{count} days ago",
+    "activity_photo_added_2": "added 2 new photos to gallery",
+    "activity_photo_added_multiple": "added {count} new photos to gallery",
+    "activity_video_added_2": "added 2 new videos to gallery",
+    "activity_video_added_multiple": "added {count} new videos to gallery"
   },
   "nav": {
     "home": "Home",
