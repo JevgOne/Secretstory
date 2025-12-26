@@ -245,11 +245,6 @@ export default function SEOFieldsSection({
               value={ogImage}
               onChange={(e) => onChange('og_image', e.target.value)}
               placeholder="Automaticky použita primární fotka z galerie"
-              disabled
-              style={{
-                opacity: 0.7,
-                cursor: 'not-allowed'
-              }}
             />
             {ogImage && (
               <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
