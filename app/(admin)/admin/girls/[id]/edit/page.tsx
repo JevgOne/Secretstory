@@ -58,11 +58,29 @@ export default function EditGirlPage({ params }: PageProps) {
     is_featured: false,
     featured_section: '',
     badge_type: '',
+    // Legacy single-language SEO fields (kept for backward compatibility)
     meta_title: '',
     meta_description: '',
     og_title: '',
     og_description: '',
-    og_image: ''
+    og_image: '',
+    // Multi-language SEO fields
+    meta_title_cs: '',
+    meta_title_en: '',
+    meta_title_de: '',
+    meta_title_uk: '',
+    meta_description_cs: '',
+    meta_description_en: '',
+    meta_description_de: '',
+    meta_description_uk: '',
+    og_title_cs: '',
+    og_title_en: '',
+    og_title_de: '',
+    og_title_uk: '',
+    og_description_cs: '',
+    og_description_en: '',
+    og_description_de: '',
+    og_description_uk: ''
   });
 
   // Load photos
@@ -160,11 +178,29 @@ export default function EditGirlPage({ params }: PageProps) {
             is_featured: girl.is_featured || false,
             featured_section: girl.featured_section || '',
             badge_type: girl.badge_type || '',
+            // Legacy SEO fields
             meta_title: girl.meta_title || '',
             meta_description: girl.meta_description || '',
             og_title: girl.og_title || '',
             og_description: girl.og_description || '',
-            og_image: girl.og_image || ''
+            og_image: girl.og_image || '',
+            // Multi-language SEO fields
+            meta_title_cs: girl.meta_title_cs || '',
+            meta_title_en: girl.meta_title_en || '',
+            meta_title_de: girl.meta_title_de || '',
+            meta_title_uk: girl.meta_title_uk || '',
+            meta_description_cs: girl.meta_description_cs || '',
+            meta_description_en: girl.meta_description_en || '',
+            meta_description_de: girl.meta_description_de || '',
+            meta_description_uk: girl.meta_description_uk || '',
+            og_title_cs: girl.og_title_cs || '',
+            og_title_en: girl.og_title_en || '',
+            og_title_de: girl.og_title_de || '',
+            og_title_uk: girl.og_title_uk || '',
+            og_description_cs: girl.og_description_cs || '',
+            og_description_en: girl.og_description_en || '',
+            og_description_de: girl.og_description_de || '',
+            og_description_uk: girl.og_description_uk || ''
           });
         } else {
           setError('Dívka nenalezena');
@@ -688,102 +724,176 @@ export default function EditGirlPage({ params }: PageProps) {
                 <div
                   key={photo.id}
                   style={{
-                    position: 'relative',
                     borderRadius: '12px',
                     overflow: 'hidden',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                     transition: 'all 0.3s ease',
                     border: photo.is_primary ? '3px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)'
                   }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.4)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-                  }}
                 >
-                  <img
-                    src={photo.url}
-                    alt=""
+                  {/* Photo container with overlay */}
+                  <div
                     style={{
-                      width: '100%',
-                      height: '200px',
-                      objectFit: 'cover',
-                      display: 'block'
-                    }}
-                  />
-
-                  {/* Overlay Gradient */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: '60%',
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
-                    pointerEvents: 'none'
-                  }} />
-
-                  {/* Primary Badge */}
-                  {photo.is_primary && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '12px',
-                      left: '12px',
-                      background: 'var(--primary)',
-                      color: 'white',
-                      padding: '6px 12px',
-                      borderRadius: '8px',
-                      fontSize: '0.85rem',
-                      fontWeight: '600',
-                      boxShadow: '0 2px 8px rgba(236, 72, 153, 0.4)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}>
-                      ⭐ Hlavní
-                    </div>
-                  )}
-
-                  {/* Delete Button */}
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      if (confirm('Opravdu smazat tuto fotku?')) {
-                        await fetch(`/api/admin/girls/${girlId}/photos?photoId=${photo.id}`, {
-                          method: 'DELETE'
-                        });
-                        await loadPhotos(girlId);
-                      }
-                    }}
-                    style={{
-                      position: 'absolute',
-                      top: '12px',
-                      right: '12px',
-                      background: 'rgba(239, 68, 68, 0.95)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '8px 12px',
-                      cursor: 'pointer',
-                      fontSize: '0.9rem',
-                      fontWeight: '600',
-                      transition: 'all 0.2s ease',
-                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)'
+                      position: 'relative',
+                      transition: 'transform 0.3s ease'
                     }}
                     onMouseOver={(e) => {
-                      e.currentTarget.style.background = 'rgba(220, 38, 38, 1)';
-                      e.currentTarget.style.transform = 'scale(1.05)';
+                      e.currentTarget.style.transform = 'translateY(-4px)';
                     }}
                     onMouseOut={(e) => {
-                      e.currentTarget.style.background = 'rgba(239, 68, 68, 0.95)';
-                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
-                    🗑️
-                  </button>
+                    <img
+                      src={photo.url}
+                      alt={photo.alt_text || ""}
+                      style={{
+                        width: '100%',
+                        height: '200px',
+                        objectFit: 'cover',
+                        display: 'block'
+                      }}
+                    />
+
+                    {/* Overlay Gradient */}
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: '60%',
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
+                      pointerEvents: 'none'
+                    }} />
+
+                    {/* Primary Badge */}
+                    {photo.is_primary && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '12px',
+                        left: '12px',
+                        background: 'var(--primary)',
+                        color: 'white',
+                        padding: '6px 12px',
+                        borderRadius: '8px',
+                        fontSize: '0.85rem',
+                        fontWeight: '600',
+                        boxShadow: '0 2px 8px rgba(236, 72, 153, 0.4)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}>
+                        ⭐ Hlavní
+                      </div>
+                    )}
+
+                    {/* Delete Button */}
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (confirm('Opravdu smazat tuto fotku?')) {
+                          await fetch(`/api/admin/girls/${girlId}/photos?photoId=${photo.id}`, {
+                            method: 'DELETE'
+                          });
+                          await loadPhotos(girlId);
+                        }
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: '12px',
+                        right: '12px',
+                        background: 'rgba(239, 68, 68, 0.95)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '8px 12px',
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                        fontWeight: '600',
+                        transition: 'all 0.2s ease',
+                        boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.background = 'rgba(220, 38, 38, 1)';
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.95)';
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
+                    >
+                      🗑️
+                    </button>
+                  </div>
+
+                  {/* ALT Text Input - Multi-language */}
+                  <div style={{
+                    padding: '12px',
+                    background: 'rgba(0, 0, 0, 0.3)',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}>
+                    <label style={{
+                      display: 'block',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      color: 'rgba(255,255,255,0.7)',
+                      marginBottom: '6px'
+                    }}>
+                      📝 ALT popisek (CS/EN/DE/UK)
+                    </label>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                      {[
+                        { lang: 'cs', label: 'CS', placeholder: 'Popis (čeština)' },
+                        { lang: 'en', label: 'EN', placeholder: 'Description (English)' },
+                        { lang: 'de', label: 'DE', placeholder: 'Beschreibung (Deutsch)' },
+                        { lang: 'uk', label: 'UK', placeholder: 'Опис (українська)' }
+                      ].map(({ lang, label, placeholder }) => (
+                        <input
+                          key={lang}
+                          type="text"
+                          value={photo[`alt_text_${lang}`] || ''}
+                          onChange={async (e) => {
+                            const newAltText = e.target.value;
+                            // Update local state immediately
+                            setPhotos(photos.map(p =>
+                              p.id === photo.id ? { ...p, [`alt_text_${lang}`]: newAltText } : p
+                            ));
+
+                            // Save to database
+                            try {
+                              await fetch(`/api/admin/girls/${girlId}/photos/${photo.id}/alt-text`, {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ [`alt_text_${lang}`]: newAltText })
+                              });
+                            } catch (error) {
+                              console.error('Error updating ALT text:', error);
+                            }
+                          }}
+                          placeholder={`${label}: ${placeholder}`}
+                          style={{
+                            width: '100%',
+                            padding: '6px 8px',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '4px',
+                            color: 'var(--white)',
+                            fontSize: '0.75rem',
+                            transition: 'all 0.2s ease',
+                            outline: 'none'
+                          }}
+                          onFocus={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--primary)';
+                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                          }}
+                          onBlur={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -1365,10 +1475,22 @@ export default function EditGirlPage({ params }: PageProps) {
         </div>
 
         <SEOFieldsSection
-          metaTitle={formData.meta_title}
-          metaDescription={formData.meta_description}
-          ogTitle={formData.og_title}
-          ogDescription={formData.og_description}
+          metaTitleCs={formData.meta_title_cs}
+          metaTitleEn={formData.meta_title_en}
+          metaTitleDe={formData.meta_title_de}
+          metaTitleUk={formData.meta_title_uk}
+          metaDescriptionCs={formData.meta_description_cs}
+          metaDescriptionEn={formData.meta_description_en}
+          metaDescriptionDe={formData.meta_description_de}
+          metaDescriptionUk={formData.meta_description_uk}
+          ogTitleCs={formData.og_title_cs}
+          ogTitleEn={formData.og_title_en}
+          ogTitleDe={formData.og_title_de}
+          ogTitleUk={formData.og_title_uk}
+          ogDescriptionCs={formData.og_description_cs}
+          ogDescriptionEn={formData.og_description_en}
+          ogDescriptionDe={formData.og_description_de}
+          ogDescriptionUk={formData.og_description_uk}
           ogImage={formData.og_image}
           girlName={formData.name}
           primaryPhoto={photos.find(p => p.is_primary)?.url || null}

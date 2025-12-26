@@ -2,23 +2,50 @@
 
 import { useState } from 'react';
 
+type Language = 'cs' | 'en' | 'de' | 'uk';
+
 interface SEOFieldsSectionProps {
-  metaTitle: string;
-  metaDescription: string;
-  ogTitle: string;
-  ogDescription: string;
+  // Multi-language SEO fields
+  metaTitleCs: string;
+  metaTitleEn: string;
+  metaTitleDe: string;
+  metaTitleUk: string;
+  metaDescriptionCs: string;
+  metaDescriptionEn: string;
+  metaDescriptionDe: string;
+  metaDescriptionUk: string;
+  ogTitleCs: string;
+  ogTitleEn: string;
+  ogTitleDe: string;
+  ogTitleUk: string;
+  ogDescriptionCs: string;
+  ogDescriptionEn: string;
+  ogDescriptionDe: string;
+  ogDescriptionUk: string;
   ogImage: string;
-  onChange: (field: 'meta_title' | 'meta_description' | 'og_title' | 'og_description' | 'og_image', value: string) => void;
+  onChange: (field: string, value: string) => void;
   onGenerate?: () => void;
   girlName?: string;
   primaryPhoto?: string | null;
 }
 
 export default function SEOFieldsSection({
-  metaTitle,
-  metaDescription,
-  ogTitle,
-  ogDescription,
+  metaTitleCs,
+  metaTitleEn,
+  metaTitleDe,
+  metaTitleUk,
+  metaDescriptionCs,
+  metaDescriptionEn,
+  metaDescriptionDe,
+  metaDescriptionUk,
+  ogTitleCs,
+  ogTitleEn,
+  ogTitleDe,
+  ogTitleUk,
+  ogDescriptionCs,
+  ogDescriptionEn,
+  ogDescriptionDe,
+  ogDescriptionUk,
   ogImage,
   onChange,
   onGenerate,
@@ -26,22 +53,91 @@ export default function SEOFieldsSection({
   primaryPhoto
 }: SEOFieldsSectionProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [currentLang, setCurrentLang] = useState<Language>('cs');
+
+  // Get current language values
+  const getCurrentValues = () => {
+    const values = {
+      cs: {
+        metaTitle: metaTitleCs,
+        metaDescription: metaDescriptionCs,
+        ogTitle: ogTitleCs,
+        ogDescription: ogDescriptionCs
+      },
+      en: {
+        metaTitle: metaTitleEn,
+        metaDescription: metaDescriptionEn,
+        ogTitle: ogTitleEn,
+        ogDescription: ogDescriptionEn
+      },
+      de: {
+        metaTitle: metaTitleDe,
+        metaDescription: metaDescriptionDe,
+        ogTitle: ogTitleDe,
+        ogDescription: ogDescriptionDe
+      },
+      uk: {
+        metaTitle: metaTitleUk,
+        metaDescription: metaDescriptionUk,
+        ogTitle: ogTitleUk,
+        ogDescription: ogDescriptionUk
+      }
+    };
+    return values[currentLang];
+  };
+
+  const currentValues = getCurrentValues();
 
   const generateSEOData = () => {
     if (girlName) {
-      // Auto-generate SEO fields based on girl's name
-      const generatedTitle = `${girlName} - Escort Praha | LovelyGirls`;
-      const generatedDescription = `Seznamte se s ${girlName}, profesionální escort v Praze. Ověřený profil, aktuální fotografie a recenze klientů na LovelyGirls.cz`;
-      const generatedOGTitle = `${girlName} - Profesionální Escort Praha`;
-      const generatedOGDescription = `Profesionální escort ${girlName} v Praze. Ověřený profil s aktuálními fotografiemi a recenzemi. Rezervujte si schůzku ještě dnes!`;
+      // Generate for Czech
+      const generatedTitleCs = `${girlName} - Escort Praha | LovelyGirls`;
+      const generatedDescriptionCs = `Seznamte se s ${girlName}, profesionální escort v Praze. Ověřený profil, aktuální fotografie a recenze klientů na LovelyGirls.cz`;
+      const generatedOGTitleCs = `${girlName} - Profesionální Escort Praha`;
+      const generatedOGDescriptionCs = `Profesionální escort ${girlName} v Praze. Ověřený profil s aktuálními fotografiemi a recenzemi. Rezervujte si schůzku ještě dnes!`;
+
+      // Generate for English
+      const generatedTitleEn = `${girlName} - Prague Escort | LovelyGirls`;
+      const generatedDescriptionEn = `Meet ${girlName}, professional escort in Prague. Verified profile, current photos and client reviews on LovelyGirls.cz`;
+      const generatedOGTitleEn = `${girlName} - Professional Prague Escort`;
+      const generatedOGDescriptionEn = `Professional escort ${girlName} in Prague. Verified profile with current photos and reviews. Book your meeting today!`;
+
+      // Generate for German
+      const generatedTitleDe = `${girlName} - Escort Prag | LovelyGirls`;
+      const generatedDescriptionDe = `Treffen Sie ${girlName}, professionelle Escort in Prag. Verifiziertes Profil, aktuelle Fotos und Kundenbewertungen auf LovelyGirls.cz`;
+      const generatedOGTitleDe = `${girlName} - Professionelle Escort Prag`;
+      const generatedOGDescriptionDe = `Professionelle Escort ${girlName} in Prag. Verifiziertes Profil mit aktuellen Fotos und Bewertungen. Buchen Sie Ihr Treffen noch heute!`;
+
+      // Generate for Ukrainian
+      const generatedTitleUk = `${girlName} - Ескорт Прага | LovelyGirls`;
+      const generatedDescriptionUk = `Зустрічайте ${girlName}, професійний ескорт у Празі. Перевірений профіль, актуальні фото та відгуки клієнтів на LovelyGirls.cz`;
+      const generatedOGTitleUk = `${girlName} - Професійний Ескорт Прага`;
+      const generatedOGDescriptionUk = `Професійний ескорт ${girlName} у Празі. Перевірений профіль з актуальними фото та відгуками. Забронюйте зустріч сьогодні!`;
 
       // Use primary photo from gallery if available
       const generatedOGImage = primaryPhoto || `/girls/${girlName.toLowerCase().replace(/\s+/g, '-')}-og.jpg`;
 
-      onChange('meta_title', generatedTitle);
-      onChange('meta_description', generatedDescription);
-      onChange('og_title', generatedOGTitle);
-      onChange('og_description', generatedOGDescription);
+      // Update all languages
+      onChange('meta_title_cs', generatedTitleCs);
+      onChange('meta_description_cs', generatedDescriptionCs);
+      onChange('og_title_cs', generatedOGTitleCs);
+      onChange('og_description_cs', generatedOGDescriptionCs);
+
+      onChange('meta_title_en', generatedTitleEn);
+      onChange('meta_description_en', generatedDescriptionEn);
+      onChange('og_title_en', generatedOGTitleEn);
+      onChange('og_description_en', generatedOGDescriptionEn);
+
+      onChange('meta_title_de', generatedTitleDe);
+      onChange('meta_description_de', generatedDescriptionDe);
+      onChange('og_title_de', generatedOGTitleDe);
+      onChange('og_description_de', generatedOGDescriptionDe);
+
+      onChange('meta_title_uk', generatedTitleUk);
+      onChange('meta_description_uk', generatedDescriptionUk);
+      onChange('og_title_uk', generatedOGTitleUk);
+      onChange('og_description_uk', generatedOGDescriptionUk);
+
       onChange('og_image', generatedOGImage);
 
       if (onGenerate) {
@@ -49,6 +145,13 @@ export default function SEOFieldsSection({
       }
     }
   };
+
+  const languageTabs = [
+    { code: 'cs' as Language, label: 'Čeština', flag: '🇨🇿' },
+    { code: 'en' as Language, label: 'English', flag: '🇬🇧' },
+    { code: 'de' as Language, label: 'Deutsch', flag: '🇩🇪' },
+    { code: 'uk' as Language, label: 'Українська', flag: '🇺🇦' }
+  ];
 
   return (
     <div className="form-section">
@@ -71,7 +174,7 @@ export default function SEOFieldsSection({
             color: 'rgba(255,255,255,0.7)',
             margin: 0
           }}>
-            Meta title, description a OG image pro vyhledávače a sociální sítě
+            Meta title, description a OG image pro vyhledávače a sociální sítě (vícejazyčné)
           </p>
         </div>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -105,7 +208,7 @@ export default function SEOFieldsSection({
                 e.currentTarget.style.boxShadow = '0 2px 8px rgba(236, 72, 153, 0.3)';
               }}
             >
-              ✨ Generovat automaticky
+              ✨ Generovat automaticky (všechny jazyky)
             </button>
           )}
           <span style={{
@@ -121,6 +224,48 @@ export default function SEOFieldsSection({
 
       {isExpanded && (
         <div>
+          {/* Language Tabs */}
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            marginBottom: '24px',
+            borderBottom: '1px solid rgba(255,255,255,0.1)',
+            paddingBottom: '12px'
+          }}>
+            {languageTabs.map(({ code, label, flag }) => (
+              <button
+                key={code}
+                type="button"
+                onClick={() => setCurrentLang(code)}
+                style={{
+                  padding: '10px 16px',
+                  background: currentLang === code ? 'var(--primary)' : 'rgba(255, 255, 255, 0.05)',
+                  color: currentLang === code ? 'var(--white)' : 'rgba(255,255,255,0.7)',
+                  border: currentLang === code ? '1px solid var(--primary)' : '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => {
+                  if (currentLang !== code) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (currentLang !== code) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  }
+                }}
+              >
+                {flag} {label}
+              </button>
+            ))}
+          </div>
+
           {/* Meta Title */}
           <div style={{ marginBottom: '24px' }}>
             <label style={{
@@ -130,15 +275,15 @@ export default function SEOFieldsSection({
               fontWeight: '600',
               color: 'var(--white)'
             }}>
-              Meta Title
+              Meta Title ({currentLang.toUpperCase()})
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
-                ({metaTitle.length}/60 znaků)
+                ({currentValues.metaTitle.length}/60 znaků)
               </span>
             </label>
             <input
               type="text"
-              value={metaTitle}
-              onChange={(e) => onChange('meta_title', e.target.value)}
+              value={currentValues.metaTitle}
+              onChange={(e) => onChange(`meta_title_${currentLang}`, e.target.value)}
               placeholder="SEO nadpis pro vyhledávače (50-60 znaků)"
               maxLength={60}
               style={{
@@ -161,7 +306,7 @@ export default function SEOFieldsSection({
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
               }}
             />
-            {metaTitle.length > 0 && metaTitle.length < 50 && (
+            {currentValues.metaTitle.length > 0 && currentValues.metaTitle.length < 50 && (
               <p style={{ fontSize: '0.85rem', color: '#fbbf24', marginTop: '8px', marginBottom: 0 }}>
                 ⚠️ Příliš krátký (doporučeno 50-60 znaků)
               </p>
@@ -177,14 +322,14 @@ export default function SEOFieldsSection({
               fontWeight: '600',
               color: 'var(--white)'
             }}>
-              Meta Description
+              Meta Description ({currentLang.toUpperCase()})
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
-                ({metaDescription.length}/160 znaků)
+                ({currentValues.metaDescription.length}/160 znaků)
               </span>
             </label>
             <textarea
-              value={metaDescription}
-              onChange={(e) => onChange('meta_description', e.target.value)}
+              value={currentValues.metaDescription}
+              onChange={(e) => onChange(`meta_description_${currentLang}`, e.target.value)}
               placeholder="Popis profilu pro vyhledávače a sociální sítě (150-160 znaků)"
               maxLength={160}
               rows={3}
@@ -210,7 +355,7 @@ export default function SEOFieldsSection({
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
               }}
             />
-            {metaDescription.length > 0 && metaDescription.length < 150 && (
+            {currentValues.metaDescription.length > 0 && currentValues.metaDescription.length < 150 && (
               <p style={{ fontSize: '0.85rem', color: '#fbbf24', marginTop: '8px', marginBottom: 0 }}>
                 ⚠️ Příliš krátký (doporučeno 150-160 znaků)
               </p>
@@ -249,15 +394,15 @@ export default function SEOFieldsSection({
               fontWeight: '600',
               color: 'var(--white)'
             }}>
-              OG Title
+              OG Title ({currentLang.toUpperCase()})
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
-                ({ogTitle.length}/60 znaků)
+                ({currentValues.ogTitle.length}/60 znaků)
               </span>
             </label>
             <input
               type="text"
-              value={ogTitle}
-              onChange={(e) => onChange('og_title', e.target.value)}
+              value={currentValues.ogTitle}
+              onChange={(e) => onChange(`og_title_${currentLang}`, e.target.value)}
               placeholder="Nadpis při sdílení na sociálních sítích (50-60 znaků)"
               maxLength={60}
               style={{
@@ -280,7 +425,7 @@ export default function SEOFieldsSection({
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
               }}
             />
-            {ogTitle.length > 0 && ogTitle.length < 50 && (
+            {currentValues.ogTitle.length > 0 && currentValues.ogTitle.length < 50 && (
               <p style={{ fontSize: '0.85rem', color: '#fbbf24', marginTop: '8px', marginBottom: 0 }}>
                 ⚠️ Příliš krátký (doporučeno 50-60 znaků)
               </p>
@@ -296,14 +441,14 @@ export default function SEOFieldsSection({
               fontWeight: '600',
               color: 'var(--white)'
             }}>
-              OG Description
+              OG Description ({currentLang.toUpperCase()})
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
-                ({ogDescription.length}/160 znaků)
+                ({currentValues.ogDescription.length}/160 znaků)
               </span>
             </label>
             <textarea
-              value={ogDescription}
-              onChange={(e) => onChange('og_description', e.target.value)}
+              value={currentValues.ogDescription}
+              onChange={(e) => onChange(`og_description_${currentLang}`, e.target.value)}
               placeholder="Popis při sdílení na sociálních sítích (150-160 znaků)"
               maxLength={160}
               rows={3}
@@ -329,7 +474,7 @@ export default function SEOFieldsSection({
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
               }}
             />
-            {ogDescription.length > 0 && ogDescription.length < 150 && (
+            {currentValues.ogDescription.length > 0 && currentValues.ogDescription.length < 150 && (
               <p style={{ fontSize: '0.85rem', color: '#fbbf24', marginTop: '8px', marginBottom: 0 }}>
                 ⚠️ Příliš krátký (doporučeno 150-160 znaků)
               </p>
