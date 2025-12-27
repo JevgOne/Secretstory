@@ -99,7 +99,7 @@ export default function EditGirlPage({ params }: PageProps) {
   // Load photos with pagination
   const loadPhotos = async (id: string, page: number = 1, append: boolean = false) => {
     try {
-      const response = await fetch(`/api/admin/girls/${id}/photos?page=${page}&limit=20`);
+      const response = await fetch(`/api/admin/girls/${id}/photos?page=${page}&limit=12`);
       const data = await response.json();
       if (data.success) {
         if (append) {
@@ -127,7 +127,7 @@ export default function EditGirlPage({ params }: PageProps) {
   // Load videos with pagination
   const loadVideos = async (id: string, page: number = 1, append: boolean = false) => {
     try {
-      const response = await fetch(`/api/admin/girls/${id}/videos?page=${page}&limit=20`);
+      const response = await fetch(`/api/admin/girls/${id}/videos?page=${page}&limit=12`);
       const data = await response.json();
       if (data.success) {
         if (append) {
@@ -155,7 +155,7 @@ export default function EditGirlPage({ params }: PageProps) {
   // Load stories with pagination
   const loadStories = async (id: string, page: number = 1, append: boolean = false) => {
     try {
-      const response = await fetch(`/api/admin/girls/${id}/stories?page=${page}&limit=20`);
+      const response = await fetch(`/api/admin/girls/${id}/stories?page=${page}&limit=12`);
       const data = await response.json();
       if (data.success) {
         if (append) {
@@ -200,12 +200,11 @@ export default function EditGirlPage({ params }: PageProps) {
         if (data.success && data.girl) {
           const girl = data.girl;
 
-          // Load photos, videos and stories
-          await Promise.all([
-            loadPhotos(resolvedParams.id),
-            loadVideos(resolvedParams.id),
-            loadStories(resolvedParams.id)
-          ]);
+          // Load media sequentially to avoid overwhelming the server
+          // Photos first (most important), then videos, then stories
+          await loadPhotos(resolvedParams.id);
+          loadVideos(resolvedParams.id); // Load in background (no await)
+          loadStories(resolvedParams.id); // Load in background (no await)
 
           setFormData({
             name: girl.name || '',

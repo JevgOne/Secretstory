@@ -95,23 +95,25 @@ export async function GET(
         `,
         args: [girl.id]
       }),
-      // Photos
+      // Photos (limit to first 20 for initial load)
       db.execute({
         sql: `
           SELECT id, url, thumbnail_url, is_primary, display_order
           FROM girl_photos
           WHERE girl_id = ?
           ORDER BY display_order ASC, created_at ASC
+          LIMIT 20
         `,
         args: [girl.id]
       }),
-      // Videos
+      // Videos (limit to first 12 for initial load)
       db.execute({
         sql: `
           SELECT id, url, thumbnail_url, display_order, duration
           FROM girl_videos
           WHERE girl_id = ?
           ORDER BY display_order ASC, created_at ASC
+          LIMIT 12
         `,
         args: [girl.id]
       }),

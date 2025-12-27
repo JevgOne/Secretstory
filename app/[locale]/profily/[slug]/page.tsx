@@ -451,8 +451,15 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                   (new Date().getTime() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24) <= 10
                   : false;
 
-                // Determine badge: auto NEW for 10 days, then is_new checkbox, then badge_type dropdown
-                const badge = (isNewlyCreated || profile.is_new) ? 'new' : (profile.badge_type || null);
+                // Badge priority: badge_type > is_new checkbox > auto-detect
+                // If badge_type is set, use it
+                // Else if is_new is explicitly set (1 or 0), respect it
+                // Else if newly created (< 10 days), auto show NEW
+                const badge = profile.badge_type
+                  ? profile.badge_type
+                  : (profile.is_new !== undefined && profile.is_new !== null)
+                    ? (profile.is_new ? 'new' : null)
+                    : (isNewlyCreated ? 'new' : null);
 
                 if (!badge) return null;
 
