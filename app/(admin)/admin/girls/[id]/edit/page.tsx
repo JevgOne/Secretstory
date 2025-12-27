@@ -26,6 +26,19 @@ export default function EditGirlPage({ params }: PageProps) {
   const [isTranslating, setIsTranslating] = useState(false);
   const [locations, setLocations] = useState<any[]>([]);
 
+  // Pagination states
+  const [photosPage, setPhotosPage] = useState(1);
+  const [photosPagination, setPhotosPagination] = useState<any>(null);
+  const [loadingMorePhotos, setLoadingMorePhotos] = useState(false);
+
+  const [videosPage, setVideosPage] = useState(1);
+  const [videosPagination, setVideosPagination] = useState<any>(null);
+  const [loadingMoreVideos, setLoadingMoreVideos] = useState(false);
+
+  const [storiesPage, setStoriesPage] = useState(1);
+  const [storiesPagination, setStoriesPagination] = useState<any>(null);
+  const [loadingMoreStories, setLoadingMoreStories] = useState(false);
+
   const basicServices = getBasicServices();
   const extraServices = getExtraServices();
 
@@ -83,43 +96,88 @@ export default function EditGirlPage({ params }: PageProps) {
     og_description_uk: ''
   });
 
-  // Load photos
-  const loadPhotos = async (id: string) => {
+  // Load photos with pagination
+  const loadPhotos = async (id: string, page: number = 1, append: boolean = false) => {
     try {
-      const response = await fetch(`/api/admin/girls/${id}/photos`);
+      const response = await fetch(`/api/admin/girls/${id}/photos?page=${page}&limit=20`);
       const data = await response.json();
       if (data.success) {
-        setPhotos(data.photos);
+        if (append) {
+          setPhotos(prev => [...prev, ...data.photos]);
+        } else {
+          setPhotos(data.photos);
+        }
+        setPhotosPagination(data.pagination);
       }
     } catch (error) {
       console.error('Error loading photos:', error);
     }
   };
 
-  // Load videos
-  const loadVideos = async (id: string) => {
+  // Load more photos
+  const loadMorePhotos = async () => {
+    if (!photosPagination?.hasMore || loadingMorePhotos) return;
+    setLoadingMorePhotos(true);
+    const nextPage = photosPage + 1;
+    setPhotosPage(nextPage);
+    await loadPhotos(girlId, nextPage, true);
+    setLoadingMorePhotos(false);
+  };
+
+  // Load videos with pagination
+  const loadVideos = async (id: string, page: number = 1, append: boolean = false) => {
     try {
-      const response = await fetch(`/api/admin/girls/${id}/videos`);
+      const response = await fetch(`/api/admin/girls/${id}/videos?page=${page}&limit=20`);
       const data = await response.json();
       if (data.success) {
-        setVideos(data.videos);
+        if (append) {
+          setVideos(prev => [...prev, ...data.videos]);
+        } else {
+          setVideos(data.videos);
+        }
+        setVideosPagination(data.pagination);
       }
     } catch (error) {
       console.error('Error loading videos:', error);
     }
   };
 
-  // Load stories
-  const loadStories = async (id: string) => {
+  // Load more videos
+  const loadMoreVideos = async () => {
+    if (!videosPagination?.hasMore || loadingMoreVideos) return;
+    setLoadingMoreVideos(true);
+    const nextPage = videosPage + 1;
+    setVideosPage(nextPage);
+    await loadVideos(girlId, nextPage, true);
+    setLoadingMoreVideos(false);
+  };
+
+  // Load stories with pagination
+  const loadStories = async (id: string, page: number = 1, append: boolean = false) => {
     try {
-      const response = await fetch(`/api/admin/girls/${id}/stories`);
+      const response = await fetch(`/api/admin/girls/${id}/stories?page=${page}&limit=20`);
       const data = await response.json();
       if (data.success) {
-        setStories(data.stories);
+        if (append) {
+          setStories(prev => [...prev, ...data.stories]);
+        } else {
+          setStories(data.stories);
+        }
+        setStoriesPagination(data.pagination);
       }
     } catch (error) {
       console.error('Error loading stories:', error);
     }
+  };
+
+  // Load more stories
+  const loadMoreStories = async () => {
+    if (!storiesPagination?.hasMore || loadingMoreStories) return;
+    setLoadingMoreStories(true);
+    const nextPage = storiesPage + 1;
+    setStoriesPage(nextPage);
+    await loadStories(girlId, nextPage, true);
+    setLoadingMoreStories(false);
   };
 
   // Load girl data
@@ -642,7 +700,14 @@ export default function EditGirlPage({ params }: PageProps) {
                 📸 Fotky
               </h3>
               <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
-                {photos.length} {photos.length === 1 ? 'fotka' : photos.length < 5 ? 'fotky' : 'fotek'}
+                {photosPagination ? (
+                  <>
+                    {photosPagination.total} {photosPagination.total === 1 ? 'fotka' : photosPagination.total < 5 ? 'fotky' : 'fotek'}
+                    {photos.length < photosPagination.total && ` (zobrazeno ${photos.length})`}
+                  </>
+                ) : (
+                  `${photos.length} ${photos.length === 1 ? 'fotka' : photos.length < 5 ? 'fotky' : 'fotek'}`
+                )}
               </span>
             </div>
 
@@ -747,6 +812,7 @@ export default function EditGirlPage({ params }: PageProps) {
                     <img
                       src={photo.url}
                       alt={photo.alt_text || ""}
+                      loading="lazy"
                       style={{
                         width: '100%',
                         height: '200px',
@@ -898,6 +964,41 @@ export default function EditGirlPage({ params }: PageProps) {
               ))}
             </div>
 
+            {/* Load More Button */}
+            {photosPagination && photosPagination.hasMore && (
+              <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                <button
+                  type="button"
+                  onClick={loadMorePhotos}
+                  disabled={loadingMorePhotos}
+                  style={{
+                    padding: '12px 32px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '8px',
+                    color: 'var(--white)',
+                    fontWeight: '500',
+                    cursor: loadingMorePhotos ? 'wait' : 'pointer',
+                    transition: 'all 0.3s ease',
+                    fontSize: '0.9rem',
+                    opacity: loadingMorePhotos ? 0.6 : 1
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!loadingMorePhotos) {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                      e.currentTarget.style.borderColor = 'var(--primary)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  }}
+                >
+                  {loadingMorePhotos ? 'Načítání...' : `Načíst další (${photosPagination.total - photos.length} zbývá)`}
+                </button>
+              </div>
+            )}
+
             {uploadingPhoto && <p style={{ color: 'var(--gray)', marginTop: '1rem' }}>Nahrávání...</p>}
             {photos.length === 0 && !uploadingPhoto && (
               <p style={{ color: 'var(--gray)', textAlign: 'center', padding: '2rem' }}>
@@ -913,7 +1014,14 @@ export default function EditGirlPage({ params }: PageProps) {
                 🎥 Videa
               </h3>
               <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
-                {videos.length} {videos.length === 1 ? 'video' : videos.length < 5 ? 'videa' : 'videí'}
+                {videosPagination ? (
+                  <>
+                    {videosPagination.total} {videosPagination.total === 1 ? 'video' : videosPagination.total < 5 ? 'videa' : 'videí'}
+                    {videos.length < videosPagination.total && ` (zobrazeno ${videos.length})`}
+                  </>
+                ) : (
+                  `${videos.length} ${videos.length === 1 ? 'video' : videos.length < 5 ? 'videa' : 'videí'}`
+                )}
               </span>
             </div>
 
@@ -996,6 +1104,7 @@ export default function EditGirlPage({ params }: PageProps) {
                   <video
                     src={video.url}
                     controls
+                    preload="metadata"
                     style={{
                       width: '100%',
                       height: '200px',
@@ -1033,6 +1142,41 @@ export default function EditGirlPage({ params }: PageProps) {
               ))}
             </div>
 
+            {/* Load More Button for Videos */}
+            {videosPagination && videosPagination.hasMore && (
+              <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                <button
+                  type="button"
+                  onClick={loadMoreVideos}
+                  disabled={loadingMoreVideos}
+                  style={{
+                    padding: '12px 32px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '8px',
+                    color: 'var(--white)',
+                    fontWeight: '500',
+                    cursor: loadingMoreVideos ? 'wait' : 'pointer',
+                    transition: 'all 0.3s ease',
+                    fontSize: '0.9rem',
+                    opacity: loadingMoreVideos ? 0.6 : 1
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!loadingMoreVideos) {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                      e.currentTarget.style.borderColor = 'var(--primary)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  }}
+                >
+                  {loadingMoreVideos ? 'Načítání...' : `Načíst další (${videosPagination.total - videos.length} zbývá)`}
+                </button>
+              </div>
+            )}
+
             {uploadingVideo && <p style={{ color: 'var(--gray)', marginTop: '1rem' }}>Nahrávání...</p>}
             {videos.length === 0 && !uploadingVideo && (
               <p style={{ color: 'var(--gray)', textAlign: 'center', padding: '2rem' }}>
@@ -1048,7 +1192,14 @@ export default function EditGirlPage({ params }: PageProps) {
                 ⚡ Stories (24h jako Instagram)
               </h3>
               <span style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>
-                {stories.length} {stories.length === 1 ? 'story' : stories.length < 5 ? 'stories' : 'stories'}
+                {storiesPagination ? (
+                  <>
+                    {storiesPagination.total} {storiesPagination.total === 1 ? 'story' : storiesPagination.total < 5 ? 'stories' : 'stories'}
+                    {stories.length < storiesPagination.total && ` (zobrazeno ${stories.length})`}
+                  </>
+                ) : (
+                  `${stories.length} ${stories.length === 1 ? 'story' : stories.length < 5 ? 'stories' : 'stories'}`
+                )}
               </span>
             </div>
 
@@ -1177,6 +1328,7 @@ export default function EditGirlPage({ params }: PageProps) {
                     <img
                       src={story.media_url}
                       alt=""
+                      loading="lazy"
                       style={{
                         width: '100%',
                         height: '200px',
@@ -1188,6 +1340,7 @@ export default function EditGirlPage({ params }: PageProps) {
                     <video
                       src={story.media_url}
                       controls
+                      preload="metadata"
                       style={{
                         width: '100%',
                         height: '200px',
@@ -1251,6 +1404,41 @@ export default function EditGirlPage({ params }: PageProps) {
                 </div>
               ))}
             </div>
+
+            {/* Load More Button for Stories */}
+            {storiesPagination && storiesPagination.hasMore && (
+              <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                <button
+                  type="button"
+                  onClick={loadMoreStories}
+                  disabled={loadingMoreStories}
+                  style={{
+                    padding: '12px 32px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '8px',
+                    color: 'var(--white)',
+                    fontWeight: '500',
+                    cursor: loadingMoreStories ? 'wait' : 'pointer',
+                    transition: 'all 0.3s ease',
+                    fontSize: '0.9rem',
+                    opacity: loadingMoreStories ? 0.6 : 1
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!loadingMoreStories) {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                      e.currentTarget.style.borderColor = 'var(--primary)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  }}
+                >
+                  {loadingMoreStories ? 'Načítání...' : `Načíst další (${storiesPagination.total - stories.length} zbývá)`}
+                </button>
+              </div>
+            )}
 
             {uploadingStory && <p style={{ color: 'var(--gray)', marginTop: '1rem' }}>Nahrávání...</p>}
             {stories.length === 0 && !uploadingStory && (

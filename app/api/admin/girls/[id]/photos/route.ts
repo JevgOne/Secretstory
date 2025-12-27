@@ -13,20 +13,41 @@ interface RouteParams {
   }>;
 }
 
-// GET - List all photos for a girl
+// GET - List all photos for a girl (with optional pagination)
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const resolvedParams = await params;
     const girlId = parseInt(resolvedParams.id);
 
-    const result = await db.execute({
-      sql: 'SELECT * FROM girl_photos WHERE girl_id = ? ORDER BY display_order ASC, created_at ASC',
+    // Get pagination parameters
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
+    const offset = (page - 1) * limit;
+
+    // Get total count
+    const countResult = await db.execute({
+      sql: 'SELECT COUNT(*) as total FROM girl_photos WHERE girl_id = ?',
       args: [girlId]
+    });
+    const total = countResult.rows[0]?.total as number || 0;
+
+    // Get paginated photos
+    const result = await db.execute({
+      sql: 'SELECT * FROM girl_photos WHERE girl_id = ? ORDER BY display_order ASC, created_at ASC LIMIT ? OFFSET ?',
+      args: [girlId, limit, offset]
     });
 
     return NextResponse.json({
       success: true,
-      photos: result.rows
+      photos: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasMore: offset + limit < total
+      }
     });
   } catch (error) {
     console.error('Error fetching photos:', error);
