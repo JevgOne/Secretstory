@@ -43,6 +43,7 @@ interface Girl {
   is_top?: boolean;
   is_featured?: boolean;
   badge_type?: string;
+  created_at?: string;
   featured_section?: string;
   primary_photo?: string | null;
   thumbnail?: string | null;
