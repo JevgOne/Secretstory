@@ -43,6 +43,7 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
   const tCommon = useTranslations('common');
   const tFooter = useTranslations('footer');
   const tGirls = useTranslations('girls');
+  const tHome = useTranslations('home');
   const [girls, setGirls] = useState<Girl[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -424,14 +425,14 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
       {/* MOBILE BOTTOM CTA */}
       <BottomCTA
         translations={{
-          call: t('cta_call'),
-          whatsapp: t('cta_whatsapp'),
-          telegram: t('cta_telegram'),
-          sms: t('cta_sms'),
-          branches: t('cta_branches'),
-          discounts: t('cta_discounts'),
-          whatsapp_warning: t('cta_whatsapp_warning'),
-          recommended: t('cta_recommended')
+          call: tHome('cta_call'),
+          whatsapp: tHome('cta_whatsapp'),
+          telegram: tHome('cta_telegram'),
+          sms: tHome('cta_sms'),
+          branches: tHome('cta_branches'),
+          discounts: tHome('cta_discounts'),
+          whatsapp_warning: tHome('cta_whatsapp_warning'),
+          recommended: tHome('cta_recommended')
         }}
       />
     </>

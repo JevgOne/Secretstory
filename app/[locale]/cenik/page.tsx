@@ -13,6 +13,7 @@ export default function PricingPage() {
   const tCommon = useTranslations('common');
   const tFooter = useTranslations('footer');
   const tPricing = useTranslations('pricing');
+  const t = useTranslations('home');
   const locale = useLocale();
   const pathname = usePathname();
 
