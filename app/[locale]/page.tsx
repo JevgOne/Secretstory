@@ -579,14 +579,14 @@ export default function Home() {
         {/* MOBILE BOTTOM CTA */}
         <BottomCTA
           translations={{
-            call: t('cta_call'),
-            whatsapp: t('cta_whatsapp'),
-            telegram: t('cta_telegram'),
-            sms: t('cta_sms'),
-            branches: t('cta_branches'),
-            discounts: t('cta_discounts'),
-            whatsapp_warning: t('cta_whatsapp_warning'),
-            recommended: t('cta_recommended')
+            call: tHome('cta_call'),
+            whatsapp: tHome('cta_whatsapp'),
+            telegram: tHome('cta_telegram'),
+            sms: tHome('cta_sms'),
+            branches: tHome('cta_branches'),
+            discounts: tHome('cta_discounts'),
+            whatsapp_warning: tHome('cta_whatsapp_warning'),
+            recommended: tHome('cta_recommended')
           }}
         />
       </div>
