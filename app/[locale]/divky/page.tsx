@@ -173,7 +173,17 @@ export default function GirlsPage() {
               </div>
             ) : (
               girls.map((girl) => {
-                const badge = girl.badge_type || null;
+                // Auto-detect if girl is new (within 10 days of creation)
+                const isNewlyCreated = girl.created_at ?
+                  (new Date().getTime() - new Date(girl.created_at).getTime()) / (1000 * 60 * 60 * 24) <= 10
+                  : false;
+
+                // Badge priority: badge_type > is_new checkbox > auto-detect
+                const badge = girl.badge_type
+                  ? girl.badge_type
+                  : (girl.is_new !== undefined && girl.is_new !== null)
+                    ? (girl.is_new ? 'new' : null)
+                    : (isNewlyCreated ? 'new' : null);
                 const badgeText = badge === 'new' ? t('girls.new') : badge === 'top' ? t('girls.top_reviews') : badge === 'recommended' ? t('girls.recommended') : badge === 'asian' ? tCommon('asian') : '';
                 const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
                 const breastSize = getBreastSize(girl.bust);
