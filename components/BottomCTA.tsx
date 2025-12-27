@@ -143,13 +143,6 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           z-index: 9999;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
           animation: slideDown 0.3s ease-out;
-          display: none;
-        }
-
-        @media (max-width: 768px) {
-          .whatsapp-warning-banner {
-            display: block;
-          }
         }
 
         .warning-content {
