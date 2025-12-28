@@ -113,8 +113,72 @@ export default function GirlsPage() {
     return names[code]?.[locale] || code;
   };
 
+  // Schema.org structured data
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ItemList",
+        "name": t('girls.title'),
+        "description": t('girls.subtitle'),
+        "numberOfItems": girls.length,
+        "itemListElement": girls.map((girl, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "Person",
+            "name": girl.name,
+            "image": girl.primary_photo || girl.thumbnail,
+            "url": `https://lovelygirls.cz/${locale}/profily/${girl.slug}`
+          }
+        }))
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://lovelygirls.cz/#business",
+        "name": "LovelyGirls Prague",
+        "description": t('girls.subtitle'),
+        "url": `https://lovelygirls.cz/${locale}/divky`,
+        "telephone": "+420734332131",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Prague",
+          "addressCountry": "CZ"
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "10:00",
+          "closes": "04:00"
+        },
+        "priceRange": "$$$$",
+        "servesCuisine": "Adult Entertainment"
+      },
+      {
+        "@type": "WebPage",
+        "@id": `https://lovelygirls.cz/${locale}/divky#webpage`,
+        "url": `https://lovelygirls.cz/${locale}/divky`,
+        "name": t('girls.title'),
+        "description": t('girls.subtitle'),
+        "inLanguage": locale,
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://lovelygirls.cz/#website",
+          "name": "LovelyGirls Prague",
+          "url": "https://lovelygirls.cz"
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      {/* Schema.org JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+
       <div className={`${playfair.variable} ${dmSans.variable}`}>
         {/* Ambient Background */}
         <div className="ambient-bg"></div>
@@ -321,6 +385,11 @@ export default function GirlsPage() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Legal Disclaimer */}
+            <div className="footer-disclaimer">
+              <p>{tFooter('disclaimer')}</p>
             </div>
 
             <div className="footer-bottom">

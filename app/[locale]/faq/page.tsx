@@ -69,8 +69,60 @@ export default function FAQPage() {
     );
   };
 
+  // Schema.org structured data - FAQPage is very important for SEO
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "FAQPage",
+        "name": tFaq('title'),
+        "description": tFaq('subtitle'),
+        "mainEntity": faqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer
+          }
+        }))
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://lovelygirls.cz/#business",
+        "name": "LovelyGirls Prague",
+        "url": `https://lovelygirls.cz/${locale}/faq`,
+        "telephone": "+420734332131",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Prague",
+          "addressCountry": "CZ"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": `https://lovelygirls.cz/${locale}/faq#webpage`,
+        "url": `https://lovelygirls.cz/${locale}/faq`,
+        "name": tFaq('title'),
+        "description": tFaq('subtitle'),
+        "inLanguage": locale,
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://lovelygirls.cz/#website",
+          "name": "LovelyGirls Prague",
+          "url": "https://lovelygirls.cz"
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      {/* Schema.org JSON-LD - FAQPage schema for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+
       {/* Mobile Menu - outside nav for proper z-index */}
       <MobileMenu currentPath={pathname} />
 
@@ -224,6 +276,11 @@ export default function FAQPage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Legal Disclaimer */}
+          <div className="footer-disclaimer">
+            <p>{tFooter('disclaimer')}</p>
           </div>
 
           <div className="footer-bottom">

@@ -201,6 +201,11 @@ export default function ServicesPage() {
             </div>
           </div>
 
+          {/* Legal Disclaimer */}
+          <div className="footer-disclaimer">
+            <p>{tFooter('disclaimer')}</p>
+          </div>
+
           <div className="footer-bottom">
             <div className="footer-bottom-left">
               <span>{t('footer.copyright')}</span>

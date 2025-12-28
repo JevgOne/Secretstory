@@ -993,9 +993,9 @@ footer {
 }
 
 .footer-disclaimer p {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     line-height: 1.6;
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.6);
     max-width: 900px;
     margin: 0 auto;
 }
@@ -1474,7 +1474,7 @@ footer {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 140px 4% 60px;
+    padding: 180px 4% 60px;
     background: var(--black);
 }
 

@@ -79,8 +79,65 @@ export default function DiscountsPage() {
     }
   ];
 
+  // Schema.org structured data
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "OfferCatalog",
+        "name": tDiscounts('title'),
+        "description": tDiscounts('subtitle'),
+        "itemListElement": discounts.map((discount, index) => ({
+          "@type": "Offer",
+          "position": index + 1,
+          "name": discount.name,
+          "description": discount.desc,
+          "discount": discount.value,
+          "priceCurrency": "CZK",
+          "seller": {
+            "@type": "LocalBusiness",
+            "name": "LovelyGirls Prague"
+          }
+        }))
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://lovelygirls.cz/#business",
+        "name": "LovelyGirls Prague",
+        "url": `https://lovelygirls.cz/${locale}/discounts`,
+        "telephone": "+420734332131",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Prague",
+          "addressCountry": "CZ"
+        },
+        "priceRange": "$$$$"
+      },
+      {
+        "@type": "WebPage",
+        "@id": `https://lovelygirls.cz/${locale}/discounts#webpage`,
+        "url": `https://lovelygirls.cz/${locale}/discounts`,
+        "name": tDiscounts('title'),
+        "description": tDiscounts('subtitle'),
+        "inLanguage": locale,
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://lovelygirls.cz/#website",
+          "name": "LovelyGirls Prague",
+          "url": "https://lovelygirls.cz"
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      {/* Schema.org JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+
       {/* Mobile Menu - outside nav for proper z-index */}
       <MobileMenu currentPath={pathname} />
 
@@ -245,6 +302,11 @@ export default function DiscountsPage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Legal Disclaimer */}
+          <div className="footer-disclaimer">
+            <p>{tFooter('disclaimer')}</p>
           </div>
 
           <div className="footer-bottom">

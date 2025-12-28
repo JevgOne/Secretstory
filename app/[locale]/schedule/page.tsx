@@ -113,8 +113,64 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
       });
   }, [locale, selectedDate]);
 
+  // Schema.org structured data
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Schedule",
+        "name": t('title'),
+        "description": t('subtitle'),
+        "eventSchedule": {
+          "@type": "Schedule",
+          "byDay": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "startTime": "10:00",
+          "endTime": "04:00"
+        }
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://lovelygirls.cz/#business",
+        "name": "LovelyGirls Prague",
+        "url": `https://lovelygirls.cz/${locale}/schedule`,
+        "telephone": "+420734332131",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Prague",
+          "addressCountry": "CZ"
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "10:00",
+          "closes": "04:00"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": `https://lovelygirls.cz/${locale}/schedule#webpage`,
+        "url": `https://lovelygirls.cz/${locale}/schedule`,
+        "name": t('title'),
+        "description": t('subtitle'),
+        "inLanguage": locale,
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://lovelygirls.cz/#website",
+          "name": "LovelyGirls Prague",
+          "url": "https://lovelygirls.cz"
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      {/* Schema.org JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+
       {/* Mobile Menu - outside nav for proper z-index */}
       <MobileMenu currentPath={`/${locale}/schedule`} />
 
@@ -146,10 +202,16 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
         </div>
       </nav>
 
+      {/* Page Header */}
+      <section className="page-header">
+        <h1 className="page-title">{t('title')}</h1>
+        {t('subtitle') && <p className="page-subtitle">{t('subtitle')}</p>}
+      </section>
+
       {/* Date Selector - Clean minimal design */}
       <section style={{
         maxWidth: '1200px',
-        margin: '120px auto 0',
+        margin: '0 auto',
         padding: '0 24px'
       }}>
         <div style={{
@@ -249,6 +311,7 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
 
       {/* Schedule Grid */}
       <section className="schedule">
+        <h2 className="sr-only">{t('legend.available')}</h2>
         {loading && (
           <div className="text-center py-8">
             <p>{t('loading')}</p>
@@ -406,6 +469,11 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Legal Disclaimer */}
+          <div className="footer-disclaimer">
+            <p>{tFooter('disclaimer')}</p>
           </div>
 
           <div className="footer-bottom">

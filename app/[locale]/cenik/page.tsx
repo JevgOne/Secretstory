@@ -297,6 +297,11 @@ export default function PricingPage() {
             </div>
           </div>
 
+          {/* Legal Disclaimer */}
+          <div className="footer-disclaimer">
+            <p>{tFooter('disclaimer')}</p>
+          </div>
+
           <div className="footer-bottom">
             <div className="footer-bottom-left">
               <span>{tFooter('copyright')}</span>
