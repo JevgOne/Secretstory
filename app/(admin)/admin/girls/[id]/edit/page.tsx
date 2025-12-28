@@ -1688,9 +1688,35 @@ export default function EditGirlPage({ params }: PageProps) {
           <Link href="/admin/girls" className="btn btn-secondary">
             Zrušit
           </Link>
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Ukládání...' : 'Uložit změny'}
-          </button>
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: '1rem' }}>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={async () => {
+                if (confirm('Opravdu smazat celý profil? Tato akce je nevratná a smaže všechny fotky, videa, recenze, rozvrhy a další data.')) {
+                  try {
+                    const response = await fetch(`/api/admin/girls/${girlId}`, {
+                      method: 'DELETE'
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                      router.push('/admin/girls');
+                    } else {
+                      alert(data.error || 'Chyba při mazání profilu');
+                    }
+                  } catch (err) {
+                    console.error('Delete error:', err);
+                    alert('Chyba při mazání profilu');
+                  }
+                }
+              }}
+            >
+              Smazat profil
+            </button>
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? 'Ukládání...' : 'Uložit změny'}
+            </button>
+          </div>
         </div>
       </form>
 
@@ -1752,6 +1778,16 @@ export default function EditGirlPage({ params }: PageProps) {
 
         .btn-secondary:hover {
           background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-danger {
+          background: #dc2626;
+          color: white;
+          border: 1px solid #b91c1c;
+        }
+
+        .btn-danger:hover {
+          background: #b91c1c;
         }
 
         .error-banner {
