@@ -152,7 +152,7 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
         .warning-content {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 15px 20px;
+          padding: 16px 20px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -164,6 +164,9 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
         .warning-icon {
           font-size: 1.5rem;
           flex-shrink: 0;
+          line-height: 1;
+          display: flex;
+          align-items: center;
         }
 
         .warning-text {
@@ -172,6 +175,8 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           display: flex;
           align-items: center;
           gap: 4px;
+          flex-wrap: wrap;
+          justify-content: center;
         }
 
         .warning-text strong {
