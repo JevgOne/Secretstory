@@ -144,15 +144,13 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           z-index: 97;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
           animation: slideDown 0.3s ease-out;
-          min-height: 60px;
-          display: flex;
-          align-items: center;
+          padding: 14px 0;
         }
 
         .warning-content {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 16px 20px;
+          padding: 0 20px;
           display: flex;
           align-items: center;
           justify-content: center;
