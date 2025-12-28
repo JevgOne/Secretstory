@@ -140,6 +140,8 @@ export default function SchedulesPage() {
       // Always refresh schedules and close modal if at least one succeeded
       if (successCount > 0) {
         setShowAddModal(false);
+        // Reset filter to show all girls
+        setSelectedGirl(null);
         fetchSchedules();
         // Reset form
         setFormGirlId(0);
