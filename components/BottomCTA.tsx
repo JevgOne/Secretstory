@@ -95,6 +95,7 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
               <strong>{translations.whatsapp_warning}</strong>
               {translations.recommended && <span> • {translations.recommended}</span>}
             </div>
+            <span className="warning-icon">⚠️</span>
           </div>
         </div>
       )}
@@ -135,7 +136,7 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
       <style jsx>{`
         .whatsapp-warning-banner {
           position: fixed;
-          top: 70px;
+          top: 75px;
           left: 0;
           right: 0;
           background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
@@ -143,12 +144,13 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           z-index: 97;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
           animation: slideDown 0.3s ease-out;
+          min-height: 50px;
         }
 
         .warning-content {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 16px 20px;
+          padding: 18px 20px;
           display: flex;
           align-items: center;
           justify-content: center;
