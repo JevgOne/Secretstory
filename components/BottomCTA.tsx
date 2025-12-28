@@ -167,8 +167,11 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
         }
 
         .warning-text {
-          line-height: 1.4;
+          line-height: 1.5;
           text-align: center;
+          display: flex;
+          align-items: center;
+          gap: 4px;
         }
 
         .warning-text strong {
