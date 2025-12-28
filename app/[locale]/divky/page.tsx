@@ -174,13 +174,9 @@ export default function GirlsPage() {
               </div>
             ) : (
               girls.map((girl) => {
-                // Badge logic: Only show if explicitly set in admin panel
-                // badge_type takes priority, then is_new checkbox
-                const badge = girl.badge_type
-                  ? girl.badge_type
-                  : girl.is_new
-                    ? 'new'
-                    : null;
+                // Badge logic: Only show if explicitly set in admin panel via badge_type
+                // Auto-detection disabled - importing old profiles from original site
+                const badge = girl.badge_type || null;
                 const badgeText = badge === 'new' ? t('girls.new') : badge === 'top' ? t('girls.top_reviews') : badge === 'recommended' ? t('girls.recommended') : badge === 'asian' ? tCommon('asian') : '';
                 const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
                 const breastSize = getBreastSize(girl.bust);
