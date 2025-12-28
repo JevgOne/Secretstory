@@ -45,6 +45,8 @@ next-env.d.ts
 *.bak
 *.backup
 *~
+.env.local.backup-*
+turso-backup*.sql
 
 # documentation (optional - odkomentuj pokud nechceš commitovat)
 # IMPLEMENTATION_*.md
