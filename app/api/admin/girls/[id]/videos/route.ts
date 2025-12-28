@@ -194,8 +194,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         filename,
         url,
         display_order: nextOrder,
-        file_size: file.size,
-        mime_type: file.type
+        file_size: fileSize,
+        mime_type: mimeType
       }
     });
   } catch (error) {
