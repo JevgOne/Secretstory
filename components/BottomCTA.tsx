@@ -135,12 +135,12 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
       <style jsx>{`
         .whatsapp-warning-banner {
           position: fixed;
-          top: 0;
+          top: 70px;
           left: 0;
           right: 0;
           background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
           color: #ffffff;
-          z-index: 99;
+          z-index: 97;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
           animation: slideDown 0.3s ease-out;
         }
