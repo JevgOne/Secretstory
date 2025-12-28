@@ -154,13 +154,14 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 12px;
-          font-size: 1rem;
+          gap: 16px;
+          font-size: 1.125rem;
           width: 100%;
+          font-weight: 500;
         }
 
         .warning-icon {
-          font-size: 1.5rem;
+          font-size: 2rem;
           flex-shrink: 0;
           line-height: 1;
           display: flex;
@@ -168,17 +169,17 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
         }
 
         .warning-text {
-          line-height: 1.5;
+          line-height: 1.6;
           text-align: center;
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 8px;
           flex-wrap: wrap;
           justify-content: center;
         }
 
         .warning-text strong {
-          font-weight: 600;
+          font-weight: 700;
         }
 
         @keyframes slideDown {
