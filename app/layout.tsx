@@ -99,8 +99,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://qktyf1ozcve7804i.public.blob.vercel-storage.com" />
         <link rel="preconnect" href="https://qktyf1ozcve7804i.public.blob.vercel-storage.com" crossOrigin="anonymous" />
 
-        {/* Google Analytics - will activate when NEXT_PUBLIC_GA_MEASUREMENT_ID is set */}
-        <GoogleAnalytics />
+        {/* Google Analytics */}
+        <GoogleAnalytics measurementId="G-W4W24CVL1L" />
       </head>
       <body className={`${cormorant.variable} ${dmSans.variable} antialiased`}>
         <SessionProvider>
