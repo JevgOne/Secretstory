@@ -144,18 +144,21 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           z-index: 97;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
           animation: slideDown 0.3s ease-out;
-          min-height: 50px;
+          min-height: 60px;
+          display: flex;
+          align-items: center;
         }
 
         .warning-content {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 18px 20px;
+          padding: 15px 20px;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 12px;
           font-size: 1rem;
+          width: 100%;
         }
 
         .warning-icon {
