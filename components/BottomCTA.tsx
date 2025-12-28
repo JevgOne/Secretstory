@@ -196,10 +196,12 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
 
         .bottom-cta-btn.telegram {
           background: linear-gradient(135deg, #0088cc 0%, #229ED9 100%);
+          position: relative;
         }
 
         .bottom-cta-btn.sms {
           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          position: relative;
         }
 
         .bottom-cta-btn.whatsapp.disabled {
@@ -210,25 +212,27 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
 
         .recommended-badge {
           position: absolute;
-          top: -4px;
-          right: -4px;
+          top: 2px;
+          right: 2px;
           background: #10b981;
           color: white;
           font-size: 10px;
           padding: 2px 4px;
           border-radius: 50%;
           font-weight: bold;
+          z-index: 1;
         }
 
         .warning-badge {
           position: absolute;
-          top: -4px;
-          right: -4px;
+          top: 2px;
+          right: 2px;
           background: #fbbf24;
           color: #1f2937;
           font-size: 10px;
           padding: 2px 4px;
           border-radius: 50%;
+          z-index: 1;
         }
 
         @media (max-width: 768px) {
