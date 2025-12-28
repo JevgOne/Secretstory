@@ -138,10 +138,10 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
           top: 60px;
           left: 0;
           right: 0;
-          background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-          color: #000000;
+          background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+          color: #ffffff;
           z-index: 97;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
           animation: slideDown 0.3s ease-out;
         }
 
