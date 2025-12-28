@@ -148,21 +148,22 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
         .warning-content {
           max-width: 1200px;
           margin: 0 auto;
-          padding: 12px 20px;
+          padding: 16px 20px;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 12px;
-          font-size: 0.875rem;
+          font-size: 1rem;
         }
 
         .warning-icon {
-          font-size: 1.25rem;
+          font-size: 1.5rem;
           flex-shrink: 0;
         }
 
         .warning-text {
-          flex: 1;
           line-height: 1.4;
+          text-align: center;
         }
 
         .warning-text strong {
