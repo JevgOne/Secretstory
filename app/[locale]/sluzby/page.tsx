@@ -201,11 +201,6 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          {/* Legal Disclaimer */}
-          <div className="footer-disclaimer">
-            <p>{tFooter('disclaimer')}</p>
-          </div>
-
           <div className="footer-bottom">
             <div className="footer-bottom-left">
               <span>{t('footer.copyright')}</span>
@@ -216,6 +211,11 @@ export default function ServicesPage() {
               <Link href={`/${locale}/podminky`}>{t('footer.terms')}</Link>
               <Link href={`/${locale}/soukromi`}>{t('footer.privacy')}</Link>
             </div>
+          </div>
+
+          {/* Legal Disclaimer */}
+          <div className="footer-disclaimer">
+            <p>{tFooter('disclaimer')}</p>
           </div>
         </div>
       </footer>

@@ -304,11 +304,6 @@ export default function DiscountsPage() {
             </div>
           </div>
 
-          {/* Legal Disclaimer */}
-          <div className="footer-disclaimer">
-            <p>{tFooter('disclaimer')}</p>
-          </div>
-
           <div className="footer-bottom">
             <div className="footer-bottom-left">
               <span>{tFooter('copyright')}</span>
@@ -319,6 +314,11 @@ export default function DiscountsPage() {
               <Link href={`/${locale}/podminky`}>{tFooter('terms')}</Link>
               <Link href={`/${locale}/soukromi`}>{tFooter('privacy')}</Link>
             </div>
+          </div>
+
+          {/* Legal Disclaimer */}
+          <div className="footer-disclaimer">
+            <p>{tFooter('disclaimer')}</p>
           </div>
         </div>
       </footer>
