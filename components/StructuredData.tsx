@@ -10,8 +10,8 @@ export function OrganizationSchema({ locale = 'cs' }: OrganizationSchemaProps) {
     "@type": "Organization",
     "name": "LovelyGirls Prague",
     "alternateName": "LovelyGirls",
-    "url": "https://lovelygirls.cz",
-    "logo": "https://lovelygirls.cz/logo.png",
+    "url": "https://www.lovelygirls.cz",
+    "logo": "https://www.lovelygirls.cz/logo.png",
     "description": "Premium escort services and erotic massage in Prague. Professional companions, verified profiles, discreet service.",
     "address": {
       "@type": "PostalAddress",
@@ -64,11 +64,11 @@ export function PersonSchema({ girl, locale }: PersonSchemaProps) {
     "name": girl.name,
     "description": girl.bio || `${girl.name}, professional companion in Prague. Age: ${girl.age}, Height: ${girl.height}cm.`,
     "nationality": girl.nationality,
-    "url": `https://lovelygirls.cz/${locale}/profily/${girl.slug}`,
+    "url": `https://www.lovelygirls.cz/${locale}/profily/${girl.slug}`,
     "worksFor": {
       "@type": "Organization",
       "name": "LovelyGirls Prague",
-      "url": "https://lovelygirls.cz"
+      "url": "https://www.lovelygirls.cz"
     }
   }
 
@@ -94,7 +94,7 @@ export function ServiceSchema({ locale = 'cs' }: ServiceSchemaProps) {
     "provider": {
       "@type": "Organization",
       "name": "LovelyGirls Prague",
-      "url": "https://lovelygirls.cz"
+      "url": "https://www.lovelygirls.cz"
     },
     "areaServed": {
       "@type": "City",

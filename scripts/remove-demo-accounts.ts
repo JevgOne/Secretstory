@@ -52,27 +52,51 @@ async function removeDemoAccounts() {
       if (girl.rows.length > 0) {
         const girlId = girl.rows[0].id;
 
-        // Delete related data first (foreign keys)
-        await db.execute({
-          sql: 'DELETE FROM girl_photos WHERE girl_id = ?',
-          args: [girlId]
-        });
-        await db.execute({
-          sql: 'DELETE FROM girl_videos WHERE girl_id = ?',
-          args: [girlId]
-        });
-        await db.execute({
-          sql: 'DELETE FROM availability WHERE girl_id = ?',
-          args: [girlId]
-        });
-        await db.execute({
-          sql: 'DELETE FROM bookings WHERE girl_id = ?',
-          args: [girlId]
-        });
-        await db.execute({
-          sql: 'DELETE FROM reviews WHERE girl_id = ?',
-          args: [girlId]
-        });
+        // Delete related data first (foreign keys) - skip if table doesn't exist
+        try {
+          await db.execute({
+            sql: 'DELETE FROM girl_photos WHERE girl_id = ?',
+            args: [girlId]
+          });
+        } catch (e) {
+          console.log(`   ⚠️  girl_photos table not found, skipping...`);
+        }
+
+        try {
+          await db.execute({
+            sql: 'DELETE FROM girl_videos WHERE girl_id = ?',
+            args: [girlId]
+          });
+        } catch (e) {
+          console.log(`   ⚠️  girl_videos table not found, skipping...`);
+        }
+
+        try {
+          await db.execute({
+            sql: 'DELETE FROM availability WHERE girl_id = ?',
+            args: [girlId]
+          });
+        } catch (e) {
+          console.log(`   ⚠️  availability table not found, skipping...`);
+        }
+
+        try {
+          await db.execute({
+            sql: 'DELETE FROM bookings WHERE girl_id = ?',
+            args: [girlId]
+          });
+        } catch (e) {
+          console.log(`   ⚠️  bookings table not found, skipping...`);
+        }
+
+        try {
+          await db.execute({
+            sql: 'DELETE FROM reviews WHERE girl_id = ?',
+            args: [girlId]
+          });
+        } catch (e) {
+          console.log(`   ⚠️  reviews table not found, skipping...`);
+        }
 
         // Finally delete the girl
         await db.execute({

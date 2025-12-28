@@ -28,10 +28,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     alternates: {
       ...metadata.alternates,
       languages: {
-        'cs': 'https://www.eroticreviews.uk/cs',
-        'en': 'https://www.eroticreviews.uk/en',
-        'de': 'https://www.eroticreviews.uk/de',
-        'uk': 'https://www.eroticreviews.uk/uk'
+        'cs': 'https://www.lovelygirls.cz/cs',
+        'en': 'https://www.lovelygirls.cz/en',
+        'de': 'https://www.lovelygirls.cz/de',
+        'uk': 'https://www.lovelygirls.cz/uk'
       }
     }
   };

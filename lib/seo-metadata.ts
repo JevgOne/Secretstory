@@ -58,8 +58,8 @@ export async function generatePageMetadata(
   const title = seoData?.meta_title || defaults.title;
   const description = seoData?.meta_description || defaults.description;
   const keywords = seoData?.meta_keywords || defaults.keywords;
-  const ogImage = seoData?.og_image || defaults.ogImage || 'https://www.eroticreviews.uk/og-image.jpg';
-  const canonicalUrl = seoData?.canonical_url || `https://www.eroticreviews.uk${pagePath}`;
+  const ogImage = seoData?.og_image || defaults.ogImage || 'https://www.lovelygirls.cz/og-image.jpg';
+  const canonicalUrl = seoData?.canonical_url || `https://www.lovelygirls.cz${pagePath}`;
 
   return {
     title,

@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   const title = titles[locale] || titles.cs
   const description = descriptions[locale] || descriptions.cs
-  const url = `https://lovelygirls.cz/${locale}/divky`
+  const url = `https://www.lovelygirls.cz/${locale}/divky`
 
   return {
     title,

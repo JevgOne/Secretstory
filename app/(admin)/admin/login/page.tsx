@@ -11,18 +11,6 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleDemoClick = (role: string) => {
-    if (role === 'girl') {
-      setEmail('katy@demo.cz');
-      setPassword('katy123');
-    } else if (role === 'manager') {
-      setEmail('manager@lovelygirls.cz');
-      setPassword('manager123');
-    } else if (role === 'admin') {
-      setEmail('admin@lovelygirls.cz');
-      setPassword('admin123');
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,25 +108,6 @@ export default function AdminLoginPage() {
               <span className="app-btn-text">Přihlásit se</span>
               <div className="app-spinner"></div>
             </button>
-
-            {/* DEMO USERS */}
-            <div className="app-demo-section">
-              <div className="app-demo-label">Demo přístupy</div>
-              <div className="app-demo-buttons">
-                <button type="button" className="app-demo-btn" onClick={() => handleDemoClick("girl")}>
-                  👩 Dívka
-                  <span>katy@demo.cz</span>
-                </button>
-                <button type="button" className="app-demo-btn" onClick={() => handleDemoClick("manager")}>
-                  👔 Manažer
-                  <span>manager@lovelygirls.cz</span>
-                </button>
-                <button type="button" className="app-demo-btn" onClick={() => handleDemoClick("admin")}>
-                  ⚙️ Admin
-                  <span>admin@lovelygirls.cz</span>
-                </button>
-              </div>
-            </div>
           </form>
 
         {/* FOOTER */}

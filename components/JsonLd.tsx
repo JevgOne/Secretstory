@@ -52,7 +52,7 @@ export function LocalBusinessSchema({
       closes: hours.split(' ')[1]?.split('-')[1]
     })),
     priceRange,
-    url: 'https://www.eroticreviews.uk',
+    url: 'https://www.lovelygirls.cz',
     sameAs: [
       'https://www.instagram.com/lovelygirls.cz',
       'https://t.me/lovelygirlscz'
@@ -72,8 +72,8 @@ export function OrganizationSchema() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'LovelyGirls Prague',
-    url: 'https://www.eroticreviews.uk',
-    logo: 'https://www.eroticreviews.uk/logo.png',
+    url: 'https://www.lovelygirls.cz',
+    logo: 'https://www.lovelygirls.cz/logo.png',
     description: 'Premium escort services in Prague. Professional companions, erotic massage, VIP services.',
     address: {
       '@type': 'PostalAddress',
@@ -105,12 +105,12 @@ export function WebSiteSchema() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'LovelyGirls Prague',
-    url: 'https://www.eroticreviews.uk',
+    url: 'https://www.lovelygirls.cz',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://www.eroticreviews.uk/cs/divky?search={search_term_string}'
+        urlTemplate: 'https://www.lovelygirls.cz/cs/divky?search={search_term_string}'
       },
       'query-input': 'required name=search_term_string'
     },
@@ -196,7 +196,7 @@ export function PersonSchema({
     memberOf: {
       '@type': 'Organization',
       name: 'LovelyGirls Prague',
-      url: 'https://www.eroticreviews.uk'
+      url: 'https://www.lovelygirls.cz'
     }
   };
 

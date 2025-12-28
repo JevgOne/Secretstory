@@ -102,9 +102,9 @@ export default function DiscountsPage() {
       },
       {
         "@type": "LocalBusiness",
-        "@id": "https://lovelygirls.cz/#business",
+        "@id": "https://www.lovelygirls.cz/#business",
         "name": "LovelyGirls Prague",
-        "url": `https://lovelygirls.cz/${locale}/discounts`,
+        "url": `https://www.lovelygirls.cz/${locale}/discounts`,
         "telephone": "+420734332131",
         "address": {
           "@type": "PostalAddress",
@@ -115,16 +115,16 @@ export default function DiscountsPage() {
       },
       {
         "@type": "WebPage",
-        "@id": `https://lovelygirls.cz/${locale}/discounts#webpage`,
-        "url": `https://lovelygirls.cz/${locale}/discounts`,
+        "@id": `https://www.lovelygirls.cz/${locale}/discounts#webpage`,
+        "url": `https://www.lovelygirls.cz/${locale}/discounts`,
         "name": tDiscounts('title'),
         "description": tDiscounts('subtitle'),
         "inLanguage": locale,
         "isPartOf": {
           "@type": "WebSite",
-          "@id": "https://lovelygirls.cz/#website",
+          "@id": "https://www.lovelygirls.cz/#website",
           "name": "LovelyGirls Prague",
-          "url": "https://lovelygirls.cz"
+          "url": "https://www.lovelygirls.cz"
         }
       }
     ]

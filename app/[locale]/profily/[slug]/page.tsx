@@ -342,9 +342,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   };
 
   const breadcrumbItems = [
-    { name: t('breadcrumb.home'), url: `https://lovelygirls.cz/${locale}` },
-    { name: t('breadcrumb.girls'), url: `https://lovelygirls.cz/${locale}/divky` },
-    { name: profile.name, url: `https://lovelygirls.cz/${locale}/profily/${profile.slug}` }
+    { name: t('breadcrumb.home'), url: `https://www.lovelygirls.cz/${locale}` },
+    { name: t('breadcrumb.girls'), url: `https://www.lovelygirls.cz/${locale}/divky` },
+    { name: profile.name, url: `https://www.lovelygirls.cz/${locale}/profily/${profile.slug}` }
   ];
 
   return (

@@ -88,9 +88,9 @@ export default function FAQPage() {
       },
       {
         "@type": "LocalBusiness",
-        "@id": "https://lovelygirls.cz/#business",
+        "@id": "https://www.lovelygirls.cz/#business",
         "name": "LovelyGirls Prague",
-        "url": `https://lovelygirls.cz/${locale}/faq`,
+        "url": `https://www.lovelygirls.cz/${locale}/faq`,
         "telephone": "+420734332131",
         "address": {
           "@type": "PostalAddress",
@@ -100,16 +100,16 @@ export default function FAQPage() {
       },
       {
         "@type": "WebPage",
-        "@id": `https://lovelygirls.cz/${locale}/faq#webpage`,
-        "url": `https://lovelygirls.cz/${locale}/faq`,
+        "@id": `https://www.lovelygirls.cz/${locale}/faq#webpage`,
+        "url": `https://www.lovelygirls.cz/${locale}/faq`,
         "name": tFaq('title'),
         "description": tFaq('subtitle'),
         "inLanguage": locale,
         "isPartOf": {
           "@type": "WebSite",
-          "@id": "https://lovelygirls.cz/#website",
+          "@id": "https://www.lovelygirls.cz/#website",
           "name": "LovelyGirls Prague",
-          "url": "https://lovelygirls.cz"
+          "url": "https://www.lovelygirls.cz"
         }
       }
     ]

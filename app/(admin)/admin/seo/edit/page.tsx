@@ -431,7 +431,7 @@ function EditSEOForm() {
               value={formData.canonical_url}
               onChange={(e) => setFormData({ ...formData, canonical_url: e.target.value })}
               style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', color: '#fff' }}
-              placeholder="https://www.eroticreviews.uk/cs"
+              placeholder="https://www.lovelygirls.cz/cs"
             />
             <small style={{ color: '#9ca3af', fontSize: '0.85rem' }}>
               Preferovaná URL stránky

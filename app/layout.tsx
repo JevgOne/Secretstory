@@ -19,7 +19,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://lovelygirls.cz'),
+  metadataBase: new URL('https://www.lovelygirls.cz'),
   title: {
     default: "LovelyGirls Prague - Premium Escort & Erotic Massage Services",
     template: "%s | LovelyGirls Prague"
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'cs_CZ',
-    url: 'https://lovelygirls.cz',
+    url: 'https://www.lovelygirls.cz',
     siteName: 'LovelyGirls Prague',
     title: 'LovelyGirls Prague - Premium Escort & Erotic Massage',
     description: 'Premium escort services in Prague. Verified profiles, professional companions, discreet service available 24/7.',
@@ -68,12 +68,12 @@ export const metadata: Metadata = {
     // yandex: 'your-yandex-verification-code', // Optional: Yandex verification
   },
   alternates: {
-    canonical: 'https://lovelygirls.cz',
+    canonical: 'https://www.lovelygirls.cz',
     languages: {
-      'cs': 'https://lovelygirls.cz/cs',
-      'en': 'https://lovelygirls.cz/en',
-      'de': 'https://lovelygirls.cz/de',
-      'uk': 'https://lovelygirls.cz/uk'
+      'cs': 'https://www.lovelygirls.cz/cs',
+      'en': 'https://www.lovelygirls.cz/en',
+      'de': 'https://www.lovelygirls.cz/de',
+      'uk': 'https://www.lovelygirls.cz/uk'
     }
   },
   icons: {

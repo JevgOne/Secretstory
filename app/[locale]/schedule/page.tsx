@@ -130,9 +130,9 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
       },
       {
         "@type": "LocalBusiness",
-        "@id": "https://lovelygirls.cz/#business",
+        "@id": "https://www.lovelygirls.cz/#business",
         "name": "LovelyGirls Prague",
-        "url": `https://lovelygirls.cz/${locale}/schedule`,
+        "url": `https://www.lovelygirls.cz/${locale}/schedule`,
         "telephone": "+420734332131",
         "address": {
           "@type": "PostalAddress",
@@ -148,16 +148,16 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
       },
       {
         "@type": "WebPage",
-        "@id": `https://lovelygirls.cz/${locale}/schedule#webpage`,
-        "url": `https://lovelygirls.cz/${locale}/schedule`,
+        "@id": `https://www.lovelygirls.cz/${locale}/schedule#webpage`,
+        "url": `https://www.lovelygirls.cz/${locale}/schedule`,
         "name": t('title'),
         "description": t('subtitle'),
         "inLanguage": locale,
         "isPartOf": {
           "@type": "WebSite",
-          "@id": "https://lovelygirls.cz/#website",
+          "@id": "https://www.lovelygirls.cz/#website",
           "name": "LovelyGirls Prague",
-          "url": "https://lovelygirls.cz"
+          "url": "https://www.lovelygirls.cz"
         }
       }
     ]

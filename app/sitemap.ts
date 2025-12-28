@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { db } from '@/lib/db'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.eroticreviews.uk'
+  const baseUrl = 'https://www.lovelygirls.cz'
   const locales = ['cs', 'en', 'de', 'uk']
 
   // Fetch active girls

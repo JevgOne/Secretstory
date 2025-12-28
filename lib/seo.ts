@@ -46,7 +46,7 @@ export function toNextMetadata(
     ogImage?: string;
   } = {}
 ): Metadata {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://lovelygirls.cz';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.lovelygirls.cz';
 
   // Use database values or fallback
   const title = seo?.meta_title || fallback.title || 'LovelyGirls Prague';

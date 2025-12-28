@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       : `Meet ${girl.name}, ${girl.age} years old, ${girl.height}cm. Premium escort services in Prague. Available for incall & outcall. Book now via WhatsApp or call.`)
     const ogImage = girl.og_image || '/og-image.jpg'
 
-    const url = `https://lovelygirls.cz/${locale}/profily/${slug}`
+    const url = `https://www.lovelygirls.cz/${locale}/profily/${slug}`
 
     // Separate OG title and description
     const ogTitle = girl.og_title || title

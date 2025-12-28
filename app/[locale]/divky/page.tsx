@@ -129,16 +129,16 @@ export default function GirlsPage() {
             "@type": "Person",
             "name": girl.name,
             "image": girl.primary_photo || girl.thumbnail,
-            "url": `https://lovelygirls.cz/${locale}/profily/${girl.slug}`
+            "url": `https://www.lovelygirls.cz/${locale}/profily/${girl.slug}`
           }
         }))
       },
       {
         "@type": "LocalBusiness",
-        "@id": "https://lovelygirls.cz/#business",
+        "@id": "https://www.lovelygirls.cz/#business",
         "name": "LovelyGirls Prague",
         "description": t('girls.subtitle'),
-        "url": `https://lovelygirls.cz/${locale}/divky`,
+        "url": `https://www.lovelygirls.cz/${locale}/divky`,
         "telephone": "+420734332131",
         "address": {
           "@type": "PostalAddress",
@@ -156,16 +156,16 @@ export default function GirlsPage() {
       },
       {
         "@type": "WebPage",
-        "@id": `https://lovelygirls.cz/${locale}/divky#webpage`,
-        "url": `https://lovelygirls.cz/${locale}/divky`,
+        "@id": `https://www.lovelygirls.cz/${locale}/divky#webpage`,
+        "url": `https://www.lovelygirls.cz/${locale}/divky`,
         "name": t('girls.title'),
         "description": t('girls.subtitle'),
         "inLanguage": locale,
         "isPartOf": {
           "@type": "WebSite",
-          "@id": "https://lovelygirls.cz/#website",
+          "@id": "https://www.lovelygirls.cz/#website",
           "name": "LovelyGirls Prague",
-          "url": "https://lovelygirls.cz"
+          "url": "https://www.lovelygirls.cz"
         }
       }
     ]
