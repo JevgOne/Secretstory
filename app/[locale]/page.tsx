@@ -285,8 +285,9 @@ export default function Home() {
               (new Date().getTime() - new Date(girl.created_at).getTime()) / (1000 * 60 * 60 * 24) <= 10
               : false;
 
-            // Determine badge: auto NEW for 10 days, then is_new checkbox, then badge_type dropdown
-            const badge = (isNewlyCreated || girl.is_new) ? 'new' : (girl.badge_type || null);
+            // Badge logic: Only show if explicitly set in admin panel via badge_type
+            // Auto-detection disabled - importing old profiles from original site
+            const badge = girl.badge_type || null;
             const badgeText = badge === 'new' ? tGirls('new') : badge === 'top' ? tGirls('top_reviews') : badge === 'recommended' ? tGirls('recommended') : badge === 'asian' ? 'Asian' : '';
             const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
 

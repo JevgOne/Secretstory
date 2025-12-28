@@ -446,13 +446,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             <div className="gallery-main">
               {profile.verified && <span className="gallery-badge verified">{t('girls.verified')}</span>}
               {(() => {
-                // Badge logic: Only show if explicitly set in admin panel
-                // badge_type takes priority, then is_new checkbox
-                const badge = profile.badge_type
-                  ? profile.badge_type
-                  : profile.is_new
-                    ? 'new'
-                    : null;
+                // Badge logic: Only show if explicitly set in admin panel via badge_type
+                // Auto-detection disabled - importing old profiles from original site
+                const badge = profile.badge_type || null;
 
                 if (!badge) return null;
 
