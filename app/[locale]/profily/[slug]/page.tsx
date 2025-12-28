@@ -1576,14 +1576,39 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           }
 
           .working-today-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+          }
+
+          .working-today-grid .card {
+            font-size: 0.85rem;
+          }
+
+          .working-today-grid .card-name {
+            font-size: 1rem;
+          }
+
+          .working-today-grid .stat-value {
+            font-size: 0.9rem;
+          }
+
+          .working-today-grid .stat-label {
+            font-size: 0.7rem;
           }
         }
 
         @media (max-width: 480px) {
           .working-today-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+          }
+
+          .working-today-grid .card {
+            font-size: 0.75rem;
+          }
+
+          .working-today-grid .card-name {
+            font-size: 0.9rem;
           }
         }
 
