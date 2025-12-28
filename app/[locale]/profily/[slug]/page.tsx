@@ -446,20 +446,13 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             <div className="gallery-main">
               {profile.verified && <span className="gallery-badge verified">{t('girls.verified')}</span>}
               {(() => {
-                // Auto-detect if girl is new (within 10 days of creation)
-                const isNewlyCreated = profile.created_at ?
-                  (new Date().getTime() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24) <= 10
-                  : false;
-
-                // Badge priority: badge_type > is_new checkbox > auto-detect
-                // If badge_type is set, use it
-                // Else if is_new is explicitly set (1 or 0), respect it
-                // Else if newly created (< 10 days), auto show NEW
+                // Badge logic: Only show if explicitly set in admin panel
+                // badge_type takes priority, then is_new checkbox
                 const badge = profile.badge_type
                   ? profile.badge_type
-                  : (profile.is_new !== undefined && profile.is_new !== null)
-                    ? (profile.is_new ? 'new' : null)
-                    : (isNewlyCreated ? 'new' : null);
+                  : (profile.is_new === 1 || profile.is_new === true)
+                    ? 'new'
+                    : null;
 
                 if (!badge) return null;
 
