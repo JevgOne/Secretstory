@@ -450,7 +450,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                 // badge_type takes priority, then is_new checkbox
                 const badge = profile.badge_type
                   ? profile.badge_type
-                  : (profile.is_new === 1 || profile.is_new === true)
+                  : profile.is_new
                     ? 'new'
                     : null;
 

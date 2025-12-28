@@ -178,7 +178,7 @@ export default function GirlsPage() {
                 // badge_type takes priority, then is_new checkbox
                 const badge = girl.badge_type
                   ? girl.badge_type
-                  : (girl.is_new === 1 || girl.is_new === true)
+                  : girl.is_new
                     ? 'new'
                     : null;
                 const badgeText = badge === 'new' ? t('girls.new') : badge === 'top' ? t('girls.top_reviews') : badge === 'recommended' ? t('girls.recommended') : badge === 'asian' ? tCommon('asian') : '';
