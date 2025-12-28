@@ -24,6 +24,7 @@ export default function EditGirlPage({ params }: PageProps) {
   const [uploadingVideo, setUploadingVideo] = useState(false);
   const [uploadingStory, setUploadingStory] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [vimeoUrl, setVimeoUrl] = useState('');
   const [locations, setLocations] = useState<any[]>([]);
 
   // Pagination states
@@ -1095,6 +1096,77 @@ export default function EditGirlPage({ params }: PageProps) {
                 style={{ display: 'none' }}
               />
             </label>
+
+            {/* Vimeo URL Input */}
+            <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '8px', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--white)' }}>
+                Nebo přidej Vimeo video odkaz
+              </label>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input
+                  type="text"
+                  value={vimeoUrl}
+                  onChange={(e) => setVimeoUrl(e.target.value)}
+                  placeholder="https://vimeo.com/123456789"
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    background: 'rgba(0,0,0,0.3)',
+                    color: 'var(--white)',
+                    fontSize: '1rem'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!vimeoUrl.trim()) {
+                      alert('Zadej Vimeo odkaz');
+                      return;
+                    }
+
+                    setUploadingVideo(true);
+                    try {
+                      const response = await fetch(`/api/admin/girls/${girlId}/videos`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ vimeo_url: vimeoUrl })
+                      });
+
+                      if (response.ok) {
+                        await loadVideos(girlId);
+                        setVimeoUrl('');
+                      } else {
+                        const data = await response.json();
+                        alert(data.error || 'Chyba při přidávání videa');
+                      }
+                    } catch (error) {
+                      console.error('Error adding Vimeo:', error);
+                      alert('Chyba při přidávání videa');
+                    }
+                    setUploadingVideo(false);
+                  }}
+                  disabled={uploadingVideo || !vimeoUrl.trim()}
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '6px',
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                    color: 'white',
+                    fontWeight: '600',
+                    cursor: uploadingVideo || !vimeoUrl.trim() ? 'not-allowed' : 'pointer',
+                    opacity: uploadingVideo || !vimeoUrl.trim() ? 0.5 : 1,
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {uploadingVideo ? 'Přidávám...' : 'Přidat'}
+                </button>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.5rem', marginBottom: 0 }}>
+                Podporujeme Vimeo odkazy (např. https://vimeo.com/123456789)
+              </p>
+            </div>
 
             {/* Videos Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>

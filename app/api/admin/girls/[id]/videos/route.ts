@@ -58,7 +58,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// POST - Upload a new video
+// POST - Upload a new video or add Vimeo URL
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const resolvedParams = await params;
@@ -77,34 +77,70 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const formData = await request.formData();
-    const file = formData.get('file') as File;
+    // Check if it's a JSON request (Vimeo URL) or FormData (file upload)
+    const contentType = request.headers.get('content-type');
+    let url: string;
+    let filename: string;
+    let fileSize: number = 0;
+    let mimeType: string = 'video/vimeo';
 
-    if (!file) {
-      return NextResponse.json(
-        { success: false, error: 'No file provided' },
-        { status: 400 }
-      );
+    if (contentType?.includes('application/json')) {
+      // Vimeo URL
+      const body = await request.json();
+      const vimeoUrl = body.vimeo_url;
+
+      if (!vimeoUrl || typeof vimeoUrl !== 'string') {
+        return NextResponse.json(
+          { success: false, error: 'Invalid Vimeo URL' },
+          { status: 400 }
+        );
+      }
+
+      // Validate Vimeo URL format
+      if (!vimeoUrl.includes('vimeo.com/')) {
+        return NextResponse.json(
+          { success: false, error: 'URL must be from Vimeo' },
+          { status: 400 }
+        );
+      }
+
+      url = vimeoUrl;
+      filename = `vimeo_${Date.now()}`;
+    } else {
+      // File upload
+      const formData = await request.formData();
+      const file = formData.get('file') as File;
+
+      if (!file) {
+        return NextResponse.json(
+          { success: false, error: 'No file provided' },
+          { status: 400 }
+        );
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('video/')) {
+        return NextResponse.json(
+          { success: false, error: 'File must be a video' },
+          { status: 400 }
+        );
+      }
+
+      // Generate unique filename
+      const timestamp = Date.now();
+      const ext = file.name.split('.').pop();
+      filename = `girls/${girlId}/videos/${timestamp}.${ext}`;
+
+      // Upload to Vercel Blob
+      const blob = await put(filename, file, {
+        access: 'public',
+        addRandomSuffix: false
+      });
+
+      url = blob.url;
+      fileSize = file.size;
+      mimeType = file.type;
     }
-
-    // Validate file type
-    if (!file.type.startsWith('video/')) {
-      return NextResponse.json(
-        { success: false, error: 'File must be a video' },
-        { status: 400 }
-      );
-    }
-
-    // Generate unique filename
-    const timestamp = Date.now();
-    const ext = file.name.split('.').pop();
-    const filename = `girls/${girlId}/videos/${timestamp}.${ext}`;
-
-    // Upload to Vercel Blob
-    const { url } = await put(filename, file, {
-      access: 'public',
-      addRandomSuffix: false
-    });
 
     // Get current max display_order
     const maxOrderResult = await db.execute({
@@ -123,8 +159,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         filename,
         url,
         nextOrder,
-        file.size,
-        file.type
+        fileSize,
+        mimeType
       ]
     });
 
@@ -202,12 +238,15 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     const video = videoResult.rows[0];
 
-    // Delete from Blob storage
-    try {
-      await del(video.url as string);
-    } catch (error) {
-      console.error('Error deleting from Blob:', error);
-      // Continue even if blob deletion fails
+    // Delete from Blob storage (only if not a Vimeo URL)
+    const isVimeo = (video.mime_type as string) === 'video/vimeo' || (video.url as string).includes('vimeo.com');
+    if (!isVimeo) {
+      try {
+        await del(video.url as string);
+      } catch (error) {
+        console.error('Error deleting from Blob:', error);
+        // Continue even if blob deletion fails
+      }
     }
 
     // Delete from database
