@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth-helpers';
 import { cache } from '@/lib/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 // PATCH /api/admin/girls/:id - Update girl profile (admin only)
 export async function PATCH(
@@ -121,11 +122,24 @@ export async function PATCH(
     if (girlResult.rows.length > 0) {
       const slug = girlResult.rows[0].slug;
       cache.clear(`girl-profile-${slug}`);
+
+      // Revalidate Next.js cache for all locales
+      revalidatePath(`/cs/profily/${slug}`, 'page');
+      revalidatePath(`/en/profily/${slug}`, 'page');
+      revalidatePath(`/de/profily/${slug}`, 'page');
+      revalidatePath(`/uk/profily/${slug}`, 'page');
+      revalidatePath(`/api/girls/${slug}`, 'page');
+
       console.log(`[Cache] Cleared cache for girl profile: ${slug}`);
     }
 
     // Also clear homepage cache as it might include this girl
     cache.clear('homepage-data');
+    revalidatePath('/', 'layout');
+    revalidatePath('/cs', 'page');
+    revalidatePath('/en', 'page');
+    revalidatePath('/de', 'page');
+    revalidatePath('/uk', 'page');
     console.log('[Cache] Cleared homepage cache');
 
     return NextResponse.json({
