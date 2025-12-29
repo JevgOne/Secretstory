@@ -623,84 +623,6 @@
 
         .footer-links a:hover { color: var(--white); }
 
-        /* AGE MODAL */
-        .age-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(10,10,10,0.98);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-        }
-
-        .age-modal.hidden {
-            display: none;
-        }
-
-        .age-box {
-            text-align: center;
-            max-width: 380px;
-            padding: 3rem;
-            background: var(--bg);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-        }
-
-        .age-box h2 {
-            font-family: 'Cormorant', serif;
-            font-size: 1.75rem;
-            font-weight: 300;
-            margin-bottom: 1rem;
-            letter-spacing: 0.05em;
-        }
-
-        .age-box p {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .age-buttons {
-            display: flex;
-            gap: 0.75rem;
-            justify-content: center;
-        }
-
-        .age-btn {
-            padding: 0.75rem 1.5rem;
-            font-size: 0.85rem;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid;
-        }
-
-        .age-btn.yes {
-            background: var(--wine);
-            color: var(--white);
-            border-color: var(--wine);
-            border-radius: 6px;
-        }
-
-        .age-btn.yes:hover {
-            background: var(--wine-light);
-            border-color: var(--wine-light);
-        }
-
-        .age-btn.no {
-            background: transparent;
-            color: var(--gray);
-            border-color: rgba(255,255,255,0.2);
-            border-radius: 6px;
-        }
-
-        .age-btn.no:hover {
-            color: var(--white);
-            border-color: var(--white);
-        }
-
         /* MOBILE MENU */
         .mobile-menu {
             display: none;
@@ -758,18 +680,6 @@
     </style>
 </head>
 <body>
-
-<!-- AGE MODAL -->
-<div class="age-modal" id="ageModal">
-    <div class="age-box">
-        <h2>18+</h2>
-        <p>Tento web je určen pouze pro dospělé. Vstupem potvrzujete, že vám je 18 let nebo více.</p>
-        <div class="age-buttons">
-            <button class="age-btn yes" onclick="confirmAge()">Vstoupit</button>
-            <button class="age-btn no" onclick="denyAge()">Odejít</button>
-        </div>
-    </div>
-</div>
 
 <!-- NAV -->
 <nav>
@@ -1038,19 +948,6 @@
         <a href="#">Soukromí</a>
     </div>
 </footer>
-
-<script>
-    function confirmAge() {
-        document.getElementById('ageModal').classList.add('hidden');
-        localStorage.setItem('age', '1');
-    }
-    function denyAge() {
-        window.location.href = 'https://google.com';
-    }
-    if (localStorage.getItem('age')) {
-        document.getElementById('ageModal').classList.add('hidden');
-    }
-</script>
 
 </body>
 </html>
