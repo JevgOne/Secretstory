@@ -1916,7 +1916,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         }
 
         .location-name {
-          font-size: 0.8rem;
+          font-size: 0.65rem;
           font-weight: 500;
           margin-bottom: 0.1rem;
         }

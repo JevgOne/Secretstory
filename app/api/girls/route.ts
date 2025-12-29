@@ -237,6 +237,40 @@ export async function GET(request: NextRequest) {
     // Filter out girls whose shift has ended (keep only non-finished)
     girlsWithPhotos = girlsWithPhotos.filter(girl => girl.schedule_status === null || girl.schedule_status === 'working' || girl.schedule_status === 'later');
 
+    // Sort girls by priority (same logic as homepage):
+    // 1. Girls working today (schedule_status = 'working' or 'later')
+    // 2. Within working girls, prioritize by time slots:
+    //    - Morning shift (10:00-16:00) comes first
+    //    - Evening shift (16:30-22:30) comes second
+    // 3. Girls without schedule come last
+    girlsWithPhotos.sort((a: any, b: any) => {
+      // Priority 1: Has schedule today vs no schedule
+      const aHasSchedule = a.schedule_status === 'working' || a.schedule_status === 'later';
+      const bHasSchedule = b.schedule_status === 'working' || b.schedule_status === 'later';
+
+      if (aHasSchedule && !bHasSchedule) return -1;
+      if (!aHasSchedule && bHasSchedule) return 1;
+
+      // Priority 2: If both have schedule, sort by time slot
+      if (aHasSchedule && bHasSchedule) {
+        const aStartTime = a.schedule_from || '';
+        const bStartTime = b.schedule_from || '';
+
+        // Morning shift (before 16:00) comes before evening shift (after 16:00)
+        const aMorning = aStartTime < '16:00';
+        const bMorning = bStartTime < '16:00';
+
+        if (aMorning && !bMorning) return -1;
+        if (!aMorning && bMorning) return 1;
+
+        // Within same time slot, sort by start time (earlier first)
+        return aStartTime.localeCompare(bStartTime);
+      }
+
+      // Both without schedule - keep original order (online, rating)
+      return 0;
+    });
+
     const responseData = {
       success: true,
       girls: girlsWithPhotos
