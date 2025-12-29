@@ -38,6 +38,8 @@ export async function PATCH(
       'bio', 'bio_cs', 'bio_de', 'bio_uk', 'tattoo_percentage', 'tattoo_description', 'piercing', 'piercing_description',
       'description_cs', 'description_en', 'description_de', 'description_uk', 'location',
       'is_new', 'is_top', 'is_featured', 'featured_section', 'badge_type',
+      // Subtitle fields (H2 on profile page)
+      'subtitle_cs', 'subtitle_en', 'subtitle_de', 'subtitle_uk',
       // Legacy single-language SEO fields
       'meta_title', 'meta_description', 'og_title', 'og_description', 'og_image',
       // Multi-language SEO fields

@@ -59,6 +59,11 @@ export default function EditGirlPage({ params }: PageProps) {
     bio_cs: '',
     bio_de: '',
     bio_uk: '',
+    // Subtitle fields (H2 on profile page)
+    subtitle_cs: '',
+    subtitle_en: '',
+    subtitle_de: '',
+    subtitle_uk: '',
     tattoo_percentage: '0',
     tattoo_description: '',
     piercing: false,
@@ -223,6 +228,10 @@ export default function EditGirlPage({ params }: PageProps) {
             bio_cs: girl.bio_cs || '',
             bio_de: girl.bio_de || '',
             bio_uk: girl.bio_uk || '',
+            subtitle_cs: girl.subtitle_cs || '',
+            subtitle_en: girl.subtitle_en || '',
+            subtitle_de: girl.subtitle_de || '',
+            subtitle_uk: girl.subtitle_uk || '',
             tattoo_percentage: girl.tattoo_percentage?.toString() || '0',
             tattoo_description: girl.tattoo_description || '',
             piercing: girl.piercing || false,
@@ -1654,6 +1663,49 @@ export default function EditGirlPage({ params }: PageProps) {
               onChange={(e) => setFormData({ ...formData, bio_uk: e.target.value })}
               rows={6}
               placeholder="Опис профілю українською..."
+            />
+          </div>
+        </div>
+
+        <div className="form-section">
+          <h2 className="section-title">📝 Subtitle (H2 nadpis na profilu)</h2>
+          <p style={{ color: 'var(--gray)', marginBottom: '1.5rem' }}>
+            Nastavte unikátní H2 nadpis pro každou dívku v různých jazycích (výchozí: "Elegantní společnice pro náročné gentlemany")
+          </p>
+          <div className="form-group">
+            <label>Subtitle CS (Čeština)</label>
+            <input
+              type="text"
+              value={formData.subtitle_cs}
+              onChange={(e) => setFormData({ ...formData, subtitle_cs: e.target.value })}
+              placeholder="Elegantní společnice pro náročné gentlemany"
+            />
+          </div>
+          <div className="form-group">
+            <label>Subtitle EN (English)</label>
+            <input
+              type="text"
+              value={formData.subtitle_en}
+              onChange={(e) => setFormData({ ...formData, subtitle_en: e.target.value })}
+              placeholder="Elegant companion for discerning gentlemen"
+            />
+          </div>
+          <div className="form-group">
+            <label>Subtitle DE (Deutsch)</label>
+            <input
+              type="text"
+              value={formData.subtitle_de}
+              onChange={(e) => setFormData({ ...formData, subtitle_de: e.target.value })}
+              placeholder="Elegante Begleiterin für anspruchsvolle Herren"
+            />
+          </div>
+          <div className="form-group">
+            <label>Subtitle UK (Українська)</label>
+            <input
+              type="text"
+              value={formData.subtitle_uk}
+              onChange={(e) => setFormData({ ...formData, subtitle_uk: e.target.value })}
+              placeholder="Елегантна супутниця для вимогливих джентльменів"
             />
           </div>
         </div>
