@@ -12,7 +12,7 @@ const securityHeaders = [
       style-src 'self' 'unsafe-inline';
       img-src 'self' blob: data: https: http:;
       font-src 'self' data:;
-      connect-src 'self' https://*.veriff.com https://*.turso.io https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net;
+      connect-src 'self' https://*.veriff.com https://*.turso.io https://*.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://*.googletagmanager.com;
       frame-src 'self' https://*.veriff.com;
       object-src 'none';
       base-uri 'self';
