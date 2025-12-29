@@ -8,11 +8,11 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: `
       default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.veriff.com;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.veriff.com https://www.googletagmanager.com https://www.google-analytics.com;
       style-src 'self' 'unsafe-inline';
       img-src 'self' blob: data: https: http:;
       font-src 'self' data:;
-      connect-src 'self' https://*.veriff.com https://*.turso.io;
+      connect-src 'self' https://*.veriff.com https://*.turso.io https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net;
       frame-src 'self' https://*.veriff.com;
       object-src 'none';
       base-uri 'self';
