@@ -2454,6 +2454,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           .schedule-grid {
             grid-template-columns: 1fr;
           }
+          .location-name {
+            font-size: 0.75rem;
+          }
         }
 
         @media (max-width: 480px) {
