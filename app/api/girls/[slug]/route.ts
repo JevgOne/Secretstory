@@ -102,7 +102,8 @@ export async function GET(
       // Photos (limit to first 20 for initial load)
       db.execute({
         sql: `
-          SELECT id, url, thumbnail_url, is_primary, display_order
+          SELECT id, url, thumbnail_url, is_primary, display_order,
+                 alt_text, alt_text_cs, alt_text_en, alt_text_de, alt_text_uk
           FROM girl_photos
           WHERE girl_id = ?
           ORDER BY display_order ASC, created_at ASC

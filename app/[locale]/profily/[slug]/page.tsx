@@ -98,6 +98,11 @@ interface Photo {
   thumbnail_url: string | null;
   is_primary: boolean;
   display_order: number;
+  alt_text?: string | null;
+  alt_text_cs?: string | null;
+  alt_text_en?: string | null;
+  alt_text_de?: string | null;
+  alt_text_uk?: string | null;
 }
 
 interface Video {
@@ -468,7 +473,11 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                 profile.photos && profile.photos.length > 0 && profile.photos[activeThumb] ? (
                   <img
                     src={profile.photos[activeThumb].url}
-                    alt={`${profile.name} - ${t('detail.photo')} ${activeThumb + 1}`}
+                    alt={
+                      profile.photos[activeThumb][`alt_text_${locale}`] ||
+                      profile.photos[activeThumb].alt_text ||
+                      `${profile.name} - ${t('detail.photo')} ${activeThumb + 1}`
+                    }
                     className="gallery-image"
                     style={{ width: '100%', height: 'auto', display: 'block' }}
                   />

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@libsql/client';
+import { cache } from '@/lib/cache';
 
 const db = createClient({
   url: process.env.TURSO_DATABASE_URL!,
@@ -75,6 +76,18 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       sql: `UPDATE girl_photos SET ${updates.join(', ')} WHERE id = ?`,
       args
     });
+
+    // Clear cache for this girl's profile
+    const girlResult = await db.execute({
+      sql: 'SELECT slug FROM girls WHERE id = ?',
+      args: [girlId]
+    });
+
+    if (girlResult.rows.length > 0) {
+      const slug = girlResult.rows[0].slug;
+      cache.clear(`girl-profile-${slug}`);
+      console.log(`[Cache] Cleared cache for girl profile after ALT text update: ${slug}`);
+    }
 
     return NextResponse.json({
       success: true,
