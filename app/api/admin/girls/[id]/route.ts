@@ -114,12 +114,12 @@ export async function PATCH(
     // Clear cache for this girl's profile
     if (girlResult.rows.length > 0) {
       const slug = girlResult.rows[0].slug;
-      cache.delete(`girl-profile-${slug}`);
+      cache.clear(`girl-profile-${slug}`);
       console.log(`[Cache] Cleared cache for girl profile: ${slug}`);
     }
 
     // Also clear homepage cache as it might include this girl
-    cache.delete('homepage-data');
+    cache.clear('homepage-data');
     console.log('[Cache] Cleared homepage cache');
 
     return NextResponse.json({
