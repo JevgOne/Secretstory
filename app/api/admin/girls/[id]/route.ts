@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth-helpers';
+import { cache } from '@/lib/cache';
 
 // PATCH /api/admin/girls/:id - Update girl profile (admin only)
 export async function PATCH(
@@ -99,10 +100,27 @@ export async function PATCH(
     updates.push('updated_at = CURRENT_TIMESTAMP');
     args.push(parseInt(id));
 
+    // Get girl slug for cache invalidation
+    const girlResult = await db.execute({
+      sql: 'SELECT slug FROM girls WHERE id = ?',
+      args: [parseInt(id)]
+    });
+
     await db.execute({
       sql: `UPDATE girls SET ${updates.join(', ')} WHERE id = ?`,
       args
     });
+
+    // Clear cache for this girl's profile
+    if (girlResult.rows.length > 0) {
+      const slug = girlResult.rows[0].slug;
+      cache.delete(`girl-profile-${slug}`);
+      console.log(`[Cache] Cleared cache for girl profile: ${slug}`);
+    }
+
+    // Also clear homepage cache as it might include this girl
+    cache.delete('homepage-data');
+    console.log('[Cache] Cleared homepage cache');
 
     return NextResponse.json({
       success: true,
