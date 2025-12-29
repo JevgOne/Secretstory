@@ -20,37 +20,31 @@ export default function DiscountsPage() {
     {
       icon: "🌟",
       name: tDiscounts('first_time_name'),
-      value: tDiscounts('first_time_value'),
       desc: tDiscounts('first_time_desc')
     },
     {
       icon: "👯",
       name: tDiscounts('double_delight_name'),
-      value: tDiscounts('double_delight_value'),
       desc: tDiscounts('double_delight_desc')
     },
     {
       icon: "💝",
       name: tDiscounts('birthday_name'),
-      value: tDiscounts('birthday_value'),
       desc: tDiscounts('birthday_desc')
     },
     {
       icon: "🔄",
       name: tDiscounts('come_back_name'),
-      value: tDiscounts('come_back_value'),
       desc: tDiscounts('come_back_desc')
     },
     {
       icon: "☀️",
       name: tDiscounts('early_bird_name'),
-      value: tDiscounts('early_bird_value'),
       desc: tDiscounts('early_bird_desc')
     },
     {
       icon: "📅",
       name: tDiscounts('midweek_name'),
-      value: tDiscounts('midweek_value'),
       desc: tDiscounts('midweek_desc')
     }
   ];
@@ -92,7 +86,6 @@ export default function DiscountsPage() {
           "position": index + 1,
           "name": discount.name,
           "description": discount.desc,
-          "discount": discount.value,
           "priceCurrency": "CZK",
           "seller": {
             "@type": "LocalBusiness",
@@ -182,10 +175,6 @@ export default function DiscountsPage() {
             <span className="featured-badge">🎁 {tDiscounts('featured_badge')}</span>
             <h2>{tDiscounts('featured_title')}</h2>
             <p>{tDiscounts('featured_desc')}</p>
-            <div className="featured-price">
-              <span className="featured-old">{tDiscounts('featured_old_price')}</span>
-              <span className="featured-new">{tDiscounts('featured_new_price')}</span>
-            </div>
             <button
               className="featured-btn"
               onClick={() => window.open('https://wa.me/420734332131?text=' + encodeURIComponent('Zajímá mě speciální nabídka'), '_blank')}
@@ -206,7 +195,6 @@ export default function DiscountsPage() {
             <div key={i} className="discount-card">
               <div className="discount-icon">{discount.icon}</div>
               <div className="discount-name">{discount.name}</div>
-              <div className="discount-value">{discount.value}</div>
               <p className="discount-desc">{discount.desc}</p>
             </div>
           ))}
