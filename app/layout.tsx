@@ -99,13 +99,12 @@ export default function RootLayout({
         {/* Preconnect to external domains for faster resource loading */}
         <link rel="dns-prefetch" href="https://qktyf1ozcve7804i.public.blob.vercel-storage.com" />
         <link rel="preconnect" href="https://qktyf1ozcve7804i.public.blob.vercel-storage.com" crossOrigin="anonymous" />
-
+      </head>
+      <body className={`${cormorant.variable} ${dmSans.variable} antialiased`}>
         {/* Google Analytics */}
         <Suspense fallback={null}>
           <GoogleAnalytics measurementId="G-W4W24CVL1L" />
         </Suspense>
-      </head>
-      <body className={`${cormorant.variable} ${dmSans.variable} antialiased`}>
         <SessionProvider>
           {children}
         </SessionProvider>
