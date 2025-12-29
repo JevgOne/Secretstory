@@ -820,7 +820,8 @@
     "term_4": "Můj zájem o veškeré zde obsažené informace je čistě soukromý a slouží pouze k mému vlastnímu použití.",
     "term_5": "Beru na vědomí, že veškeré obrazové a textové materiály jsou chráněny autorským právem.",
     "legal_notice": "Veškeré informace umístěné na těchto webových stránkách jsou zveřejňovány pro reklamní účely poskytovatelů služeb. Provozovatel této webové stránky neodpovídá za správnost a aktuálnost zveřejněných informací ani za poskytované služby. Podmínkou inzerátu je pronájem pokoje.",
-    "agree_button": "Souhlasím a potvrzuji výše uvedené"
+    "agree_button": "Souhlasím a potvrzuji výše uvedené",
+    "leave_button": "Odejít"
   },
   "admin": {
     "common": {

@@ -8,19 +8,50 @@ export default function AgeVerificationModal() {
   const t = useTranslations('disclaimer');
 
   useEffect(() => {
-    // Check if user has already agreed
-    const hasAgreed = localStorage.getItem('age-verified');
+    // Check if user has already agreed in this session
+    const hasAgreed = sessionStorage.getItem('age-verified');
     if (!hasAgreed) {
       setIsVisible(true);
       // Prevent scrolling when modal is open
       document.body.style.overflow = 'hidden';
+
+      // Disable right-click
+      const handleContextMenu = (e: MouseEvent) => {
+        e.preventDefault();
+        return false;
+      };
+
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (
+          e.key === 'F12' ||
+          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+          (e.ctrlKey && e.key === 'U')
+        ) {
+          e.preventDefault();
+          return false;
+        }
+      };
+
+      document.addEventListener('contextmenu', handleContextMenu);
+      document.addEventListener('keydown', handleKeyDown);
+
+      // Cleanup listeners when modal closes
+      return () => {
+        document.removeEventListener('contextmenu', handleContextMenu);
+        document.removeEventListener('keydown', handleKeyDown);
+      };
     }
   }, []);
 
   const handleAgree = () => {
-    localStorage.setItem('age-verified', 'true');
+    sessionStorage.setItem('age-verified', 'true');
     setIsVisible(false);
     document.body.style.overflow = 'unset';
+  };
+
+  const handleLeave = () => {
+    window.location.href = 'https://www.google.com';
   };
 
   if (!isVisible) return null;
@@ -48,12 +79,20 @@ export default function AgeVerificationModal() {
           </div>
         </div>
 
-        <button
-          onClick={handleAgree}
-          className="age-verification-button"
-        >
-          {t('agree_button')}
-        </button>
+        <div className="age-verification-buttons">
+          <button
+            onClick={handleLeave}
+            className="age-verification-button age-verification-button-leave"
+          >
+            {t('leave_button')}
+          </button>
+          <button
+            onClick={handleAgree}
+            className="age-verification-button age-verification-button-agree"
+          >
+            {t('agree_button')}
+          </button>
+        </div>
       </div>
     </div>
   );

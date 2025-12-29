@@ -7155,10 +7155,16 @@ body > div > button[title*="Next"],
   text-align: center;
 }
 
-.age-verification-button {
+.age-verification-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
   width: 100%;
+}
+
+.age-verification-button {
+  flex: 1;
   padding: 1rem 2rem;
-  background: var(--wine, #8b2942);
   color: white;
   border: none;
   border-radius: 12px;
@@ -7167,10 +7173,23 @@ body > div > button[title*="Next"],
   cursor: pointer;
   transition: all 0.3s ease;
   flex-shrink: 0;
-  margin-top: auto;
 }
 
-.age-verification-button:hover {
+.age-verification-button-leave {
+  background: #666;
+}
+
+.age-verification-button-leave:hover {
+  background: #777;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 102, 102, 0.3);
+}
+
+.age-verification-button-agree {
+  background: var(--wine, #8b2942);
+}
+
+.age-verification-button-agree:hover {
   background: #a33350;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(139, 41, 66, 0.3);

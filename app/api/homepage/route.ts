@@ -206,7 +206,41 @@ export async function GET() {
 
     // Filter out ONLY girls whose shift has ended (keep working, later, and null status)
     // This ensures homepage always shows available girls or those without schedule
-    const activeGirls = girlsWithData.filter((g: any) => g.schedule_status !== 'finished');
+    let activeGirls = girlsWithData.filter((g: any) => g.schedule_status !== 'finished');
+
+    // Sort girls by priority:
+    // 1. Girls working today (schedule_status = 'working' or 'later')
+    // 2. Within working girls, prioritize by time slots:
+    //    - Morning shift (10:00-16:00) comes first
+    //    - Evening shift (16:30-22:30) comes second
+    // 3. Girls without schedule come last
+    activeGirls.sort((a: any, b: any) => {
+      // Priority 1: Has schedule today vs no schedule
+      const aHasSchedule = a.schedule_status === 'working' || a.schedule_status === 'later';
+      const bHasSchedule = b.schedule_status === 'working' || b.schedule_status === 'later';
+
+      if (aHasSchedule && !bHasSchedule) return -1;
+      if (!aHasSchedule && bHasSchedule) return 1;
+
+      // Priority 2: If both have schedule, sort by time slot
+      if (aHasSchedule && bHasSchedule) {
+        const aStartTime = a.schedule_from || '';
+        const bStartTime = b.schedule_from || '';
+
+        // Morning shift (before 16:00) comes before evening shift (after 16:00)
+        const aMorning = aStartTime < '16:00';
+        const bMorning = bStartTime < '16:00';
+
+        if (aMorning && !bMorning) return -1;
+        if (!aMorning && bMorning) return 1;
+
+        // Within same time slot, sort by start time (earlier first)
+        return aStartTime.localeCompare(bStartTime);
+      }
+
+      // Both without schedule - keep original order (by is_new, online, rating)
+      return 0;
+    });
 
     // Featured girl (first NEW girl, prefer from active girls, fallback to any new girl)
     const featuredGirl = activeGirls.find((g: any) => g.is_new) || newGirls[0] || null;
