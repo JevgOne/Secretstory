@@ -37,7 +37,13 @@ export async function PATCH(
       'bio', 'bio_cs', 'bio_de', 'bio_uk', 'tattoo_percentage', 'tattoo_description', 'piercing', 'piercing_description',
       'description_cs', 'description_en', 'description_de', 'description_uk', 'location',
       'is_new', 'is_top', 'is_featured', 'featured_section', 'badge_type',
-      'meta_title', 'meta_description', 'og_title', 'og_description', 'og_image'
+      // Legacy single-language SEO fields
+      'meta_title', 'meta_description', 'og_title', 'og_description', 'og_image',
+      // Multi-language SEO fields
+      'meta_title_cs', 'meta_title_en', 'meta_title_de', 'meta_title_uk',
+      'meta_description_cs', 'meta_description_en', 'meta_description_de', 'meta_description_uk',
+      'og_title_cs', 'og_title_en', 'og_title_de', 'og_title_uk',
+      'og_description_cs', 'og_description_en', 'og_description_de', 'og_description_uk'
     ];
 
     for (const field of allowedFields) {
