@@ -314,7 +314,7 @@ function EditSEOForm() {
               Doporučená velikost: 1200x630px pro optimální sdílení na sociálních sítích
             </small>
 
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
               <div>
                 <input
                   type="file"
@@ -341,6 +341,41 @@ function EditSEOForm() {
                   {uploadingImage ? 'Nahrávám...' : '📁 Nahrát obrázek'}
                 </label>
               </div>
+
+              {/* Auto-generate OG image button for profile pages */}
+              {pagePath.includes('/profily/') && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    // Use the auto-generated opengraph-image endpoint
+                    const autoGenUrl = `https://www.lovelygirls.cz${pagePath}/opengraph-image`;
+                    setFormData({ ...formData, og_image: autoGenUrl });
+                    setSuccess('Automaticky generovaný OG image nastaven!');
+                    setTimeout(() => setSuccess(''), 3000);
+                  }}
+                  style={{
+                    padding: '10px 20px',
+                    background: 'rgba(212, 175, 55, 0.2)',
+                    border: '1px solid rgba(212, 175, 55, 0.5)',
+                    borderRadius: '8px',
+                    color: '#d4af37',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    fontSize: '14px',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(212, 175, 55, 0.3)';
+                    e.currentTarget.style.borderColor = '#d4af37';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(212, 175, 55, 0.2)';
+                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.5)';
+                  }}
+                >
+                  ✨ Použít auto-generovaný OG image
+                </button>
+              )}
 
               {formData.og_image && (
                 <input
