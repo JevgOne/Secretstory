@@ -234,8 +234,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Filter out girls whose shift has ended (keep only non-finished)
-    girlsWithPhotos = girlsWithPhotos.filter(girl => girl.schedule_status === null || girl.schedule_status === 'working' || girl.schedule_status === 'later');
+    // NOTE: Do NOT filter out girls by schedule_status - they should appear on the website
+    // even if their shift has ended. The schedule info is just for the calendar/timeline.
 
     // Sort girls by priority (same logic as homepage):
     // 1. Girls working today (schedule_status = 'working' or 'later')
