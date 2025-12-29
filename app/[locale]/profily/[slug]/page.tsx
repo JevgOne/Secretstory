@@ -473,11 +473,16 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                 profile.photos && profile.photos.length > 0 && profile.photos[activeThumb] ? (
                   <img
                     src={profile.photos[activeThumb].url}
-                    alt={
-                      profile.photos[activeThumb][`alt_text_${locale}`] ||
-                      profile.photos[activeThumb].alt_text ||
-                      `${profile.name} - ${t('detail.photo')} ${activeThumb + 1}`
-                    }
+                    alt={(() => {
+                      const photo = profile.photos[activeThumb];
+                      // Get locale-specific alt text
+                      if (locale === 'cs' && photo.alt_text_cs) return photo.alt_text_cs;
+                      if (locale === 'en' && photo.alt_text_en) return photo.alt_text_en;
+                      if (locale === 'de' && photo.alt_text_de) return photo.alt_text_de;
+                      if (locale === 'uk' && photo.alt_text_uk) return photo.alt_text_uk;
+                      // Fallback to generic alt_text or default
+                      return photo.alt_text || `${profile.name} - ${t('detail.photo')} ${activeThumb + 1}`;
+                    })()}
                     className="gallery-image"
                     style={{ width: '100%', height: 'auto', display: 'block' }}
                   />
