@@ -3,6 +3,7 @@ import { Cormorant, DM_Sans } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { Suspense } from "react";
 
 const cormorant = Cormorant({
   variable: "--font-cormorant",
@@ -100,7 +101,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://qktyf1ozcve7804i.public.blob.vercel-storage.com" crossOrigin="anonymous" />
 
         {/* Google Analytics */}
-        <GoogleAnalytics measurementId="G-W4W24CVL1L" />
+        <Suspense fallback={null}>
+          <GoogleAnalytics measurementId="G-W4W24CVL1L" />
+        </Suspense>
       </head>
       <body className={`${cormorant.variable} ${dmSans.variable} antialiased`}>
         <SessionProvider>
