@@ -6674,6 +6674,21 @@ body > div > button[title*="Next"],
     .stat-label {
         font-size: 0.6rem;
     }
+
+    /* Disable hover effects on mobile to prevent skewed/rotated cards */
+    .card:hover {
+        transform: none !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    }
+
+    .card:hover .card-flip-inner {
+        transform: none !important;
+    }
+
+    .card:hover .card-image,
+    .card:hover .card-placeholder {
+        transform: none !important;
+    }
 }
 
 /* ========================================
