@@ -155,7 +155,7 @@ export async function DELETE(
 
     // Check if girl exists
     const girlResult = await db.execute({
-      sql: 'SELECT id FROM girls WHERE id = ?',
+      sql: 'SELECT id, slug FROM girls WHERE id = ?',
       args: [parseInt(id)]
     });
 
@@ -166,11 +166,32 @@ export async function DELETE(
       );
     }
 
-    // Delete girl (CASCADE will delete related records)
+    const girlId = parseInt(id);
+    const slug = girlResult.rows[0].slug;
+
+    // Manually delete all related records (because some tables don't have CASCADE)
+    // Order matters: delete child records first, then parent
+
+    await db.execute({ sql: 'DELETE FROM girl_photos WHERE girl_id = ?', args: [girlId] });
+    await db.execute({ sql: 'DELETE FROM girl_videos WHERE girl_id = ?', args: [girlId] });
+    await db.execute({ sql: 'DELETE FROM stories WHERE girl_id = ?', args: [girlId] });
+    await db.execute({ sql: 'DELETE FROM girl_schedules WHERE girl_id = ?', args: [girlId] });
+    await db.execute({ sql: 'DELETE FROM girl_services WHERE girl_id = ?', args: [girlId] });
+    await db.execute({ sql: 'DELETE FROM girl_seo_metadata WHERE girl_id = ?', args: [girlId] });
+    await db.execute({ sql: 'DELETE FROM reviews WHERE girl_id = ?', args: [girlId] });
+    await db.execute({ sql: 'DELETE FROM activity_log WHERE girl_id = ?', args: [girlId] });
+    await db.execute({ sql: 'DELETE FROM bookings WHERE girl_id = ?', args: [girlId] });
+
+    // Finally, delete the girl
     await db.execute({
       sql: 'DELETE FROM girls WHERE id = ?',
-      args: [parseInt(id)]
+      args: [girlId]
     });
+
+    // Clear cache
+    cache.clear(`girl-profile-${slug}`);
+    cache.clear('homepage-data');
+    cache.clear('girls-status=active');
 
     return NextResponse.json({
       success: true,
