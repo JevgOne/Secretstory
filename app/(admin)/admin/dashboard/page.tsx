@@ -806,6 +806,17 @@ export default function AdminDashboardPage() {
               },
               {
                 icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>,
+                title: 'FAQ',
+                count: 'Questions & Answers',
+                path: '/admin/faq',
+                color: '#8b5cf6'
+              },
+              {
+                icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="18" y1="20" x2="18" y2="10"/>
                   <line x1="12" y1="20" x2="12" y2="4"/>
                   <line x1="6" y1="20" x2="6" y2="14"/>

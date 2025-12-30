@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -30,31 +30,34 @@ export default function FAQPage() {
   const pathname = usePathname();
   const [activeCategory, setActiveCategory] = useState("all");
   const [openItems, setOpenItems] = useState<number[]>([0]); // První otázka otevřená
+  const [faqs, setFaqs] = useState<FAQItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Load FAQ items from translations
-  const faqKeys = [
-    'booking_how',
-    'booking_advance',
-    'payment_methods',
-    'discretion_how',
-    'services_included',
-    'booking_cancel',
-    'discretion_location',
-    'services_couples'
-  ];
-
-  const faqs: FAQItem[] = faqKeys.map(key => ({
-    question: tFaq(`items.${key}.question`),
-    answer: tFaq(`items.${key}.answer`),
-    category: tFaq(`items.${key}.category`)
-  }));
+  // Fetch FAQ items from API
+  useEffect(() => {
+    async function fetchFAQs() {
+      try {
+        const response = await fetch(`/api/faq?lang=${locale}`);
+        const data = await response.json();
+        if (data.success) {
+          setFaqs(data.faqs);
+        }
+      } catch (error) {
+        console.error('Error fetching FAQs:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchFAQs();
+  }, [locale]);
 
   const categories = [
     { key: "all", label: tFaq('category_all') },
     { key: "booking", label: tFaq('category_booking') },
     { key: "services", label: tFaq('category_services') },
     { key: "payment", label: tFaq('category_payment') },
-    { key: "discretion", label: tFaq('category_discretion') }
+    { key: "discretion", label: tFaq('category_discretion') },
+    { key: "general", label: tFaq('category_general') || 'Obecné' }
   ];
 
   const filteredFAQs = activeCategory === "all"
@@ -177,21 +180,31 @@ export default function FAQPage() {
 
         {/* FAQ Grid */}
         <div className="faq-grid">
-          {filteredFAQs.map((faq, i) => (
-            <div key={i} className={`faq-item ${openItems.includes(i) ? "open" : ""}`}>
-              <button className="faq-question" onClick={() => toggleItem(i)}>
-                {faq.question}
-                <span className="faq-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 5v14M5 12h14"/>
-                  </svg>
-                </span>
-              </button>
-              <div className="faq-answer">
-                <div className="faq-answer-inner">{faq.answer}</div>
-              </div>
+          {loading ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px' }}>
+              Načítání...
             </div>
-          ))}
+          ) : filteredFAQs.length === 0 ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px' }}>
+              Žádné otázky
+            </div>
+          ) : (
+            filteredFAQs.map((faq, i) => (
+              <div key={i} className={`faq-item ${openItems.includes(i) ? "open" : ""}`}>
+                <button className="faq-question" onClick={() => toggleItem(i)}>
+                  {faq.question}
+                  <span className="faq-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                  </span>
+                </button>
+                <div className="faq-answer">
+                  <div className="faq-answer-inner">{faq.answer}</div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </section>
 
