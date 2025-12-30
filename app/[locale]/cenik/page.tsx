@@ -158,8 +158,8 @@ export default function PricingPage() {
       <section className="pricing">
         <div className="pricing-grid">
           {pricingPlans.map((plan, i) => (
-            <div key={i} className={`pricing-card ${plan.popular ? "popular" : ""}`}>
-              {plan.popular && <div className="pricing-badge">{tPricing('most_popular')}</div>}
+            <div key={i} className={`pricing-card ${plan.is_popular ? "popular" : ""}`}>
+              {plan.is_popular && <div className="pricing-badge">{tPricing('most_popular')}</div>}
               <div className="pricing-duration">{plan.duration} {tPricing('duration')}</div>
               <div className="pricing-title">{plan.title}</div>
               <div className="pricing-price">
