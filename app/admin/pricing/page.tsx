@@ -45,8 +45,10 @@ export default function AdminPricingPage() {
   const [loading, setLoading] = useState(true);
   const [editingPlan, setEditingPlan] = useState<PricingPlan | null>(null);
   const [editingExtra, setEditingExtra] = useState<PricingExtra | null>(null);
+  const [editingFeatures, setEditingFeatures] = useState<{ plan: PricingPlan; features: PlanFeature[] } | null>(null);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [showExtraModal, setShowExtraModal] = useState(false);
+  const [showFeaturesModal, setShowFeaturesModal] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -176,6 +178,55 @@ export default function AdminPricingPage() {
     }
   };
 
+  const saveFeature = async (feature: Partial<PlanFeature>) => {
+    try {
+      const url = '/api/admin/pricing/features';
+      const method = feature.id ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(feature)
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        await fetchData();
+        return true;
+      } else {
+        alert('Chyba při ukládání feature');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error saving feature:', error);
+      alert('Chyba při ukládání feature');
+      return false;
+    }
+  };
+
+  const deleteFeature = async (id: number) => {
+    if (!confirm('Opravdu smazat tento bod?')) return false;
+
+    try {
+      const response = await fetch(`/api/admin/pricing/features?id=${id}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        await fetchData();
+        return true;
+      } else {
+        alert('Chyba při mazání feature');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error deleting feature:', error);
+      alert('Chyba při mazání feature');
+      return false;
+    }
+  };
+
   if (status === 'loading' || loading) {
     return <div className="admin-loading">Načítání...</div>;
   }
@@ -188,7 +239,7 @@ export default function AdminPricingPage() {
     <div className="admin-container">
       <div className="admin-header">
         <h1>Správa ceníku</h1>
-        <button onClick={() => router.push('/admin')} className="app-btn">
+        <button onClick={() => router.push('/admin/dashboard')} className="app-btn">
           ← Zpět do admin
         </button>
       </div>
@@ -220,6 +271,7 @@ export default function AdminPricingPage() {
                 <th>Název (DE)</th>
                 <th>Název (UK)</th>
                 <th>Populární</th>
+                <th>Počet bodů</th>
                 <th>Akce</th>
               </tr>
             </thead>
@@ -234,6 +286,7 @@ export default function AdminPricingPage() {
                   <td>{plan.title_de}</td>
                   <td>{plan.title_uk}</td>
                   <td>{plan.is_popular ? '✓' : ''}</td>
+                  <td>{plan.features?.length || 0}</td>
                   <td>
                     <button
                       onClick={() => {
@@ -243,6 +296,16 @@ export default function AdminPricingPage() {
                       className="app-btn-small"
                     >
                       Upravit
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingFeatures({ plan, features: plan.features || [] });
+                        setShowFeaturesModal(true);
+                      }}
+                      className="app-btn-small"
+                      style={{ background: '#10b981' }}
+                    >
+                      Features ({plan.features?.length || 0})
                     </button>
                     <button
                       onClick={() => deletePlan(plan.id)}
@@ -339,6 +402,21 @@ export default function AdminPricingPage() {
           onClose={() => {
             setShowExtraModal(false);
             setEditingExtra(null);
+          }}
+        />
+      )}
+
+      {/* Features Modal */}
+      {showFeaturesModal && editingFeatures && (
+        <FeaturesModal
+          plan={editingFeatures.plan}
+          features={editingFeatures.features}
+          onSave={saveFeature}
+          onDelete={deleteFeature}
+          onClose={() => {
+            setShowFeaturesModal(false);
+            setEditingFeatures(null);
+            fetchData();
           }}
         />
       )}
@@ -568,6 +646,158 @@ function ExtraModal({
             </button>
             <button type="submit" className="app-btn app-btn-primary">
               Uložit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// Features Modal Component
+function FeaturesModal({
+  plan,
+  features,
+  onSave,
+  onDelete,
+  onClose
+}: {
+  plan: PricingPlan;
+  features: PlanFeature[];
+  onSave: (feature: Partial<PlanFeature>) => Promise<boolean>;
+  onDelete: (id: number) => Promise<boolean>;
+  onClose: () => void;
+}) {
+  const [localFeatures, setLocalFeatures] = useState<PlanFeature[]>(features);
+  const [newFeature, setNewFeature] = useState({
+    feature_cs: '',
+    feature_en: '',
+    feature_de: '',
+    feature_uk: '',
+    display_order: features.length
+  });
+
+  const handleSaveFeature = async (feature: PlanFeature) => {
+    const success = await onSave(feature);
+    if (success) {
+      // Data will be refreshed by parent
+    }
+  };
+
+  const handleAddFeature = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const success = await onSave({
+      ...newFeature,
+      plan_id: plan.id
+    });
+    if (success) {
+      setNewFeature({
+        feature_cs: '',
+        feature_en: '',
+        feature_de: '',
+        feature_uk: '',
+        display_order: features.length + 1
+      });
+    }
+  };
+
+  const handleDeleteFeature = async (id: number) => {
+    await onDelete(id);
+  };
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
+        <h2>Features pro "{plan.title_cs}" ({plan.duration} min, {plan.price} Kč)</h2>
+
+        <div style={{ marginBottom: '20px' }}>
+          <h3>Existující features</h3>
+          {features.length === 0 ? (
+            <p style={{ color: '#666' }}>Zatím žádné features</p>
+          ) : (
+            features.map((feature) => (
+              <div key={feature.id} style={{
+                background: '#1f1f23',
+                border: '1px solid #2d2d31',
+                borderRadius: '8px',
+                padding: '12px',
+                marginBottom: '8px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ marginBottom: '4px' }}>
+                      <strong>CS:</strong> {feature.feature_cs}
+                    </div>
+                    <div style={{ marginBottom: '4px' }}>
+                      <strong>EN:</strong> {feature.feature_en}
+                    </div>
+                    <div style={{ marginBottom: '4px' }}>
+                      <strong>DE:</strong> {feature.feature_de}
+                    </div>
+                    <div>
+                      <strong>UK:</strong> {feature.feature_uk}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleDeleteFeature(feature.id)}
+                    className="app-btn-small app-btn-danger"
+                  >
+                    Smazat
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <form onSubmit={handleAddFeature}>
+          <h3>Přidat nový feature</h3>
+          <div className="form-group">
+            <label>Feature (čeština)</label>
+            <input
+              type="text"
+              value={newFeature.feature_cs}
+              onChange={(e) => setNewFeature({ ...newFeature, feature_cs: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Feature (angličtina)</label>
+            <input
+              type="text"
+              value={newFeature.feature_en}
+              onChange={(e) => setNewFeature({ ...newFeature, feature_en: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Feature (němčina)</label>
+            <input
+              type="text"
+              value={newFeature.feature_de}
+              onChange={(e) => setNewFeature({ ...newFeature, feature_de: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Feature (ukrajinština)</label>
+            <input
+              type="text"
+              value={newFeature.feature_uk}
+              onChange={(e) => setNewFeature({ ...newFeature, feature_uk: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="modal-actions">
+            <button type="button" onClick={onClose} className="app-btn">
+              Zavřít
+            </button>
+            <button type="submit" className="app-btn app-btn-primary">
+              + Přidat feature
             </button>
           </div>
         </form>
