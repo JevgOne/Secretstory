@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     };
 
     // Cache the response
-    cache.set(cacheKey, response, 3600000); // 1 hour
+    cache.set(cacheKey, response);
 
     return NextResponse.json(response, {
       headers: {
