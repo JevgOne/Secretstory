@@ -69,7 +69,7 @@ export default function DiscountsPage() {
           "@type": "Offer",
           "position": index + 1,
           "name": discount.name,
-          "description": discount.desc,
+          "description": discount.description,
           "priceCurrency": "CZK",
           "seller": {
             "@type": "LocalBusiness",
