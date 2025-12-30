@@ -1,11 +1,28 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
+
+interface Discount {
+  id: number;
+  icon: string;
+  name: string;
+  description: string;
+  is_featured: boolean;
+}
+
+interface LoyaltyTier {
+  id: number;
+  visits_required: number;
+  discount_percentage: number;
+  title: string;
+  description: string;
+}
 
 export default function DiscountsPage() {
   const tNav = useTranslations('nav');
@@ -15,63 +32,30 @@ export default function DiscountsPage() {
   const locale = useLocale();
   const pathname = usePathname();
 
-  // Generate discounts array from translations
-  const discounts = [
-    {
-      icon: "🌟",
-      name: tDiscounts('first_time_name'),
-      desc: tDiscounts('first_time_desc')
-    },
-    {
-      icon: "👯",
-      name: tDiscounts('double_delight_name'),
-      desc: tDiscounts('double_delight_desc')
-    },
-    {
-      icon: "💝",
-      name: tDiscounts('birthday_name'),
-      desc: tDiscounts('birthday_desc')
-    },
-    {
-      icon: "🔄",
-      name: tDiscounts('come_back_name'),
-      desc: tDiscounts('come_back_desc')
-    },
-    {
-      icon: "☀️",
-      name: tDiscounts('early_bird_name'),
-      desc: tDiscounts('early_bird_desc')
-    },
-    {
-      icon: "📅",
-      name: tDiscounts('midweek_name'),
-      desc: tDiscounts('midweek_desc')
-    }
-  ];
+  const [discounts, setDiscounts] = useState<Discount[]>([]);
+  const [featuredDiscount, setFeaturedDiscount] = useState<Discount | null>(null);
+  const [loyaltySteps, setLoyaltySteps] = useState<LoyaltyTier[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Generate loyalty steps array from translations
-  const loyaltySteps = [
-    {
-      num: tDiscounts('loyalty_bronze_num'),
-      title: tDiscounts('loyalty_bronze_title'),
-      desc: tDiscounts('loyalty_bronze_desc')
-    },
-    {
-      num: tDiscounts('loyalty_silver_num'),
-      title: tDiscounts('loyalty_silver_title'),
-      desc: tDiscounts('loyalty_silver_desc')
-    },
-    {
-      num: tDiscounts('loyalty_gold_num'),
-      title: tDiscounts('loyalty_gold_title'),
-      desc: tDiscounts('loyalty_gold_desc')
-    },
-    {
-      num: tDiscounts('loyalty_vip_num'),
-      title: tDiscounts('loyalty_vip_title'),
-      desc: tDiscounts('loyalty_vip_desc')
+  // Fetch discounts data from API
+  useEffect(() => {
+    async function fetchDiscounts() {
+      try {
+        const response = await fetch(`/api/discounts?lang=${locale}`);
+        const data = await response.json();
+        if (data.success) {
+          setDiscounts(data.discounts);
+          setFeaturedDiscount(data.featured_discount);
+          setLoyaltySteps(data.loyalty_tiers);
+        }
+      } catch (error) {
+        console.error('Error fetching discounts:', error);
+      } finally {
+        setLoading(false);
+      }
     }
-  ];
+    fetchDiscounts();
+  }, [locale]);
 
   // Schema.org structured data
   const schemaData = {
@@ -191,13 +175,23 @@ export default function DiscountsPage() {
       <section className="discounts">
         <h2 className="discounts-title">{tDiscounts('current_title')}</h2>
         <div className="discounts-grid">
-          {discounts.map((discount, i) => (
-            <div key={i} className="discount-card">
-              <div className="discount-icon">{discount.icon}</div>
-              <div className="discount-name">{discount.name}</div>
-              <p className="discount-desc">{discount.desc}</p>
+          {loading ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px' }}>
+              Načítání...
             </div>
-          ))}
+          ) : discounts.length === 0 ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px' }}>
+              Žádné slevy
+            </div>
+          ) : (
+            discounts.map((discount) => (
+              <div key={discount.id} className="discount-card">
+                <div className="discount-icon">{discount.icon}</div>
+                <div className="discount-name">{discount.name}</div>
+                <p className="discount-desc">{discount.description}</p>
+              </div>
+            ))
+          )}
         </div>
       </section>
 
@@ -207,11 +201,11 @@ export default function DiscountsPage() {
           <h2 className="loyalty-title">{tDiscounts('loyalty_title')}</h2>
           <p className="loyalty-subtitle">{tDiscounts('loyalty_subtitle')}</p>
           <div className="loyalty-steps">
-            {loyaltySteps.map((step, i) => (
-              <div key={i} className="loyalty-step">
-                <div className="loyalty-num">{step.num}</div>
+            {loyaltySteps.map((step) => (
+              <div key={step.id} className="loyalty-step">
+                <div className="loyalty-num">{step.visits_required}+</div>
                 <div className="loyalty-step-title">{step.title}</div>
-                <div className="loyalty-step-desc">{step.desc}</div>
+                <div className="loyalty-step-desc">{step.description}</div>
               </div>
             ))}
           </div>

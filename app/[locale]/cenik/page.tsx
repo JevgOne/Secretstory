@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Script from "next/script";
 import { usePathname } from "next/navigation";
@@ -7,6 +8,21 @@ import { useTranslations, useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
 import BottomCTA from '@/components/BottomCTA';
+
+interface PricingPlan {
+  id: number;
+  duration: number;
+  price: number;
+  is_popular: boolean;
+  title: string;
+  features: string[];
+}
+
+interface PricingExtra {
+  id: number;
+  name: string;
+  price: number;
+}
 
 export default function PricingPage() {
   const tNav = useTranslations('nav');
@@ -17,59 +33,28 @@ export default function PricingPage() {
   const locale = useLocale();
   const pathname = usePathname();
 
-  // Pricing plans from translations
-  const pricingPlans = [
-    {
-      key: "quick_relax",
-      duration: tPricing('plans.quick_relax.duration'),
-      title: tPricing('plans.quick_relax.title'),
-      price: tPricing('plans.quick_relax.price'),
-      features: [
-        tPricing('plans.quick_relax.features.0'),
-        tPricing('plans.quick_relax.features.1'),
-        tPricing('plans.quick_relax.features.2')
-      ]
-    },
-    {
-      key: "classic_experience",
-      duration: tPricing('plans.classic_experience.duration'),
-      title: tPricing('plans.classic_experience.title'),
-      price: tPricing('plans.classic_experience.price'),
-      popular: true,
-      features: [
-        tPricing('plans.classic_experience.features.0'),
-        tPricing('plans.classic_experience.features.1'),
-        tPricing('plans.classic_experience.features.2'),
-        tPricing('plans.classic_experience.features.3'),
-        tPricing('plans.classic_experience.features.4')
-      ]
-    },
-    {
-      key: "premium_pleasure",
-      duration: tPricing('plans.premium_pleasure.duration'),
-      title: tPricing('plans.premium_pleasure.title'),
-      price: tPricing('plans.premium_pleasure.price'),
-      features: [
-        tPricing('plans.premium_pleasure.features.0'),
-        tPricing('plans.premium_pleasure.features.1'),
-        tPricing('plans.premium_pleasure.features.2'),
-        tPricing('plans.premium_pleasure.features.3'),
-        tPricing('plans.premium_pleasure.features.4')
-      ]
-    }
-  ];
+  const [pricingPlans, setPricingPlans] = useState<PricingPlan[]>([]);
+  const [extras, setExtras] = useState<PricingExtra[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Extras from translations
-  const extras = [
-    { name: tPricing('extras.nuru_massage.name'), price: tPricing('extras.nuru_massage.price') },
-    { name: tPricing('extras.tantra_massage.name'), price: tPricing('extras.tantra_massage.price') },
-    { name: tPricing('extras.duo_massage.name'), price: tPricing('extras.duo_massage.price') },
-    { name: tPricing('extras.extension_30min.name'), price: tPricing('extras.extension_30min.price') },
-    { name: tPricing('extras.prostate_massage.name'), price: tPricing('extras.prostate_massage.price') },
-    { name: tPricing('extras.roleplay.name'), price: tPricing('extras.roleplay.price') },
-    { name: tPricing('extras.dominance_light.name'), price: tPricing('extras.dominance_light.price') },
-    { name: tPricing('extras.foot_fetish.name'), price: tPricing('extras.foot_fetish.price') }
-  ];
+  // Fetch pricing data from API
+  useEffect(() => {
+    async function fetchPricing() {
+      try {
+        const response = await fetch(`/api/pricing?lang=${locale}`);
+        const data = await response.json();
+        if (data.success) {
+          setPricingPlans(data.plans);
+          setExtras(data.extras);
+        }
+      } catch (error) {
+        console.error('Error fetching pricing:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPricing();
+  }, [locale]);
 
   // Schema.org structured data
   const schemaData = {
