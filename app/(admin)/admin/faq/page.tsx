@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import AdminHeader from '@/components/AdminHeader';
 
 interface FAQItem {
   id: number;
@@ -19,7 +19,6 @@ interface FAQItem {
 }
 
 export default function AdminFAQPage() {
-  const { data: session, status } = useSession();
   const router = useRouter();
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,16 +27,8 @@ export default function AdminFAQPage() {
   const [filterCategory, setFilterCategory] = useState<string>('all');
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/admin');
-    }
-  }, [status, router]);
-
-  useEffect(() => {
-    if (session) {
-      fetchData();
-    }
-  }, [session]);
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -101,14 +92,6 @@ export default function AdminFAQPage() {
     }
   };
 
-  if (status === 'loading' || loading) {
-    return <div className="admin-loading">Načítání...</div>;
-  }
-
-  if (!session) {
-    return null;
-  }
-
   const categories = [
     { key: 'all', label: 'Vše' },
     { key: 'booking', label: 'Rezervace' },
@@ -122,24 +105,23 @@ export default function AdminFAQPage() {
     ? faqs
     : faqs.filter(faq => faq.category === filterCategory);
 
+  if (loading) {
+    return <div className="loading">Načítání...</div>;
+  }
+
   return (
-    <div className="admin-container">
-      <div className="admin-header">
-        <h1>Správa FAQ</h1>
-        <button onClick={() => router.push('/admin/dashboard')} className="app-btn">
-          ← Zpět do admin
-        </button>
-      </div>
+    <>
+      <AdminHeader title="Správa FAQ" showBack={true} />
+      <div className="admin-container">
 
       {/* Category Filter */}
-      <div className="admin-section">
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+      <div style={{ marginBottom: '20px' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           {categories.map(cat => (
             <button
               key={cat.key}
               onClick={() => setFilterCategory(cat.key)}
-              className={`app-btn ${filterCategory === cat.key ? 'app-btn-primary' : ''}`}
-              style={{ padding: '8px 16px' }}
+              className={`btn ${filterCategory === cat.key ? 'btn-primary' : ''}`}
             >
               {cat.label}
             </button>
@@ -148,22 +130,22 @@ export default function AdminFAQPage() {
       </div>
 
       {/* FAQ Items Section */}
-      <section className="admin-section">
-        <div className="admin-section-header">
-          <h2>FAQ položky ({filteredFaqs.length})</h2>
+      <section style={{ marginBottom: '40px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#fff' }}>FAQ položky ({filteredFaqs.length})</h2>
           <button
             onClick={() => {
               setEditingFaq(null);
               setShowModal(true);
             }}
-            className="app-btn app-btn-primary"
+            className="btn btn-primary"
           >
             + Přidat FAQ
           </button>
         </div>
 
-        <div className="admin-table-container">
-          <table className="admin-table">
+        <div className="girls-table">
+          <table>
             <thead>
               <tr>
                 <th>Pořadí</th>
@@ -204,13 +186,13 @@ export default function AdminFAQPage() {
                         setEditingFaq(faq);
                         setShowModal(true);
                       }}
-                      className="app-btn-small"
+                      className="btn-small"
                     >
                       Upravit
                     </button>
                     <button
                       onClick={() => deleteFaq(faq.id)}
-                      className="app-btn-small app-btn-danger"
+                      className="btn-small btn-danger"
                     >
                       Smazat
                     </button>
@@ -233,7 +215,225 @@ export default function AdminFAQPage() {
           }}
         />
       )}
-    </div>
+
+      <style jsx>{`
+        .admin-container {
+          padding: 24px;
+          max-width: 1400px;
+          margin: 0 auto;
+          background: #1f1f23;
+          min-height: 100vh;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          border-radius: 8px;
+          font-weight: 500;
+          text-decoration: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border: none;
+          background: #2d2d31;
+          color: #9ca3af;
+          border: 1px solid #3d3d41;
+        }
+
+        .btn:hover {
+          border-color: #4d4d51;
+          background: #35353a;
+        }
+
+        .btn.btn-primary {
+          background: #d4af37;
+          color: #1f1f23;
+          border-color: #d4af37;
+        }
+
+        .btn.btn-primary:hover {
+          background: #c19b2b;
+          border-color: #c19b2b;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 6px -1px rgba(212, 175, 55, 0.3);
+        }
+
+        .loading {
+          text-align: center;
+          padding: 48px;
+          color: #9ca3af;
+          font-size: 0.875rem;
+          background: #2d2d31;
+          border-radius: 12px;
+        }
+
+        .girls-table {
+          background: #2d2d31;
+          border: 1px solid #3d3d41;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        thead {
+          background: #1f1f23;
+          border-bottom: 1px solid #3d3d41;
+        }
+
+        th {
+          padding: 12px 16px;
+          text-align: left;
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #9ca3af;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        td {
+          padding: 16px;
+          border-top: 1px solid #3d3d41;
+          color: #ffffff;
+          font-size: 0.875rem;
+          background: #2d2d31;
+        }
+
+        tbody tr:hover td {
+          background: #35353a;
+        }
+
+        button {
+          padding: 8px 16px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 0.875rem;
+          font-weight: 500;
+          transition: all 0.2s ease;
+          border: none;
+          margin-right: 8px;
+        }
+
+        button:hover {
+          transform: translateY(-1px);
+        }
+
+        button.btn-primary {
+          background: #d4af37;
+          color: #1f1f23;
+        }
+
+        button.btn-small {
+          padding: 6px 12px;
+          font-size: 0.8rem;
+          background: #3b82f6;
+          color: white;
+        }
+
+        button.btn-danger {
+          background: #ef4444;
+          color: white;
+        }
+
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          padding: 20px;
+        }
+
+        .modal-content {
+          background: #2d2d31;
+          border: 1px solid #3d3d41;
+          border-radius: 12px;
+          padding: 24px;
+          width: 100%;
+          max-width: 600px;
+          max-height: 90vh;
+          overflow-y: auto;
+        }
+
+        .modal-content.large {
+          max-width: 900px;
+        }
+
+        .modal-content h2 {
+          color: #fff;
+          margin-bottom: 20px;
+        }
+
+        .modal-content h3 {
+          color: #d4af37;
+          margin-top: 20px;
+          margin-bottom: 12px;
+          font-size: 1.1rem;
+        }
+
+        .form-row {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 16px;
+          margin-bottom: 16px;
+        }
+
+        .form-group {
+          margin-bottom: 16px;
+        }
+
+        .form-group label {
+          display: block;
+          color: #9ca3af;
+          font-size: 0.875rem;
+          margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+          width: 100%;
+          padding: 10px 12px;
+          background: #1f1f23;
+          border: 1px solid #3d3d41;
+          border-radius: 6px;
+          color: #fff;
+          font-size: 0.875rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+          outline: none;
+          border-color: #d4af37;
+        }
+
+        .modal-actions {
+          display: flex;
+          gap: 12px;
+          justify-content: flex-end;
+          margin-top: 24px;
+        }
+
+        @media (max-width: 1200px) {
+          .girls-table {
+            overflow-x: auto;
+          }
+
+          table {
+            min-width: 800px;
+          }
+        }
+      `}</style>
+      </div>
+    </>
   );
 }
 
@@ -391,10 +591,10 @@ function FAQModal({
           </div>
 
           <div className="modal-actions">
-            <button type="button" onClick={onClose} className="app-btn">
+            <button type="button" onClick={onClose} className="btn">
               Zrušit
             </button>
-            <button type="submit" className="app-btn app-btn-primary">
+            <button type="submit" className="btn btn-primary">
               Uložit
             </button>
           </div>
