@@ -861,9 +861,37 @@ function ExtraModal({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2>{extra ? 'Upravit extra' : 'Přidat extra'}</h2>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0, 0, 0, 0.8)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+        padding: '20px'
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: '#2d2d31',
+          border: '1px solid #3d3d41',
+          borderRadius: '12px',
+          padding: '24px',
+          width: '100%',
+          maxWidth: '600px',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          color: '#fff'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 style={{ marginBottom: '20px' }}>{extra ? 'Upravit extra' : 'Přidat extra'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-row">
             <div className="form-group">
@@ -934,6 +962,58 @@ function ExtraModal({
             </button>
           </div>
         </form>
+        <style jsx>{`
+          .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+          }
+          .form-group {
+            margin-bottom: 16px;
+          }
+          .form-group label {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.875rem;
+            margin-bottom: 6px;
+          }
+          .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #1f1f23;
+            border: 1px solid #3d3d41;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.875rem;
+          }
+          .form-group input:focus {
+            outline: none;
+            border-color: #d4af37;
+          }
+          .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+          }
+          .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #3d3d41;
+            font-size: 0.875rem;
+            background: #2d2d31;
+            color: #9ca3af;
+          }
+          .btn-primary {
+            background: #d4af37;
+            color: #1f1f23;
+            border-color: #d4af37;
+          }
+        `}</style>
       </div>
     </div>
   );
@@ -991,9 +1071,37 @@ function FeaturesModal({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content large" onClick={(e) => e.stopPropagation()}>
-        <h2>Features pro "{plan.title_cs}" ({plan.duration} min, {plan.price} Kč)</h2>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0, 0, 0, 0.8)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+        padding: '20px'
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: '#2d2d31',
+          border: '1px solid #3d3d41',
+          borderRadius: '12px',
+          padding: '24px',
+          width: '100%',
+          maxWidth: '800px',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          color: '#fff'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 style={{ marginBottom: '20px' }}>Features pro "{plan.title_cs}" ({plan.duration} min, {plan.price} Kč)</h2>
 
         <div style={{ marginBottom: '20px' }}>
           <h3>Existující features</h3>
