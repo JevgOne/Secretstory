@@ -349,17 +349,15 @@ export default function JoinPage() {
                 </div>
 
                 <div className="form-group">
-                  <label>Velikost poprsí</label>
-                  <select
+                  <label>Poprsí</label>
+                  <input
+                    type="number"
                     value={formData.bust}
                     onChange={(e) => setFormData({ ...formData, bust: e.target.value })}
-                  >
-                    <option value="">Vyber velikost</option>
-                    <option value="1">1 (A)</option>
-                    <option value="2">2 (B)</option>
-                    <option value="3">3 (C)</option>
-                    <option value="4">4 (D+)</option>
-                  </select>
+                    placeholder="1-4"
+                    min="1"
+                    max="4"
+                  />
                 </div>
               </div>
             )}
