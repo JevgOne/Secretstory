@@ -252,7 +252,33 @@ export default function AdminSEOPage() {
           <button
             onClick={handleScanWebsite}
             disabled={scanning}
-            className="btn btn-primary"
+            style={{
+              padding: '10px 20px',
+              borderRadius: '8px',
+              fontWeight: '600',
+              cursor: scanning ? 'not-allowed' : 'pointer',
+              border: 'none',
+              background: scanning
+                ? 'rgba(212, 175, 55, 0.5)'
+                : 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+              color: '#1f1f23',
+              fontSize: '0.9rem',
+              boxShadow: scanning ? 'none' : '0 4px 12px rgba(212, 175, 55, 0.3)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              opacity: scanning ? 0.6 : 1
+            }}
+            onMouseOver={(e) => {
+              if (!scanning) {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(212, 175, 55, 0.4)';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (!scanning) {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
+              }
+            }}
           >
             {scanning ? '⏳ Skenuji...' : '🔍 Skenovat web'}
           </button>
@@ -381,7 +407,30 @@ export default function AdminSEOPage() {
                     <td>
                       <Link
                         href={`/admin/seo/edit?path=${encodeURIComponent(page.path)}`}
-                        className="action-btn edit"
+                        style={{
+                          display: 'inline-block',
+                          padding: '8px 16px',
+                          borderRadius: '8px',
+                          fontSize: '0.875rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          border: 'none',
+                          background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                          color: '#ffffff',
+                          textDecoration: 'none',
+                          boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)',
+                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 6px 16px rgba(59, 130, 246, 0.4)';
+                          e.currentTarget.style.background = 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
+                          e.currentTarget.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
+                        }}
                       >
                         ✏️ Upravit SEO
                       </Link>
@@ -462,6 +511,14 @@ export default function AdminSEOPage() {
             border-radius: 12px;
             padding: 24px;
             text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+
+          .stat-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transform: translateY(-4px);
           }
 
           .stat-value {
@@ -491,13 +548,14 @@ export default function AdminSEOPage() {
             border-radius: 8px;
             color: #fff;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           }
 
           .search-input:focus {
             outline: none;
             border-color: #d4af37;
             background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
           }
 
           .search-input::placeholder {
@@ -531,13 +589,20 @@ export default function AdminSEOPage() {
             color: #fff;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+          }
+
+          .filter-group select:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(212, 175, 55, 0.3);
           }
 
           .filter-group select:focus {
             outline: none;
             border-color: #d4af37;
             background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
           }
 
           .loading {
@@ -551,6 +616,7 @@ export default function AdminSEOPage() {
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
           }
 
           table {
@@ -570,6 +636,14 @@ export default function AdminSEOPage() {
             color: #9ca3af;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+          }
+
+          tbody tr {
+            transition: all 0.2s ease;
+          }
+
+          tbody tr:hover {
+            background: rgba(212, 175, 55, 0.08);
           }
 
           td {
