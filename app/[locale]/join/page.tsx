@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
@@ -44,10 +44,24 @@ export default function JoinPage() {
     phone: '',
     experience: 'beginner',
     languages: [] as string[],
-    availability: [] as string[],
+    services: [] as string[],
     bio_cs: '',
     bio_en: ''
   });
+
+  const [availableServices, setAvailableServices] = useState<Array<{id: string, name: string, category: string}>>([]);
+
+  // Load services on mount
+  useEffect(() => {
+    fetch('/api/v1/services')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setAvailableServices(data.services);
+        }
+      })
+      .catch(err => console.error('Failed to load services:', err));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +80,8 @@ export default function JoinPage() {
           bust: formData.bust ? parseInt(formData.bust) : null,
           waist: null,
           hips: null,
-          telegram: null
+          telegram: null,
+          availability: null
         })
       });
 
@@ -99,16 +114,16 @@ export default function JoinPage() {
     }
   };
 
-  const handleAvailabilityToggle = (day: string) => {
-    if (formData.availability.includes(day)) {
+  const handleServiceToggle = (serviceId: string) => {
+    if (formData.services.includes(serviceId)) {
       setFormData({
         ...formData,
-        availability: formData.availability.filter(d => d !== day)
+        services: formData.services.filter(s => s !== serviceId)
       });
     } else {
       setFormData({
         ...formData,
-        availability: [...formData.availability, day]
+        services: [...formData.services, serviceId]
       });
     }
   };
@@ -411,16 +426,16 @@ export default function JoinPage() {
                 </div>
 
                 <div className="form-group">
-                  <label>Dostupnost (kdy můžeš pracovat?)</label>
+                  <label>Služby (které služby chceš poskytovat?)</label>
                   <div className="checkbox-grid">
-                    {['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Neděle'].map(day => (
-                      <label key={day} className="checkbox-label">
+                    {availableServices.map(service => (
+                      <label key={service.id} className="checkbox-label">
                         <input
                           type="checkbox"
-                          checked={formData.availability.includes(day)}
-                          onChange={() => handleAvailabilityToggle(day)}
+                          checked={formData.services.includes(String(service.id))}
+                          onChange={() => handleServiceToggle(String(service.id))}
                         />
-                        <span>{day}</span>
+                        <span>{service.name}</span>
                       </label>
                     ))}
                   </div>
