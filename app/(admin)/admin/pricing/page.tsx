@@ -229,8 +229,22 @@ export default function AdminPricingPage() {
 
       {/* Pricing Plans Section */}
       <section style={{ marginBottom: '40px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#fff' }}>Cenové plány</h2>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '24px',
+          padding: '20px 24px',
+          background: 'linear-gradient(135deg, #2a2a2e 0%, #1f1f23 100%)',
+          borderRadius: '12px',
+          border: '1px solid #3d3d41'
+        }}>
+          <h2 style={{
+            fontSize: '1.75rem',
+            fontWeight: '700',
+            color: '#fff',
+            letterSpacing: '-0.02em'
+          }}>Cenové plány</h2>
           <button
             type="button"
             onClick={() => {
@@ -239,15 +253,25 @@ export default function AdminPricingPage() {
               setShowPlanModal(true);
             }}
             style={{
-              padding: '10px 20px',
-              borderRadius: '8px',
-              fontWeight: '500',
+              padding: '12px 24px',
+              borderRadius: '10px',
+              fontWeight: '600',
               cursor: 'pointer',
-              transition: 'all 0.2s ease',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               border: 'none',
-              background: '#d4af37',
+              background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
               color: '#1f1f23',
-              fontSize: '0.875rem'
+              fontSize: '0.9rem',
+              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)',
+              letterSpacing: '0.02em'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(212, 175, 55, 0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
             }}
           >
             + Přidat plán
@@ -259,55 +283,99 @@ export default function AdminPricingPage() {
             <thead>
               <tr>
                 <th>Pořadí</th>
-                <th>Trvání (min)</th>
-                <th>Cena (Kč)</th>
+                <th>Trvání</th>
+                <th>Cena</th>
                 <th>Název (CS)</th>
                 <th>Název (EN)</th>
                 <th>Název (DE)</th>
                 <th>Název (UK)</th>
-                <th>Populární</th>
-                <th>Počet bodů</th>
+                <th>Top</th>
+                <th>Features (body)</th>
                 <th>Akce</th>
               </tr>
             </thead>
             <tbody>
               {plans.map((plan) => (
                 <tr key={plan.id}>
-                  <td>{plan.display_order}</td>
-                  <td>{plan.duration}</td>
-                  <td>{plan.price}</td>
-                  <td>{plan.title_cs}</td>
+                  <td style={{ fontWeight: '600', color: '#d4af37' }}>{plan.display_order}</td>
+                  <td style={{ fontWeight: '600' }}>{plan.duration} min</td>
+                  <td style={{ fontWeight: '600', color: '#10b981' }}>{plan.price} Kč</td>
+                  <td style={{ fontWeight: '600' }}>{plan.title_cs}</td>
                   <td>{plan.title_en}</td>
                   <td>{plan.title_de}</td>
                   <td>{plan.title_uk}</td>
-                  <td>{plan.is_popular ? '✓' : ''}</td>
-                  <td>{plan.features?.length || 0}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    {plan.is_popular && (
+                      <span style={{
+                        display: 'inline-block',
+                        padding: '4px 12px',
+                        background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+                        color: '#1f1f23',
+                        borderRadius: '12px',
+                        fontSize: '0.75rem',
+                        fontWeight: '700',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>★ Top</span>
+                    )}
+                  </td>
                   <td>
-                    <button
-                      onClick={() => {
-                        setEditingPlan(plan);
-                        setShowPlanModal(true);
-                      }}
-                      className="btn-small"
-                    >
-                      Upravit
-                    </button>
-                    <button
-                      onClick={() => {
-                        setEditingFeatures({ plan, features: plan.features || [] });
-                        setShowFeaturesModal(true);
-                      }}
-                      className="btn-small"
-                      style={{ background: '#10b981' }}
-                    >
-                      Features ({plan.features?.length || 0})
-                    </button>
-                    <button
-                      onClick={() => deletePlan(plan.id)}
-                      className="btn-small btn-danger"
-                    >
-                      Smazat
-                    </button>
+                    <div style={{
+                      fontSize: '0.85rem',
+                      color: '#9ca3af',
+                      maxWidth: '250px',
+                      lineHeight: '1.6'
+                    }}>
+                      {plan.features && plan.features.length > 0 ? (
+                        <ul style={{
+                          margin: 0,
+                          padding: '0 0 0 20px',
+                          listStyle: 'none'
+                        }}>
+                          {plan.features.map((feature: PlanFeature, idx: number) => (
+                            <li key={feature.id} style={{
+                              position: 'relative',
+                              paddingLeft: '4px',
+                              marginBottom: '4px'
+                            }}>
+                              <span style={{ color: '#10b981', marginRight: '6px' }}>✓</span>
+                              {feature.feature_cs}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <span style={{ color: '#ef4444', fontStyle: 'italic' }}>Žádné features</span>
+                      )}
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                      <button
+                        onClick={() => {
+                          setEditingPlan(plan);
+                          setShowPlanModal(true);
+                        }}
+                        className="btn-small"
+                      >
+                        ✏️ Upravit
+                      </button>
+                      <button
+                        onClick={() => {
+                          setEditingFeatures({ plan, features: plan.features || [] });
+                          setShowFeaturesModal(true);
+                        }}
+                        className="btn-small"
+                        style={{ background: '#10b981' }}
+                      >
+                        ⚡ Features ({plan.features?.length || 0})
+                      </button>
+                      <button
+                        onClick={() => deletePlan(plan.id)}
+                        className="btn-small btn-danger"
+                      >
+                        🗑️ Smazat
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -317,22 +385,56 @@ export default function AdminPricingPage() {
       </section>
 
       {/* Extras Section */}
-      <section className="admin-section">
-        <div className="admin-section-header">
-          <h2>Příplatky (Extras)</h2>
+      <section style={{ marginBottom: '40px' }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '24px',
+          padding: '20px 24px',
+          background: 'linear-gradient(135deg, #2a2a2e 0%, #1f1f23 100%)',
+          borderRadius: '12px',
+          border: '1px solid #3d3d41'
+        }}>
+          <h2 style={{
+            fontSize: '1.75rem',
+            fontWeight: '700',
+            color: '#fff',
+            letterSpacing: '-0.02em'
+          }}>Příplatky (Extras)</h2>
           <button
             onClick={() => {
               setEditingExtra(null);
               setShowExtraModal(true);
             }}
-            className="btn btn-primary"
+            style={{
+              padding: '12px 24px',
+              borderRadius: '10px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              border: 'none',
+              background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+              color: '#1f1f23',
+              fontSize: '0.9rem',
+              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)',
+              letterSpacing: '0.02em'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(212, 175, 55, 0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
+            }}
           >
             + Přidat extra
           </button>
         </div>
 
-        <div className="admin-table-container">
-          <table className="admin-table">
+        <div className="girls-table">
+          <table>
             <thead>
               <tr>
                 <th>Pořadí</th>
@@ -421,9 +523,9 @@ export default function AdminPricingPage() {
         .girls-table {
           background: #2d2d31;
           border: 1px solid #3d3d41;
-          border-radius: 12px;
+          border-radius: 16px;
           overflow: hidden;
-          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
         }
 
         table {
@@ -432,30 +534,40 @@ export default function AdminPricingPage() {
         }
 
         thead {
-          background: #1f1f23;
-          border-bottom: 1px solid #3d3d41;
+          background: linear-gradient(to bottom, #2a2a2e, #1f1f23);
+          border-bottom: 2px solid #d4af37;
         }
 
         th {
-          padding: 12px 16px;
+          padding: 16px;
           text-align: left;
-          font-size: 0.75rem;
-          font-weight: 600;
-          color: #9ca3af;
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: #d4af37;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.08em;
         }
 
         td {
-          padding: 16px;
+          padding: 20px 16px;
           border-top: 1px solid #3d3d41;
           color: #ffffff;
-          font-size: 0.875rem;
+          font-size: 0.9rem;
           background: #2d2d31;
+          vertical-align: middle;
+        }
+
+        tbody tr {
+          transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+          background: linear-gradient(to right, #35353a, #2d2d31);
+          transform: translateX(4px);
         }
 
         tbody tr:hover td {
-          background: #35353a;
+          background: transparent;
         }
 
         button {
@@ -479,15 +591,27 @@ export default function AdminPricingPage() {
         }
 
         button.btn-small {
-          padding: 6px 12px;
+          padding: 8px 14px;
           font-size: 0.8rem;
-          background: #3b82f6;
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
           color: white;
+          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        button.btn-small:hover {
+          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
         }
 
         button.btn-danger {
-          background: #ef4444;
+          background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
           color: white;
+          box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+
+        button.btn-danger:hover {
+          background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
         }
 
         .modal-overlay {
