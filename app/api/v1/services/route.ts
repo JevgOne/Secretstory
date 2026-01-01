@@ -7,12 +7,13 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
+    const locale = searchParams.get('locale') || 'cs'
 
-    let sql = 'SELECT * FROM services ORDER BY category, name'
+    let sql = 'SELECT id, slug, name_cs as name, category FROM services ORDER BY category, name_cs'
     let args: any[] = []
 
     if (category) {
-      sql = 'SELECT * FROM services WHERE category = ? ORDER BY name'
+      sql = 'SELECT id, slug, name_cs as name, category FROM services WHERE category = ? ORDER BY name_cs'
       args = [category]
     }
 
