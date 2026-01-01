@@ -429,11 +429,10 @@ export default function JoinPage() {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>💇‍♀️ Barva vlasů *</label>
+                    <label>💇‍♀️ Barva vlasů</label>
                     <select
                       value={formData.hair}
                       onChange={(e) => setFormData({ ...formData, hair: e.target.value })}
-                      required
                     >
                       <option value="">Vyber barvu</option>
                       <option value="blonde">🌟 Blond</option>
@@ -445,11 +444,10 @@ export default function JoinPage() {
                   </div>
 
                   <div className="form-group">
-                    <label>👁️ Barva očí *</label>
+                    <label>👁️ Barva očí</label>
                     <select
                       value={formData.eyes}
                       onChange={(e) => setFormData({ ...formData, eyes: e.target.value })}
-                      required
                     >
                       <option value="">Vyber barvu</option>
                       <option value="blue">💙 Modré</option>
