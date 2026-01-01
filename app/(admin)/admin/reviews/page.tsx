@@ -178,25 +178,25 @@ export default function AdminReviewsPage() {
           className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
           onClick={() => setFilter('pending')}
         >
-          Čekající na schválení
+          ⏳ Čekající na schválení
         </button>
         <button
           className={`filter-btn ${filter === 'approved' ? 'active' : ''}`}
           onClick={() => setFilter('approved')}
         >
-          Schválené
+          ✅ Schválené
         </button>
         <button
           className={`filter-btn ${filter === 'rejected' ? 'active' : ''}`}
           onClick={() => setFilter('rejected')}
         >
-          Zamítnuté
+          ❌ Zamítnuté
         </button>
         <button
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
-          Všechny
+          📋 Všechny
         </button>
       </div>
 
@@ -247,33 +247,96 @@ export default function AdminReviewsPage() {
                   {review.status === 'pending' && (
                     <>
                       <button
-                        className="action-btn approve"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '8px 16px',
+                          borderRadius: '8px',
+                          fontSize: '0.875rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          border: 'none',
+                          background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                          color: '#ffffff',
+                          boxShadow: '0 2px 8px rgba(34, 197, 94, 0.3)',
+                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 6px 16px rgba(34, 197, 94, 0.4)';
+                          e.currentTarget.style.background = 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 2px 8px rgba(34, 197, 94, 0.3)';
+                          e.currentTarget.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+                        }}
                         onClick={() => handleApprove(review.id)}
                       >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M20 6L9 17l-5-5"/>
-                        </svg>
-                        Schválit
+                        ✅ Schválit
                       </button>
                       <button
-                        className="action-btn reject"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '8px 16px',
+                          borderRadius: '8px',
+                          fontSize: '0.875rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          border: 'none',
+                          background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                          color: '#1f1f23',
+                          boxShadow: '0 2px 8px rgba(251, 191, 36, 0.3)',
+                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 6px 16px rgba(251, 191, 36, 0.4)';
+                          e.currentTarget.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 2px 8px rgba(251, 191, 36, 0.3)';
+                          e.currentTarget.style.background = 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)';
+                        }}
                         onClick={() => handleReject(review.id)}
                       >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M18 6L6 18M6 6l12 12"/>
-                        </svg>
-                        Zamítnout
+                        ⚠️ Zamítnout
                       </button>
                     </>
                   )}
                   <button
-                    className="action-btn delete"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      fontSize: '0.875rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                      color: '#ffffff',
+                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)',
+                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.4)';
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(239, 68, 68, 0.3)';
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+                    }}
                     onClick={() => handleDelete(review.id)}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                    </svg>
-                    Smazat
+                    🗑️ Smazat
                   </button>
                 </div>
               </div>
@@ -324,17 +387,28 @@ export default function AdminReviewsPage() {
           border-radius: 8px;
           color: #9ca3af;
           cursor: pointer;
-          transition: all 0.3s;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          font-weight: 500;
+          font-size: 0.9rem;
         }
 
         .filter-btn:hover {
           background: #35353a;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          border-color: #4d4d51;
         }
 
         .filter-btn.active {
-          background: var(--wine);
-          color: white;
-          border-color: var(--wine);
+          background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+          color: #1f1f23;
+          border-color: transparent;
+          font-weight: 600;
+          box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .filter-btn.active:hover {
+          box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
         }
 
         .loading {
@@ -353,6 +427,13 @@ export default function AdminReviewsPage() {
           border: 1px solid #2d2d31;
           border-radius: 12px;
           padding: 1.5rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .review-card:hover {
+          border-color: #3d3d41;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+          transform: translateY(-2px);
         }
 
         .review-header {
@@ -379,14 +460,15 @@ export default function AdminReviewsPage() {
           width: 40px;
           height: 40px;
           border-radius: 50%;
-          background: var(--wine);
+          background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: white;
-          font-weight: 600;
+          color: #1f1f23;
+          font-weight: 700;
           font-size: 1.1rem;
           flex-shrink: 0;
+          box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
         }
 
         .author-name {
