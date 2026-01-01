@@ -10,6 +10,11 @@ interface Application {
   height: number;
   weight: number;
   bust: number;
+  hair: string;
+  eyes: string;
+  tattoo: number;
+  tattoo_description: string;
+  piercing: number;
   waist: number;
   hips: number;
   email: string;
@@ -303,10 +308,25 @@ export default function AdminApplicationsPage() {
                   <div><strong>Věk:</strong> {viewingApp.age} let</div>
                   <div><strong>Výška:</strong> {viewingApp.height || '?'} cm</div>
                   <div><strong>Váha:</strong> {viewingApp.weight || '?'} kg</div>
-                  <div><strong>Poprsí:</strong> {viewingApp.bust || '?'} cm</div>
+                  <div><strong>Poprsí:</strong> {viewingApp.bust || '?'}</div>
                   <div><strong>Pas:</strong> {viewingApp.waist || '?'} cm</div>
                   <div><strong>Boky:</strong> {viewingApp.hips || '?'} cm</div>
                 </div>
+              </div>
+
+              <div className="detail-section">
+                <h3>Vzhled</h3>
+                <div className="detail-grid">
+                  <div><strong>💇‍♀️ Barva vlasů:</strong> {viewingApp.hair || '?'}</div>
+                  <div><strong>👁️ Barva očí:</strong> {viewingApp.eyes || '?'}</div>
+                  <div><strong>💉 Tetování:</strong> {viewingApp.tattoo ? 'Ano' : 'Ne'}</div>
+                  <div><strong>✨ Piercing:</strong> {viewingApp.piercing ? 'Ano' : 'Ne'}</div>
+                </div>
+                {viewingApp.tattoo && viewingApp.tattoo_description && (
+                  <p style={{ marginTop: '1rem' }}>
+                    <strong>Popis tetování:</strong> {viewingApp.tattoo_description}
+                  </p>
+                )}
               </div>
 
               <div className="detail-section">
