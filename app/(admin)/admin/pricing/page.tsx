@@ -1263,9 +1263,28 @@ function FeaturesModal({
                   </div>
                   <button
                     onClick={() => handleDeleteFeature(feature.id)}
-                    className="btn-small btn-danger"
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      fontSize: '0.8rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                      color: 'white',
+                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
                   >
-                    Smazat
+                    🗑️ Smazat
                   </button>
                 </div>
               </div>
@@ -1315,15 +1334,89 @@ function FeaturesModal({
             />
           </div>
 
-          <div className="modal-actions">
-            <button type="button" onClick={onClose} className="btn">
+          <div style={{
+            display: 'flex',
+            gap: '12px',
+            justifyContent: 'flex-end',
+            marginTop: '24px'
+          }}>
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '8px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                border: '1px solid #3d3d41',
+                fontSize: '0.875rem',
+                background: '#2d2d31',
+                color: '#9ca3af'
+              }}
+            >
               Zavřít
             </button>
-            <button type="submit" className="btn btn-primary">
-              + Přidat feature
+            <button
+              type="submit"
+              style={{
+                padding: '10px 20px',
+                borderRadius: '8px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                border: 'none',
+                background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+                color: '#1f1f23',
+                fontSize: '0.875rem',
+                boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(212, 175, 55, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
+              }}
+            >
+              ⚡ Přidat feature
             </button>
           </div>
         </form>
+        <style jsx>{`
+          .form-group {
+            margin-bottom: 16px;
+          }
+          .form-group label {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.875rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+          }
+          .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #1f1f23;
+            border: 1px solid #3d3d41;
+            borderRadius: '8px';
+            color: #fff;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+          }
+          .form-group input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+          }
+          h3 {
+            color: #d4af37;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            font-weight: 600;
+          }
+        `}</style>
       </div>
     </div>
   );
