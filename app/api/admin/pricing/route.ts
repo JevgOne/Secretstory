@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { auth } from '@/auth';
+import { revalidatePath } from 'next/cache';
 
 // GET /api/admin/pricing - Get all pricing data
 export async function GET(request: NextRequest) {
@@ -75,6 +76,13 @@ export async function POST(request: NextRequest) {
         ]
       });
 
+      // Revalidate pricing page for all locales
+      revalidatePath('/cs/cenik', 'page');
+      revalidatePath('/en/cenik', 'page');
+      revalidatePath('/de/cenik', 'page');
+      revalidatePath('/uk/cenik', 'page');
+      console.log('[Cache] Revalidated pricing pages after creating plan');
+
       return NextResponse.json({
         success: true,
         id: result.lastInsertRowid
@@ -93,6 +101,13 @@ export async function POST(request: NextRequest) {
           data.name_uk
         ]
       });
+
+      // Revalidate pricing page for all locales
+      revalidatePath('/cs/cenik', 'page');
+      revalidatePath('/en/cenik', 'page');
+      revalidatePath('/de/cenik', 'page');
+      revalidatePath('/uk/cenik', 'page');
+      console.log('[Cache] Revalidated pricing pages after creating extra');
 
       return NextResponse.json({
         success: true,
@@ -159,6 +174,13 @@ export async function PUT(request: NextRequest) {
       });
     }
 
+    // Revalidate pricing page for all locales
+    revalidatePath('/cs/cenik', 'page');
+    revalidatePath('/en/cenik', 'page');
+    revalidatePath('/de/cenik', 'page');
+    revalidatePath('/uk/cenik', 'page');
+    console.log('[Cache] Revalidated pricing pages after update');
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Update pricing error:', error);
@@ -198,6 +220,13 @@ export async function DELETE(request: NextRequest) {
         args: [id]
       });
     }
+
+    // Revalidate pricing page for all locales
+    revalidatePath('/cs/cenik', 'page');
+    revalidatePath('/en/cenik', 'page');
+    revalidatePath('/de/cenik', 'page');
+    revalidatePath('/uk/cenik', 'page');
+    console.log('[Cache] Revalidated pricing pages after delete');
 
     return NextResponse.json({ success: true });
   } catch (error) {

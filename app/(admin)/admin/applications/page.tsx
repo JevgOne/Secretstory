@@ -273,33 +273,12 @@ export default function AdminApplicationsPage() {
                 <p className="app-date">Podáno {formatDate(app.created_at)}</p>
 
                 <div className="app-actions">
-                  <div
-                    onClick={() => {
-                      console.log('Detail button clicked for:', app.name);
-                      setViewingApp(app);
-                    }}
-                    onMouseEnter={() => console.log('Mouse entered button for:', app.name)}
-                    style={{
-                      padding: '8px 16px',
-                      borderRadius: '6px',
-                      fontSize: '0.85rem',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      border: 'none',
-                      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                      color: '#ffffff',
-                      boxShadow: '0 2px 6px rgba(59, 130, 246, 0.3)',
-                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                      flex: 1,
-                      position: 'relative',
-                      zIndex: 100,
-                      pointerEvents: 'auto',
-                      userSelect: 'none',
-                      textAlign: 'center'
-                    } as React.CSSProperties}
+                  <button
+                    onClick={() => setViewingApp(app)}
+                    className="detail-button"
                   >
                     👁️ Detail
-                  </div>
+                  </button>
                 </div>
               </div>
             ))}
@@ -557,6 +536,30 @@ export default function AdminApplicationsPage() {
             margin-top: 16px;
             position: relative;
             z-index: 10;
+          }
+
+          .detail-button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            fontSize: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            flex: 1;
+            text-align: center;
+          }
+
+          .detail-button:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+            transform: translateY(-1px);
+          }
+
+          .detail-button:active {
+            transform: translateY(0);
           }
 
           .empty-state {

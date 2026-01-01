@@ -41,6 +41,11 @@ export default function JoinPage() {
     height: '',
     weight: '',
     bust: '',
+    hair: '',
+    eyes: '',
+    tattoo: false,
+    tattoo_description: '',
+    piercing: false,
     email: '',
     phone: '',
     experience: 'beginner',
@@ -75,6 +80,11 @@ export default function JoinPage() {
           height: formData.height ? parseInt(formData.height) : null,
           weight: formData.weight ? parseInt(formData.weight) : null,
           bust: formData.bust ? parseInt(formData.bust) : null,
+          hair: formData.hair,
+          eyes: formData.eyes,
+          tattoo: formData.tattoo,
+          tattoo_description: formData.tattoo ? formData.tattoo_description : null,
+          piercing: formData.piercing,
           waist: null,
           hips: null,
           telegram: null,
@@ -415,6 +425,77 @@ export default function JoinPage() {
                     max="4"
                     required
                   />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Barva vlasů *</label>
+                    <select
+                      value={formData.hair}
+                      onChange={(e) => setFormData({ ...formData, hair: e.target.value })}
+                      required
+                    >
+                      <option value="">Vyber barvu</option>
+                      <option value="blonde">Blond</option>
+                      <option value="brown">Hnědá</option>
+                      <option value="black">Černá</option>
+                      <option value="red">Zrzavá</option>
+                      <option value="other">Jiná</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Barva očí *</label>
+                    <select
+                      value={formData.eyes}
+                      onChange={(e) => setFormData({ ...formData, eyes: e.target.value })}
+                      required
+                    >
+                      <option value="">Vyber barvu</option>
+                      <option value="blue">Modré</option>
+                      <option value="green">Zelené</option>
+                      <option value="brown">Hnědé</option>
+                      <option value="gray">Šedé</option>
+                      <option value="hazel">Oříškové</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={formData.tattoo}
+                      onChange={(e) => setFormData({ ...formData, tattoo: e.target.checked })}
+                      style={{ marginRight: '10px' }}
+                    />
+                    Mám tetování
+                  </label>
+                </div>
+
+                {formData.tattoo && (
+                  <div className="form-group">
+                    <label>Kde máš tetování? *</label>
+                    <textarea
+                      value={formData.tattoo_description}
+                      onChange={(e) => setFormData({ ...formData, tattoo_description: e.target.value })}
+                      placeholder="Popis tetování a umístění..."
+                      rows={3}
+                      required
+                    />
+                  </div>
+                )}
+
+                <div className="form-group">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={formData.piercing}
+                      onChange={(e) => setFormData({ ...formData, piercing: e.target.checked })}
+                      style={{ marginRight: '10px' }}
+                    />
+                    Mám piercing
+                  </label>
                 </div>
               </div>
             )}
