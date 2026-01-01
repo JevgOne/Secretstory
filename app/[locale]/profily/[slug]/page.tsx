@@ -1829,6 +1829,10 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         }
 
         /* Hashtags - Modern */
+        .hashtags-section {
+          margin-bottom: 2rem;
+        }
+
         .hashtags {
           display: flex;
           flex-wrap: wrap;

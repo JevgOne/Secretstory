@@ -273,8 +273,12 @@ export default function AdminApplicationsPage() {
                 <p className="app-date">Podáno {formatDate(app.created_at)}</p>
 
                 <div className="app-actions">
-                  <button
-                    onClick={() => setViewingApp(app)}
+                  <div
+                    onClick={() => {
+                      console.log('Detail button clicked for:', app.name);
+                      setViewingApp(app);
+                    }}
+                    onMouseEnter={() => console.log('Mouse entered button for:', app.name)}
                     style={{
                       padding: '8px 16px',
                       borderRadius: '6px',
@@ -286,11 +290,16 @@ export default function AdminApplicationsPage() {
                       color: '#ffffff',
                       boxShadow: '0 2px 6px rgba(59, 130, 246, 0.3)',
                       transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                      flex: 1
-                    }}
+                      flex: 1,
+                      position: 'relative',
+                      zIndex: 100,
+                      pointerEvents: 'auto',
+                      userSelect: 'none',
+                      textAlign: 'center'
+                    } as React.CSSProperties}
                   >
                     👁️ Detail
-                  </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -546,6 +555,8 @@ export default function AdminApplicationsPage() {
             display: flex;
             gap: 8px;
             margin-top: 16px;
+            position: relative;
+            z-index: 10;
           }
 
           .empty-state {
