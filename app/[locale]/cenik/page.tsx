@@ -198,7 +198,7 @@ export default function PricingPage() {
       {/* Note */}
       <section className="note">
         <div className="note-box">
-          <div className="note-title">💳 {tPricing('note_title')}</div>
+          <div className="note-title">💵 {tPricing('note_title')}</div>
           <p className="note-text">
             {tPricing('note_text')}
           </p>
