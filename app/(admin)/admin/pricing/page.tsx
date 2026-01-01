@@ -77,19 +77,25 @@ export default function AdminPricingPage() {
         ? { type: 'plan', id: plan.id, data: plan }
         : { type: 'plan', data: plan };
 
+      console.log('Saving plan:', { method, body });
+
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
+
       if (data.success) {
         await fetchData();
         setShowPlanModal(false);
         setEditingPlan(null);
         alert('Plán úspěšně uložen!');
       } else {
+        console.error('API returned success: false', data);
         alert('Chyba při ukládání plánu');
       }
     } catch (error) {
