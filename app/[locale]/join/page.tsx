@@ -59,11 +59,18 @@ export default function JoinPage() {
     setError('');
 
     try {
+      // Always include basic services + selected extra services
+      const allServices = [
+        ...basicServices.map(s => s.id),
+        ...formData.services
+      ];
+
       const response = await fetch('/api/applications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          services: allServices,
           age: parseInt(formData.age),
           height: formData.height ? parseInt(formData.height) : null,
           weight: formData.weight ? parseInt(formData.weight) : null,
@@ -414,23 +421,19 @@ export default function JoinPage() {
                 </div>
 
                 <div className="form-group">
-                  <label>Základní služby</label>
-                  <div className="checkbox-grid">
+                  <label>Základní služby (vždy zahrnuté v ceně)</label>
+                  <div className="services-list">
                     {basicServices.map(service => (
-                      <label key={service.id} className="checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={formData.services.includes(service.id)}
-                          onChange={() => handleServiceToggle(service.id)}
-                        />
+                      <div key={service.id} className="service-item-fixed">
+                        <span>✓</span>
                         <span>{service.translations.cs}</span>
-                      </label>
+                      </div>
                     ))}
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>Extra služby (volitelné)</label>
+                  <label>Extra služby (které chceš nabízet?)</label>
                   <div className="checkbox-grid">
                     {extraServices.map(service => (
                       <label key={service.id} className="checkbox-label">
@@ -726,6 +729,31 @@ export default function JoinPage() {
           gap: 0.75rem;
         }
 
+        .services-list {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          gap: 0.75rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .service-item-fixed {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.75rem 1rem;
+          background: rgba(180, 39, 77, 0.1);
+          border: 1px solid rgba(180, 39, 77, 0.2);
+          border-radius: 10px;
+          font-family: var(--font-dm-sans);
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.9rem;
+        }
+
+        .service-item-fixed span:first-child {
+          color: var(--wine);
+          font-weight: 600;
+        }
+
         .checkbox-label {
           display: flex;
           align-items: center;
@@ -840,7 +868,8 @@ export default function JoinPage() {
             grid-template-columns: 1fr;
           }
 
-          .checkbox-grid {
+          .checkbox-grid,
+          .services-list {
             grid-template-columns: repeat(2, 1fr);
           }
 
