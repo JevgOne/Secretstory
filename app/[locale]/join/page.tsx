@@ -42,7 +42,6 @@ export default function JoinPage() {
     bust: '',
     email: '',
     phone: '',
-    telegram: '',
     experience: 'beginner',
     languages: [] as string[],
     availability: [] as string[],
@@ -66,7 +65,8 @@ export default function JoinPage() {
           weight: formData.weight ? parseInt(formData.weight) : null,
           bust: formData.bust ? parseInt(formData.bust) : null,
           waist: null,
-          hips: null
+          hips: null,
+          telegram: null
         })
       });
 
@@ -372,16 +372,6 @@ export default function JoinPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="tvuj@email.cz"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Telegram</label>
-                  <input
-                    type="text"
-                    value={formData.telegram}
-                    onChange={(e) => setFormData({ ...formData, telegram: e.target.value })}
-                    placeholder="@username"
                   />
                 </div>
               </div>
