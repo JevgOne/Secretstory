@@ -40,8 +40,6 @@ export default function JoinPage() {
     height: '',
     weight: '',
     bust: '',
-    waist: '',
-    hips: '',
     email: '',
     phone: '',
     telegram: '',
@@ -67,8 +65,8 @@ export default function JoinPage() {
           height: formData.height ? parseInt(formData.height) : null,
           weight: formData.weight ? parseInt(formData.weight) : null,
           bust: formData.bust ? parseInt(formData.bust) : null,
-          waist: formData.waist ? parseInt(formData.waist) : null,
-          hips: formData.hips ? parseInt(formData.hips) : null
+          waist: null,
+          hips: null
         })
       });
 
@@ -335,36 +333,18 @@ export default function JoinPage() {
                   </div>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Poprsí (cm)</label>
-                    <input
-                      type="number"
-                      value={formData.bust}
-                      onChange={(e) => setFormData({ ...formData, bust: e.target.value })}
-                      placeholder="90"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Pas (cm)</label>
-                    <input
-                      type="number"
-                      value={formData.waist}
-                      onChange={(e) => setFormData({ ...formData, waist: e.target.value })}
-                      placeholder="60"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Boky (cm)</label>
-                    <input
-                      type="number"
-                      value={formData.hips}
-                      onChange={(e) => setFormData({ ...formData, hips: e.target.value })}
-                      placeholder="90"
-                    />
-                  </div>
+                <div className="form-group">
+                  <label>Velikost poprsí</label>
+                  <select
+                    value={formData.bust}
+                    onChange={(e) => setFormData({ ...formData, bust: e.target.value })}
+                  >
+                    <option value="">Vyber velikost</option>
+                    <option value="1">1 (A)</option>
+                    <option value="2">2 (B)</option>
+                    <option value="3">3 (C)</option>
+                    <option value="4">4 (D+)</option>
+                  </select>
                 </div>
               </div>
             )}
