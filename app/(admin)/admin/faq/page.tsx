@@ -121,7 +121,39 @@ export default function AdminFAQPage() {
             <button
               key={cat.key}
               onClick={() => setFilterCategory(cat.key)}
-              className={`btn ${filterCategory === cat.key ? 'btn-primary' : ''}`}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '8px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                border: '1px solid #3d3d41',
+                background: filterCategory === cat.key
+                  ? 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)'
+                  : '#2d2d31',
+                color: filterCategory === cat.key ? '#1f1f23' : '#9ca3af',
+                transition: 'all 0.2s ease',
+                boxShadow: filterCategory === cat.key
+                  ? '0 4px 12px rgba(212, 175, 55, 0.3)'
+                  : 'none'
+              }}
+              onMouseOver={(e) => {
+                if (filterCategory !== cat.key) {
+                  e.currentTarget.style.background = '#35353a';
+                  e.currentTarget.style.borderColor = '#4d4d51';
+                } else {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(212, 175, 55, 0.4)';
+                }
+              }}
+              onMouseOut={(e) => {
+                if (filterCategory !== cat.key) {
+                  e.currentTarget.style.background = '#2d2d31';
+                  e.currentTarget.style.borderColor = '#3d3d41';
+                } else {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
+                }
+              }}
             >
               {cat.label}
             </button>
@@ -138,9 +170,28 @@ export default function AdminFAQPage() {
               setEditingFaq(null);
               setShowModal(true);
             }}
-            className="btn btn-primary"
+            style={{
+              padding: '10px 20px',
+              borderRadius: '8px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              border: 'none',
+              background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+              color: '#1f1f23',
+              fontSize: '0.9rem',
+              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(212, 175, 55, 0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
+            }}
           >
-            + Přidat FAQ
+            ➕ Přidat FAQ
           </button>
         </div>
 
@@ -186,15 +237,54 @@ export default function AdminFAQPage() {
                         setEditingFaq(faq);
                         setShowModal(true);
                       }}
-                      className="btn-small"
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        fontSize: '0.8rem',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        border: 'none',
+                        background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                        color: '#ffffff',
+                        marginRight: '8px',
+                        boxShadow: '0 2px 6px rgba(59, 130, 246, 0.3)',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.boxShadow = '0 4px 10px rgba(59, 130, 246, 0.4)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 2px 6px rgba(59, 130, 246, 0.3)';
+                      }}
                     >
-                      Upravit
+                      ✏️ Upravit
                     </button>
                     <button
                       onClick={() => deleteFaq(faq.id)}
-                      className="btn-small btn-danger"
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        fontSize: '0.8rem',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        border: 'none',
+                        background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                        color: '#ffffff',
+                        boxShadow: '0 2px 6px rgba(239, 68, 68, 0.3)',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.boxShadow = '0 4px 10px rgba(239, 68, 68, 0.4)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 2px 6px rgba(239, 68, 68, 0.3)';
+                      }}
                     >
-                      Smazat
+                      🗑️ Smazat
                     </button>
                   </td>
                 </tr>
@@ -270,7 +360,7 @@ export default function AdminFAQPage() {
           border: 1px solid #3d3d41;
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
         table {
@@ -301,8 +391,12 @@ export default function AdminFAQPage() {
           background: #2d2d31;
         }
 
+        tbody tr {
+          transition: all 0.2s ease;
+        }
+
         tbody tr:hover td {
-          background: #35353a;
+          background: rgba(212, 175, 55, 0.08);
         }
 
         button {
@@ -413,6 +507,7 @@ export default function AdminFAQPage() {
         .form-group select:focus {
           outline: none;
           border-color: #d4af37;
+          box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
         }
 
         .modal-actions {
@@ -591,11 +686,53 @@ function FAQModal({
           </div>
 
           <div className="modal-actions">
-            <button type="button" onClick={onClose} className="btn">
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '8px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                border: '1px solid #3d3d41',
+                background: '#2d2d31',
+                color: '#9ca3af',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = '#35353a';
+                e.currentTarget.style.borderColor = '#4d4d51';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = '#2d2d31';
+                e.currentTarget.style.borderColor = '#3d3d41';
+              }}
+            >
               Zrušit
             </button>
-            <button type="submit" className="btn btn-primary">
-              Uložit
+            <button
+              type="submit"
+              style={{
+                padding: '10px 20px',
+                borderRadius: '8px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                border: 'none',
+                background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+                color: '#1f1f23',
+                boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(212, 175, 55, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
+              }}
+            >
+              💾 Uložit
             </button>
           </div>
         </form>
