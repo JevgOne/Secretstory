@@ -166,8 +166,23 @@ export default function JoinPage() {
         </nav>
 
         <div className="success-page">
+          <div className="confetti-container">
+            {Array.from({ length: 50 }).map((_, i) => (
+              <div
+                key={i}
+                className="confetti"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 3}s`,
+                  animationDuration: `${3 + Math.random() * 2}s`
+                }}
+              >
+                {['🎉', '🎊', '✨', '💫', '⭐'][Math.floor(Math.random() * 5)]}
+              </div>
+            ))}
+          </div>
           <div className="success-content">
-            <div className="success-icon">✨</div>
+            <div className="success-icon">🎉</div>
             <h1>Děkujeme za tvůj zájem!</h1>
             <p>Tvoje žádost byla úspěšně odeslána. Brzy se ti ozveme na uvedený telefon nebo email.</p>
             <Link href={`/${locale}`} className="btn-home">
@@ -184,16 +199,59 @@ export default function JoinPage() {
             justify-content: center;
             padding: 2rem;
             background: var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+          }
+
+          .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+          }
+
+          .confetti {
+            position: absolute;
+            top: -10%;
+            font-size: 2rem;
+            animation: fall linear infinite;
+            opacity: 0;
+          }
+
+          @keyframes fall {
+            0% {
+              opacity: 1;
+              transform: translateY(0) rotate(0deg);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(100vh) rotate(360deg);
+            }
           }
 
           .success-content {
             text-align: center;
             max-width: 600px;
+            position: relative;
+            z-index: 2;
           }
 
           .success-icon {
             font-size: 5rem;
             margin-bottom: 2rem;
+            animation: bounce 1s ease infinite;
+          }
+
+          @keyframes bounce {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-20px);
+            }
           }
 
           h1 {
@@ -286,14 +344,13 @@ export default function JoinPage() {
             </div>
           </div>
 
-          {error && (
-            <div className="error-alert">
-              <span>⚠️</span>
-              <p>{error}</p>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="join-form">
+            {error && (
+              <div className="error-alert">
+                <span>⚠️</span>
+                <p>{error}</p>
+              </div>
+            )}
             {/* Step 1: Personal Info */}
             {currentStep === 1 && (
               <div className="form-step">
@@ -325,28 +382,30 @@ export default function JoinPage() {
                   </div>
 
                   <div className="form-group">
-                    <label>Výška (cm)</label>
+                    <label>Výška (cm) *</label>
                     <input
                       type="number"
                       value={formData.height}
                       onChange={(e) => setFormData({ ...formData, height: e.target.value })}
                       placeholder="165"
+                      required
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>Váha (kg)</label>
+                    <label>Váha (kg) *</label>
                     <input
                       type="number"
                       value={formData.weight}
                       onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
                       placeholder="55"
+                      required
                     />
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>Poprsí</label>
+                  <label>Poprsí *</label>
                   <input
                     type="number"
                     value={formData.bust}
@@ -354,6 +413,7 @@ export default function JoinPage() {
                     placeholder="1-4"
                     min="1"
                     max="4"
+                    required
                   />
                 </div>
               </div>
@@ -376,12 +436,13 @@ export default function JoinPage() {
                 </div>
 
                 <div className="form-group">
-                  <label>Email</label>
+                  <label>Email *</label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="tvuj@email.cz"
+                    required
                   />
                 </div>
               </div>
@@ -456,12 +517,13 @@ export default function JoinPage() {
                 <h2 className="step-title">O tobě</h2>
 
                 <div className="form-group">
-                  <label>Popis (česky)</label>
+                  <label>Popis (česky) *</label>
                   <textarea
                     value={formData.bio_cs}
                     onChange={(e) => setFormData({ ...formData, bio_cs: e.target.value })}
                     rows={5}
                     placeholder="Napiš něco o sobě, co by měli klienti vědět..."
+                    required
                   />
                 </div>
 
