@@ -238,7 +238,17 @@ export default function AdminPricingPage() {
               setEditingPlan(null);
               setShowPlanModal(true);
             }}
-            className="btn btn-primary"
+            style={{
+              padding: '10px 20px',
+              borderRadius: '8px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              border: 'none',
+              background: '#d4af37',
+              color: '#1f1f23',
+              fontSize: '0.875rem'
+            }}
           >
             + Přidat plán
           </button>
@@ -367,46 +377,7 @@ export default function AdminPricingPage() {
         </div>
       </section>
 
-      {/* Plan Modal */}
-      {showPlanModal && (
-        <PlanModal
-          plan={editingPlan}
-          onSave={savePlan}
-          onClose={() => {
-            setShowPlanModal(false);
-            setEditingPlan(null);
-          }}
-        />
-      )}
-
-      {/* Extra Modal */}
-      {showExtraModal && (
-        <ExtraModal
-          extra={editingExtra}
-          onSave={saveExtra}
-          onClose={() => {
-            setShowExtraModal(false);
-            setEditingExtra(null);
-          }}
-        />
-      )}
-
-      {/* Features Modal */}
-      {showFeaturesModal && editingFeatures && (
-        <FeaturesModal
-          plan={editingFeatures.plan}
-          features={editingFeatures.features}
-          onSave={saveFeature}
-          onDelete={deleteFeature}
-          onClose={() => {
-            setShowFeaturesModal(false);
-            setEditingFeatures(null);
-            fetchData();
-          }}
-        />
-      )}
-
-      <style jsx global>{`
+      <style jsx>{`
         .admin-container {
           padding: 24px;
           max-width: 1400px;
@@ -615,6 +586,45 @@ export default function AdminPricingPage() {
         }
       `}</style>
       </div>
+
+      {/* Plan Modal */}
+      {showPlanModal && (
+        <PlanModal
+          plan={editingPlan}
+          onSave={savePlan}
+          onClose={() => {
+            setShowPlanModal(false);
+            setEditingPlan(null);
+          }}
+        />
+      )}
+
+      {/* Extra Modal */}
+      {showExtraModal && (
+        <ExtraModal
+          extra={editingExtra}
+          onSave={saveExtra}
+          onClose={() => {
+            setShowExtraModal(false);
+            setEditingExtra(null);
+          }}
+        />
+      )}
+
+      {/* Features Modal */}
+      {showFeaturesModal && editingFeatures && (
+        <FeaturesModal
+          plan={editingFeatures.plan}
+          features={editingFeatures.features}
+          onSave={saveFeature}
+          onDelete={deleteFeature}
+          onClose={() => {
+            setShowFeaturesModal(false);
+            setEditingFeatures(null);
+            fetchData();
+          }}
+        />
+      )}
     </>
   );
 }

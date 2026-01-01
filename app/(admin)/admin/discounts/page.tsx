@@ -325,7 +325,7 @@ export default function AdminDiscountsPage() {
         />
       )}
 
-      <style jsx global>{`
+      <style jsx>{`
         .admin-container {
           padding: 24px;
           max-width: 1400px;
