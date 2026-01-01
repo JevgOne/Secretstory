@@ -367,7 +367,7 @@ export default function JoinPage() {
                 <h2 className="step-title">Základní údaje</h2>
 
                 <div className="form-group">
-                  <label>Jméno / Přezdívka *</label>
+                  <label>👤 Jméno / Přezdívka *</label>
                   <input
                     type="text"
                     value={formData.name}
@@ -379,7 +379,7 @@ export default function JoinPage() {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Věk *</label>
+                    <label>🎂 Věk *</label>
                     <input
                       type="number"
                       value={formData.age}
@@ -392,7 +392,7 @@ export default function JoinPage() {
                   </div>
 
                   <div className="form-group">
-                    <label>Výška (cm) *</label>
+                    <label>📏 Výška (cm) *</label>
                     <input
                       type="number"
                       value={formData.height}
@@ -403,7 +403,7 @@ export default function JoinPage() {
                   </div>
 
                   <div className="form-group">
-                    <label>Váha (kg) *</label>
+                    <label>⚖️ Váha (kg) *</label>
                     <input
                       type="number"
                       value={formData.weight}
@@ -415,12 +415,12 @@ export default function JoinPage() {
                 </div>
 
                 <div className="form-group">
-                  <label>Poprsí *</label>
+                  <label>💕 Poprsí *</label>
                   <input
                     type="number"
                     value={formData.bust}
                     onChange={(e) => setFormData({ ...formData, bust: e.target.value })}
-                    placeholder="1-4"
+                    placeholder="1-4 (1=A, 2=B, 3=C, 4=D+)"
                     min="1"
                     max="4"
                     required
@@ -429,74 +429,72 @@ export default function JoinPage() {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Barva vlasů *</label>
+                    <label>💇‍♀️ Barva vlasů *</label>
                     <select
                       value={formData.hair}
                       onChange={(e) => setFormData({ ...formData, hair: e.target.value })}
                       required
                     >
                       <option value="">Vyber barvu</option>
-                      <option value="blonde">Blond</option>
-                      <option value="brown">Hnědá</option>
-                      <option value="black">Černá</option>
-                      <option value="red">Zrzavá</option>
-                      <option value="other">Jiná</option>
+                      <option value="blonde">🌟 Blond</option>
+                      <option value="brown">🤎 Hnědá</option>
+                      <option value="black">🖤 Černá</option>
+                      <option value="red">🦊 Zrzavá</option>
+                      <option value="other">🌈 Jiná</option>
                     </select>
                   </div>
 
                   <div className="form-group">
-                    <label>Barva očí *</label>
+                    <label>👁️ Barva očí *</label>
                     <select
                       value={formData.eyes}
                       onChange={(e) => setFormData({ ...formData, eyes: e.target.value })}
                       required
                     >
                       <option value="">Vyber barvu</option>
-                      <option value="blue">Modré</option>
-                      <option value="green">Zelené</option>
-                      <option value="brown">Hnědé</option>
-                      <option value="gray">Šedé</option>
-                      <option value="hazel">Oříškové</option>
+                      <option value="blue">💙 Modré</option>
+                      <option value="green">💚 Zelené</option>
+                      <option value="brown">🤎 Hnědé</option>
+                      <option value="gray">🩶 Šedé</option>
+                      <option value="hazel">🌰 Oříškové</option>
                     </select>
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label>
+                <div className="checkbox-group">
+                  <label className="custom-checkbox">
                     <input
                       type="checkbox"
                       checked={formData.tattoo}
                       onChange={(e) => setFormData({ ...formData, tattoo: e.target.checked })}
-                      style={{ marginRight: '10px' }}
                     />
-                    Mám tetování
+                    <span className="checkbox-mark"></span>
+                    <span className="checkbox-text">💉 Mám tetování</span>
+                  </label>
+
+                  <label className="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={formData.piercing}
+                      onChange={(e) => setFormData({ ...formData, piercing: e.target.checked })}
+                    />
+                    <span className="checkbox-mark"></span>
+                    <span className="checkbox-text">✨ Mám piercing</span>
                   </label>
                 </div>
 
                 {formData.tattoo && (
-                  <div className="form-group">
-                    <label>Kde máš tetování? *</label>
+                  <div className="form-group tattoo-details">
+                    <label>💉 Kde máš tetování? *</label>
                     <textarea
                       value={formData.tattoo_description}
                       onChange={(e) => setFormData({ ...formData, tattoo_description: e.target.value })}
-                      placeholder="Popis tetování a umístění..."
+                      placeholder="Např. malý motýlek na zápěstí..."
                       rows={3}
                       required
                     />
                   </div>
                 )}
-
-                <div className="form-group">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={formData.piercing}
-                      onChange={(e) => setFormData({ ...formData, piercing: e.target.checked })}
-                      style={{ marginRight: '10px' }}
-                    />
-                    Mám piercing
-                  </label>
-                </div>
               </div>
             )}
 
@@ -923,6 +921,103 @@ export default function JoinPage() {
         .checkbox-label span {
           color: rgba(255, 255, 255, 0.8);
           font-size: 0.9rem;
+        }
+
+        /* Custom Checkboxes */
+        .checkbox-group {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin-bottom: 1.75rem;
+        }
+
+        .custom-checkbox {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem 1.25rem;
+          background: rgba(255, 255, 255, 0.02);
+          border: 2px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          font-family: var(--font-dm-sans);
+        }
+
+        .custom-checkbox:hover {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(212, 175, 55, 0.3);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-checkbox input[type="checkbox"] {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+          height: 0;
+          width: 0;
+        }
+
+        .checkbox-mark {
+          position: relative;
+          height: 24px;
+          width: 24px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          border-radius: 6px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          flex-shrink: 0;
+        }
+
+        .checkbox-mark::after {
+          content: '';
+          position: absolute;
+          display: none;
+          left: 7px;
+          top: 3px;
+          width: 6px;
+          height: 11px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+        }
+
+        .custom-checkbox input:checked ~ .checkbox-mark {
+          background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+          border-color: #d4af37;
+          box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .custom-checkbox input:checked ~ .checkbox-mark::after {
+          display: block;
+        }
+
+        .custom-checkbox input:checked ~ .checkbox-text {
+          color: #d4af37;
+          font-weight: 600;
+        }
+
+        .checkbox-text {
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.95rem;
+          transition: all 0.3s ease;
+        }
+
+        .tattoo-details {
+          animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         .info-note {
