@@ -279,8 +279,12 @@ export default function AdminApplicationsPage() {
 
                 <div className="app-actions">
                   <button
-                    onClick={() => setViewingApp(app)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setViewingApp(app);
+                    }}
                     className="detail-button"
+                    type="button"
                   >
                     👁️ Detail
                   </button>
