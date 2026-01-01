@@ -232,7 +232,9 @@ export default function AdminPricingPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#fff' }}>Cenové plány</h2>
           <button
+            type="button"
             onClick={() => {
+              console.log('Přidat plán clicked');
               setEditingPlan(null);
               setShowPlanModal(true);
             }}
@@ -404,7 +406,7 @@ export default function AdminPricingPage() {
         />
       )}
 
-      <style jsx>{`
+      <style jsx global>{`
         .admin-container {
           padding: 24px;
           max-width: 1400px;

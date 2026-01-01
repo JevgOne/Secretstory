@@ -216,7 +216,7 @@ export default function AdminFAQPage() {
         />
       )}
 
-      <style jsx>{`
+      <style jsx global>{`
         .admin-container {
           padding: 24px;
           max-width: 1400px;
