@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Cormorant, DM_Sans } from 'next/font/google';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
+import { SERVICES, getBasicServices, getExtraServices } from '@/lib/services';
 
 const cormorant = Cormorant({
   subsets: ['latin'],
@@ -49,19 +50,8 @@ export default function JoinPage() {
     bio_en: ''
   });
 
-  const [availableServices, setAvailableServices] = useState<Array<{id: string, name: string, category: string}>>([]);
-
-  // Load services on mount
-  useEffect(() => {
-    fetch('/api/v1/services')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setAvailableServices(data.services);
-        }
-      })
-      .catch(err => console.error('Failed to load services:', err));
-  }, []);
+  const basicServices = getBasicServices();
+  const extraServices = getExtraServices();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -424,16 +414,32 @@ export default function JoinPage() {
                 </div>
 
                 <div className="form-group">
-                  <label>Služby (které služby chceš poskytovat?)</label>
+                  <label>Základní služby</label>
                   <div className="checkbox-grid">
-                    {availableServices.map(service => (
+                    {basicServices.map(service => (
                       <label key={service.id} className="checkbox-label">
                         <input
                           type="checkbox"
-                          checked={formData.services.includes(String(service.id))}
-                          onChange={() => handleServiceToggle(String(service.id))}
+                          checked={formData.services.includes(service.id)}
+                          onChange={() => handleServiceToggle(service.id)}
                         />
-                        <span>{service.name}</span>
+                        <span>{service.translations.cs}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Extra služby (volitelné)</label>
+                  <div className="checkbox-grid">
+                    {extraServices.map(service => (
+                      <label key={service.id} className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={formData.services.includes(service.id)}
+                          onChange={() => handleServiceToggle(service.id)}
+                        />
+                        <span>{service.translations.cs}</span>
                       </label>
                     ))}
                   </div>
