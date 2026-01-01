@@ -25,6 +25,7 @@ interface SEOFieldsSectionProps {
   ogImage: string;
   onChange: (field: string, value: string) => void;
   onGenerate?: () => void;
+  onSave?: () => Promise<void>;
   girlName?: string;
   primaryPhoto?: string | null;
 }
@@ -49,11 +50,13 @@ export default function SEOFieldsSection({
   ogImage,
   onChange,
   onGenerate,
+  onSave,
   girlName,
   primaryPhoto
 }: SEOFieldsSectionProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [currentLang, setCurrentLang] = useState<Language>('cs');
+  const [isSaving, setIsSaving] = useState(false);
 
   // Get current language values
   const getCurrentValues = () => {
@@ -87,6 +90,29 @@ export default function SEOFieldsSection({
   };
 
   const currentValues = getCurrentValues();
+
+  const generateAndSave = async () => {
+    if (!girlName || !onSave) return;
+
+    setIsSaving(true);
+    try {
+      // Generate SEO data first
+      generateSEOData();
+
+      // Wait a bit for React to apply state updates
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Save to database
+      await onSave();
+
+      alert('✅ SEO data byla vygenerována a uložena!');
+    } catch (error) {
+      console.error('Error saving SEO:', error);
+      alert('❌ Chyba při ukládání SEO dat');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const generateSEOData = () => {
     if (girlName) {
@@ -178,7 +204,46 @@ export default function SEOFieldsSection({
           </p>
         </div>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          {girlName && (
+          {girlName && onSave && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                generateAndSave();
+              }}
+              disabled={isSaving}
+              style={{
+                padding: '10px 20px',
+                background: isSaving ? '#6b7280' : 'linear-gradient(135deg, #10b981, #059669)',
+                color: 'var(--white)',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                cursor: isSaving ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)',
+                opacity: isSaving ? 0.7 : 1
+              }}
+              onMouseOver={(e) => {
+                if (!isSaving) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #059669, #047857)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.4)';
+                }
+              }}
+              onMouseOut={(e) => {
+                if (!isSaving) {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(16, 185, 129, 0.3)';
+                }
+              }}
+            >
+              {isSaving ? '💾 Ukládám...' : '💾 Generovat a uložit (všechny jazyky)'}
+            </button>
+          )}
+          {girlName && !onSave && (
             <button
               type="button"
               onClick={(e) => {
@@ -208,7 +273,7 @@ export default function SEOFieldsSection({
                 e.currentTarget.style.boxShadow = '0 2px 8px rgba(236, 72, 153, 0.3)';
               }}
             >
-              ✨ Generovat automaticky (všechny jazyky)
+              ✨ Generovat (jen vyplní pole)
             </button>
           )}
           <span style={{

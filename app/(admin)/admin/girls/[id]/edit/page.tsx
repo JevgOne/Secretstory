@@ -283,46 +283,48 @@ export default function EditGirlPage({ params }: PageProps) {
     loadGirl();
   }, [params]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
+  // Save profile without redirect (for SEO auto-save)
+  const saveProfile = async () => {
     // Validation
     if (formData.languages.length === 0) {
-      setError('Vyberte alespoň jeden jazyk');
-      return;
+      throw new Error('Vyberte alespoň jeden jazyk');
     }
 
     // Always include all basic services (mandatory)
     const basicServiceIds = basicServices.map(s => s.id);
     const allServices = [...new Set([...basicServiceIds, ...formData.services])];
 
+    const response = await fetch(`/api/admin/girls/${girlId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...formData,
+        services: allServices,
+        age: parseInt(formData.age),
+        height: formData.height ? parseInt(formData.height) : null,
+        weight: formData.weight ? parseInt(formData.weight) : null,
+        tattoo_percentage: parseInt(formData.tattoo_percentage)
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || 'Chyba při aktualizaci profilu');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/admin/girls/${girlId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          services: allServices,
-          age: parseInt(formData.age),
-          height: formData.height ? parseInt(formData.height) : null,
-          weight: formData.weight ? parseInt(formData.weight) : null,
-          tattoo_percentage: parseInt(formData.tattoo_percentage)
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        router.push(`/admin/girls`);
-      } else {
-        setError(data.error || 'Chyba při aktualizaci profilu');
-      }
+      await saveProfile();
+      router.push(`/admin/girls`);
     } catch (err) {
       console.error('Error updating girl:', err);
-      setError('Chyba při aktualizaci profilu');
+      setError(err instanceof Error ? err.message : 'Chyba při aktualizaci profilu');
     } finally {
       setLoading(false);
     }
@@ -1806,6 +1808,7 @@ export default function EditGirlPage({ params }: PageProps) {
           girlName={formData.name}
           primaryPhoto={photos.find(p => p.is_primary)?.url || null}
           onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
+          onSave={saveProfile}
         />
 
         <div className="form-actions">
