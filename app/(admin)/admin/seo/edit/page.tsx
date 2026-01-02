@@ -186,7 +186,7 @@ function EditSEOForm() {
 
   return (
     <>
-      <AdminHeader title="Edit SEO" showBack={false} />
+      <AdminHeader title="Edit SEO" showBack={true} backUrl="/admin/seo" />
       <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', color: '#fff' }}>
         <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>SEO Editor</h1>
         <p style={{ color: '#9ca3af', marginBottom: '2rem' }}>
