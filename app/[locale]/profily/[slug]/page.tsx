@@ -1950,8 +1950,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         }
 
         .location-address {
-          font-size: 0.85rem;
-          color: var(--gray);
+          font-size: 1.05rem;
+          color: rgba(255, 255, 255, 0.9);
+          font-weight: 500;
         }
 
         /* Description */
