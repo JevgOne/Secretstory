@@ -99,8 +99,8 @@ export default function SEOFieldsSection({
       // Generate SEO data first
       generateSEOData();
 
-      // Wait a bit for React to apply state updates
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Wait for React to apply state updates (needs more time!)
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Save to database
       await onSave();

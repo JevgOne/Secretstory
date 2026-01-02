@@ -294,17 +294,27 @@ export default function EditGirlPage({ params }: PageProps) {
     const basicServiceIds = basicServices.map(s => s.id);
     const allServices = [...new Set([...basicServiceIds, ...formData.services])];
 
+    const payload = {
+      ...formData,
+      services: allServices,
+      age: parseInt(formData.age),
+      height: formData.height ? parseInt(formData.height) : null,
+      weight: formData.weight ? parseInt(formData.weight) : null,
+      tattoo_percentage: parseInt(formData.tattoo_percentage)
+    };
+
+    // DEBUG: Log SEO fields being sent
+    console.log('[DEBUG] SEO fields being sent:', {
+      meta_title_cs: payload.meta_title_cs,
+      meta_title_en: payload.meta_title_en,
+      meta_description_cs: payload.meta_description_cs,
+      og_title_cs: payload.og_title_cs
+    });
+
     const response = await fetch(`/api/admin/girls/${girlId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...formData,
-        services: allServices,
-        age: parseInt(formData.age),
-        height: formData.height ? parseInt(formData.height) : null,
-        weight: formData.weight ? parseInt(formData.weight) : null,
-        tattoo_percentage: parseInt(formData.tattoo_percentage)
-      })
+      body: JSON.stringify(payload)
     });
 
     const data = await response.json();
