@@ -299,15 +299,17 @@ export default function GirlCard({
         .girl-card-location {
           display: flex;
           align-items: center;
-          gap: 6px;
-          font-size: 0.95rem;
-          color: var(--gray);
+          gap: 8px;
+          font-size: 1.05rem;
+          color: rgba(255, 255, 255, 0.9);
           font-weight: 500;
+          margin-top: 0.5rem;
         }
 
         .girl-card-location svg {
-          width: 16px;
-          height: 16px;
+          width: 18px;
+          height: 18px;
+          color: var(--accent);
         }
 
         .girl-card-actions {
