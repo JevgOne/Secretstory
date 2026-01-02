@@ -106,7 +106,34 @@ export async function POST(request: NextRequest) {
     });
 
     if (existing.rows.length > 0) {
-      // Update existing
+      // Update existing - ensure all values are strings or numbers or null
+      const args = [
+          page_type || null,
+          locale || null,
+          meta_title || null,
+          meta_description || null,
+          meta_keywords || null,
+          og_title || null,
+          og_description || null,
+          og_image || null,
+          og_image_alt || null,
+          og_type || null,
+          twitter_card || null,
+          twitter_title || null,
+          twitter_description || null,
+          twitter_image || null,
+          schema_type || null,
+          schema_data || null,
+          canonical_url || null,
+          robots_index ?? 1,
+          robots_follow ?? 1,
+          focus_keyword || null,
+          seo_score ?? 0,
+          page_path
+        ];
+
+      console.log('[SEO API] UPDATE args:', args.map((v, i) => `${i}: ${typeof v} = ${JSON.stringify(v)}`));
+
       await db.execute({
         sql: `UPDATE seo_metadata SET
           page_type = ?,
@@ -132,15 +159,7 @@ export async function POST(request: NextRequest) {
           seo_score = ?,
           updated_at = CURRENT_TIMESTAMP
         WHERE page_path = ?`,
-        args: [
-          page_type, locale, meta_title, meta_description, meta_keywords,
-          og_title, og_description, og_image, og_image_alt, og_type,
-          twitter_card, twitter_title, twitter_description, twitter_image,
-          schema_type, schema_data, canonical_url,
-          robots_index ?? 1, robots_follow ?? 1,
-          focus_keyword, seo_score ?? 0,
-          page_path
-        ]
+        args
       });
 
       return NextResponse.json({
@@ -149,7 +168,34 @@ export async function POST(request: NextRequest) {
         id: existing.rows[0].id
       });
     } else {
-      // Insert new
+      // Insert new - ensure all values are strings or numbers or null
+      const args = [
+          page_path,
+          page_type || null,
+          locale || null,
+          meta_title || null,
+          meta_description || null,
+          meta_keywords || null,
+          og_title || null,
+          og_description || null,
+          og_image || null,
+          og_image_alt || null,
+          og_type || 'website',
+          twitter_card || 'summary_large_image',
+          twitter_title || null,
+          twitter_description || null,
+          twitter_image || null,
+          schema_type || null,
+          schema_data || null,
+          canonical_url || null,
+          robots_index ?? 1,
+          robots_follow ?? 1,
+          focus_keyword || null,
+          seo_score ?? 0
+        ];
+
+      console.log('[SEO API] INSERT args:', args.map((v, i) => `${i}: ${typeof v} = ${JSON.stringify(v)}`));
+
       const result = await db.execute({
         sql: `INSERT INTO seo_metadata (
           page_path, page_type, locale,
@@ -159,14 +205,7 @@ export async function POST(request: NextRequest) {
           schema_type, schema_data, canonical_url,
           robots_index, robots_follow, focus_keyword, seo_score
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        args: [
-          page_path, page_type, locale,
-          meta_title, meta_description, meta_keywords,
-          og_title, og_description, og_image, og_image_alt, og_type || 'website',
-          twitter_card || 'summary_large_image', twitter_title, twitter_description, twitter_image,
-          schema_type, schema_data, canonical_url,
-          robots_index ?? 1, robots_follow ?? 1, focus_keyword, seo_score ?? 0
-        ]
+        args
       });
 
       return NextResponse.json({
