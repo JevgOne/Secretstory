@@ -300,8 +300,9 @@ export default function GirlCard({
           display: flex;
           align-items: center;
           gap: 6px;
-          font-size: 0.85rem;
+          font-size: 0.95rem;
           color: var(--gray);
+          font-weight: 500;
         }
 
         .girl-card-location svg {
