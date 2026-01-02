@@ -277,18 +277,13 @@ export default function AdminApplicationsPage() {
 
                 <p className="app-date">Podáno {formatDate(app.created_at)}</p>
 
-                <div className="app-actions">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setViewingApp(app);
-                    }}
-                    className="detail-button"
-                    type="button"
-                  >
-                    👁️ Detail
-                  </button>
-                </div>
+                <button
+                  onClick={() => setViewingApp(app)}
+                  className="detail-button"
+                  type="button"
+                >
+                  👁️ Detail
+                </button>
               </div>
             ))}
 
@@ -467,7 +462,7 @@ export default function AdminApplicationsPage() {
             border: 1px solid #3d3d41;
             border-radius: 12px;
             padding: 20px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
           }
 
@@ -554,40 +549,27 @@ export default function AdminApplicationsPage() {
             margin: 12px 0;
           }
 
-          .app-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 16px;
-            position: relative;
-            z-index: 10;
-          }
-
           .detail-button {
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.875rem;
             font-weight: 600;
-            cursor: pointer !important;
+            cursor: pointer;
             border: none;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: #3b82f6;
             color: #ffffff;
-            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            flex: 1;
-            text-align: center;
-            position: relative;
-            z-index: 100;
-            pointer-events: auto !important;
+            transition: background 0.2s ease;
             width: 100%;
+            margin-top: 16px;
+            display: block;
           }
 
           .detail-button:hover {
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
-            transform: translateY(-1px);
+            background: #2563eb;
           }
 
           .detail-button:active {
-            transform: translateY(0);
+            background: #1d4ed8;
           }
 
           .empty-state {
