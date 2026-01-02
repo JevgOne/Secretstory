@@ -567,7 +567,7 @@ export default function AdminApplicationsPage() {
             border-radius: 6px;
             fontSize: 0.85rem;
             font-weight: 600;
-            cursor: pointer;
+            cursor: pointer !important;
             border: none;
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: #ffffff;
@@ -575,6 +575,9 @@ export default function AdminApplicationsPage() {
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             flex: 1;
             text-align: center;
+            position: relative;
+            z-index: 10;
+            pointer-events: auto !important;
           }
 
           .detail-button:hover {

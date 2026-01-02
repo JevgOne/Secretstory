@@ -41,6 +41,7 @@ export default function AdminDashboardPage() {
     usersCount: 0,
     servicesCount: 0
   });
+  const [applicationsCount, setApplicationsCount] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -75,15 +76,17 @@ export default function AdminDashboardPage() {
   const fetchStats = async () => {
     try {
       // Fetch only counts, not full data for speed
-      const [girlsRes, reviewsRes, usersRes] = await Promise.all([
+      const [girlsRes, reviewsRes, usersRes, appsRes] = await Promise.all([
         fetch('/api/admin/girls?count=true'),
         fetch('/api/reviews?status=approved&count=true'),
-        fetch('/api/admin/users?count=true')
+        fetch('/api/admin/users?count=true'),
+        fetch('/api/applications?status=pending')
       ]);
 
       const girlsData = await girlsRes.json();
       const reviewsData = await reviewsRes.json();
       const usersData = await usersRes.json();
+      const appsData = await appsRes.json();
 
       setStats({
         girlsCount: girlsData.count || 0,
@@ -91,6 +94,7 @@ export default function AdminDashboardPage() {
         usersCount: usersData.count || 0,
         servicesCount: 24
       });
+      setApplicationsCount(appsData.applications?.length || 0);
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
@@ -690,6 +694,18 @@ export default function AdminDashboardPage() {
             gap: '16px'
           }}>
             {[
+              {
+                icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="12" y1="18" x2="12" y2="12"/>
+                  <line x1="9" y1="15" x2="15" y2="15"/>
+                </svg>,
+                title: 'Žádosti',
+                count: `${applicationsCount} ${applicationsCount === 1 ? 'čekající' : applicationsCount < 5 ? 'čekající' : 'čekajících'}`,
+                path: '/admin/applications',
+                color: '#f97316'
+              },
               {
                 icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
