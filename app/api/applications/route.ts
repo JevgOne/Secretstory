@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      id: result.lastInsertRowid,
+      id: Number(result.lastInsertRowid),
       message: 'Žádost úspěšně odeslána! Brzy se vám ozveme.'
     });
   } catch (error) {
