@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { useState, useEffect } from "react";
 
 interface AdminHeaderProps {
   title: string;
@@ -10,6 +11,52 @@ interface AdminHeaderProps {
 }
 
 export default function AdminHeader({ title, showBack = false, backUrl = "/admin/dashboard" }: AdminHeaderProps) {
+  const [notifications, setNotifications] = useState({ applications: 0, reviews: 0 });
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    fetchNotifications();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!showNotifications) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.notifications-container')) {
+        setShowNotifications(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showNotifications]);
+
+  const fetchNotifications = async () => {
+    try {
+      const [appsRes, reviewsRes] = await Promise.all([
+        fetch('/api/applications?status=pending'),
+        fetch('/api/reviews?status=pending')
+      ]);
+
+      const appsData = await appsRes.json();
+      const reviewsData = await reviewsRes.json();
+
+      setNotifications({
+        applications: appsData.applications?.length || 0,
+        reviews: reviewsData.reviews?.length || 0
+      });
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  const totalNotifications = notifications.applications + notifications.reviews;
+
   return (
     <header className="app-header admin">
       <div className="app-header-left">
@@ -45,6 +92,209 @@ export default function AdminHeader({ title, showBack = false, backUrl = "/admin
         <div className="app-header-title">{title}</div>
       </div>
       <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        {/* Notifications Bell */}
+        <div className="notifications-container" style={{ position: 'relative' }}>
+          <button
+            onClick={() => setShowNotifications(!showNotifications)}
+            style={{
+              padding: '8px 16px',
+              background: totalNotifications > 0 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+              border: `1px solid ${totalNotifications > 0 ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
+              borderRadius: '8px',
+              color: totalNotifications > 0 ? '#ef4444' : 'white',
+              fontSize: '0.85rem',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            {totalNotifications > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '-4px',
+                background: '#ef4444',
+                color: 'white',
+                width: '20px',
+                height: '20px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.625rem',
+                fontWeight: '700',
+                border: '2px solid #1f1f23'
+              }}>
+                {totalNotifications > 9 ? '9+' : totalNotifications}
+              </span>
+            )}
+          </button>
+
+          {/* Notifications Dropdown */}
+          {showNotifications && (
+            <div style={{
+              position: 'absolute',
+              top: 'calc(100% + 8px)',
+              right: 0,
+              background: '#2d2d31',
+              border: '1px solid #3d3d41',
+              borderRadius: '12px',
+              padding: '16px',
+              minWidth: '280px',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+              zIndex: 1000
+            }}>
+              <div style={{
+                fontSize: '0.75rem',
+                fontWeight: '600',
+                color: '#9ca3af',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                marginBottom: '12px'
+              }}>
+                Notifikace
+              </div>
+
+              {totalNotifications === 0 ? (
+                <div style={{
+                  padding: '20px',
+                  textAlign: 'center',
+                  color: '#6b7280',
+                  fontSize: '0.875rem'
+                }}>
+                  Žádné nové notifikace
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {notifications.applications > 0 && (
+                    <Link
+                      href="/admin/applications"
+                      onClick={() => setShowNotifications(false)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '12px',
+                        background: 'rgba(239, 68, 68, 0.1)',
+                        border: '1px solid rgba(239, 68, 68, 0.2)',
+                        borderRadius: '8px',
+                        textDecoration: 'none',
+                        color: 'white',
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '8px',
+                          background: '#ef4444',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.875rem'
+                        }}>
+                          📝
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>
+                            Nové žádosti
+                          </div>
+                          <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                            {notifications.applications} čekající
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{
+                        background: '#ef4444',
+                        color: 'white',
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.75rem',
+                        fontWeight: '700'
+                      }}>
+                        {notifications.applications}
+                      </div>
+                    </Link>
+                  )}
+
+                  {notifications.reviews > 0 && (
+                    <Link
+                      href="/admin/reviews"
+                      onClick={() => setShowNotifications(false)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '12px',
+                        background: 'rgba(239, 68, 68, 0.1)',
+                        border: '1px solid rgba(239, 68, 68, 0.2)',
+                        borderRadius: '8px',
+                        textDecoration: 'none',
+                        color: 'white',
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '8px',
+                          background: '#f59e0b',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.875rem'
+                        }}>
+                          ⭐
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.875rem', fontWeight: '600' }}>
+                            Nové recenze
+                          </div>
+                          <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                            {notifications.reviews} ke schválení
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{
+                        background: '#f59e0b',
+                        color: 'white',
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.75rem',
+                        fontWeight: '700'
+                      }}>
+                        {notifications.reviews}
+                      </div>
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
         <Link
           href="/cs"
           style={{
