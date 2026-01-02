@@ -127,22 +127,29 @@ function EditSEOForm() {
     else if (pagePath.includes('/blog/')) pageType = 'blog';
     else if (pagePath.includes('/sluzby/')) pageType = 'dynamic';
 
+    const payload = {
+      page_path: pagePath,
+      page_type: pageType,
+      locale: locale,
+      ...formData,
+      robots_index: 1,
+      robots_follow: 1,
+      seo_score: 75
+    };
+
+    console.log('[SEO SAVE] Sending data:', payload);
+
     try {
       const res = await fetch('/api/seo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          page_path: pagePath,
-          page_type: pageType,
-          locale: locale,
-          ...formData,
-          robots_index: 1,
-          robots_follow: 1,
-          seo_score: 75
-        }),
+        body: JSON.stringify(payload),
       });
 
+      console.log('[SEO SAVE] Response status:', res.status);
+
       const data = await res.json();
+      console.log('[SEO SAVE] Response data:', data);
 
       if (data.success) {
         setSuccess('✅ SEO metadata uložena!');
@@ -151,6 +158,7 @@ function EditSEOForm() {
         setError(data.error || 'Chyba při ukládání');
       }
     } catch (err: any) {
+      console.error('[SEO SAVE] Error:', err);
       setError('Chyba: ' + err.message);
     } finally {
       setSaving(false);
