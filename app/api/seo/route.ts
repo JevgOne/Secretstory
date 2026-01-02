@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
 
 // GET /api/seo - Get all SEO metadata (with optional filters)
 export async function GET(request: NextRequest) {
@@ -162,6 +163,15 @@ export async function POST(request: NextRequest) {
         args
       });
 
+      // Revalidate the page to clear Next.js cache
+      try {
+        revalidatePath(page_path, 'page');
+        console.log('[SEO API] Revalidated path:', page_path);
+      } catch (revalidateError) {
+        console.error('[SEO API] Error revalidating path:', revalidateError);
+        // Don't fail the request if revalidation fails
+      }
+
       return NextResponse.json({
         success: true,
         message: 'SEO metadata updated',
@@ -208,6 +218,15 @@ export async function POST(request: NextRequest) {
         args
       });
 
+      // Revalidate the page to clear Next.js cache
+      try {
+        revalidatePath(page_path, 'page');
+        console.log('[SEO API] Revalidated path:', page_path);
+      } catch (revalidateError) {
+        console.error('[SEO API] Error revalidating path:', revalidateError);
+        // Don't fail the request if revalidation fails
+      }
+
       return NextResponse.json({
         success: true,
         message: 'SEO metadata created',
@@ -249,6 +268,15 @@ export async function DELETE(request: NextRequest) {
       sql: 'DELETE FROM seo_metadata WHERE page_path = ?',
       args: [pagePath]
     });
+
+    // Revalidate the page to clear Next.js cache
+    try {
+      revalidatePath(pagePath, 'page');
+      console.log('[SEO API] Revalidated path after deletion:', pagePath);
+    } catch (revalidateError) {
+      console.error('[SEO API] Error revalidating path:', revalidateError);
+      // Don't fail the request if revalidation fails
+    }
 
     return NextResponse.json({
       success: true,
