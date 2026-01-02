@@ -565,7 +565,7 @@ export default function AdminApplicationsPage() {
           .detail-button {
             padding: 8px 16px;
             border-radius: 6px;
-            fontSize: 0.85rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer !important;
             border: none;
