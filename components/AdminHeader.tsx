@@ -6,15 +6,16 @@ import { signOut } from "next-auth/react";
 interface AdminHeaderProps {
   title: string;
   showBack?: boolean;
+  backUrl?: string;
 }
 
-export default function AdminHeader({ title, showBack = false }: AdminHeaderProps) {
+export default function AdminHeader({ title, showBack = false, backUrl = "/admin/dashboard" }: AdminHeaderProps) {
   return (
     <header className="app-header admin">
       <div className="app-header-left">
         {showBack && (
           <Link
-            href="/admin/dashboard"
+            href={backUrl}
             style={{
               display: 'flex',
               alignItems: 'center',
