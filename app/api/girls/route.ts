@@ -208,6 +208,12 @@ export async function GET(request: NextRequest) {
         }
       }
 
+      // Check if girl is actually new (within 14 days of creation)
+      // Same logic as homepage API
+      const createdAt = new Date(row.created_at);
+      const daysSinceCreated = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+      const isActuallyNew = row.is_new && daysSinceCreated <= 14;
+
       return {
         ...row,
         services,
@@ -215,7 +221,7 @@ export async function GET(request: NextRequest) {
         verified: Boolean(row.verified),
         online: Boolean(row.online),
         piercing: Boolean(row.piercing),
-        is_new: Boolean(row.is_new),
+        is_new: isActuallyNew, // Use the calculated value, not just Boolean(row.is_new)
         is_top: Boolean(row.is_top),
         is_featured: Boolean(row.is_featured),
         primary_photo: primaryPhoto?.url || null,
