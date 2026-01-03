@@ -22,6 +22,7 @@ interface Application {
   experience: string;
   languages: string;
   availability: string;
+  services: string;
   bio_cs: string;
   bio_en: string;
   status: string;
@@ -107,6 +108,40 @@ export default function QuickViewPage() {
             <strong>Zkušenosti:</strong> <span>{app.experience}</span>
             <strong>Jazyky:</strong> <span>{parseJSON(app.languages).join(', ') || 'N/A'}</span>
             <strong>Dostupnost:</strong> <span>{parseJSON(app.availability).join(', ') || 'N/A'}</span>
+          </div>
+
+          {app.services && (
+            <div style={{
+              marginTop: '20px',
+              padding: '16px',
+              background: '#1f1f23',
+              borderRadius: '8px',
+              border: '2px solid #d4af37'
+            }}>
+              <strong style={{ color: '#d4af37', fontSize: '18px' }}>🔥 SLUŽBY:</strong>
+              <div style={{
+                marginTop: '12px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px'
+              }}>
+                {parseJSON(app.services).map((service: string) => (
+                  <span key={service} style={{
+                    background: 'rgba(212, 175, 55, 0.2)',
+                    color: '#d4af37',
+                    padding: '6px 12px',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    border: '1px solid rgba(212, 175, 55, 0.4)'
+                  }}>
+                    {service}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px', marginTop: '20px' }}>
             <strong>Status:</strong> <span style={{
               color: app.status === 'pending' ? '#fbbf24' : app.status === 'approved' ? '#22c55e' : '#ef4444',
               fontWeight: 'bold'
