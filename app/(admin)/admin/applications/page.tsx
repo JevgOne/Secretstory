@@ -242,7 +242,12 @@ export default function AdminApplicationsPage() {
         ) : (
           <div className="applications-grid">
             {applications.map((app) => (
-              <div key={app.id} className="app-card">
+              <div
+                key={app.id}
+                className="app-card"
+                onClick={() => setViewingApp(app)}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="app-header">
                   <div>
                     <h3>{app.name}</h3>
@@ -277,13 +282,9 @@ export default function AdminApplicationsPage() {
 
                 <p className="app-date">Podáno {formatDate(app.created_at)}</p>
 
-                <button
-                  onClick={() => setViewingApp(app)}
-                  className="detail-button"
-                  type="button"
-                >
+                <div className="detail-button">
                   👁️ Detail
-                </button>
+                </div>
               </div>
             ))}
 
