@@ -249,17 +249,19 @@ export default function HomeClient({ initialData }: HomeClientProps) {
       {/* STORIES */}
       <Stories initialStories={stories} />
 
-      {/* NEW GIRLS SECTION - Single featured new girl */}
-      {newGirls.length > 0 && (
-        <section className="new-girls-section" style={{ background: 'rgba(139, 41, 66, 0.03)', padding: '4rem 0', marginBottom: '4rem' }}>
-          <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 4%' }}>
-            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-              <h2 className="section-title">✦ {tHome('new_label')}</h2>
-              <p className="section-subtitle">{tHome('new_girls_subtitle')}</p>
-            </div>
-            <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-              {(() => {
-                const girl = newGirls[0]; // Only show first new girl
+      {/* NEW GIRLS SECTION - Only girls with "new" badge */}
+      {(() => {
+        const girlsWithNewBadge = newGirls.filter(g => g.badge_type === 'new');
+        return girlsWithNewBadge.length > 0 && (
+          <section className="new-girls-section" style={{ background: 'rgba(139, 41, 66, 0.03)', padding: '4rem 0', marginBottom: '4rem' }}>
+            <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 4%' }}>
+              <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+                <h2 className="section-title">✦ {tHome('new_label')}</h2>
+                <p className="section-subtitle">{tHome('new_girls_subtitle')}</p>
+              </div>
+              <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+                {(() => {
+                  const girl = girlsWithNewBadge[0]; // Only show first girl with NEW badge
                 const badge = 'new';
                 const badgeText = tGirls('new');
                 const badgeClass = 'badge-new';
@@ -347,11 +349,12 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                     </article>
                   </Link>
                 );
-              })()}
+                })()}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      })()}
 
       {/* PROFILES */}
       <section className="profiles" id="profiles">
