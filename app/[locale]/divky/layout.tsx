@@ -1,6 +1,9 @@
 import { Metadata } from 'next';
 import { generatePageMetadata, getDefaultSEO } from '@/lib/seo-metadata';
 
+// ISR - Revalidate every 60 seconds
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const pagePath = `/${locale}/divky`;
