@@ -550,26 +550,33 @@ export default function AdminApplicationsPage() {
           }
 
           .detail-button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            border: none;
+            border: 2px solid #3b82f6;
             background: #3b82f6;
             color: #ffffff;
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
             width: 100%;
             margin-top: 16px;
-            display: block;
+            display: inline-block;
+            text-align: center;
+            touch-action: manipulation;
+            user-select: none;
           }
 
           .detail-button:hover {
             background: #2563eb;
+            border-color: #2563eb;
+            transform: scale(1.02);
           }
 
           .detail-button:active {
             background: #1d4ed8;
+            border-color: #1d4ed8;
+            transform: scale(0.98);
           }
 
           .empty-state {
