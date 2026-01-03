@@ -71,10 +71,16 @@ export default function GirlsPage() {
 
   const fetchGirls = async () => {
     try {
-      const response = await fetch('/api/girls?status=active');
+      const response = await fetch('/api/girls?status=active', {
+        cache: 'no-store' // Force fresh data, bypass browser cache
+      });
       const data = await response.json();
+      console.log('[DIVKY DEBUG] API response:', { success: data.success, girlsCount: data.girls?.length });
       if (data.success) {
         setGirls(data.girls);
+        console.log('[DIVKY DEBUG] Girls set, count:', data.girls.length);
+      } else {
+        console.warn('[DIVKY DEBUG] API returned success=false');
       }
     } catch (error) {
       console.error('Error fetching girls:', error);
