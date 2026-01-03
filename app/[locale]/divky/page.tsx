@@ -185,11 +185,17 @@ async function getGirlsData() {
 export default async function DivkyPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
-  // Fetch ALL active girls from API - NO FILTERING
-  const girls = await getGirlsData();
+  // Fetch ALL active girls from database
+  const allGirls = await getGirlsData();
 
-  console.log('[DIVKY SERVER] Fetched girls count:', girls.length);
+  // FILTER: Show ONLY girls working today (have schedule today)
+  // schedule_status = 'working' (currently working) or 'later' (working later today)
+  const girlsWorkingToday = allGirls.filter((girl: Girl) =>
+    girl.schedule_status === 'working' || girl.schedule_status === 'later'
+  );
 
-  // Pass ALL girls to client component (sorted by schedule status by API)
-  return <DivkyClient initialGirls={girls} locale={locale} />;
+  console.log('[DIVKY SERVER] All girls:', allGirls.length, 'Working today:', girlsWorkingToday.length);
+
+  // Pass ONLY working girls to client component
+  return <DivkyClient initialGirls={girlsWorkingToday} locale={locale} />;
 }
