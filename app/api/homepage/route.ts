@@ -4,18 +4,18 @@ import { cache } from '@/lib/cache';
 
 // Edge runtime for maximum performance
 export const runtime = 'edge';
-export const revalidate = 300; // Cache for 5 minutes
+export const revalidate = 60; // Cache for 60 seconds (matches ISR)
 
 export async function GET() {
   try {
-    // Check in-memory cache first (5min TTL)
-    const cached = cache.get('homepage-data', 300000);
+    // Check in-memory cache first (60s TTL - matches ISR)
+    const cached = cache.get('homepage-data', 60000);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
-          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600, max-age=120',
-          'CDN-Cache-Control': 'public, s-maxage=600',
-          'Vercel-CDN-Cache-Control': 'public, s-maxage=600',
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120, max-age=30',
+          'CDN-Cache-Control': 'public, s-maxage=60',
+          'Vercel-CDN-Cache-Control': 'public, s-maxage=60',
           'X-Cache': 'HIT',
           'X-Content-Type-Options': 'nosniff'
         }
@@ -257,16 +257,16 @@ export async function GET() {
       reviews: reviewsResult.rows
     };
 
-    // Store in cache for 5 minutes
+    // Store in cache for 60 seconds (matches ISR)
     cache.set('homepage-data', responseData);
 
     // Return everything in ONE response
     return NextResponse.json(responseData, {
       headers: {
-        // Aggressive caching for performance
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600, max-age=120',
-        'CDN-Cache-Control': 'public, s-maxage=600',
-        'Vercel-CDN-Cache-Control': 'public, s-maxage=600',
+        // 60s caching to match ISR
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120, max-age=30',
+        'CDN-Cache-Control': 'public, s-maxage=60',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=60',
         'X-Cache': 'MISS',
         'X-Content-Type-Options': 'nosniff'
       }
