@@ -46,19 +46,11 @@ export async function getSEOMetadata(pagePath: string): Promise<SEOData | null> 
 export async function generatePageMetadata(pagePath: string): Promise<Metadata> {
   const seoData = await getSEOMetadata(pagePath);
 
-  // If no SEO data in database -> noindex (don't index the page)
+  // If no SEO data in database -> return empty (no noindex)
   if (!seoData || !seoData.meta_title || !seoData.meta_description) {
     return {
-      title: 'Page',
-      description: 'No SEO configured',
-      robots: {
-        index: false,
-        follow: false,
-        googleBot: {
-          index: false,
-          follow: false,
-        }
-      }
+      title: '',
+      description: ''
     };
   }
 

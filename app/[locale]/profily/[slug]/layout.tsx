@@ -28,19 +28,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       }
     }
 
-    // If no SEO metadata is filled in, use noindex to prevent indexing
+    // If no SEO metadata, return basic info (no noindex)
     if (!girl.meta_title || !girl.meta_description) {
       return {
         title: girl.name,
-        description: 'Profile page',
-        robots: {
-          index: false,
-          follow: false,
-          googleBot: {
-            index: false,
-            follow: false,
-          }
-        }
+        description: girl.bio || ''
       }
     }
 
