@@ -1,49 +1,46 @@
 import { Metadata } from 'next'
+import { generatePageMetadata } from '@/lib/seo-metadata'
 
 // ISR - Revalidate every 60 seconds for SEO updates
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
+  const pagePath = `/${locale}/cenik`
 
-  const titles: Record<string, string> = {
-    cs: 'Ceník - Transparentní ceny | LovelyGirls Prague',
-    en: 'Pricing - Transparent Prices | LovelyGirls Prague',
-    de: 'Preise - Transparente Preise | LovelyGirls Prag',
-    uk: 'Ціни - Прозорі ціни | LovelyGirls Прага'
+  // Fallback defaults if database has no SEO data
+  const defaults = {
+    cs: {
+      title: 'Ceník - Transparentní ceny | LovelyGirls Prague',
+      description: 'Transparentní ceník prémiových služeb v Praze. Od 1500 Kč. Klasická masáž, erotická masáž, tantra. Žádné skryté poplatky. Platba hotově i kartou.',
+      keywords: 'ceník escort praha, ceny erotická masáž, tantra masáž praha cena, erotic massage price prague, escort pricing'
+    },
+    en: {
+      title: 'Pricing - Transparent Prices | LovelyGirls Prague',
+      description: 'Transparent pricing for premium services in Prague. From 1500 CZK. Classic massage, erotic massage, tantra. No hidden fees. Cash and card payment.',
+      keywords: 'escort pricing prague, erotic massage prices, service rates prague'
+    },
+    de: {
+      title: 'Preise - Transparente Preise | LovelyGirls Prag',
+      description: 'Transparente Preise für Premium-Dienstleistungen in Prag. Ab 1500 CZK. Klassische Massage, erotische Massage, Tantra. Keine versteckten Gebühren.',
+      keywords: 'escort preise prag, erotische massage preise, service tarife prag'
+    },
+    uk: {
+      title: 'Ціни - Прозорі ціни | LovelyGirls Прага',
+      description: 'Прозорі ціни на преміум послуги в Празі. Від 1500 крон. Класичний масаж, еротичний масаж, тантра. Без прихованих платежів.',
+      keywords: 'ціни ескорт прага, ціни еротичний масаж, тарифи послуг прага'
+    }
   }
 
-  const descriptions: Record<string, string> = {
-    cs: 'Transparentní ceník prémiových služeb v Praze. Od 1500 Kč. Klasická masáž, erotická masáž, tantra. Žádné skryté poplatky. Platba hotově i kartou.',
-    en: 'Transparent pricing for premium services in Prague. From 1500 CZK. Classic massage, erotic massage, tantra. No hidden fees. Cash and card payment.',
-    de: 'Transparente Preise für Premium-Dienstleistungen in Prag. Ab 1500 CZK. Klassische Massage, erotische Massage, Tantra. Keine versteckten Gebühren.',
-    uk: 'Прозорі ціни на преміум послуги в Празі. Від 1500 крон. Класичний масаж, еротичний масаж, тантра. Без прихованих платежів.'
-  }
+  const fallback = defaults[locale as keyof typeof defaults] || defaults.cs
 
-  const title = titles[locale] || titles.cs
-  const description = descriptions[locale] || descriptions.cs
-  const url = `https://www.lovelygirls.cz/${locale}/cenik`
+  // Load SEO from database, fallback to defaults
+  const metadata = await generatePageMetadata(pagePath, fallback)
 
   return {
-    title,
-    description,
-    keywords: 'ceník escort praha, ceny erotická masáž, tantra masáž praha cena, erotic massage price prague, escort pricing',
-    authors: [{ name: 'LovelyGirls Prague' }],
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: 'LovelyGirls Prague',
-      locale: locale,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
+    ...metadata,
     alternates: {
-      canonical: url,
+      ...metadata.alternates,
       languages: {
         'cs': '/cs/cenik',
         'en': '/en/cenik',

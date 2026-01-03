@@ -1,49 +1,46 @@
 import { Metadata } from 'next'
+import { generatePageMetadata } from '@/lib/seo-metadata'
 
 // ISR - Revalidate every 60 seconds for SEO updates
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
+  const pagePath = `/${locale}/faq`
 
-  const titles: Record<string, string> = {
-    cs: 'FAQ - Časté otázky | LovelyGirls Prague',
-    en: 'FAQ - Frequently Asked Questions | LovelyGirls Prague',
-    de: 'FAQ - Häufig gestellte Fragen | LovelyGirls Prag',
-    uk: 'FAQ - Часті питання | LovelyGirls Прага'
+  // Fallback defaults if database has no SEO data
+  const defaults = {
+    cs: {
+      title: 'FAQ - Časté otázky | LovelyGirls Prague',
+      description: 'Odpovědi na časté otázky o našich službách. Rezervace, platba, diskrétnost, programy. Vše co potřebujete vědět o LovelyGirls Prague.',
+      keywords: 'faq escort prague, časté otázky, rezervace escort, platba escort, diskrétnost'
+    },
+    en: {
+      title: 'FAQ - Frequently Asked Questions | LovelyGirls Prague',
+      description: 'Answers to frequently asked questions about our services. Booking, payment, discretion, programs. Everything you need to know about LovelyGirls Prague.',
+      keywords: 'escort faq prague, frequently asked questions, booking escort, payment'
+    },
+    de: {
+      title: 'FAQ - Häufig gestellte Fragen | LovelyGirls Prag',
+      description: 'Antworten auf häufig gestellte Fragen zu unseren Dienstleistungen. Buchung, Zahlung, Diskretion, Programme. Alles über LovelyGirls Prag.',
+      keywords: 'escort faq prag, häufig gestellte fragen, buchung escort'
+    },
+    uk: {
+      title: 'FAQ - Часті питання | LovelyGirls Прага',
+      description: 'Відповіді на часті питання про наші послуги. Бронювання, оплата, конфіденційність, програми. Все про LovelyGirls Prague.',
+      keywords: 'ескорт faq прага, часті питання, бронювання ескорт'
+    }
   }
 
-  const descriptions: Record<string, string> = {
-    cs: 'Odpovědi na časté otázky o našich službách. Rezervace, platba, diskrétnost, programy. Vše co potřebujete vědět o LovelyGirls Prague.',
-    en: 'Answers to frequently asked questions about our services. Booking, payment, discretion, programs. Everything you need to know about LovelyGirls Prague.',
-    de: 'Antworten auf häufig gestellte Fragen zu unseren Dienstleistungen. Buchung, Zahlung, Diskretion, Programme. Alles über LovelyGirls Prag.',
-    uk: 'Відповіді на часті питання про наші послуги. Бронювання, оплата, конфіденційність, програми. Все про LovelyGirls Prague.'
-  }
+  const fallback = defaults[locale as keyof typeof defaults] || defaults.cs
 
-  const title = titles[locale] || titles.cs
-  const description = descriptions[locale] || descriptions.cs
-  const url = `https://www.lovelygirls.cz/${locale}/faq`
+  // Load SEO from database, fallback to defaults
+  const metadata = await generatePageMetadata(pagePath, fallback)
 
   return {
-    title,
-    description,
-    keywords: 'faq escort prague, časté otázky, rezervace escort, platba escort, diskrétnost',
-    authors: [{ name: 'LovelyGirls Prague' }],
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: 'LovelyGirls Prague',
-      locale: locale,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary',
-      title,
-      description,
-    },
+    ...metadata,
     alternates: {
-      canonical: url,
+      ...metadata.alternates,
       languages: {
         'cs': '/cs/faq',
         'en': '/en/faq',

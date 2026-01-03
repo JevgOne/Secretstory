@@ -1,6 +1,9 @@
 import { Metadata } from 'next'
 import { db } from '@/lib/db'
 
+// ISR - Revalidate every 60 seconds for SEO updates
+export const revalidate = 60;
+
 interface ProfileLayoutProps {
   children: React.ReactNode
   params: Promise<{ locale: string; slug: string }>
@@ -25,11 +28,25 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       }
     }
 
-    // Use custom SEO fields if available, otherwise fallback to generated defaults
-    const title = girl.meta_title || `${girl.name} - ${girl.age} years | Premium Escort Prague | LovelyGirls`
-    const description = girl.meta_description || (girl.bio
-      ? girl.bio.substring(0, 155) + '...'
-      : `Meet ${girl.name}, ${girl.age} years old, ${girl.height}cm. Premium escort services in Prague. Available for incall & outcall. Book now via WhatsApp or call.`)
+    // If no SEO metadata is filled in, use noindex to prevent indexing
+    if (!girl.meta_title || !girl.meta_description) {
+      return {
+        title: `${girl.name} | LovelyGirls Prague`,
+        description: 'Profile page',
+        robots: {
+          index: false,
+          follow: false,
+          googleBot: {
+            index: false,
+            follow: false,
+          }
+        }
+      }
+    }
+
+    // Use custom SEO fields (only when both are filled)
+    const title = girl.meta_title
+    const description = girl.meta_description
     const ogImage = girl.og_image || '/og-image.jpg'
 
     const url = `https://www.lovelygirls.cz/${locale}/profily/${slug}`
