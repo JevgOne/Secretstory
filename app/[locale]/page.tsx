@@ -73,9 +73,11 @@ async function getHomepageData() {
       db.execute({
         sql: `
           SELECT r.id, r.girl_id, r.author_name, r.rating, r.title, r.content, r.created_at,
-                 g.name as girl_name, g.slug as girl_slug
+                 g.name as girl_name, g.slug as girl_slug,
+                 p.url as girl_photo, p.thumbnail_url as girl_thumbnail
           FROM reviews r
           JOIN girls g ON r.girl_id = g.id
+          LEFT JOIN girl_photos p ON g.id = p.girl_id AND p.is_primary = 1
           WHERE r.status = 'approved'
           ORDER BY r.created_at DESC
           LIMIT 3
