@@ -20,10 +20,7 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.lovelygirls.cz'),
-  title: {
-    default: "LovelyGirls Prague - Premium Escort & Erotic Massage Services",
-    template: "%s | LovelyGirls Prague"
-  },
+  title: "LovelyGirls Prague - Premium Escort & Erotic Massage Services",
   description: "Premium escort services in Prague. Professional companions, erotic massage, VIP services. Verified profiles, discreet, available 24/7. Incall & outcall.",
   keywords: "escort prague, erotic massage prague, VIP escort czech, luxury companions, tantra massage praha, premium escort services",
   authors: [{ name: "LovelyGirls Prague" }],

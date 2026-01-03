@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
     if (!girl) {
       return {
-        title: 'Profile Not Found | LovelyGirls Prague',
+        title: 'Profile Not Found',
         description: 'This profile is not available.',
         robots: 'noindex, nofollow'
       }
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     // If no SEO metadata is filled in, use noindex to prevent indexing
     if (!girl.meta_title || !girl.meta_description) {
       return {
-        title: `${girl.name} | LovelyGirls Prague`,
+        title: girl.name,
         description: 'Profile page',
         robots: {
           index: false,
