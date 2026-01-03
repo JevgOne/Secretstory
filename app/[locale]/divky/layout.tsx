@@ -1,55 +1,44 @@
-import { Metadata } from 'next'
+import { Metadata } from 'next';
+import { generatePageMetadata, getDefaultSEO } from '@/lib/seo-metadata';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
-  const { locale } = await params
+  const { locale } = await params;
+  const pagePath = `/${locale}/divky`;
 
-  const titles: Record<string, string> = {
-    cs: 'Naše Dívky - Ověřené Profily | LovelyGirls Prague',
-    en: 'Our Girls - Verified Profiles | LovelyGirls Prague',
-    de: 'Unsere Mädchen - Verifizierte Profile | LovelyGirls Prag',
-    uk: 'Наші Дівчата - Перевірені Профілі | LovelyGirls Прага'
-  }
+  // Fallback SEO values if database has no data
+  const defaults = {
+    cs: {
+      title: 'Naše Dívky - Ověřené Profily | LovelyGirls Prague',
+      description: 'Prohlédněte si profily našich ověřených společnic v Praze. Profesionální escort služby, erotická masáž, VIP doprovod. Skutečné fotky, diskrétnost garantována.',
+      keywords: 'escort praha, erotická masáž praha, VIP escort prague, verified escorts, luxury companions prague, tantra massage'
+    },
+    en: {
+      title: 'Our Girls - Verified Profiles | LovelyGirls Prague',
+      description: 'Browse verified companion profiles in Prague. Professional escort services, erotic massage, VIP companionship. Real photos, discretion guaranteed.',
+      keywords: 'escort prague, verified escorts, luxury companions, erotic massage prague'
+    },
+    de: {
+      title: 'Unsere Mädchen - Verifizierte Profile | LovelyGirls Prag',
+      description: 'Durchsuchen Sie verifizierte Begleiterprofile in Prag. Professionelle Escort-Services, erotische Massage, VIP-Begleitung.',
+      keywords: 'escort prag, verifizierte escorts, luxus-begleitung'
+    },
+    uk: {
+      title: 'Наші Дівчата - Перевірені Профілі | LovelyGirls Прага',
+      description: 'Перегляньте профілі наших перевірених супутниць у Празі. Професійні ескорт-послуги, еротичний масаж.',
+      keywords: 'ескорт прага, перевірені ескорт'
+    }
+  };
 
-  const descriptions: Record<string, string> = {
-    cs: 'Prohlédněte si profily našich ověřených společnic v Praze. Profesionální escort služby, erotická masáž, VIP doprovod. Skutečné fotky, diskrétnost garantována.',
-    en: 'Browse verified companion profiles in Prague. Professional escort services, erotic massage, VIP companionship. Real photos, discretion guaranteed.',
-    de: 'Durchsuchen Sie verifizierte Begleiterprofile in Prag. Professionelle Escort-Services, erotische Massage, VIP-Begleitung. Echte Fotos, Diskretion garantiert.',
-    uk: 'Перегляньте профілі наших перевірених супутниць у Празі. Професійні ескорт-послуги, еротичний масаж. Справжні фото, конфіденційність гарантована.'
-  }
+  const fallback = defaults[locale as keyof typeof defaults] || defaults.cs;
 
-  const title = titles[locale] || titles.cs
-  const description = descriptions[locale] || descriptions.cs
-  const url = `https://www.lovelygirls.cz/${locale}/divky`
+  // Load SEO from database, fallback to defaults
+  const metadata = await generatePageMetadata(pagePath, fallback);
 
+  // Add language alternates
   return {
-    title,
-    description,
-    keywords: 'escort praha, erotická masáž praha, VIP escort prague, verified escorts, luxury companions prague, tantra massage',
-    authors: [{ name: 'LovelyGirls Prague' }],
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: 'LovelyGirls Prague',
-      locale: locale,
-      type: 'website',
-      images: [
-        {
-          url: '/og-image.jpg',
-          width: 1200,
-          height: 630,
-          alt: 'LovelyGirls Prague - Premium Escort Services'
-        }
-      ]
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: ['/og-image.jpg']
-    },
+    ...metadata,
     alternates: {
-      canonical: url,
+      ...metadata.alternates,
       languages: {
         'cs': '/cs/divky',
         'en': '/en/divky',
@@ -57,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         'uk': '/uk/divky'
       }
     }
-  }
+  };
 }
 
 export default function DivkyLayout({ children }: { children: React.ReactNode }) {
