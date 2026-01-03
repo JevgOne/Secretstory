@@ -73,6 +73,7 @@ async function getHomepageData() {
       db.execute({
         sql: `
           SELECT r.id, r.girl_id, r.author_name, r.rating, r.title, r.content, r.created_at,
+                 r.helpful_count,
                  g.name as girl_name, g.slug as girl_slug,
                  p.url as girl_photo, p.thumbnail_url as girl_thumbnail
           FROM reviews r

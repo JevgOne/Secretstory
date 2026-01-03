@@ -20,6 +20,7 @@ interface Review {
   status: string;
   vibe?: string;
   tags?: string;
+  helpful_count?: number;
 }
 
 interface ReviewsSectionProps {
@@ -228,7 +229,7 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
               </p>
 
               {/* Vibe and Tags */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
                 {/* Vibe emoji */}
                 {review.vibe && VIBE_OPTIONS[review.vibe as keyof typeof VIBE_OPTIONS] && (
                   <div style={{
@@ -268,6 +269,31 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
                     </span>
                   );
                 })}
+              </div>
+
+              {/* Helpful count */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: '#9ca3af',
+                fontSize: '13px',
+                fontWeight: '500'
+              }}>
+                <span>👍</span>
+                <span>Užitečné</span>
+                {review.helpful_count !== undefined && review.helpful_count > 0 && (
+                  <span style={{
+                    background: 'rgba(212, 175, 55, 0.15)',
+                    color: '#d4af37',
+                    padding: '2px 8px',
+                    borderRadius: '10px',
+                    fontSize: '12px',
+                    fontWeight: '600'
+                  }}>
+                    {review.helpful_count}
+                  </span>
+                )}
               </div>
             </div>
           ))}
