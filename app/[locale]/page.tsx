@@ -217,10 +217,10 @@ async function getHomepageData() {
       girls: activeGirls.slice(0, 4),
       featuredGirl,
       newGirls,
-      locations: locationsResult.rows,
+      locations: locationsResult.rows as any[],
       stories: Object.values(storiesByGirl),
-      activities: activitiesResult.rows,
-      reviews: reviewsResult.rows
+      activities: activitiesResult.rows as any[],
+      reviews: reviewsResult.rows as any[]
     };
   } catch (error: any) {
     console.error('Homepage data fetch error:', error);
