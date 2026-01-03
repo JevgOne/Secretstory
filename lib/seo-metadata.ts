@@ -41,25 +41,33 @@ export async function getSEOMetadata(pagePath: string): Promise<SEOData | null> 
 
 /**
  * Generate Next.js Metadata object from database SEO data
- * Falls back to default values if no data found
+ * Returns noindex if no SEO data found in database
  */
-export async function generatePageMetadata(
-  pagePath: string,
-  defaults: {
-    title: string;
-    description: string;
-    keywords?: string;
-    ogImage?: string;
-  }
-): Promise<Metadata> {
+export async function generatePageMetadata(pagePath: string): Promise<Metadata> {
   const seoData = await getSEOMetadata(pagePath);
 
-  // Use database data if available, otherwise use defaults
-  const title = seoData?.meta_title || defaults.title;
-  const description = seoData?.meta_description || defaults.description;
-  const keywords = seoData?.meta_keywords || defaults.keywords;
-  const ogImage = seoData?.og_image || defaults.ogImage || 'https://www.lovelygirls.cz/og-image.jpg';
-  const canonicalUrl = seoData?.canonical_url || `https://www.lovelygirls.cz${pagePath}`;
+  // If no SEO data in database -> noindex (don't index the page)
+  if (!seoData || !seoData.meta_title || !seoData.meta_description) {
+    return {
+      title: 'Page',
+      description: 'No SEO configured',
+      robots: {
+        index: false,
+        follow: false,
+        googleBot: {
+          index: false,
+          follow: false,
+        }
+      }
+    };
+  }
+
+  // Use database SEO data
+  const title = seoData.meta_title;
+  const description = seoData.meta_description;
+  const keywords = seoData.meta_keywords;
+  const ogImage = seoData.og_image || 'https://www.lovelygirls.cz/og-image.jpg';
+  const canonicalUrl = seoData.canonical_url || `https://www.lovelygirls.cz${pagePath}`;
 
   return {
     title,
@@ -69,11 +77,11 @@ export async function generatePageMetadata(
       canonical: canonicalUrl
     },
     openGraph: {
-      title: seoData?.og_title || title,
-      description: seoData?.og_description || description,
+      title: seoData.og_title || title,
+      description: seoData.og_description || description,
       url: canonicalUrl,
       siteName: 'LovelyGirls Prague',
-      type: (seoData?.og_type as any) || 'website',
+      type: (seoData.og_type as any) || 'website',
       images: [
         {
           url: ogImage,
@@ -84,17 +92,17 @@ export async function generatePageMetadata(
       ]
     },
     twitter: {
-      card: (seoData?.twitter_card as any) || 'summary_large_image',
-      title: seoData?.twitter_title || title,
-      description: seoData?.twitter_description || description,
-      images: [seoData?.twitter_image || ogImage]
+      card: (seoData.twitter_card as any) || 'summary_large_image',
+      title: seoData.twitter_title || title,
+      description: seoData.twitter_description || description,
+      images: [seoData.twitter_image || ogImage]
     },
     robots: {
-      index: seoData?.robots_index !== false,
-      follow: seoData?.robots_follow !== false,
+      index: seoData.robots_index !== false,
+      follow: seoData.robots_follow !== false,
       googleBot: {
-        index: seoData?.robots_index !== false,
-        follow: seoData?.robots_follow !== false,
+        index: seoData.robots_index !== false,
+        follow: seoData.robots_follow !== false,
         'max-video-preview': -1,
         'max-image-preview': 'large',
         'max-snippet': -1

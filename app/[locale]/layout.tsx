@@ -16,11 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const pagePath = `/${locale}`;
 
-  // Get default SEO for this locale
-  const defaults = getDefaultSEO(locale);
-
-  // Try to get SEO from database, fallback to defaults
-  const metadata = await generatePageMetadata(pagePath, defaults);
+  // Load SEO from database (no fallback - noindex if not in DB)
+  const metadata = await generatePageMetadata(pagePath);
 
   // Add hreflang alternates
   return {
