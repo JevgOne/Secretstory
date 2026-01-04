@@ -851,14 +851,13 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
       {/* Working Today Section */}
       {onlineGirls.length > 0 && (
         <section className="working-today-section">
-          <div className="working-today-container">
-            <h3 className={`working-today-title ${cormorant.className}`}>
-              {t('profile.working_today_title') || 'Dnes také pracují'}
-            </h3>
-            <p className="working-today-subtitle">
-              {t('profile.working_today_subtitle') || 'Další dívky dostupné ve stejný den'}
-            </p>
-            <div className="working-today-grid">
+          <h3 className={`working-today-title ${cormorant.className}`}>
+            {t('profile.working_today_title') || 'Dnes také pracují'}
+          </h3>
+          <p className="working-today-subtitle">
+            {t('profile.working_today_subtitle') || 'Další dívky dostupné ve stejný den'}
+          </p>
+          <div className="working-today-grid">
               {onlineGirls.map((girl) => {
                 // Calculate breast size from bust measurement
                 const getBreastSize = (bust: string): number => {
@@ -914,7 +913,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                   </Link>
                 );
               })}
-            </div>
           </div>
         </section>
       )}
@@ -1525,101 +1523,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           width: 14px;
           height: 14px;
           color: var(--wine-light);
-        }
-
-        /* Working Today Section */
-        .working-today-section {
-          padding: 4rem 0;
-          background: rgba(0, 0, 0, 0.2);
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .working-today-container {
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 0 2rem;
-        }
-
-        .working-today-title {
-          font-size: 2.5rem;
-          font-weight: 400;
-          margin-bottom: 0.5rem;
-          color: var(--white);
-          text-align: center;
-        }
-
-        .working-today-subtitle {
-          font-size: 1.1rem;
-          color: var(--gray);
-          margin-bottom: 3rem;
-          text-align: center;
-        }
-
-        .working-today-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 2rem;
-        }
-
-        @media (max-width: 1200px) {
-          .working-today-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-
-        @media (max-width: 768px) {
-          .working-today-section {
-            padding: 3rem 0;
-          }
-
-          .working-today-container {
-            padding: 0 1.5rem;
-          }
-
-          .working-today-title {
-            font-size: 2rem;
-          }
-
-          .working-today-subtitle {
-            font-size: 1rem;
-            margin-bottom: 2rem;
-          }
-
-          .working-today-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-          }
-
-          .working-today-grid .card {
-            font-size: 0.85rem;
-          }
-
-          .working-today-grid .card-name {
-            font-size: 1rem;
-          }
-
-          .working-today-grid .stat-value {
-            font-size: 0.9rem;
-          }
-
-          .working-today-grid .stat-label {
-            font-size: 0.7rem;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .working-today-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-          }
-
-          .working-today-grid .card {
-            font-size: 0.75rem;
-          }
-
-          .working-today-grid .card-name {
-            font-size: 0.9rem;
-          }
         }
 
         /* Profile Content */
