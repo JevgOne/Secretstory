@@ -140,9 +140,8 @@ export default function SEOFieldsSection({
       const generatedOGTitleUk = `${girlName} - Професійний Ескорт Прага`;
       const generatedOGDescriptionUk = `Професійний ескорт ${girlName} у Празі. Перевірений профіль з актуальними фото та відгуками. Забронюйте зустріч сьогодні!`;
 
-      // Only use primary photo if available, otherwise leave og_image empty (will use primary photo automatically)
-      // Don't generate fake URLs - primární fotka se použije automaticky z galerie
-      const generatedOGImage = primaryPhoto || '';
+      // Use primary photo from gallery if available
+      const generatedOGImage = primaryPhoto || `/girls/${girlName.toLowerCase().replace(/\s+/g, '-')}-og.jpg`;
 
       // Update all languages
       onChange('meta_title_cs', generatedTitleCs);
@@ -165,10 +164,7 @@ export default function SEOFieldsSection({
       onChange('og_title_uk', generatedOGTitleUk);
       onChange('og_description_uk', generatedOGDescriptionUk);
 
-      // Only set og_image if primary photo exists, otherwise leave empty (automatic from gallery)
-      if (generatedOGImage) {
-        onChange('og_image', generatedOGImage);
-      }
+      onChange('og_image', generatedOGImage);
 
       if (onGenerate) {
         onGenerate();
@@ -550,96 +546,6 @@ export default function SEOFieldsSection({
             )}
           </div>
 
-          {/* Automatic OG Image from Gallery */}
-          {primaryPhoto && (
-            <div style={{ marginBottom: '32px' }}>
-              <label style={{
-                display: 'block',
-                marginBottom: '12px',
-                fontSize: '0.95rem',
-                fontWeight: '600',
-                color: 'var(--white)'
-              }}>
-                📸 Automatický OG Image z galerie
-                <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
-                  (primární fotka pro Facebook, Twitter, WhatsApp)
-                </span>
-              </label>
-              <div style={{
-                padding: '16px',
-                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1))',
-                borderRadius: '12px',
-                border: '2px solid rgba(16, 185, 129, 0.3)'
-              }}>
-                <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', marginBottom: '12px' }}>
-                  ℹ️ Automaticky použita primární fotka z galerie (můžete přepsat vlastním URL níže)
-                </p>
-                <div style={{
-                  background: 'rgba(0,0,0,0.4)',
-                  borderRadius: '8px',
-                  overflow: 'hidden',
-                  border: '1px solid rgba(255,255,255,0.1)'
-                }}>
-                  <img
-                    src={primaryPhoto}
-                    alt="Primary Photo OG Preview"
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      display: 'block',
-                      maxHeight: '400px',
-                      objectFit: 'cover'
-                    }}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                      const parent = (e.target as HTMLElement).parentElement;
-                      if (parent) {
-                        parent.innerHTML = '<div style="padding: 40px; text-align: center; color: rgba(255,255,255,0.5);">⚠️ Primární fotka se nepodařilo načíst</div>';
-                      }
-                    }}
-                  />
-                </div>
-                <div style={{
-                  marginTop: '12px',
-                  display: 'flex',
-                  gap: '12px',
-                  flexWrap: 'wrap',
-                  alignItems: 'center'
-                }}>
-                  <span style={{
-                    padding: '8px 12px',
-                    background: 'rgba(16, 185, 129, 0.2)',
-                    borderRadius: '6px',
-                    fontSize: '0.85rem',
-                    color: '#10b981',
-                    fontWeight: '600'
-                  }}>
-                    ✓ Používá se automaticky
-                  </span>
-                  <span style={{
-                    fontSize: '0.85rem',
-                    color: 'rgba(255,255,255,0.6)'
-                  }}>
-                    {primaryPhoto}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-          {!primaryPhoto && girlName && (
-            <div style={{
-              marginBottom: '32px',
-              padding: '16px',
-              background: 'rgba(251, 191, 36, 0.1)',
-              border: '1px solid rgba(251, 191, 36, 0.3)',
-              borderRadius: '8px'
-            }}>
-              <p style={{ fontSize: '0.9rem', color: '#fbbf24', margin: 0 }}>
-                ⚠️ Není nastavena primární fotka v galerii. Nastavte primární fotku nebo použijte vlastní OG image URL níže.
-              </p>
-            </div>
-          )}
-
           {/* OG Image */}
           <div style={{ marginBottom: '24px' }}>
             <label style={{
@@ -649,16 +555,16 @@ export default function SEOFieldsSection({
               fontWeight: '600',
               color: 'var(--white)'
             }}>
-              OG Image URL (vlastní - volitelné)
+              OG Image URL
               <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: '400', marginLeft: '8px' }}>
-                (přepíše automatický)
+                (automaticky z galerie)
               </span>
             </label>
             <input
               type="text"
               value={ogImage}
               onChange={(e) => onChange('og_image', e.target.value)}
-              placeholder="Nechte prázdné pro použití automatického OG image"
+              placeholder="Automaticky použita primární fotka z galerie"
               style={{
                 width: '100%',
                 padding: '12px 16px',
@@ -681,7 +587,7 @@ export default function SEOFieldsSection({
             />
             {ogImage && (
               <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', marginBottom: '8px' }}>📸 Vlastní OG image:</p>
+                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', marginBottom: '8px' }}>📸 Náhled fotky pro sdílení:</p>
                 {ogImage.startsWith('http') ? (
                   <img
                     src={ogImage}

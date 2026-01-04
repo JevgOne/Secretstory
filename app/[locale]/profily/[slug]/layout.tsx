@@ -35,20 +35,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       }
     }
 
-    // Get primary photo from gallery for automatic OG image
-    let primaryPhoto = null
-    try {
-      const photoResult = await db.execute({
-        sql: `SELECT url FROM photos WHERE girl_id = (SELECT id FROM girls WHERE slug = ?) AND is_primary = 1 LIMIT 1`,
-        args: [slug]
-      })
-      if (photoResult.rows[0]) {
-        primaryPhoto = (photoResult.rows[0] as any).url
-      }
-    } catch (error) {
-      console.error('Error fetching primary photo:', error)
-    }
-
     // Get language-specific fields with fallback chain
     const getLocalizedField = (fieldPrefix: string) => {
       const localeField = girl[`${fieldPrefix}_${locale}`]
@@ -60,8 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const description = getLocalizedField('meta_description') || girl.bio || ''
     const ogTitle = getLocalizedField('og_title') || title
     const ogDesc = getLocalizedField('og_description') || description
-    // Use custom og_image if set, otherwise use primary photo from gallery, finally fallback
-    const ogImage = girl.og_image || primaryPhoto || '/og-image.jpg'
+    const ogImage = girl.og_image || '/og-image.jpg'
 
     const url = `https://www.lovelygirls.cz/${locale}/profily/${slug}`
 
