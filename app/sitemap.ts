@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let blogPosts: any[] = []
   try {
     const result = await db.execute({
-      sql: "SELECT slug, updated_at FROM blog_posts WHERE status = 'published' ORDER BY created_at DESC"
+      sql: "SELECT slug, updated_at FROM blog_posts WHERE is_published = 1 ORDER BY created_at DESC"
     })
     blogPosts = result.rows as any[]
   } catch (error) {
@@ -42,14 +42,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   // Static pages for each locale
-  const staticPages = ['', 'divky', 'cenik', 'faq', 'schedule', 'discounts', 'blog', 'sluzby', 'podminky', 'soukromi']
+  const staticPages = ['', 'divky', 'cenik', 'faq', 'schedule', 'discounts', 'blog', 'sluzby', 'podminky', 'soukromi', 'join']
 
   const staticUrls: MetadataRoute.Sitemap = locales.flatMap(locale =>
     staticPages.map(page => ({
       url: `${baseUrl}/${locale}${page ? '/' + page : ''}`,
       lastModified: new Date(),
       changeFrequency: (page === '' || page === 'divky' || page === 'schedule') ? 'hourly' as const : 'daily' as const,
-      priority: page === '' ? 1.0 : page === 'divky' ? 0.9 : 0.7,
+      priority: page === '' ? 1.0 : page === 'divky' ? 0.9 : page === 'join' ? 0.3 : 0.7,
     }))
   )
 

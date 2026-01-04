@@ -5,6 +5,9 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
 import BlogContent from './BlogContent';
 
+// ISR: Revalidate every 5 minutes
+export const revalidate = 300;
+
 type Props = {
   params: Promise<{ locale: string }>;
 };
@@ -19,7 +22,7 @@ async function getBlogPosts(locale: string, category?: string) {
 
   try {
     const res = await fetch(url.toString(), {
-      cache: 'no-store' // Always fetch fresh data
+      next: { revalidate: 300 } // ISR: Revalidate every 5 minutes
     });
 
     if (!res.ok) {
@@ -44,7 +47,7 @@ async function getFeaturedPost(locale: string) {
 
   try {
     const res = await fetch(url.toString(), {
-      cache: 'no-store'
+      next: { revalidate: 300 } // ISR: Revalidate every 5 minutes
     });
 
     if (!res.ok) {

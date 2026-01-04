@@ -5,6 +5,9 @@ import { useTranslations } from 'next-intl';
 import { Metadata } from 'next';
 import BlogArticleContent from './BlogArticleContent';
 
+// ISR: Revalidate every 5 minutes
+export const revalidate = 300;
+
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };
@@ -16,7 +19,7 @@ async function getBlogPost(slug: string, locale: string) {
 
   try {
     const res = await fetch(url.toString(), {
-      cache: 'no-store'
+      next: { revalidate: 300 } // ISR: Revalidate every 5 minutes
     });
 
     if (!res.ok) {
@@ -42,7 +45,7 @@ async function getRelatedPosts(locale: string, currentSlug: string, limit = 3) {
 
   try {
     const res = await fetch(url.toString(), {
-      cache: 'no-store'
+      next: { revalidate: 300 } // ISR: Revalidate every 5 minutes
     });
 
     if (!res.ok) {

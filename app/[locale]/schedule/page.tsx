@@ -1,11 +1,9 @@
-"use client";
+import { db } from '@/lib/db';
+import { cache } from '@/lib/cache';
+import ScheduleClient from './ScheduleClient';
 
-import { use, useState, useEffect } from "react";
-import Link from "next/link";
-import { useTranslations, useLocale } from "next-intl";
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import MobileMenu from '@/components/MobileMenu';
-import BottomCTA from '@/components/BottomCTA';
+// ISR - Revalidate every second for real-time updates
+export const revalidate = 1;
 
 interface Girl {
   id: number;
@@ -27,91 +25,162 @@ interface Girl {
   badge_type: string | null;
 }
 
-interface ScheduleResponse {
-  success: boolean;
-  current_time: string;
-  day: string;
-  timezone: string;
+interface ScheduleData {
   girls: Girl[];
+  currentTime: string;
 }
 
-export default function SchedulePage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale: paramsLocale } = use(params);
-  const locale = useLocale();
-  const t = useTranslations('schedule');
-  const tNav = useTranslations('nav');
-  const tCommon = useTranslations('common');
-  const tFooter = useTranslations('footer');
-  const tGirls = useTranslations('girls');
-  const tHome = useTranslations('home');
-  const [girls, setGirls] = useState<Girl[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [currentTime, setCurrentTime] = useState("");
-  const [selectedDate, setSelectedDate] = useState(0); // 0 = today, 1 = tomorrow, etc.
+// Server-side data fetching - directly from database
+// Fetches TODAY's schedule for initial page load
+async function getScheduleData(lang: string): Promise<ScheduleData> {
+  try {
+    // Create cache key
+    const cacheKey = `schedule-today-${lang}`;
+    const cached = cache.get<ScheduleData>(cacheKey, 60000); // 60s cache
+    if (cached) {
+      return cached;
+    }
 
-  // Helper function for breast size - returns number (1, 2, 3)
-  const getBreastSize = (bust: number): number => {
-    if (bust < 80) return 1;
-    if (bust < 90) return 2;
-    return 3;
-  };
+    // 1. Get current time in Prague timezone
+    const now = new Date();
+    const pragueTz = 'Europe/Prague';
 
-  // Generate days from today until end of week (Sunday)
-  const getDays = () => {
-    const days = [];
-    const dayNames = [t('days.mon'), t('days.tue'), t('days.wed'), t('days.thu'), t('days.fri'), t('days.sat'), t('days.sun')];
+    // Format current time as HH:MM (24h format)
+    const currentTime = new Intl.DateTimeFormat('cs-CZ', {
+      timeZone: pragueTz,
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).format(now);
 
-    const today = new Date();
-    const currentDayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    // Get day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    // Convert to our format: 0 = Monday, 1 = Tuesday, ..., 6 = Sunday
+    const jsDay = now.getDay();
+    const dayOfWeek = jsDay === 0 ? 6 : jsDay - 1;
 
-    // Convert to our format: 0 = Monday, 6 = Sunday
-    const currentDay = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+    // 2. Fetch all active girls with their schedules for today
+    const result = await db.execute({
+      sql: `SELECT DISTINCT
+        g.id, g.name, g.slug, g.age, g.height, g.weight, g.bust, g.location,
+        g.description_cs, g.description_en, g.description_de, g.description_uk,
+        g.bio, g.online, g.badge_type,
+        gs.start_time, gs.end_time
+      FROM girls g
+      LEFT JOIN girl_schedules gs ON g.id = gs.girl_id
+        AND gs.day_of_week = ?
+        AND gs.is_active = 1
+      WHERE g.status = 'active'
+      ORDER BY g.name`,
+      args: [dayOfWeek]
+    });
 
-    // Calculate how many days until Sunday
-    const daysUntilSunday = 6 - currentDay;
+    // Get all girl IDs that have schedules
+    const girlIds = result.rows
+      .filter((girl: any) => girl.start_time && girl.end_time)
+      .map((girl: any) => girl.id);
 
-    // Generate days from today to Sunday
-    for (let i = 0; i <= daysUntilSunday; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() + i);
-      const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1;
+    // Fetch ALL primary photos in one query (much faster!)
+    let photoMap = new Map<number, string>();
+    if (girlIds.length > 0) {
+      const placeholders = girlIds.map(() => '?').join(',');
+      const photosResult = await db.execute({
+        sql: `
+          SELECT girl_id, url
+          FROM girl_photos
+          WHERE girl_id IN (${placeholders}) AND is_primary = 1
+        `,
+        args: girlIds
+      });
 
-      days.push({
-        index: i,
-        dayName: i === 0 ? t('days.today_short') : dayNames[dayOfWeek],
-        dayNum: date.getDate(),
-        date: date,
-        available: 0 // Number of girls available - will be updated later
+      photosResult.rows.forEach((row: any) => {
+        photoMap.set(row.girl_id as number, row.url as string);
       });
     }
-    return days;
-  };
 
-  useEffect(() => {
-    // Calculate the target date based on selectedDate
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + selectedDate);
-    const dateString = targetDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    // 3. Filter by schedule and determine status
+    const girls = result.rows
+      .map((girl: any) => {
+        // If no schedule for this day, skip
+        if (!girl.start_time || !girl.end_time) return null;
 
-    setLoading(true);
-    fetch(`/api/schedule?lang=${locale}&date=${dateString}`)
-      .then(res => res.json())
-      .then((data: ScheduleResponse) => {
-        if (data.success) {
-          setGirls(data.girls);
-          setCurrentTime(data.current_time);
-        } else {
-          setError(true);
+        const shiftFrom = girl.start_time.substring(0, 5); // HH:MM
+        const shiftTo = girl.end_time.substring(0, 5);     // HH:MM
+
+        // Determine status (for today)
+        let status: "working" | "later" = 'later'; // Default: not working yet
+
+        if (currentTime >= shiftFrom && currentTime <= shiftTo) {
+          status = 'working'; // Currently working
+        } else if (currentTime > shiftTo) {
+          // Shift has ended - skip this girl
+          return null;
         }
-        setLoading(false);
+
+        // Get photo from pre-fetched map
+        const photoUrl = photoMap.get(girl.id as number);
+        const photos = photoUrl ? [photoUrl] : [];
+
+        // Get description in requested language
+        const descriptionKey = `description_${lang}` as keyof typeof girl;
+        const description = girl[descriptionKey] as string || girl.bio as string || '';
+
+        return {
+          id: Number(girl.id),
+          name: girl.name,
+          slug: girl.slug,
+          status,
+          shift: {
+            from: shiftFrom,
+            to: shiftTo
+          },
+          location: girl.location || 'Praha 2',
+          photos,
+          age: Number(girl.age),
+          height: Number(girl.height),
+          weight: Number(girl.weight),
+          bust: Number(girl.bust),
+          description,
+          online: Boolean(girl.online),
+          badge_type: girl.badge_type
+        };
       })
-      .catch(err => {
-        console.error("Failed to fetch schedule:", err);
-        setError(true);
-        setLoading(false);
-      });
-  }, [locale, selectedDate]);
+      .filter((girl): girl is Girl => girl !== null);
+
+    // 4. Sort by status: working first, then later
+    girls.sort((a, b) => {
+      if (a.status === 'working' && b.status !== 'working') return -1;
+      if (a.status !== 'working' && b.status === 'working') return 1;
+      return 0;
+    });
+
+    const responseData = {
+      girls,
+      currentTime
+    };
+
+    // Cache the response
+    cache.set(cacheKey, responseData);
+
+    return responseData;
+  } catch (error) {
+    console.error('Schedule API error:', error);
+    // Return empty data on error
+    return {
+      girls: [],
+      currentTime: ''
+    };
+  }
+}
+
+export default async function SchedulePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  // Fetch schedule data server-side (today's schedule)
+  const { girls, currentTime } = await getScheduleData(locale);
 
   // Schema.org structured data
   const schemaData = {
@@ -119,8 +188,8 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
     "@graph": [
       {
         "@type": "Schedule",
-        "name": t('title'),
-        "description": t('subtitle'),
+        "name": "Rozvrh - LovelyGirls Prague",
+        "description": "Aktuální rozvrh dostupnosti společnic",
         "eventSchedule": {
           "@type": "Schedule",
           "byDay": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
@@ -150,8 +219,8 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
         "@type": "WebPage",
         "@id": `https://www.lovelygirls.cz/${locale}/schedule#webpage`,
         "url": `https://www.lovelygirls.cz/${locale}/schedule`,
-        "name": t('title'),
-        "description": t('subtitle'),
+        "name": "Rozvrh - LovelyGirls Prague",
+        "description": "Aktuální rozvrh dostupnosti společnic",
         "inLanguage": locale,
         "isPartOf": {
           "@type": "WebSite",
@@ -164,345 +233,11 @@ export default function SchedulePage({ params }: { params: Promise<{ locale: str
   };
 
   return (
-    <>
-      {/* Schema.org JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-      />
-
-      {/* Mobile Menu - outside nav for proper z-index */}
-      <MobileMenu currentPath={`/${locale}/schedule`} />
-
-      {/* Navigation */}
-      <nav className="main-nav">
-        <Link href={`/${locale}`} className="logo">
-          <span className="logo-L">
-            <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
-              <path d="M2 12C4 11 6 7 9 5C8 3 9 1.5 10 1" stroke="#c41e3a" strokeWidth="2" strokeLinecap="round"/>
-              <circle cx="10" cy="1.5" r="1.5" fill="#fff"/>
-              <path d="M1 12C3 11.5 6 11 9 11" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-            L
-          </span>
-          ovely Girls
-        </Link>
-        <div className="nav-links">
-          <Link href={`/${locale}`}>{tNav('home')}</Link>
-          <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
-          <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
-          <Link href={`/${locale}/schedule`} className="active">{tNav('schedule')}</Link>
-          <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
-          <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
-        </div>
-        <div className="nav-contact">
-          <LanguageSwitcher />
-          <a href="https://t.me/+420734332131" className="btn">{tNav('telegram')}</a>
-          <a href="https://wa.me/420734332131" className="btn btn-fill">{tNav('whatsapp')}</a>
-        </div>
-      </nav>
-
-      {/* Page Header */}
-      <section className="page-header">
-        <h1 className="page-title">{t('title')}</h1>
-        {t('subtitle') && <p className="page-subtitle">{t('subtitle')}</p>}
-      </section>
-
-      {/* Date Selector - Clean minimal design */}
-      <section style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '0 24px'
-      }}>
-        <div style={{
-          display: 'flex',
-          gap: '16px',
-          justifyContent: 'center',
-          marginBottom: '48px',
-          flexWrap: 'wrap'
-        }}>
-          {getDays().map((day) => (
-            <button
-              key={day.index}
-              onClick={() => setSelectedDate(day.index)}
-              style={{
-                background: selectedDate === day.index
-                  ? 'linear-gradient(135deg, rgba(139, 58, 74, 0.4), rgba(139, 58, 74, 0.2))'
-                  : '#1a1a1a',
-                border: selectedDate === day.index
-                  ? '2px solid var(--wine)'
-                  : '1px solid rgba(139, 58, 74, 0.2)',
-                borderRadius: '12px',
-                padding: day.index === 0 ? '8px 16px' : '12px 16px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '4px',
-                minWidth: '80px'
-              }}
-              onMouseEnter={(e) => {
-                if (selectedDate !== day.index) {
-                  e.currentTarget.style.borderColor = 'var(--wine)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedDate !== day.index) {
-                  e.currentTarget.style.borderColor = 'rgba(139, 58, 74, 0.2)';
-                }
-              }}
-            >
-              {day.index === 0 ? (
-                <>
-                  <span style={{
-                    fontSize: '11px',
-                    fontWeight: '700',
-                    color: 'var(--wine)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}>
-                    {t('days.today_short').toUpperCase()}
-                  </span>
-                  <span style={{
-                    fontSize: '32px',
-                    fontWeight: '700',
-                    color: '#fff',
-                    lineHeight: '1'
-                  }}>
-                    {day.dayNum}
-                  </span>
-                </>
-              ) : (
-                <span style={{
-                  fontSize: '32px',
-                  fontWeight: '700',
-                  color: '#fff',
-                  lineHeight: '1'
-                }}>
-                  {day.dayNum}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <style jsx>{`
-        @media (max-width: 768px) {
-          section {
-            margin: 80px auto 0 !important;
-          }
-          section > div {
-            gap: 8px !important;
-          }
-          section button {
-            min-width: 60px !important;
-            padding: 8px 12px !important;
-          }
-          section button span {
-            font-size: 24px !important;
-          }
-          section button span:first-child {
-            font-size: 9px !important;
-          }
-        }
-      `}</style>
-
-      {/* Schedule Grid */}
-      <section className="schedule">
-        <h2 className="sr-only">{t('legend.available')}</h2>
-        {loading && (
-          <div className="text-center py-8">
-            <p>{t('loading')}</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="text-center py-8">
-            <p className="text-red-500">{t('error')}</p>
-          </div>
-        )}
-
-        {!loading && !error && girls.length === 0 && (
-          <div className="text-center py-8">
-            <p style={{ fontSize: '1.2rem', color: '#9a8a8e' }}>{t('closed_today')}</p>
-          </div>
-        )}
-
-        {!loading && !error && girls.length > 0 && (
-          <div className="cards-grid">
-            {girls.map((girl) => {
-              const isWorking = girl.status === 'working';
-              const breastSize = getBreastSize(girl.bust);
-              const badge = girl.badge_type || null;
-              const badgeText = badge === 'new' ? tGirls('new') : badge === 'top' ? tGirls('top_reviews') : badge === 'recommended' ? tGirls('recommended') : '';
-              const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
-
-              return (
-                <Link
-                  key={girl.id}
-                  href={`/${locale}/profily/${girl.slug}`}
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <article className="card">
-                    <div className="card-image-container">
-                      {badge && (
-                        <span className={`badge ${badgeClass}`}>{badgeText}</span>
-                      )}
-                      {girl.photos && girl.photos.length > 0 ? (
-                        <img
-                          src={girl.photos[0]}
-                          alt={girl.name}
-                          className="card-image"
-                        />
-                      ) : (
-                        <div className="card-placeholder">{tCommon('photo')}</div>
-                      )}
-                      <div className="card-overlay"></div>
-                    </div>
-                    <div className="card-info">
-                      <div className="card-header">
-                        <h3 className="card-name">
-                          {isWorking && <span className="online-dot"></span>}
-                          {girl.name}
-                        </h3>
-                        <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`}>
-                          {girl.shift.from} - {girl.shift.to}
-                        </span>
-                      </div>
-                      <div className="card-stats">
-                        <span className="stat"><span className="stat-value">{girl.age}</span><span className="stat-label">{tGirls('age_years')}</span></span>
-                        <span className="stat"><span className="stat-value">{girl.height}</span><span className="stat-label">cm</span></span>
-                        <span className="stat"><span className="stat-value">{girl.weight}</span><span className="stat-label">kg</span></span>
-                        <span className="stat"><span className="stat-value">{breastSize}</span><span className="stat-label">{tGirls('bust')}</span></span>
-                      </div>
-                      <div className="card-location-wrapper">
-                        <div className="card-location">
-                          <svg className="location-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                          </svg>
-                          {girl.location}
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* Legend */}
-      <section className="legend">
-        <div className="legend-item">
-          <span className="legend-dot online"></span>
-          {t('legend.available')}
-        </div>
-        <div className="legend-item">
-          <span className="legend-dot offline"></span>
-          {t('legend.later')}
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer>
-        <div className="footer-container">
-          <div className="footer-main">
-            <div className="footer-brand-section">
-              <Link href={`/${locale}`} className="footer-logo">
-                <span className="logo-L">
-                  <svg className="santa-hat" viewBox="0 0 16 14" fill="none">
-                    <path d="M2 12C4 11 6 7 9 5C8 3 9 1.5 10 1" stroke="#c41e3a" strokeWidth="2" strokeLinecap="round"/>
-                    <circle cx="10" cy="1.5" r="1.5" fill="#fff"/>
-                    <path d="M1 12C3 11.5 6 11 9 11" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                  L
-                </span>
-                ovely Girls
-              </Link>
-              <p className="footer-tagline">{tFooter('tagline')}</p>
-              <p className="footer-desc">{tFooter('about_text')}</p>
-            </div>
-
-            <div className="footer-links-grid">
-              {/* Services */}
-              <div className="footer-links-col">
-                <h4 className="footer-links-title">{tFooter('practices')}</h4>
-                <nav className="footer-links">
-                  <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
-                  <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
-                  <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
-                  <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
-                  <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
-                  <Link href={`/${locale}/blog`}>{tFooter('blog')}</Link>
-                </nav>
-              </div>
-
-              {/* Contact */}
-              <div className="footer-links-col">
-                <h4 className="footer-links-title">{tFooter('contact')}</h4>
-                <div className="footer-contact-info">
-                  <div className="footer-contact-item">
-                    <span className="label">{tFooter('hours')}</span>
-                    <span className="value">{tFooter('hours_value')}</span>
-                  </div>
-                  <div className="footer-contact-item">
-                    <span className="label">{tFooter('location')}</span>
-                    <span className="value">{tFooter('location_value')}</span>
-                  </div>
-                </div>
-                <div className="footer-contact-actions">
-                  <a href="tel:+420734332131" className="footer-contact-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                    </svg>
-                    {tFooter('call')}
-                  </a>
-                  <a href="https://wa.me/420734332131?text=Ahoj%2C%20m%C3%A1te%20dneska%20voln%C3%BD%20term%C3%ADn%3F" className="footer-contact-btn whatsapp">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                    </svg>
-                    {tFooter('whatsapp')}
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="footer-bottom">
-            <div className="footer-bottom-left">
-              <span>{tFooter('copyright')}</span>
-              <span className="dot">•</span>
-              <span>{tCommon('adults_only')}</span>
-            </div>
-            <div className="footer-bottom-right">
-              <Link href={`/${locale}/podminky`}>{tFooter('terms')}</Link>
-              <Link href={`/${locale}/soukromi`}>{tFooter('privacy')}</Link>
-            </div>
-          </div>
-
-          {/* Legal Disclaimer */}
-          <div className="footer-disclaimer">
-            <p>{tFooter('disclaimer')}</p>
-          </div>
-        </div>
-      </footer>
-
-      {/* MOBILE BOTTOM CTA */}
-      <BottomCTA
-        translations={{
-          call: tHome('cta_call'),
-          whatsapp: tHome('cta_whatsapp'),
-          telegram: tHome('cta_telegram'),
-          sms: tHome('cta_sms'),
-          branches: tHome('cta_branches'),
-          discounts: tHome('cta_discounts'),
-          whatsapp_warning: tHome('cta_whatsapp_warning'),
-          recommended: tHome('cta_recommended')
-        }}
-      />
-    </>
+    <ScheduleClient
+      locale={locale}
+      initialGirls={girls}
+      initialCurrentTime={currentTime}
+      schemaData={schemaData}
+    />
   );
 }

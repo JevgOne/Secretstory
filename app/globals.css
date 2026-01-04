@@ -6470,9 +6470,11 @@ body > div > button[title*="Next"],
 
 .card-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 14px;
+    text-align: center;
+    margin-bottom: 16px;
+    gap: 10px;
 }
 
 .card-name {
@@ -6481,7 +6483,9 @@ body > div > button[title*="Next"],
     font-weight: 600;
     display: flex;
     align-items: center;
+    justify-content: center;
     color: #ffffff;
+    width: 100%;
 }
 
 .time-badge {
@@ -6512,43 +6516,41 @@ body > div > button[title*="Next"],
 }
 
 .card-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-    margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
 }
 
 .stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: rgba(255,255,255,0.06);
-    padding: 5px 3px;
-    border-radius: 6px;
-    border: 1px solid rgba(255,255,255,0.1);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    background: transparent;
+    padding: 0;
+    border: none;
     transition: all 0.3s ease;
 }
 
 .stat:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(139,58,92,0.3);
     transform: translateY(-1px);
+    color: var(--wine-light);
 }
 
 .stat-value {
-    color: var(--text-primary);
+    color: #ffffff;
     font-weight: 700;
-    font-size: 1rem;
-    line-height: 1.2;
+    font-size: 1.1rem;
+    line-height: 1;
 }
 
 .stat-label {
-    color: var(--text-secondary);
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 2px;
-    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0;
 }
 
 .card-location-wrapper {
@@ -7333,4 +7335,58 @@ body > div > button[title*="Next"],
 
 .working-girl-schedule svg {
   flex-shrink: 0;
+}
+
+/* ========================================
+   MOBILE CARD STYLES - SCHEDULE & GIRLS
+   ======================================== */
+@media (max-width: 768px) {
+  .card-info {
+    padding: 16px 12px;
+  }
+
+  .card-name {
+    font-size: 1.3rem;
+  }
+
+  .card-stats {
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .stat-value {
+    font-size: 1rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .card-location {
+    font-size: 0.95rem;
+    padding: 8px 14px;
+  }
+
+  .time-badge {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-name {
+    font-size: 1.2rem;
+  }
+
+  .card-stats {
+    gap: 10px;
+  }
+
+  .stat-value {
+    font-size: 0.95rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
 }
