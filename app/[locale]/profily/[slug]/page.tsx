@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Head from "next/head";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -358,71 +357,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <Head>
-        <title>{
-          (locale === 'cs' && profile.meta_title_cs) ||
-          (locale === 'en' && profile.meta_title_en) ||
-          (locale === 'de' && profile.meta_title_de) ||
-          (locale === 'uk' && profile.meta_title_uk) ||
-          profile.meta_title ||
-          `${profile.name}, ${profile.age} | LovelyGirls`
-        }</title>
-        <meta name="description" content={
-          (locale === 'cs' && profile.meta_description_cs) ||
-          (locale === 'en' && profile.meta_description_en) ||
-          (locale === 'de' && profile.meta_description_de) ||
-          (locale === 'uk' && profile.meta_description_uk) ||
-          profile.meta_description ||
-          `${profile.name} - ${profile.age} let, ${profile.nationality}. ${profile.bio || ''}`
-        } />
-
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="profile" />
-        <meta property="og:title" content={
-          (locale === 'cs' && profile.og_title_cs) ||
-          (locale === 'en' && profile.og_title_en) ||
-          (locale === 'de' && profile.og_title_de) ||
-          (locale === 'uk' && profile.og_title_uk) ||
-          profile.og_title ||
-          profile.meta_title ||
-          `${profile.name}, ${profile.age} | LovelyGirls`
-        } />
-        <meta property="og:description" content={
-          (locale === 'cs' && profile.og_description_cs) ||
-          (locale === 'en' && profile.og_description_en) ||
-          (locale === 'de' && profile.og_description_de) ||
-          (locale === 'uk' && profile.og_description_uk) ||
-          profile.og_description ||
-          profile.meta_description ||
-          `${profile.name} - ${profile.age} let, ${profile.nationality}.`
-        } />
-        {profile.og_image && <meta property="og:image" content={profile.og_image} />}
-        {!profile.og_image && profile.photos && profile.photos[0] && (
-          <meta property="og:image" content={profile.photos[0].url} />
-        )}
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={
-          (locale === 'cs' && profile.og_title_cs) ||
-          (locale === 'en' && profile.og_title_en) ||
-          (locale === 'de' && profile.og_title_de) ||
-          (locale === 'uk' && profile.og_title_uk) ||
-          profile.og_title ||
-          profile.meta_title ||
-          `${profile.name}, ${profile.age} | LovelyGirls`
-        } />
-        <meta name="twitter:description" content={
-          (locale === 'cs' && profile.og_description_cs) ||
-          (locale === 'en' && profile.og_description_en) ||
-          (locale === 'de' && profile.og_description_de) ||
-          (locale === 'uk' && profile.og_description_uk) ||
-          profile.og_description ||
-          profile.meta_description ||
-          `${profile.name} - ${profile.age} let, ${profile.nationality}.`
-        } />
-      </Head>
-
+      {/* Metadata now handled by layout.tsx generateMetadata() */}
       <PersonSchema girl={profile} locale={locale} />
       <BreadcrumbSchema items={breadcrumbItems} />
 

@@ -14,7 +14,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   try {
     const result = await db.execute({
-      sql: `SELECT name, age, height, weight, bust, bio, nationality, meta_title, meta_description, og_title, og_description, og_image FROM girls WHERE slug = ? AND status = 'active'`,
+      sql: `SELECT
+        name, age, height, weight, bust, bio, nationality,
+        meta_title, meta_description, og_title, og_description, og_image,
+        meta_title_cs, meta_title_en, meta_title_de, meta_title_uk,
+        meta_description_cs, meta_description_en, meta_description_de, meta_description_uk,
+        og_title_cs, og_title_en, og_title_de, og_title_uk,
+        og_description_cs, og_description_en, og_description_de, og_description_uk
+      FROM girls WHERE slug = ? AND status = 'active'`,
       args: [slug]
     })
 
@@ -28,24 +35,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       }
     }
 
-    // If no SEO metadata, return basic info (no noindex)
-    if (!girl.meta_title || !girl.meta_description) {
-      return {
-        title: girl.name,
-        description: girl.bio || ''
-      }
+    // Get language-specific fields with fallback chain
+    const getLocalizedField = (fieldPrefix: string) => {
+      const localeField = girl[`${fieldPrefix}_${locale}`]
+      const genericField = girl[fieldPrefix]
+      return localeField || genericField
     }
 
-    // Use custom SEO fields (only when both are filled)
-    const title = girl.meta_title
-    const description = girl.meta_description
+    const title = getLocalizedField('meta_title') || girl.name
+    const description = getLocalizedField('meta_description') || girl.bio || ''
+    const ogTitle = getLocalizedField('og_title') || title
+    const ogDesc = getLocalizedField('og_description') || description
     const ogImage = girl.og_image || '/og-image.jpg'
 
     const url = `https://www.lovelygirls.cz/${locale}/profily/${slug}`
-
-    // Separate OG title and description
-    const ogTitle = girl.og_title || title
-    const ogDesc = girl.og_description || description
 
     return {
       title,
