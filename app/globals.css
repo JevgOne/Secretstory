@@ -2684,23 +2684,6 @@ footer {
     padding: 0 1.5rem;
 }
 
-/* OLD PROFILE STATS - COMMENTED OUT - USE .card-stats INSTEAD
-.stat-value {
-    font-family: 'Cormorant', serif;
-    font-size: 2rem;
-    font-weight: 400;
-    line-height: 1;
-    margin-bottom: 0.25rem;
-}
-
-.stat-label {
-    font-size: 0.7rem;
-    color: var(--gray);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-*/
-
 .stat-divider {
     width: 1px;
     height: 40px;
