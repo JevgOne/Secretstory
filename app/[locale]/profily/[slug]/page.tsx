@@ -857,7 +857,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           <p className="working-today-subtitle">
             {t('profile.working_today_subtitle') || 'Další dívky dostupné ve stejný den'}
           </p>
-          <div className="working-today-grid">
+          <div className="cards-grid">
               {onlineGirls.map((girl) => {
                 // Calculate breast size from bust measurement
                 const getBreastSize = (bust: string): number => {
