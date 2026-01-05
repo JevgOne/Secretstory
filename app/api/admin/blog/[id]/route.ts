@@ -7,7 +7,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -70,7 +70,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -195,7 +195,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {

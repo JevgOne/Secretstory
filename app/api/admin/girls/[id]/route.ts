@@ -10,7 +10,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   // Only admin can update girls
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -163,7 +163,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   // Only admin can delete girls
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -228,7 +228,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   // Only admin can view girl details
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {

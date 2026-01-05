@@ -4,7 +4,7 @@ import { requireAuth } from '@/lib/auth-helpers';
 
 // POST /api/admin/blog - Create new blog post (admin only)
 export async function POST(request: NextRequest) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
 
 // GET /api/admin/blog - Get all blog posts (admin only)
 export async function GET(request: NextRequest) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {

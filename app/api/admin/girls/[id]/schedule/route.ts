@@ -7,7 +7,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const user = await requireAuth(['admin', 'manager']);
+  const user = await requireAuth(['admin', 'manager'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -90,7 +90,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const user = await requireAuth(['admin', 'manager']);
+  const user = await requireAuth(['admin', 'manager'], request);
   if (user instanceof NextResponse) return user;
 
   try {

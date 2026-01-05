@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 
 // GET /api/admin/users - Get all users
 export async function GET(request: NextRequest) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {

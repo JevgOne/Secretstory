@@ -4,7 +4,7 @@ import { requireAuth } from '@/lib/auth-helpers';
 
 // POST /api/admin/migrate-soft-delete - Add soft delete columns to bookings (Admin only)
 export async function POST(request: NextRequest) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {

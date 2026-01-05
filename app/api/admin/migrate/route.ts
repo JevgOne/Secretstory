@@ -5,7 +5,7 @@ import { requireAuth } from '@/lib/auth-helpers';
 // POST /api/admin/migrate - Run database migrations (admin only)
 export async function POST(request: NextRequest) {
   // Only admin can run migrations
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {

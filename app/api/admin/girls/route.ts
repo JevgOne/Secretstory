@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 // POST /api/admin/girls - Create new girl profile (admin only)
 export async function POST(request: NextRequest) {
   // Only admin can create girls
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
 // GET /api/admin/girls - Get all girls (admin only, including pending)
 export async function GET(request: NextRequest) {
   // Only admin can view all girls
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {

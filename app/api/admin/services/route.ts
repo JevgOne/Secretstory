@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 
 // GET /api/admin/services - Get all services or filter by category
 export async function GET(request: NextRequest) {
-  const user = await requireAuth(['admin', 'manager']);
+  const user = await requireAuth(['admin', 'manager'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
 
 // POST /api/admin/services - Create new service
 export async function POST(request: NextRequest) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
 // PUT /api/admin/services/:id - Update service
 export async function PUT(request: NextRequest) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -171,7 +171,7 @@ export async function PUT(request: NextRequest) {
 
 // DELETE /api/admin/services/:id - Delete service
 export async function DELETE(request: NextRequest) {
-  const user = await requireAuth(['admin']);
+  const user = await requireAuth(['admin'], request);
   if (user instanceof NextResponse) return user;
 
   try {
