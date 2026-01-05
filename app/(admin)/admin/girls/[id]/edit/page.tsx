@@ -790,11 +790,13 @@ export default function EditGirlPage({ params }: PageProps) {
                       if (response.ok) {
                         await loadPhotos(girlId);
                       } else {
-                        alert(`Chyba při nahrávání ${file.name}`);
+                        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+                        console.error('Upload failed:', response.status, errorData);
+                        alert(`Chyba při nahrávání ${file.name}:\n${errorData.error || `HTTP ${response.status}`}`);
                       }
                     } catch (error) {
                       console.error('Upload error:', error);
-                      alert(`Chyba při nahrávání ${file.name}`);
+                      alert(`Chyba při nahrávání ${file.name}:\n${error instanceof Error ? error.message : 'Network error'}`);
                     }
                   }
                   setUploadingPhoto(false);
