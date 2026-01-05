@@ -10,11 +10,18 @@ export async function requireAuth(
   request?: NextRequest
 ) {
   try {
-    // Get JWT token from cookie
+    if (!request) {
+      console.log('[requireAuth] No request provided')
+      return NextResponse.json(
+        { error: 'Internal error - no request' },
+        { status: 500 }
+      )
+    }
+
+    // Get JWT token from cookie - NextAuth v5 auto-detects cookie name from config
     const token = await getToken({
       req: request,
-      secret: process.env.NEXTAUTH_SECRET || 'lovelygirls-secret-change-in-production',
-      cookieName: 'lovelygirls-session'
+      secret: process.env.NEXTAUTH_SECRET || 'lovelygirls-secret-change-in-production'
     })
 
     console.log('[requireAuth] Checking token...')
