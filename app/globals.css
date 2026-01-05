@@ -6470,11 +6470,9 @@ body > div > button[title*="Next"],
 
 .card-header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
-    margin-bottom: 16px;
-    gap: 10px;
+    margin-bottom: 14px;
 }
 
 .card-name {
@@ -6483,9 +6481,7 @@ body > div > button[title*="Next"],
     font-weight: 600;
     display: flex;
     align-items: center;
-    justify-content: center;
     color: #ffffff;
-    width: 100%;
 }
 
 .time-badge {
@@ -6516,41 +6512,43 @@ body > div > button[title*="Next"],
 }
 
 .card-stats {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
 }
 
 .stat {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 4px;
-    background: transparent;
-    padding: 0;
-    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255,255,255,0.06);
+    padding: 5px 3px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.1);
     transition: all 0.3s ease;
 }
 
 .stat:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(139,58,92,0.3);
     transform: translateY(-1px);
-    color: var(--wine-light);
 }
 
 .stat-value {
-    color: #ffffff;
+    color: var(--text-primary);
     font-weight: 700;
-    font-size: 1.1rem;
-    line-height: 1;
+    font-size: 1rem;
+    line-height: 1.2;
 }
 
 .stat-label {
-    color: rgba(255,255,255,0.5);
-    font-size: 0.85rem;
-    font-weight: 400;
-    letter-spacing: 0;
+    color: var(--text-secondary);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+    font-weight: 500;
 }
 
 .card-location-wrapper {

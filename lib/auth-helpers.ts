@@ -18,11 +18,23 @@ export async function requireAuth(
       )
     }
 
-    // Get JWT token from cookie - NextAuth v5 auto-detects cookie name from config
-    const token = await getToken({
+    console.log('[requireAuth] Cookies:', request.cookies.getAll().map(c => c.name))
+
+    // Try multiple cookie name variations for NextAuth v5
+    let token = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET || 'lovelygirls-secret-change-in-production'
     })
+
+    // If auto-detect fails, try with explicit cookie name
+    if (!token) {
+      console.log('[requireAuth] Auto-detect failed, trying explicit cookie name')
+      token = await getToken({
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET || 'lovelygirls-secret-change-in-production',
+        cookieName: 'lovelygirls-session'
+      })
+    }
 
     console.log('[requireAuth] Checking token...')
     console.log('[requireAuth] Token exists:', !!token)
