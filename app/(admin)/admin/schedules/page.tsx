@@ -118,9 +118,9 @@ export default function SchedulesPage() {
 
     try {
       // Create schedule for each selected day with its specific time
-      const promises = selectedDays.map(dayIndex => {
+      const promises = selectedDays.map(async dayIndex => {
         const times = dayTimes[dayIndex] || { start: "10:00", end: "22:00" };
-        return fetch('/api/admin/schedules', {
+        const response = await fetch('/api/admin/schedules', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -131,11 +131,22 @@ export default function SchedulesPage() {
             location: formLocation
           })
         });
+
+        const data = await response.json();
+        return { response, data, dayIndex };
       });
 
-      const responses = await Promise.all(promises);
-      const successCount = responses.filter(r => r.ok).length;
-      const totalCount = responses.length;
+      const results = await Promise.all(promises);
+      const successCount = results.filter(r => r.response.ok).length;
+      const totalCount = results.length;
+
+      // Collect error messages
+      const errors = results
+        .filter(r => !r.response.ok)
+        .map(r => {
+          const dayNames = ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
+          return `${dayNames[r.dayIndex]}: ${r.data.error || 'Neznámá chyba'}`;
+        });
 
       // Always refresh schedules and close modal if at least one succeeded
       if (successCount > 0) {
@@ -153,13 +164,14 @@ export default function SchedulesPage() {
         if (successCount === totalCount) {
           alert(`✅ Všechny rozvrhy (${successCount}) byly úspěšně vytvořeny`);
         } else {
-          alert(`⚠️ ${successCount} z ${totalCount} rozvrhů bylo vytvořeno. ${totalCount - successCount} se nepodařilo.`);
+          alert(`⚠️ ${successCount} z ${totalCount} rozvrhů bylo vytvořeno.\n\nChyby:\n${errors.join('\n')}`);
         }
       } else {
-        alert('❌ Nepodařilo se vytvořit žádný rozvrh');
+        alert(`❌ Nepodařilo se vytvořit žádný rozvrh\n\nChyby:\n${errors.join('\n')}`);
       }
     } catch (error) {
       alert('Chyba při vytváření rozvrhů');
+      console.error('Error:', error);
     }
   };
 

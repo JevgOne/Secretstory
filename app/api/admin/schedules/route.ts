@@ -88,10 +88,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check for overlapping schedules
-    const overlapCheck = await db.execute({
+    // Check if EXACT same schedule already exists (same day, same times)
+    const exactMatch = await db.execute({
       sql: `
         SELECT id FROM girl_schedules
+        WHERE girl_id = ?
+        AND day_of_week = ?
+        AND start_time = ?
+        AND end_time = ?
+        AND is_active = 1
+      `,
+      args: [girl_id, day_of_week, start_time, end_time]
+    });
+
+    // If exact same schedule exists, return success (idempotent)
+    if (exactMatch.rows.length > 0) {
+      return NextResponse.json({
+        success: true,
+        schedule_id: (exactMatch.rows[0] as any).id,
+        message: 'Rozvrh již existuje',
+        exists: true
+      }, { status: 200 });
+    }
+
+    // Check for overlapping schedules (different times on same day)
+    const overlapCheck = await db.execute({
+      sql: `
+        SELECT id, start_time, end_time FROM girl_schedules
         WHERE girl_id = ?
         AND day_of_week = ?
         AND is_active = 1
@@ -105,8 +128,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (overlapCheck.rows.length > 0) {
+      const existing = overlapCheck.rows[0] as any;
       return NextResponse.json(
-        { error: 'Rozvrh se překrývá s existujícím rozvrhem' },
+        { error: `Rozvrh se překrývá s existujícím rozvrhem (${existing.start_time}-${existing.end_time})` },
         { status: 409 }
       );
     }
