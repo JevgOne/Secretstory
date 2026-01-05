@@ -166,7 +166,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      schedule_id: result.lastInsertRowid,
+      schedule_id: Number(result.lastInsertRowid),
       message: 'Rozvrh vytvořen'
     }, { status: 201 });
   } catch (error) {
