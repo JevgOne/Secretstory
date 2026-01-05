@@ -45,7 +45,8 @@ export async function requireAuth(
       id: token.sub as string,
       email: token.email as string,
       name: token.name as string,
-      role: token.role as string
+      role: token.role as string,
+      girlId: token.girlId as number | null | undefined
     }
   } catch (error) {
     console.error('[requireAuth] Error:', error)
