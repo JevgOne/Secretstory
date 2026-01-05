@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { auth } from '@/auth';
 
+export const runtime = 'nodejs';
+
 // GET /api/admin/schedules - Get all schedules or schedules for a specific girl
 export async function GET(request: NextRequest) {
   const session = await auth();
@@ -72,14 +74,21 @@ export async function GET(request: NextRequest) {
 
 // POST /api/admin/schedules - Create new schedule
 export async function POST(request: NextRequest) {
+  console.log('[SCHEDULE POST] Starting auth check...');
   const session = await auth();
+  console.log('[SCHEDULE POST] Session:', JSON.stringify(session));
+  console.log('[SCHEDULE POST] User:', session?.user);
+  console.log('[SCHEDULE POST] Role:', session?.user?.role);
 
   if (!session?.user || !['admin', 'manager'].includes(session.user.role as string)) {
+    console.log('[SCHEDULE POST] Auth failed - returning 401');
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
     );
   }
+
+  console.log('[SCHEDULE POST] Auth SUCCESS');
 
   try {
     const body = await request.json();
