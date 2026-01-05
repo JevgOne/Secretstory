@@ -4,7 +4,7 @@ import { requireAuth } from '@/lib/auth-helpers';
 
 // GET /api/admin/schedules - Get all schedules or schedules for a specific girl
 export async function GET(request: NextRequest) {
-  const user = await requireAuth(['admin', 'manager']);
+  const user = await requireAuth(['admin', 'manager'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
 
 // POST /api/admin/schedules - Create new schedule
 export async function POST(request: NextRequest) {
-  const user = await requireAuth(['admin', 'manager']);
+  const user = await requireAuth(['admin', 'manager'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/admin/schedules - Delete schedule
 export async function DELETE(request: NextRequest) {
-  const user = await requireAuth(['admin', 'manager']);
+  const user = await requireAuth(['admin', 'manager'], request);
   if (user instanceof NextResponse) return user;
 
   try {
