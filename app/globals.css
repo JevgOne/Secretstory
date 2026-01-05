@@ -2684,6 +2684,7 @@ footer {
     padding: 0 1.5rem;
 }
 
+/* OLD PROFILE STATS - COMMENTED OUT - USE .card-stats INSTEAD
 .stat-value {
     font-family: 'Cormorant', serif;
     font-size: 2rem;
@@ -2698,6 +2699,7 @@ footer {
     text-transform: uppercase;
     letter-spacing: 0.1em;
 }
+*/
 
 .stat-divider {
     width: 1px;
