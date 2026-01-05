@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@libsql/client';
 import { put, del } from '@vercel/blob';
+import { requireAuth } from '@/lib/auth-helpers';
 
 const db = createClient({
   url: process.env.TURSO_DATABASE_URL!,
@@ -15,6 +16,9 @@ interface RouteParams {
 
 // GET - List all photos for a girl (with optional pagination)
 export async function GET(request: NextRequest, { params }: RouteParams) {
+  const user = await requireAuth(['admin', 'manager'], request);
+  if (user instanceof NextResponse) return user;
+
   try {
     const resolvedParams = await params;
     const girlId = parseInt(resolvedParams.id);
@@ -60,6 +64,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 // POST - Upload a new photo
 export async function POST(request: NextRequest, { params }: RouteParams) {
+  const user = await requireAuth(['admin', 'manager'], request);
+  if (user instanceof NextResponse) return user;
+
   try {
     const resolvedParams = await params;
     const girlId = parseInt(resolvedParams.id);
@@ -182,6 +189,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
 // DELETE - Delete a specific photo
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  const user = await requireAuth(['admin', 'manager'], request);
+  if (user instanceof NextResponse) return user;
+
   try {
     const resolvedParams = await params;
     const girlId = parseInt(resolvedParams.id);
