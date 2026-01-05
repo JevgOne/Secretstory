@@ -6287,11 +6287,11 @@ body > div > button[title*="Next"],
 /* Cards Grid */
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 48px 56px;
-    max-width: 1800px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 48px;
+    padding: 32px;
 }
 
 /* Card */
@@ -7262,9 +7262,9 @@ body > div > button[title*="Next"],
 
 .working-today-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 48px 56px;
-  max-width: 1800px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 32px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
