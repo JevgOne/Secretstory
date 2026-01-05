@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { requireAuth } from '@/lib/auth-helpers';
+import { auth } from '@/auth';
 
 // GET /api/admin/schedules - Get all schedules or schedules for a specific girl
 export async function GET(request: NextRequest) {
-  const user = await requireAuth(['admin', 'manager'], request);
-  if (user instanceof NextResponse) return user;
+  const session = await auth();
+
+  if (!session?.user || !['admin', 'manager'].includes(session.user.role as string)) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
 
   try {
     const { searchParams } = new URL(request.url);
@@ -66,8 +72,14 @@ export async function GET(request: NextRequest) {
 
 // POST /api/admin/schedules - Create new schedule
 export async function POST(request: NextRequest) {
-  const user = await requireAuth(['admin', 'manager'], request);
-  if (user instanceof NextResponse) return user;
+  const session = await auth();
+
+  if (!session?.user || !['admin', 'manager'].includes(session.user.role as string)) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
 
   try {
     const body = await request.json();
@@ -159,8 +171,14 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/admin/schedules - Delete schedule
 export async function DELETE(request: NextRequest) {
-  const user = await requireAuth(['admin', 'manager'], request);
-  if (user instanceof NextResponse) return user;
+  const session = await auth();
+
+  if (!session?.user || !['admin', 'manager'].includes(session.user.role as string)) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
 
   try {
     const { searchParams } = new URL(request.url);
