@@ -64,12 +64,18 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 // POST - Upload a new photo
 export async function POST(request: NextRequest, { params }: RouteParams) {
+  console.log('[PHOTO UPLOAD] Starting upload...');
   const user = await requireAuth(['admin', 'manager'], request);
-  if (user instanceof NextResponse) return user;
+  if (user instanceof NextResponse) {
+    console.log('[PHOTO UPLOAD] Auth failed:', user.status);
+    return user;
+  }
+  console.log('[PHOTO UPLOAD] Auth OK, user:', user.email);
 
   try {
     const resolvedParams = await params;
     const girlId = parseInt(resolvedParams.id);
+    console.log('[PHOTO UPLOAD] Girl ID:', girlId);
 
     // Verify girl exists
     const girlCheck = await db.execute({
@@ -86,8 +92,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
+    console.log('[PHOTO UPLOAD] File received:', file?.name, file?.size, 'bytes');
 
     if (!file) {
+      console.log('[PHOTO UPLOAD] ERROR: No file in form data');
       return NextResponse.json(
         { success: false, error: 'No file provided' },
         { status: 400 }
@@ -96,6 +104,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
+      console.log('[PHOTO UPLOAD] ERROR: Invalid file type:', file.type);
       return NextResponse.json(
         { success: false, error: 'File must be an image' },
         { status: 400 }
@@ -106,12 +115,14 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const timestamp = Date.now();
     const ext = file.name.split('.').pop();
     const filename = `girls/${girlId}/${timestamp}.${ext}`;
+    console.log('[PHOTO UPLOAD] Uploading to Vercel Blob:', filename);
 
     // Upload to Vercel Blob
     const { url } = await put(filename, file, {
       access: 'public',
       addRandomSuffix: false
     });
+    console.log('[PHOTO UPLOAD] Blob upload success:', url);
 
     // Get current max display_order
     const maxOrderResult = await db.execute({
