@@ -9,8 +9,11 @@ export const size = {
 }
 export const contentType = 'image/png'
 
-export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
+export default async function Image({ params }: { params: Promise<{ slug: string; locale?: string }> }) {
+  const resolvedParams = await params
+  const slug = resolvedParams.slug
+
+  console.log('[OG IMAGE] Generating for slug:', slug)
 
   // Fetch girl data
   let girl: any = null
@@ -20,11 +23,13 @@ export default async function Image({ params }: { params: Promise<{ slug: string
       args: [slug]
     })
     girl = result.rows[0]
+    console.log('[OG IMAGE] Girl found:', girl?.name || 'none')
   } catch (error) {
-    console.error('Error fetching girl for OG image:', error)
+    console.error('[OG IMAGE] Error fetching girl:', error)
   }
 
   if (!girl) {
+    console.log('[OG IMAGE] No girl found, using defaults')
     girl = {
       name: 'Profile',
       age: 0,

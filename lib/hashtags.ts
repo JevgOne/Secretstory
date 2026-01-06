@@ -59,6 +59,26 @@ export const HASHTAGS: Hashtag[] = [
   { id: 'spolecnice-praha', category: 'profession', translations: { cs: 'společnice praha', en: 'escorts prague', de: 'begleiterinnen prag', uk: 'супроводжувальниці прага' } },
   { id: 'girlfriend-experience', category: 'style', translations: { cs: 'girlfriend experience', en: 'girlfriend experience', de: 'girlfriend experience', uk: 'girlfriend experience' } },
   { id: 'gfe-praha', category: 'style', translations: { cs: 'gfe praha', en: 'gfe prague', de: 'gfe prag', uk: 'gfe прага' } },
+
+  // Sexy & Attractive
+  { id: 'sexy-holky', category: 'style', translations: { cs: 'sexy holky', en: 'sexy girls', de: 'sexy mädchen', uk: 'сексуальні дівчата' } },
+  { id: 'krasne-holky', category: 'appearance', translations: { cs: 'krásné holky', en: 'beautiful girls', de: 'schöne mädchen', uk: 'красиві дівчата' } },
+  { id: 'horcice-praha', category: 'style', translations: { cs: 'hořčice praha', en: 'hot girls prague', de: 'heiße mädchen prag', uk: 'гарячі дівчата прага' } },
+  { id: 'dokonale-telo', category: 'body', translations: { cs: 'dokonalé tělo', en: 'perfect body', de: 'perfekter körper', uk: 'досконале тіло' } },
+
+  // Premium Services
+  { id: 'vip-holky', category: 'profession', translations: { cs: 'vip holky', en: 'vip girls', de: 'vip mädchen', uk: 'vip дівчата' } },
+  { id: 'luxusni-sluzby', category: 'profession', translations: { cs: 'luxusní služby', en: 'luxury services', de: 'luxusdienstleistungen', uk: 'розкішні послуги' } },
+  { id: 'privatni-sluzby', category: 'profession', translations: { cs: 'privátní služby', en: 'private services', de: 'private dienstleistungen', uk: 'приватні послуги' } },
+
+  // Physical Features
+  { id: 'dlouhe-vlasy', category: 'appearance', translations: { cs: 'dlouhé vlasy', en: 'long hair', de: 'lange haare', uk: 'довге волосся' } },
+  { id: 'modre-oci', category: 'appearance', translations: { cs: 'modré oči', en: 'blue eyes', de: 'blaue augen', uk: 'блакитні очі' } },
+  { id: 'vysoke-holky', category: 'body', translations: { cs: 'vysoké holky', en: 'tall girls', de: 'große mädchen', uk: 'високі дівчата' } },
+  { id: 'atleticke-telo', category: 'body', translations: { cs: 'atletické tělo', en: 'athletic body', de: 'athletischer körper', uk: 'атлетичне тіло' } },
+
+  // Style & Elegance
+  { id: 'elegantni-holky', category: 'style', translations: { cs: 'elegantní holky', en: 'elegant girls', de: 'elegante mädchen', uk: 'елегантні дівчата' } },
 ];
 
 export function getHashtagById(id: string): Hashtag | undefined {
