@@ -132,6 +132,25 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     // Database operations
     console.log('[PHOTO UPLOAD] Starting database operations...');
     try {
+      // Check if girl exists
+      const girlCheck = await db.execute({
+        sql: 'SELECT id, name FROM girls WHERE id = ?',
+        args: [girlId]
+      });
+
+      if (girlCheck.rows.length === 0) {
+        console.error('[PHOTO UPLOAD] Girl not found, ID:', girlId);
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Girl not found',
+            details: `Girl with ID ${girlId} does not exist in database`
+          },
+          { status: 404 }
+        );
+      }
+      console.log('[PHOTO UPLOAD] Girl found:', girlCheck.rows[0].name);
+
       // Get current max display_order
       const maxOrderResult = await db.execute({
         sql: 'SELECT MAX(display_order) as max_order FROM girl_photos WHERE girl_id = ?',

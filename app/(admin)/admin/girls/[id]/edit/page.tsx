@@ -792,7 +792,10 @@ export default function EditGirlPage({ params }: PageProps) {
                       } else {
                         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
                         console.error('Upload failed:', response.status, errorData);
-                        alert(`Chyba při nahrávání ${file.name}:\n${errorData.error || `HTTP ${response.status}`}`);
+                        const errorMsg = errorData.details
+                          ? `${errorData.error}\n\nDetaily: ${errorData.details}`
+                          : errorData.error || `HTTP ${response.status}`;
+                        alert(`Chyba při nahrávání ${file.name}:\n${errorMsg}`);
                       }
                     } catch (error) {
                       console.error('Upload error:', error);
