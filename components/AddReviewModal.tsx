@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface AddReviewModalProps {
   isOpen: boolean;
@@ -24,6 +24,14 @@ export default function AddReviewModal({ isOpen, onClose, girls, onSuccess }: Ad
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  // Log when isOpen changes
+  useEffect(() => {
+    console.log('[AddReviewModal] isOpen changed to:', isOpen);
+    if (isOpen) {
+      alert('Modal by se měl otevřít! isOpen=' + isOpen);
+    }
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
