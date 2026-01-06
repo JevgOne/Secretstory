@@ -189,9 +189,12 @@ export default function AdminReviewsPage() {
             <p className="admin-subtitle">Schvalujte a spravujte recenze od klientů</p>
           </div>
           <button
-            className="btn-add-review"
-            onClick={() => {
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               console.log('[BUTTON CLICKED] Opening modal, current showAddModal:', showAddModal);
+              alert('Tlačítko bylo kliknuto! showAddModal: ' + showAddModal);
               setShowAddModal(true);
               console.log('[BUTTON CLICKED] After setShowAddModal(true)');
             }}
@@ -208,7 +211,10 @@ export default function AdminReviewsPage() {
               fontWeight: '600',
               cursor: 'pointer',
               transition: 'all 0.2s',
-              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)'
+              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)',
+              position: 'relative',
+              zIndex: 10,
+              pointerEvents: 'auto'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
