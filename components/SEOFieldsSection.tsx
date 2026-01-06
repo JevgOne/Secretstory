@@ -546,6 +546,243 @@ export default function SEOFieldsSection({
             )}
           </div>
 
+          {/* OG Preview Cards */}
+          {primaryPhoto && currentValues.ogTitle && (
+            <div style={{ marginBottom: '32px' }}>
+              <h4 style={{
+                fontSize: '0.95rem',
+                fontWeight: '600',
+                color: 'var(--white)',
+                marginBottom: '16px'
+              }}>
+                📱 Náhled sdílení na sociálních sítích
+              </h4>
+
+              <div style={{ display: 'grid', gap: '20px' }}>
+                {/* Facebook / WhatsApp Preview */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                  <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '12px', fontWeight: '600' }}>
+                    💬 WhatsApp / Facebook
+                  </p>
+                  <div style={{
+                    background: '#ffffff',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    maxWidth: '500px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                  }}>
+                    <div style={{
+                      width: '100%',
+                      height: '260px',
+                      background: '#000',
+                      position: 'relative'
+                    }}>
+                      <img
+                        src={primaryPhoto}
+                        alt={girlName || 'Preview'}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    </div>
+                    <div style={{ padding: '12px 16px', background: '#f0f2f5' }}>
+                      <p style={{
+                        fontSize: '0.7rem',
+                        color: '#606770',
+                        margin: '0 0 4px 0',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
+                      }}>
+                        LOVELYGIRLS.CZ
+                      </p>
+                      <p style={{
+                        fontSize: '0.95rem',
+                        fontWeight: '600',
+                        color: '#050505',
+                        margin: '0 0 6px 0',
+                        lineHeight: '1.3'
+                      }}>
+                        {currentValues.ogTitle || 'OG Title zde'}
+                      </p>
+                      <p style={{
+                        fontSize: '0.85rem',
+                        color: '#606770',
+                        margin: 0,
+                        lineHeight: '1.4',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}>
+                        {currentValues.ogDescription || 'OG Description zde'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Twitter Preview */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                  <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '12px', fontWeight: '600' }}>
+                    🐦 Twitter (X)
+                  </p>
+                  <div style={{
+                    background: '#ffffff',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    maxWidth: '500px',
+                    border: '1px solid #cfd9de',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                  }}>
+                    <div style={{
+                      width: '100%',
+                      height: '260px',
+                      background: '#000',
+                      position: 'relative'
+                    }}>
+                      <img
+                        src={primaryPhoto}
+                        alt={girlName || 'Preview'}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    </div>
+                    <div style={{ padding: '12px 16px' }}>
+                      <p style={{
+                        fontSize: '0.95rem',
+                        fontWeight: '600',
+                        color: '#0f1419',
+                        margin: '0 0 4px 0',
+                        lineHeight: '1.3',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}>
+                        {currentValues.ogTitle || 'OG Title zde'}
+                      </p>
+                      <p style={{
+                        fontSize: '0.85rem',
+                        color: '#536471',
+                        margin: '0 0 6px 0',
+                        lineHeight: '1.4',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}>
+                        {currentValues.ogDescription || 'OG Description zde'}
+                      </p>
+                      <p style={{
+                        fontSize: '0.75rem',
+                        color: '#536471',
+                        margin: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}>
+                        🔗 lovelygirls.cz
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* LinkedIn Preview */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                  <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '12px', fontWeight: '600' }}>
+                    💼 LinkedIn
+                  </p>
+                  <div style={{
+                    background: '#ffffff',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    maxWidth: '500px',
+                    border: '1px solid #e0dfdc',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                  }}>
+                    <div style={{
+                      width: '100%',
+                      height: '260px',
+                      background: '#000',
+                      position: 'relative'
+                    }}>
+                      <img
+                        src={primaryPhoto}
+                        alt={girlName || 'Preview'}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    </div>
+                    <div style={{ padding: '12px 16px', background: '#ffffff' }}>
+                      <p style={{
+                        fontSize: '0.95rem',
+                        fontWeight: '600',
+                        color: '#000000',
+                        margin: '0 0 4px 0',
+                        lineHeight: '1.3'
+                      }}>
+                        {currentValues.ogTitle || 'OG Title zde'}
+                      </p>
+                      <p style={{
+                        fontSize: '0.8rem',
+                        color: '#00000099',
+                        margin: 0,
+                        lineHeight: '1.4'
+                      }}>
+                        lovelygirls.cz
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p style={{
+                fontSize: '0.85rem',
+                color: 'rgba(255,255,255,0.5)',
+                marginTop: '16px',
+                fontStyle: 'italic'
+              }}>
+                💡 Tip: Používá se automaticky primární fotka z galerie (1200×630px)
+              </p>
+            </div>
+          )}
+
+          {!primaryPhoto && currentValues.ogTitle && (
+            <div style={{
+              marginBottom: '24px',
+              padding: '16px',
+              background: 'rgba(251, 191, 36, 0.1)',
+              border: '1px solid rgba(251, 191, 36, 0.3)',
+              borderRadius: '8px'
+            }}>
+              <p style={{ fontSize: '0.9rem', color: '#fbbf24', margin: 0 }}>
+                ⚠️ Nastavte primární fotku v galerii pro zobrazení OG náhledu
+              </p>
+            </div>
+          )}
+
           {/* OG Image */}
           <div style={{ marginBottom: '24px' }}>
             <label style={{
