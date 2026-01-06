@@ -3,6 +3,7 @@
 import AdminHeader from '@/components/AdminHeader';
 import { useState, useEffect } from 'react';
 import ReviewStars from '@/components/ReviewStars';
+import AddReviewModal from '@/components/AddReviewModal';
 
 interface Review {
   id: number;
@@ -23,6 +24,9 @@ export default function AdminReviewsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('pending');
   const [userId, setUserId] = useState<number | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [girls, setGirls] = useState<{id: number; name: string}[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     // Get user ID from session storage or cookie
@@ -34,7 +38,20 @@ export default function AdminReviewsPage() {
 
   useEffect(() => {
     fetchReviews();
+    fetchGirls();
   }, [filter]);
+
+  const fetchGirls = async () => {
+    try {
+      const response = await fetch('/api/girls?status=active');
+      const data = await response.json();
+      if (data.success) {
+        setGirls(data.girls.map((g: any) => ({ id: g.id, name: g.name })));
+      }
+    } catch (err) {
+      console.error('Error fetching girls:', err);
+    }
+  };
 
   const fetchReviews = async () => {
     try {
@@ -171,6 +188,35 @@ export default function AdminReviewsPage() {
           <div>
             <p className="admin-subtitle">Schvalujte a spravujte recenze od klientů</p>
           </div>
+          <button
+            className="btn-add-review"
+            onClick={() => setShowAddModal(true)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 24px',
+              background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+              color: '#1f1f23',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '1rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(212, 175, 55, 0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
+            }}
+          >
+            ✍️ Nová recenze
+          </button>
         </div>
 
       <div className="filters">
@@ -351,6 +397,17 @@ export default function AdminReviewsPage() {
         </div>
       )}
 
+      {/* Add Review Modal */}
+      <AddReviewModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        girls={girls}
+        onSuccess={() => {
+          fetchReviews();
+          alert('Recenze byla úspěšně vytvořena!');
+        }}
+      />
+
       <style jsx>{`
         .admin-container {
           padding: 2rem;
@@ -360,6 +417,10 @@ export default function AdminReviewsPage() {
 
         .admin-header {
           margin-bottom: 2rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 1rem;
         }
 
         .admin-title {
