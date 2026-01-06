@@ -190,7 +190,11 @@ export default function AdminReviewsPage() {
           </div>
           <button
             className="btn-add-review"
-            onClick={() => setShowAddModal(true)}
+            onClick={() => {
+              console.log('[BUTTON CLICKED] Opening modal, current showAddModal:', showAddModal);
+              setShowAddModal(true);
+              console.log('[BUTTON CLICKED] After setShowAddModal(true)');
+            }}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
