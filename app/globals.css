@@ -7342,7 +7342,9 @@ body > div > button[title*="Next"],
   }
 
   .card-name {
-    font-size: 1.3rem;
+    font-family: var(--font-playfair), 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
   }
 
   .card-stats {
@@ -7352,26 +7354,32 @@ body > div > button[title*="Next"],
 
   .stat-value {
     font-size: 1rem;
+    font-weight: 700;
   }
 
   .stat-label {
-    font-size: 0.8rem;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
   }
 
   .card-location {
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     padding: 8px 14px;
   }
 
   .time-badge {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     padding: 6px 12px;
   }
 }
 
 @media (max-width: 480px) {
   .card-name {
+    font-family: var(--font-playfair), 'Playfair Display', serif;
     font-size: 1.2rem;
+    font-weight: 600;
   }
 
   .card-stats {
@@ -7380,9 +7388,13 @@ body > div > button[title*="Next"],
 
   .stat-value {
     font-size: 0.95rem;
+    font-weight: 700;
   }
 
   .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
   }
 }
