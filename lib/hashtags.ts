@@ -63,7 +63,7 @@ export const HASHTAGS: Hashtag[] = [
   // Sexy & Attractive
   { id: 'sexy-holky', category: 'style', translations: { cs: 'sexy holky', en: 'sexy girls', de: 'sexy mädchen', uk: 'сексуальні дівчата' } },
   { id: 'krasne-holky', category: 'appearance', translations: { cs: 'krásné holky', en: 'beautiful girls', de: 'schöne mädchen', uk: 'красиві дівчата' } },
-  { id: 'horke-holky-praha', category: 'style', translations: { cs: 'horké holky praha', en: 'hot girls prague', de: 'heiße mädchen prag', uk: 'гарячі дівчата прага' } },
+  { id: 'hot-holky-praha', category: 'style', translations: { cs: 'hot holky praha', en: 'hot girls prague', de: 'heiße mädchen prag', uk: 'гарячі дівчата прага' } },
   { id: 'dokonale-telo', category: 'body', translations: { cs: 'dokonalé tělo', en: 'perfect body', de: 'perfekter körper', uk: 'досконале тіло' } },
 
   // Premium Services
