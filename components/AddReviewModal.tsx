@@ -81,12 +81,29 @@ export default function AddReviewModal({ isOpen, onClose, girls, onSuccess }: Ad
     }
   };
 
+  if (!isOpen) {
+    console.log('[AddReviewModal] Not rendering - isOpen is false');
+    return null;
+  }
+
+  console.log('[AddReviewModal] Rendering modal!');
+
   return (
     <div
       className="modal-overlay"
       onClick={onClose}
       style={{
-        display: isOpen ? 'flex' : 'none'
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0, 0, 0, 0.85)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 99999,
+        padding: '1rem'
       }}
     >
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
