@@ -10,8 +10,7 @@ interface AddReviewModalProps {
 }
 
 export default function AddReviewModal({ isOpen, onClose, girls, onSuccess }: AddReviewModalProps) {
-  console.log('[AddReviewModal] Rendered with isOpen:', isOpen, 'girls:', girls.length);
-
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
     girl_id: '',
     author_name: '',
@@ -25,13 +24,20 @@ export default function AddReviewModal({ isOpen, onClose, girls, onSuccess }: Ad
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Only render on client (after mount)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Log when isOpen changes
   useEffect(() => {
     console.log('[AddReviewModal] isOpen changed to:', isOpen);
-    if (isOpen) {
-      console.log('[AddReviewModal] Modal SHOULD be visible now!');
-    }
   }, [isOpen]);
+
+  // Don't render on server
+  if (!mounted) {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
