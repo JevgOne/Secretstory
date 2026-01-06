@@ -190,13 +190,15 @@ export default function AdminReviewsPage() {
           </div>
           <button
             type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log('[BUTTON CLICKED] Opening modal, current showAddModal:', showAddModal);
-              alert('Tlačítko bylo kliknuto! showAddModal: ' + showAddModal);
-              setShowAddModal(true);
-              console.log('[BUTTON CLICKED] After setShowAddModal(true)');
+            onClick={() => {
+              console.log('[BUTTON] Before:', showAddModal);
+              setShowAddModal(prev => {
+                console.log('[BUTTON] Setting from', prev, 'to true');
+                return true;
+              });
+              setTimeout(() => {
+                console.log('[BUTTON] After timeout, showAddModal should be true');
+              }, 100);
             }}
             style={{
               display: 'inline-flex',

@@ -29,7 +29,7 @@ export default function AddReviewModal({ isOpen, onClose, girls, onSuccess }: Ad
   useEffect(() => {
     console.log('[AddReviewModal] isOpen changed to:', isOpen);
     if (isOpen) {
-      alert('Modal by se měl otevřít! isOpen=' + isOpen);
+      console.log('[AddReviewModal] Modal SHOULD be visible now!');
     }
   }, [isOpen]);
 
