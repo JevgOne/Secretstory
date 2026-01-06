@@ -928,6 +928,57 @@ export default function EditGirlPage({ params }: PageProps) {
                     >
                       🗑️
                     </button>
+
+                    {/* Set Primary Button - Only show if not already primary */}
+                    {!photo.is_primary && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`/api/admin/girls/${girlId}/photos/${photo.id}/set-primary`, {
+                              method: 'PATCH'
+                            });
+
+                            if (response.ok) {
+                              await loadPhotos(girlId);
+                            } else {
+                              alert('Chyba při nastavování hlavní fotky');
+                            }
+                          } catch (error) {
+                            console.error('Error setting primary photo:', error);
+                            alert('Chyba při nastavování hlavní fotky');
+                          }
+                        }}
+                        style={{
+                          position: 'absolute',
+                          bottom: '12px',
+                          right: '12px',
+                          background: 'rgba(236, 72, 153, 0.95)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '8px',
+                          padding: '8px 12px',
+                          cursor: 'pointer',
+                          fontSize: '0.85rem',
+                          fontWeight: '600',
+                          transition: 'all 0.2s ease',
+                          boxShadow: '0 2px 8px rgba(236, 72, 153, 0.4)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.background = 'rgba(219, 39, 119, 1)';
+                          e.currentTarget.style.transform = 'scale(1.05)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.background = 'rgba(236, 72, 153, 0.95)';
+                          e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                      >
+                        ⭐ Hlavní
+                      </button>
+                    )}
                   </div>
 
                   {/* ALT Text Input - Multi-language */}
