@@ -64,135 +64,162 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 // POST - Upload a new photo
 export async function POST(request: NextRequest, { params }: RouteParams) {
-  console.log('[PHOTO UPLOAD] Starting upload...');
-  const user = await requireAuth(['admin', 'manager'], request);
-  if (user instanceof NextResponse) {
-    console.log('[PHOTO UPLOAD] Auth failed:', user.status);
-    return user;
-  }
-  console.log('[PHOTO UPLOAD] Auth OK, user:', user.email);
-
   try {
+    console.log('[PHOTO UPLOAD] Starting upload...');
+
+    // Auth check
+    const user = await requireAuth(['admin', 'manager'], request);
+    if (user instanceof NextResponse) {
+      console.log('[PHOTO UPLOAD] Auth failed');
+      return user;
+    }
+    console.log('[PHOTO UPLOAD] Auth OK');
+
+    // Parse params
     const resolvedParams = await params;
     const girlId = parseInt(resolvedParams.id);
     console.log('[PHOTO UPLOAD] Girl ID:', girlId);
 
-    // Verify girl exists
-    const girlCheck = await db.execute({
-      sql: 'SELECT id FROM girls WHERE id = ?',
-      args: [girlId]
-    });
-
-    if (girlCheck.rows.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'Girl not found' },
-        { status: 404 }
-      );
-    }
-
+    // Get file from form
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    console.log('[PHOTO UPLOAD] File received:', file?.name, file?.size, 'bytes');
 
     if (!file) {
-      console.log('[PHOTO UPLOAD] ERROR: No file in form data');
+      console.error('[PHOTO UPLOAD] No file in form data');
       return NextResponse.json(
         { success: false, error: 'No file provided' },
         { status: 400 }
       );
     }
 
+    console.log('[PHOTO UPLOAD] File:', file.name, file.size, 'bytes', file.type);
+
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      console.log('[PHOTO UPLOAD] ERROR: Invalid file type:', file.type);
+      console.error('[PHOTO UPLOAD] Invalid file type:', file.type);
       return NextResponse.json(
         { success: false, error: 'File must be an image' },
         { status: 400 }
       );
     }
 
-    // Generate unique filename
+    // Upload to Vercel Blob
+    console.log('[PHOTO UPLOAD] Starting Blob upload...');
     const timestamp = Date.now();
     const ext = file.name.split('.').pop();
     const filename = `girls/${girlId}/${timestamp}.${ext}`;
-    console.log('[PHOTO UPLOAD] Uploading to Vercel Blob:', filename);
 
-    // Upload to Vercel Blob
-    const { url } = await put(filename, file, {
-      access: 'public',
-      addRandomSuffix: false
-    });
-    console.log('[PHOTO UPLOAD] Blob upload success:', url);
+    let blobUrl: string;
+    try {
+      const { url } = await put(filename, file, {
+        access: 'public',
+        addRandomSuffix: false
+      });
+      blobUrl = url;
+      console.log('[PHOTO UPLOAD] Blob upload SUCCESS:', blobUrl);
+    } catch (blobError) {
+      console.error('[PHOTO UPLOAD] Blob upload FAILED:', blobError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to upload to storage',
+          details: blobError instanceof Error ? blobError.message : String(blobError)
+        },
+        { status: 500 }
+      );
+    }
 
-    // Get current max display_order
-    const maxOrderResult = await db.execute({
-      sql: 'SELECT MAX(display_order) as max_order FROM girl_photos WHERE girl_id = ?',
-      args: [girlId]
-    });
-    const nextOrder = (maxOrderResult.rows[0]?.max_order as number || -1) + 1;
+    // Database operations
+    console.log('[PHOTO UPLOAD] Starting database operations...');
+    try {
+      // Get current max display_order
+      const maxOrderResult = await db.execute({
+        sql: 'SELECT MAX(display_order) as max_order FROM girl_photos WHERE girl_id = ?',
+        args: [girlId]
+      });
+      const nextOrder = (maxOrderResult.rows[0]?.max_order as number || -1) + 1;
+      console.log('[PHOTO UPLOAD] Next display_order:', nextOrder);
 
-    // Check if this should be primary (first photo)
-    const photoCountResult = await db.execute({
-      sql: 'SELECT COUNT(*) as count FROM girl_photos WHERE girl_id = ?',
-      args: [girlId]
-    });
-    const isPrimary = photoCountResult.rows[0]?.count === 0 ? 1 : 0;
+      // Check if this should be primary (first photo)
+      const photoCountResult = await db.execute({
+        sql: 'SELECT COUNT(*) as count FROM girl_photos WHERE girl_id = ?',
+        args: [girlId]
+      });
+      const isPrimary = photoCountResult.rows[0]?.count === 0 ? 1 : 0;
+      console.log('[PHOTO UPLOAD] Is primary?', isPrimary);
 
-    // Insert into database
-    const insertResult = await db.execute({
-      sql: `INSERT INTO girl_photos
-            (girl_id, filename, url, display_order, is_primary, file_size, mime_type)
-            VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      args: [
-        girlId,
-        filename,
-        url,
-        nextOrder,
-        isPrimary,
-        file.size,
-        file.type
-      ]
-    });
+      // Insert into database
+      const insertResult = await db.execute({
+        sql: `INSERT INTO girl_photos
+              (girl_id, filename, url, display_order, is_primary, file_size, mime_type)
+              VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        args: [
+          girlId,
+          filename,
+          blobUrl,
+          nextOrder,
+          isPrimary,
+          file.size,
+          file.type
+        ]
+      });
+      console.log('[PHOTO UPLOAD] Database INSERT OK, ID:', insertResult.lastInsertRowid);
 
-    // Get girl name for activity log
-    const girlData = await db.execute({
-      sql: 'SELECT name FROM girls WHERE id = ?',
-      args: [girlId]
-    });
-    const girlName = girlData.rows[0]?.name || 'Unknown';
+      // Get girl name for activity log
+      const girlData = await db.execute({
+        sql: 'SELECT name FROM girls WHERE id = ?',
+        args: [girlId]
+      });
+      const girlName = girlData.rows[0]?.name || 'Unknown';
 
-    // Log activity
-    await db.execute({
-      sql: `INSERT INTO activity_log
-            (girl_id, activity_type, title, description, media_url, is_visible)
-            VALUES (?, ?, ?, ?, ?, ?)`,
-      args: [
-        girlId,
-        'photo_added',
-        `${girlName} přidala novou fotku`,
-        `${girlName} přidala novou fotku do galerie`,
-        url,
-        1
-      ]
-    });
+      // Log activity
+      await db.execute({
+        sql: `INSERT INTO activity_log
+              (girl_id, activity_type, title, description, media_url, is_visible)
+              VALUES (?, ?, ?, ?, ?, ?)`,
+        args: [
+          girlId,
+          'photo_added',
+          `${girlName} přidala novou fotku`,
+          `${girlName} přidala novou fotku do galerie`,
+          blobUrl,
+          1
+        ]
+      });
+      console.log('[PHOTO UPLOAD] Activity log OK');
 
-    return NextResponse.json({
-      success: true,
-      photo: {
-        id: insertResult.lastInsertRowid,
-        girl_id: girlId,
-        filename,
-        url,
-        display_order: nextOrder,
-        is_primary: isPrimary,
-        file_size: file.size,
-        mime_type: file.type
-      }
-    });
+      return NextResponse.json({
+        success: true,
+        photo: {
+          id: insertResult.lastInsertRowid,
+          girl_id: girlId,
+          filename,
+          url: blobUrl,
+          display_order: nextOrder,
+          is_primary: isPrimary,
+          file_size: file.size,
+          mime_type: file.type
+        }
+      });
+    } catch (dbError) {
+      console.error('[PHOTO UPLOAD] Database operation FAILED:', dbError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to save photo to database',
+          details: dbError instanceof Error ? dbError.message : String(dbError)
+        },
+        { status: 500 }
+      );
+    }
   } catch (error) {
-    console.error('Error uploading photo:', error);
+    console.error('[PHOTO UPLOAD] Unexpected error:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to upload photo' },
+      {
+        success: false,
+        error: 'Failed to upload photo',
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     );
   }
