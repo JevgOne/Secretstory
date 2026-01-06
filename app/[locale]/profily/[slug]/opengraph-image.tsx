@@ -15,15 +15,24 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 
   console.log('[OG IMAGE] Generating for slug:', slug)
 
-  // Fetch girl data
+  // Fetch girl data WITH PRIMARY PHOTO
   let girl: any = null
+  let photoUrl: string | null = null
+
   try {
     const result = await db.execute({
-      sql: `SELECT name, age, height, weight, nationality FROM girls WHERE slug = ? AND status = 'active'`,
+      sql: `
+        SELECT
+          g.name, g.age, g.height, g.weight, g.nationality,
+          (SELECT url FROM girl_photos WHERE girl_id = g.id AND is_primary = 1 LIMIT 1) as photo_url
+        FROM girls g
+        WHERE g.slug = ? AND g.status = 'active'
+      `,
       args: [slug]
     })
     girl = result.rows[0]
-    console.log('[OG IMAGE] Girl found:', girl?.name || 'none')
+    photoUrl = girl?.photo_url as string | null
+    console.log('[OG IMAGE] Girl found:', girl?.name || 'none', 'Photo:', photoUrl ? 'YES' : 'NO')
   } catch (error) {
     console.error('[OG IMAGE] Error fetching girl:', error)
   }
@@ -176,23 +185,36 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           </div>
         </div>
 
-        {/* Right side - Placeholder for photo */}
+        {/* Right side - Girl Photo */}
         <div
           style={{
             width: '400px',
             height: '500px',
-            background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(196, 30, 58, 0.2) 100%)',
             borderRadius: '20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '40px',
-            color: '#9a8a8e',
             border: '3px solid rgba(212, 175, 55, 0.3)',
             zIndex: 1,
+            overflow: 'hidden',
+            background: photoUrl ? 'transparent' : 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(196, 30, 58, 0.2) 100%)',
           }}
         >
-          PHOTO
+          {photoUrl ? (
+            <img
+              src={photoUrl}
+              alt={girl.name}
+              width="400"
+              height="500"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+          ) : (
+            <span style={{ fontSize: '40px', color: '#9a8a8e' }}>PHOTO</span>
+          )}
         </div>
 
         {/* Bottom banner */}
