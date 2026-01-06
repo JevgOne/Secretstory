@@ -25,6 +25,7 @@ export default function EditGirlPage({ params }: PageProps) {
   const [uploadingStory, setUploadingStory] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
   const [vimeoUrl, setVimeoUrl] = useState('');
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
   const [locations, setLocations] = useState<any[]>([]);
 
   // Pagination states
@@ -788,7 +789,18 @@ export default function EditGirlPage({ params }: PageProps) {
                       });
 
                       if (response.ok) {
-                        await loadPhotos(girlId);
+                        // Upload succeeded - reload photos
+                        try {
+                          await loadPhotos(girlId);
+                          console.log(`✅ Photo ${file.name} uploaded successfully`);
+                          setUploadSuccess(file.name);
+                          setTimeout(() => setUploadSuccess(null), 3000);
+                        } catch (loadError) {
+                          // Upload succeeded but photo list reload failed
+                          console.error('Photo uploaded but list reload failed:', loadError);
+                          // Don't show error alert - just refresh the page
+                          window.location.reload();
+                        }
                       } else {
                         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
                         console.error('Upload failed:', response.status, errorData);

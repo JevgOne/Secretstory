@@ -210,7 +210,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({
         success: true,
         photo: {
-          id: insertResult.lastInsertRowid,
+          id: Number(insertResult.lastInsertRowid),
           girl_id: girlId,
           filename,
           url: blobUrl,
