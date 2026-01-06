@@ -890,45 +890,16 @@ export default function EditGirlPage({ params }: PageProps) {
                         ⭐ Hlavní
                       </div>
                     )}
+                  </div>
 
-                    {/* Delete Button */}
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        if (confirm('Opravdu smazat tuto fotku?')) {
-                          await fetch(`/api/admin/girls/${girlId}/photos?photoId=${photo.id}`, {
-                            method: 'DELETE'
-                          });
-                          await loadPhotos(girlId);
-                        }
-                      }}
-                      style={{
-                        position: 'absolute',
-                        top: '12px',
-                        right: '12px',
-                        background: 'rgba(239, 68, 68, 0.95)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '8px 12px',
-                        cursor: 'pointer',
-                        fontSize: '0.9rem',
-                        fontWeight: '600',
-                        transition: 'all 0.2s ease',
-                        boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)'
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.background = 'rgba(220, 38, 38, 1)';
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.95)';
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                    >
-                      🗑️
-                    </button>
-
+                  {/* Action Buttons - Under photo */}
+                  <div style={{
+                    padding: '12px',
+                    background: 'rgba(0, 0, 0, 0.2)',
+                    display: 'grid',
+                    gridTemplateColumns: photo.is_primary ? '1fr' : '1fr 1fr',
+                    gap: '8px'
+                  }}>
                     {/* Set Primary Button - Only show if not already primary */}
                     {!photo.is_primary && (
                       <button
@@ -950,35 +921,70 @@ export default function EditGirlPage({ params }: PageProps) {
                           }
                         }}
                         style={{
-                          position: 'absolute',
-                          top: '12px',
-                          left: '12px',
                           background: 'rgba(236, 72, 153, 0.95)',
                           color: 'white',
                           border: 'none',
                           borderRadius: '8px',
-                          padding: '8px 12px',
+                          padding: '10px 14px',
                           cursor: 'pointer',
-                          fontSize: '0.85rem',
+                          fontSize: '0.9rem',
                           fontWeight: '600',
                           transition: 'all 0.2s ease',
-                          boxShadow: '0 2px 8px rgba(236, 72, 153, 0.4)',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '4px'
+                          justifyContent: 'center',
+                          gap: '6px'
                         }}
                         onMouseOver={(e) => {
                           e.currentTarget.style.background = 'rgba(219, 39, 119, 1)';
-                          e.currentTarget.style.transform = 'scale(1.05)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
                         }}
                         onMouseOut={(e) => {
                           e.currentTarget.style.background = 'rgba(236, 72, 153, 0.95)';
-                          e.currentTarget.style.transform = 'scale(1)';
+                          e.currentTarget.style.transform = 'translateY(0)';
                         }}
                       >
                         ⭐ Hlavní
                       </button>
                     )}
+
+                    {/* Delete Button */}
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (confirm('Opravdu smazat tuto fotku?')) {
+                          await fetch(`/api/admin/girls/${girlId}/photos?photoId=${photo.id}`, {
+                            method: 'DELETE'
+                          });
+                          await loadPhotos(girlId);
+                        }
+                      }}
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.95)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '10px 14px',
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                        fontWeight: '600',
+                        transition: 'all 0.2s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.background = 'rgba(220, 38, 38, 1)';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.95)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      🗑️ Smazat
+                    </button>
                   </div>
 
                   {/* ALT Text Input - Multi-language */}
