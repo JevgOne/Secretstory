@@ -81,10 +81,14 @@ export default function AddReviewModal({ isOpen, onClose, girls, onSuccess }: Ad
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      style={{
+        display: isOpen ? 'flex' : 'none'
+      }}
+    >
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>✍️ Přidat novou recenzi</h2>
