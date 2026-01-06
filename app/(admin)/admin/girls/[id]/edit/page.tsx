@@ -951,8 +951,8 @@ export default function EditGirlPage({ params }: PageProps) {
                         }}
                         style={{
                           position: 'absolute',
-                          bottom: '12px',
-                          right: '12px',
+                          top: '12px',
+                          left: '12px',
                           background: 'rgba(236, 72, 153, 0.95)',
                           color: 'white',
                           border: 'none',
