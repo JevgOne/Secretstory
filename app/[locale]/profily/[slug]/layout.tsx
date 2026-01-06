@@ -46,36 +46,43 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const description = getLocalizedField('meta_description') || girl.bio || ''
     const ogTitle = getLocalizedField('og_title') || title
     const ogDesc = getLocalizedField('og_description') || description
-    const ogImage = girl.og_image || '/og-image.jpg'
 
     const url = `https://www.lovelygirls.cz/${locale}/profily/${slug}`
+
+    // Build OpenGraph config
+    const openGraphConfig: any = {
+      title: ogTitle,
+      description: ogDesc,
+      url,
+      siteName: 'LovelyGirls Prague',
+      locale: locale,
+      type: 'profile'
+    }
+
+    // Only set custom image if specified in database, otherwise Next.js uses opengraph-image.tsx
+    if (girl.og_image) {
+      openGraphConfig.images = [
+        {
+          url: girl.og_image,
+          width: 1200,
+          height: 630,
+          alt: `${girl.name} - Premium Escort Prague`
+        }
+      ]
+    }
 
     return {
       title,
       description,
       keywords: `${girl.name}, escort prague, premium escort, ${girl.nationality} escort, erotic massage prague, VIP escort czech`,
       authors: [{ name: 'LovelyGirls Prague' }],
-      openGraph: {
-        title: ogTitle,
-        description: ogDesc,
-        url,
-        siteName: 'LovelyGirls Prague',
-        locale: locale,
-        type: 'profile',
-        images: [
-          {
-            url: ogImage,
-            width: 1200,
-            height: 630,
-            alt: `${girl.name} - Premium Escort Prague`
-          }
-        ]
-      },
+      openGraph: openGraphConfig,
       twitter: {
         card: 'summary_large_image',
         title: ogTitle,
         description: ogDesc,
-        images: [ogImage]
+        // Don't specify images for Twitter either if no custom og_image
+        ...(girl.og_image && { images: [girl.og_image] })
       },
       alternates: {
         canonical: url,
