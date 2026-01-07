@@ -53,6 +53,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   )
 
+  // Hashtag/category pages
+  const hashtags = [
+    'zrzky-praha', 'blondynky-praha', 'brunetky-praha', 'cernovlasky-praha',
+    'silikonove-prsa', 'prirodni-poprsi', 'velka-prsa', 'dlouhe-nohy',
+    'plne-rty', 'kratke-vlasy', 'tetovani', 'piercing-holky',
+    'fit-holky', 'stihla-postava', 'krivky', 'bujne-tvary',
+    'mlade-holky', 'zrale-zeny', 'milf-praha', 'studentky-praha',
+    'modelky-praha', 'exoticke-krasky', 'ceske-holky', 'slovenske-holky',
+    'ukrajinske-holky', 'ruske-holky', 'latinky', 'asiatky',
+    'holky-praha', 'spolecnice-praha', 'girlfriend-experience', 'gfe-praha',
+    'sexy-holky', 'krasne-holky', 'hot-holky-praha', 'dokonale-telo',
+    'vip-holky', 'luxusni-sluzby', 'privatni-sluzby'
+  ]
+
+  const hashtagUrls: MetadataRoute.Sitemap = locales.flatMap(locale =>
+    hashtags.map(tag => ({
+      url: `${baseUrl}/${locale}/hashtag/${tag}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }))
+  )
+
   // Girl profile pages (high priority for SEO)
   const girlUrls: MetadataRoute.Sitemap = locales.flatMap(locale =>
     girls.map(girl => ({
@@ -83,5 +106,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   )
 
-  return [...staticUrls, ...girlUrls, ...serviceUrls, ...blogUrls]
+  return [...staticUrls, ...girlUrls, ...serviceUrls, ...blogUrls, ...hashtagUrls]
 }

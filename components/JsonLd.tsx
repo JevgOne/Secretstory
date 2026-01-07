@@ -241,3 +241,37 @@ export function ItemListSchema({ items }: ItemListSchemaProps) {
     />
   );
 }
+
+interface AggregateRatingSchemaProps {
+  ratingValue: number;
+  reviewCount: number;
+  bestRating?: number;
+  worstRating?: number;
+}
+
+export function AggregateRatingSchema({
+  ratingValue,
+  reviewCount,
+  bestRating = 5,
+  worstRating = 1
+}: AggregateRatingSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'LovelyGirls Prague',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: ratingValue.toFixed(1),
+      reviewCount,
+      bestRating,
+      worstRating
+    }
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
