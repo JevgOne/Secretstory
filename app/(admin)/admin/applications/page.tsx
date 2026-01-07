@@ -245,8 +245,6 @@ export default function AdminApplicationsPage() {
               <div
                 key={app.id}
                 className="app-card"
-                onClick={() => setViewingApp(app)}
-                style={{ cursor: 'pointer' }}
               >
                 <div className="app-header">
                   <div>
@@ -282,9 +280,12 @@ export default function AdminApplicationsPage() {
 
                 <p className="app-date">Podáno {formatDate(app.created_at)}</p>
 
-                <div className="detail-button">
+                <button
+                  className="detail-button"
+                  onClick={() => setViewingApp(app)}
+                >
                   👁️ Detail
-                </div>
+                </button>
               </div>
             ))}
 
