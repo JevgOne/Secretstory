@@ -31,13 +31,23 @@ export default function AddReviewModal({ isOpen, onClose, girls, onSuccess }: Ad
 
   // Log when isOpen changes
   useEffect(() => {
-    console.log('[AddReviewModal] isOpen changed to:', isOpen);
-  }, [isOpen]);
+    console.log('[AddReviewModal] isOpen changed to:', isOpen, 'girls count:', girls.length);
+  }, [isOpen, girls]);
 
   // Don't render on server
   if (!mounted) {
     return null;
   }
+
+  // Don't render if no girls loaded
+  if (!isOpen || girls.length === 0) {
+    if (isOpen && girls.length === 0) {
+      console.log('[AddReviewModal] Not rendering - no girls loaded yet');
+    }
+    return null;
+  }
+
+  console.log('[AddReviewModal] Rendering modal with', girls.length, 'girls');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

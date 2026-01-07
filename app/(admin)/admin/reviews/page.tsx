@@ -196,15 +196,14 @@ export default function AdminReviewsPage() {
           <button
             type="button"
             onClick={() => {
-              console.log('[BUTTON] Before:', showAddModal);
-              setShowAddModal(prev => {
-                console.log('[BUTTON] Setting from', prev, 'to true');
-                return true;
-              });
-              setTimeout(() => {
-                console.log('[BUTTON] After timeout, showAddModal should be true');
-              }, 100);
+              console.log('[BUTTON] Clicked! Girls loaded:', girls.length);
+              if (girls.length === 0) {
+                alert('Načítání dívek, chvíli strpení...');
+                return;
+              }
+              setShowAddModal(true);
             }}
+            disabled={girls.length === 0}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
