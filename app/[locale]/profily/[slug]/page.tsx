@@ -158,6 +158,7 @@ interface Girl {
   // For online girls list
   primary_photo?: string;
   secondary_photo?: string;
+  thumbnail?: string;
   is_working_now?: boolean;
   schedule_from?: string;
   schedule_to?: string;
