@@ -298,6 +298,34 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
             </div>
           ))}
         </div>
+
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <Link
+            href={`/${locale}/recenze`}
+            style={{
+              display: 'inline-block',
+              padding: '12px 32px',
+              background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+              color: '#1f1f23',
+              textDecoration: 'none',
+              borderRadius: '8px',
+              fontWeight: '600',
+              fontSize: '0.95rem',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(212, 175, 55, 0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
+            }}
+          >
+            {t('reviews_all')}
+          </Link>
+        </div>
       </div>
 
       <style jsx>{`
