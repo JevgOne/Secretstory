@@ -305,22 +305,24 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
             style={{
               display: 'inline-block',
               padding: '12px 32px',
-              background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
-              color: '#1f1f23',
+              background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.9) 0%, rgba(176, 27, 71, 0.9) 100%)',
+              color: '#ffffff',
               textDecoration: 'none',
               borderRadius: '8px',
               fontWeight: '600',
               fontSize: '0.95rem',
               transition: 'all 0.3s ease',
-              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)'
+              boxShadow: '0 4px 12px rgba(139, 21, 56, 0.4)'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(212, 175, 55, 0.5)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(139, 21, 56, 0.6)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(139, 21, 56, 1) 0%, rgba(176, 27, 71, 1) 100%)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(212, 175, 55, 0.3)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(139, 21, 56, 0.4)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(139, 21, 56, 0.9) 0%, rgba(176, 27, 71, 0.9) 100%)';
             }}
           >
             {t('reviews_all')}

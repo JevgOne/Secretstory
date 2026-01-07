@@ -30,8 +30,7 @@ interface Girl {
 
 export default function ReviewsPage() {
   const locale = useLocale();
-  const t = useTranslations('reviews');
-  const tHome = useTranslations('home');
+  const t = useTranslations('home');
 
   const [reviews, setReviews] = useState<Review[]>([]);
   const [girls, setGirls] = useState<Girl[]>([]);
@@ -124,21 +123,40 @@ export default function ReviewsPage() {
   const activeFiltersCount = [selectedGirl, selectedRating, selectedVibe].filter(Boolean).length;
 
   return (
-    <>
-      <div className="page-container">
-        <div className="page-header">
-          <h1 className="page-title">{tHome('reviews_title')}</h1>
-          <p className="page-subtitle">{tHome('reviews_subtitle')}</p>
+    <section style={{ padding: '2.5rem 0', background: 'rgba(0, 0, 0, 0.2)', minHeight: '70vh' }}>
+      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h2 className="section-title">{t('reviews_title')}</h2>
+          <p className="section-subtitle">{t('reviews_subtitle')}</p>
         </div>
 
         {/* Filters */}
-        <div className="filters-container">
-          <div className="filters-grid">
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.03)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '16px',
+          padding: '1.5rem',
+          marginBottom: '2rem'
+        }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '1rem',
+            alignItems: 'end'
+          }}>
             {/* Girl Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Dívka</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Dívka</label>
               <select
-                className="filter-select"
+                style={{
+                  padding: '0.75rem 1rem',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  color: '#ffffff',
+                  fontSize: '0.95rem',
+                  cursor: 'pointer'
+                }}
                 value={selectedGirl}
                 onChange={(e) => setSelectedGirl(e.target.value)}
               >
@@ -150,25 +168,41 @@ export default function ReviewsPage() {
             </div>
 
             {/* Rating Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Hodnocení</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Hodnocení</label>
               <select
-                className="filter-select"
+                style={{
+                  padding: '0.75rem 1rem',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  color: '#ffffff',
+                  fontSize: '0.95rem',
+                  cursor: 'pointer'
+                }}
                 value={selectedRating}
                 onChange={(e) => setSelectedRating(e.target.value)}
               >
                 <option value="">Všechna hodnocení</option>
-                <option value="5">⭐⭐⭐⭐⭐ (5 hvězd)</option>
+                <option value="5">⭐⭐⭐⭐⭐ Z5 (5 hvězd)</option>
                 <option value="4">⭐⭐⭐⭐ (4+ hvězd)</option>
                 <option value="3">⭐⭐⭐ (3+ hvězd)</option>
               </select>
             </div>
 
             {/* Vibe Filter */}
-            <div className="filter-group">
-              <label className="filter-label">Atmosféra</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.875rem', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Atmosféra</label>
               <select
-                className="filter-select"
+                style={{
+                  padding: '0.75rem 1rem',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  color: '#ffffff',
+                  fontSize: '0.95rem',
+                  cursor: 'pointer'
+                }}
                 value={selectedVibe}
                 onChange={(e) => setSelectedVibe(e.target.value)}
               >
@@ -183,92 +217,213 @@ export default function ReviewsPage() {
 
             {/* Reset Button */}
             {activeFiltersCount > 0 && (
-              <div className="filter-group">
-                <label className="filter-label">&nbsp;</label>
-                <button className="reset-btn" onClick={resetFilters}>
-                  ✕ Vymazat filtry ({activeFiltersCount})
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: '600', color: 'transparent', textTransform: 'uppercase', letterSpacing: '0.5px' }}>.</label>
+                <button
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    background: 'rgba(139, 21, 56, 0.8)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: '#ffffff',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onClick={resetFilters}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(139, 21, 56, 1)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(139, 21, 56, 0.8)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  ✕ Vymazat ({activeFiltersCount})
                 </button>
               </div>
             )}
           </div>
         </div>
 
-        {/* Reviews Grid */}
+        {/* Loading / No Results */}
         {loading ? (
-          <div className="loading">Načítání recenzí...</div>
+          <div style={{ textAlign: 'center', color: '#9ca3af', padding: '3rem 0' }}>Načítání recenzí...</div>
         ) : reviews.length === 0 ? (
-          <div className="no-reviews">
-            <p>Žádné recenze nebyly nalezeny.</p>
+          <div style={{ textAlign: 'center', color: '#9ca3af', padding: '3rem 0' }}>
+            <p style={{ marginBottom: '1rem' }}>Žádné recenze nebyly nalezeny.</p>
             {activeFiltersCount > 0 && (
-              <button className="reset-btn-secondary" onClick={resetFilters}>
+              <button
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'rgba(139, 21, 56, 0.8)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: '#ffffff',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+                onClick={resetFilters}
+              >
                 Vymazat filtry
               </button>
             )}
           </div>
         ) : (
           <>
-            <div className="reviews-count">
+            <div style={{ textAlign: 'center', color: '#9ca3af', fontSize: '0.95rem', fontWeight: '500', marginBottom: '1.5rem' }}>
               Zobrazeno {reviews.length} {reviews.length === 1 ? 'recenze' : reviews.length < 5 ? 'recenze' : 'recenzí'}
             </div>
 
-            <div className="reviews-grid">
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+              gap: '24px',
+              marginBottom: '2rem'
+            }}>
               {reviews.map((review) => (
-                <div key={review.id} className="review-card">
+                <div
+                  key={review.id}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '12px',
+                    padding: '24px',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                    e.currentTarget.style.borderColor = '#d4af37';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  }}
+                >
                   {/* Girl name with photo at the top */}
                   {review.girl_name && (
                     <Link
                       href={`/${locale}/profily/${review.girl_slug}`}
-                      className="review-girl-link"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        marginBottom: '16px',
+                        textDecoration: 'none'
+                      }}
                     >
                       {review.girl_photo && (
                         <img
                           src={review.girl_photo}
                           alt={review.girl_name}
-                          className="review-girl-photo"
+                          style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            border: '2px solid var(--wine)'
+                          }}
                         />
                       )}
                       <div>
-                        <div className="review-girl-name">{review.girl_name}</div>
-                        <div className="review-view-profile">Zobrazit profil</div>
+                        <div style={{
+                          fontSize: '18px',
+                          fontWeight: '700',
+                          color: '#fff',
+                          marginBottom: '4px'
+                        }}>
+                          {review.girl_name}
+                        </div>
+                        <div style={{
+                          fontSize: '12px',
+                          color: 'var(--wine)',
+                          fontWeight: '500'
+                        }}>
+                          {t('view_profile')}
+                        </div>
                       </div>
                     </Link>
                   )}
 
-                  <div className="review-header">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                     <div>
-                      <div className="review-author">
+                      <div style={{ color: '#9ca3af', fontWeight: '500', fontSize: '13px' }}>
                         {review.author_name}
                         {review.status === 'approved' && (
-                          <span className="review-verified" title="Ověřeno">✓</span>
+                          <span style={{ marginLeft: '6px', color: '#10b981', fontSize: '13px' }} title="Ověřeno">✓</span>
                         )}
-                        <span className="review-separator">•</span>
+                        <span style={{ margin: '0 8px', color: '#4b5563' }}>•</span>
                         {formatDate(review.created_at)}
                       </div>
                     </div>
-                    <div className="review-stars">
+                    <div style={{ display: 'flex', gap: '2px' }}>
                       {renderStars(review.rating)}
                     </div>
                   </div>
 
                   {review.title && (
-                    <h3 className="review-title">{review.title}</h3>
+                    <h3 style={{
+                      color: '#fff',
+                      fontSize: '15px',
+                      fontWeight: '600',
+                      marginBottom: '8px'
+                    }}>
+                      {review.title}
+                    </h3>
                   )}
 
-                  <p className="review-content">{review.content}</p>
+                  <p style={{
+                    color: '#e5e7eb',
+                    fontSize: '14px',
+                    lineHeight: '1.6',
+                    marginBottom: '12px',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 4,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }}>
+                    {review.content}
+                  </p>
 
                   {/* Vibe and Tags */}
-                  <div className="review-meta">
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
+                    {/* Vibe emoji */}
                     {review.vibe && VIBE_OPTIONS[review.vibe as keyof typeof VIBE_OPTIONS] && (
-                      <div className="review-vibe">
+                      <div style={{
+                        fontSize: '20px',
+                        padding: '4px 8px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        borderRadius: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}>
                         {VIBE_OPTIONS[review.vibe as keyof typeof VIBE_OPTIONS].emoji}
                       </div>
                     )}
 
+                    {/* Tags */}
                     {review.tags && JSON.parse(review.tags).map((tagId: string) => {
                       const tag = TAG_OPTIONS[tagId as keyof typeof TAG_OPTIONS];
                       if (!tag) return null;
                       return (
-                        <span key={tagId} className="review-tag">
+                        <span
+                          key={tagId}
+                          style={{
+                            fontSize: '12px',
+                            padding: '4px 10px',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '12px',
+                            color: '#9ca3af',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
                           <span>{tag.emoji}</span>
                           <span>{tag.label_cs}</span>
                         </span>
@@ -277,11 +432,27 @@ export default function ReviewsPage() {
                   </div>
 
                   {/* Helpful count */}
-                  <div className="review-helpful">
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    color: '#9ca3af',
+                    fontSize: '13px',
+                    fontWeight: '500'
+                  }}>
                     <span>👍</span>
                     <span>Užitečné</span>
                     {review.helpful_count !== undefined && review.helpful_count > 0 && (
-                      <span className="review-helpful-count">{review.helpful_count}</span>
+                      <span style={{
+                        background: 'rgba(212, 175, 55, 0.15)',
+                        color: '#d4af37',
+                        padding: '2px 8px',
+                        borderRadius: '10px',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}>
+                        {review.helpful_count}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -292,316 +463,12 @@ export default function ReviewsPage() {
       </div>
 
       <style jsx>{`
-        .page-container {
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 2rem 1.5rem;
-          min-height: 60vh;
-        }
-
-        .page-header {
-          text-align: center;
-          margin-bottom: 2.5rem;
-          padding-top: 1rem;
-        }
-
-        .page-title {
-          font-size: 2.5rem;
-          font-weight: 700;
-          color: #ffffff;
-          margin: 0 0 0.5rem 0;
-          background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        .page-subtitle {
-          font-size: 1.125rem;
-          color: #9ca3af;
-          font-weight: 500;
-        }
-
-        .filters-container {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 16px;
-          padding: 1.5rem;
-          margin-bottom: 2rem;
-        }
-
-        .filters-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 1.5rem;
-          align-items: end;
-        }
-
-        .filter-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        .filter-label {
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: #9ca3af;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .filter-select {
-          padding: 0.75rem 1rem;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 8px;
-          color: #ffffff;
-          font-size: 0.95rem;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .filter-select:hover {
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(212, 175, 55, 0.3);
-        }
-
-        .filter-select:focus {
-          outline: none;
-          border-color: var(--gold);
-          background: rgba(255, 255, 255, 0.08);
-        }
-
-        .reset-btn,
-        .reset-btn-secondary {
-          padding: 0.75rem 1.5rem;
-          background: linear-gradient(135deg, rgba(239, 68, 68, 0.8) 0%, rgba(220, 38, 38, 0.8) 100%);
-          border: none;
-          border-radius: 8px;
-          color: #ffffff;
-          font-size: 0.9rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          width: 100%;
-        }
-
-        .reset-btn:hover,
-        .reset-btn-secondary:hover {
-          background: linear-gradient(135deg, rgba(239, 68, 68, 1) 0%, rgba(220, 38, 38, 1) 100%);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-        }
-
-        .reset-btn-secondary {
-          margin-top: 1rem;
-          max-width: 200px;
-        }
-
-        .reviews-count {
-          text-align: center;
-          color: #9ca3af;
-          font-size: 0.95rem;
-          font-weight: 500;
-          margin-bottom: 1.5rem;
-        }
-
-        .loading,
-        .no-reviews {
-          text-align: center;
-          padding: 4rem 2rem;
-          color: #9ca3af;
-          font-size: 1.125rem;
-        }
-
-        .no-reviews {
-          background: rgba(255, 255, 255, 0.02);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          border-radius: 16px;
-        }
-
-        .no-reviews p {
-          margin: 0 0 1rem 0;
-        }
-
-        .reviews-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-          gap: 1.5rem;
-          margin-bottom: 2rem;
-        }
-
-        .review-card {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          padding: 1.5rem;
-          transition: all 0.3s ease;
-        }
-
-        .review-card:hover {
-          background: rgba(255, 255, 255, 0.06);
-          border-color: var(--gold);
-          transform: translateY(-4px);
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .review-girl-link {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          margin-bottom: 16px;
-          text-decoration: none;
-        }
-
-        .review-girl-photo {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 2px solid var(--wine);
-        }
-
-        .review-girl-name {
-          font-size: 18px;
-          font-weight: 700;
-          color: #fff;
-          margin-bottom: 4px;
-        }
-
-        .review-view-profile {
-          font-size: 12px;
-          color: var(--wine);
-          font-weight: 500;
-        }
-
-        .review-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 12px;
-        }
-
-        .review-author {
-          color: #9ca3af;
-          font-weight: 500;
-          font-size: 13px;
-        }
-
-        .review-verified {
-          margin-left: 6px;
-          color: #10b981;
-          font-size: 13px;
-        }
-
-        .review-separator {
-          margin: 0 8px;
-          color: #4b5563;
-        }
-
-        .review-stars {
-          display: flex;
-          gap: 2px;
-        }
-
-        .review-title {
-          color: #fff;
-          font-size: 15px;
-          font-weight: 600;
-          margin-bottom: 8px;
-        }
-
-        .review-content {
-          color: #e5e7eb;
-          font-size: 14px;
-          line-height: 1.6;
-          margin-bottom: 12px;
-          display: -webkit-box;
-          -webkit-line-clamp: 4;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
-        .review-meta {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          align-items: center;
-          margin-bottom: 12px;
-        }
-
-        .review-vibe {
-          font-size: 20px;
-          padding: 4px 8px;
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 6px;
-          display: flex;
-          align-items: center;
-        }
-
-        .review-tag {
-          font-size: 12px;
-          padding: 4px 10px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          color: #9ca3af;
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-        }
-
-        .review-helpful {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          color: #9ca3af;
-          font-size: 13px;
-          font-weight: 500;
-        }
-
-        .review-helpful-count {
-          background: rgba(212, 175, 55, 0.15);
-          color: #d4af37;
-          padding: 2px 8px;
-          border-radius: 10px;
-          font-size: 12px;
-          font-weight: 600;
-        }
-
         @media (max-width: 768px) {
-          .page-container {
-            padding: 1.5rem 1rem;
-          }
-
-          .page-title {
-            font-size: 1.875rem;
-          }
-
-          .page-subtitle {
-            font-size: 1rem;
-          }
-
-          .filters-container {
-            padding: 1rem;
-          }
-
-          .filters-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
-
-          .reviews-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
-
-          .review-card {
-            padding: 1.25rem;
+          section {
+            padding: 2rem 0 !important;
           }
         }
       `}</style>
-    </>
+    </section>
   );
 }
