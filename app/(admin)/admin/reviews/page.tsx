@@ -3,12 +3,7 @@
 import AdminHeader from '@/components/AdminHeader';
 import { useState, useEffect } from 'react';
 import ReviewStars from '@/components/ReviewStars';
-import dynamic from 'next/dynamic';
-
-// Dynamic import with no SSR for modal to avoid hydration errors
-const AddReviewModal = dynamic(() => import('@/components/AddReviewModal'), {
-  ssr: false
-});
+import { useRouter } from 'next/navigation';
 
 interface Review {
   id: number;
@@ -25,13 +20,11 @@ interface Review {
 }
 
 export default function AdminReviewsPage() {
+  const router = useRouter();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('pending');
   const [userId, setUserId] = useState<number | null>(null);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [girls, setGirls] = useState<{id: number; name: string}[]>([]);
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     // Get user ID from session storage or cookie
@@ -43,20 +36,8 @@ export default function AdminReviewsPage() {
 
   useEffect(() => {
     fetchReviews();
-    fetchGirls();
   }, [filter]);
 
-  const fetchGirls = async () => {
-    try {
-      const response = await fetch('/api/girls?status=active');
-      const data = await response.json();
-      if (data.success) {
-        setGirls(data.girls.map((g: any) => ({ id: g.id, name: g.name })));
-      }
-    } catch (err) {
-      console.error('Error fetching girls:', err);
-    }
-  };
 
   const fetchReviews = async () => {
     try {
@@ -195,15 +176,7 @@ export default function AdminReviewsPage() {
           </div>
           <button
             type="button"
-            onClick={() => {
-              console.log('[BUTTON] Clicked! Girls loaded:', girls.length);
-              if (girls.length === 0) {
-                alert('Načítání dívek, chvíli strpení...');
-                return;
-              }
-              setShowAddModal(true);
-            }}
-            disabled={girls.length === 0}
+            onClick={() => router.push('/admin/reviews/new')}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -217,10 +190,7 @@ export default function AdminReviewsPage() {
               fontWeight: '600',
               cursor: 'pointer',
               transition: 'all 0.2s',
-              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)',
-              position: 'relative',
-              zIndex: 10,
-              pointerEvents: 'auto'
+              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
@@ -412,17 +382,6 @@ export default function AdminReviewsPage() {
           )}
         </div>
       )}
-
-      {/* Add Review Modal */}
-      <AddReviewModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        girls={girls}
-        onSuccess={() => {
-          fetchReviews();
-          alert('Recenze byla úspěšně vytvořena!');
-        }}
-      />
 
       <style jsx>{`
         .admin-container {
