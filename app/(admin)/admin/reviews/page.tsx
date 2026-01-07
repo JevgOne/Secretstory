@@ -3,7 +3,12 @@
 import AdminHeader from '@/components/AdminHeader';
 import { useState, useEffect } from 'react';
 import ReviewStars from '@/components/ReviewStars';
-import AddReviewModal from '@/components/AddReviewModal';
+import dynamic from 'next/dynamic';
+
+// Dynamic import with no SSR for modal to avoid hydration errors
+const AddReviewModal = dynamic(() => import('@/components/AddReviewModal'), {
+  ssr: false
+});
 
 interface Review {
   id: number;
