@@ -880,13 +880,81 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                   <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <article className="card">
                       <div className="card-image-container">
-                        {girl.verified && <span className="badge badge-top">{t('girls.verified')}</span>}
-                        {girl.primary_photo ? (
-                          <img src={girl.primary_photo} alt={girl.name} className="card-image" />
-                        ) : (
-                          <div className="card-placeholder">FOTO</div>
+                        {girl.badge_type && (
+                          <span className={`badge ${girl.badge_type === 'new' ? 'badge-new' : girl.badge_type === 'top' ? 'badge-top' : 'badge-asian'}`}>
+                            {girl.badge_type === 'new' ? t('girls.new') : girl.badge_type === 'top' ? t('girls.top_reviews') : girl.badge_type === 'recommended' ? t('girls.recommended') : 'Asian'}
+                          </span>
                         )}
+
+                        {/* 3D Flip Container */}
+                        {girl.secondary_photo ? (
+                          <div className="card-flip-inner">
+                            {/* Front Side */}
+                            <div className="card-flip-front">
+                              {girl.primary_photo || girl.thumbnail ? (
+                                <img
+                                  src={girl.thumbnail || girl.primary_photo}
+                                  alt={girl.name}
+                                  className="card-image"
+                                  loading="lazy"
+                                  decoding="async"
+                                />
+                              ) : (
+                                <div className="card-placeholder">FOTO</div>
+                              )}
+                            </div>
+
+                            {/* Back Side */}
+                            <div className="card-flip-back">
+                              <img
+                                src={girl.secondary_photo}
+                                alt={`${girl.name} - back view`}
+                                className="card-image"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          // No secondary photo - just show primary
+                          girl.primary_photo || girl.thumbnail ? (
+                            <img
+                              src={girl.thumbnail || girl.primary_photo}
+                              alt={girl.name}
+                              className="card-image"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          ) : (
+                            <div className="card-placeholder">FOTO</div>
+                          )
+                        )}
+
                         <div className="card-overlay"></div>
+                        <div className="quick-actions">
+                          <button
+                            className="action-btn"
+                            title="Profil"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              window.location.href = `/${locale}/profily/${girl.slug}`;
+                            }}
+                          >
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                          </button>
+                          <button
+                            className="action-btn"
+                            title="Přidat do oblíbených"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              // Favorite functionality would go here
+                            }}
+                          >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                       <div className="card-info">
                         <div className="card-header">

@@ -298,26 +298,6 @@ export default function ReviewsSection({ initialReviews = [] }: ReviewsSectionPr
             </div>
           ))}
         </div>
-
-        <div style={{ textAlign: 'center' }}>
-          <Link
-            href={`/${locale}/recenze`}
-            className="btn"
-            style={{
-              display: 'inline-block',
-              padding: '12px 32px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '8px',
-              color: '#fff',
-              textDecoration: 'none',
-              fontWeight: '500',
-              transition: 'all 0.3s ease'
-            }}
-          >
-            {t('reviews_all')}
-          </Link>
-        </div>
       </div>
 
       <style jsx>{`
