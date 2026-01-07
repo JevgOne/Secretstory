@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import AdminHeader from '@/components/AdminHeader';
 
 interface Application {
@@ -280,12 +281,12 @@ export default function AdminApplicationsPage() {
 
                 <p className="app-date">Podáno {formatDate(app.created_at)}</p>
 
-                <button
+                <Link
+                  href={`/admin/applications/${app.id}`}
                   className="detail-button"
-                  onClick={() => setViewingApp(app)}
                 >
                   👁️ Detail
-                </button>
+                </Link>
               </div>
             ))}
 
@@ -430,236 +431,6 @@ export default function AdminApplicationsPage() {
             </div>
           </div>
         )}
-
-        <style jsx>{`
-          .admin-container {
-            padding: 24px;
-            max-width: 1400px;
-            margin: 0 auto;
-            background: #1f1f23;
-            min-height: 100vh;
-          }
-
-          .filters {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-          }
-
-          .loading {
-            text-align: center;
-            padding: 48px;
-            color: #9ca3af;
-          }
-
-          .applications-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-          }
-
-          .app-card {
-            background: #2d2d31;
-            border: 1px solid #3d3d41;
-            border-radius: 12px;
-            padding: 20px;
-            transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-          }
-
-          .app-card:hover {
-            border-color: rgba(212, 175, 55, 0.3);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-          }
-
-          .app-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-          }
-
-          h3 {
-            color: #fff;
-            font-size: 1.2rem;
-            margin-bottom: 4px;
-          }
-
-          .app-meta {
-            color: #9ca3af;
-            font-size: 0.85rem;
-          }
-
-          .app-measurements {
-            color: #d4af37;
-            font-size: 0.9rem;
-            font-weight: 600;
-          }
-
-          .app-status-badge {
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            white-space: nowrap;
-          }
-
-          .app-status-badge[data-status="pending"] {
-            background: rgba(251, 191, 36, 0.2);
-            color: #fbbf24;
-          }
-
-          .app-status-badge[data-status="approved"] {
-            background: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
-          }
-
-          .app-status-badge[data-status="rejected"] {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-          }
-
-          .app-details {
-            margin: 16px 0;
-            color: #9ca3af;
-            font-size: 0.85rem;
-          }
-
-          .app-details p {
-            margin: 4px 0;
-          }
-
-          .app-skills {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin: 12px 0;
-          }
-
-          .skill-badge {
-            padding: 4px 8px;
-            background: rgba(212, 175, 55, 0.2);
-            color: #d4af37;
-            border-radius: 4px;
-            font-size: 0.75rem;
-          }
-
-          .app-date {
-            color: #6b7280;
-            font-size: 0.75rem;
-            margin: 12px 0;
-          }
-
-          .detail-button {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: 2px solid #3b82f6;
-            background: #3b82f6;
-            color: #ffffff;
-            transition: all 0.2s ease;
-            width: 100%;
-            margin-top: 16px;
-            display: inline-block;
-            text-align: center;
-            touch-action: manipulation;
-            user-select: none;
-          }
-
-          .detail-button:hover {
-            background: #2563eb;
-            border-color: #2563eb;
-            transform: scale(1.02);
-          }
-
-          .detail-button:active {
-            background: #1d4ed8;
-            border-color: #1d4ed8;
-            transform: scale(0.98);
-          }
-
-          .empty-state {
-            text-align: center;
-            padding: 48px;
-            color: #9ca3af;
-            background: #2d2d31;
-            border: 1px solid #3d3d41;
-            border-radius: 12px;
-            grid-column: 1 / -1;
-          }
-
-          .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-          }
-
-          .modal-content {
-            background: #2d2d31;
-            border: 1px solid #3d3d41;
-            border-radius: 12px;
-            padding: 24px;
-            width: 100%;
-            max-width: 700px;
-            max-height: 90vh;
-            overflow-y: auto;
-          }
-
-          .modal-content h2 {
-            color: #fff;
-            margin-bottom: 24px;
-          }
-
-          .detail-section {
-            margin-bottom: 24px;
-          }
-
-          .detail-section h3 {
-            color: #d4af37;
-            font-size: 1rem;
-            margin-bottom: 12px;
-          }
-
-          .detail-section p {
-            color: #9ca3af;
-            margin: 8px 0;
-          }
-
-          .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            color: #9ca3af;
-          }
-
-          .modal-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 24px;
-          }
-
-          @media (max-width: 768px) {
-            .applications-grid {
-              grid-template-columns: 1fr;
-            }
-
-            .detail-grid {
-              grid-template-columns: 1fr;
-            }
-          }
-        `}</style>
       </div>
     </>
   );
