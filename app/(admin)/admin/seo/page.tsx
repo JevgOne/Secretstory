@@ -6,7 +6,6 @@ import Link from 'next/link';
 import AdminHeader from '@/components/AdminHeader';
 import type { SEOMetadata } from '@/lib/seo-types';
 import { calculateSEOScore } from '@/lib/seo-utils';
-import { getAllPages } from '@/lib/pages';
 
 interface PageWithSEO {
   path: string;
@@ -34,16 +33,22 @@ export default function AdminSEOPage() {
   const fetchSEOData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/seo');
-      const data = await response.json();
 
-      if (data.success) {
-        const allPages = getAllPages();
+      // Fetch all pages (including dynamic ones from database)
+      const pagesResponse = await fetch('/api/pages');
+      const pagesData = await pagesResponse.json();
+
+      // Fetch SEO metadata
+      const seoResponse = await fetch('/api/seo');
+      const seoData = await seoResponse.json();
+
+      if (pagesData.success && seoData.success) {
+        const allPages = pagesData.pages;
         const seoMap = new Map<string, SEOMetadata>(
-          data.metadata.map((seo: SEOMetadata) => [seo.page_path, seo])
+          seoData.metadata.map((seo: SEOMetadata) => [seo.page_path, seo])
         );
 
-        const pagesWithSEO: PageWithSEO[] = allPages.map(page => {
+        const pagesWithSEO: PageWithSEO[] = allPages.map((page: any) => {
           const seo = seoMap.get(page.path) as SEOMetadata | undefined;
           const seoScore = seo ? calculateSEOScore(seo) : 0;
 
@@ -72,21 +77,30 @@ export default function AdminSEOPage() {
   const handleScanWebsite = async () => {
     try {
       setScanning(true);
-      const allPages = getAllPages();
+
+      // Fetch all pages (including dynamic ones from database)
+      const pagesResponse = await fetch('/api/pages');
+      const pagesData = await pagesResponse.json();
+
+      if (!pagesData.success) {
+        throw new Error('Failed to fetch pages');
+      }
+
+      const allPages = pagesData.pages;
 
       // Get current SEO data
-      const response = await fetch('/api/seo');
-      const data = await response.json();
+      const seoResponse = await fetch('/api/seo');
+      const seoData = await seoResponse.json();
 
-      if (data.success) {
+      if (seoData.success) {
         const existingPaths = new Set(
-          data.metadata.map((seo: SEOMetadata) => seo.page_path)
+          seoData.metadata.map((seo: SEOMetadata) => seo.page_path)
         );
 
         // Create records for pages without SEO metadata
         const createPromises = allPages
-          .filter(page => !existingPaths.has(page.path))
-          .map(page => {
+          .filter((page: any) => !existingPaths.has(page.path))
+          .map((page: any) => {
             const locale = page.path.split('/')[1] || 'cs';
             return fetch('/api/seo', {
               method: 'POST',
@@ -105,7 +119,7 @@ export default function AdminSEOPage() {
 
         await Promise.all(createPromises);
         await fetchSEOData();
-        alert(`Scan dokončen! Nalezeno ${createPromises.length} nových stránek.`);
+        alert(`Scan dokončen! Nalezeno ${createPromises.length} nových stránek.\nCelkem stránek: ${allPages.length}`);
       }
     } catch (err) {
       console.error('Error scanning website:', err);
