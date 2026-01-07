@@ -251,11 +251,13 @@ export default function HomeClient({ initialData }: HomeClientProps) {
 
       {/* PROFILES */}
       <section className="profiles" id="profiles">
-        <div className="profiles-header">
-          <div>
-            <h2 className="section-title">{tHome('profiles_title')}</h2>
-            <p className="section-subtitle">{tHome('profiles_subtitle')}</p>
-          </div>
+        <div className="profiles-header" style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem' }}>
+          <h2 className="section-title" style={{ fontSize: '2.8rem', marginBottom: '1rem', fontWeight: 500 }}>
+            {tHome('profiles_title')}
+          </h2>
+          <p className="section-subtitle" style={{ fontSize: '1.3rem', lineHeight: 1.6, color: '#c8b5ba' }}>
+            {tHome('profiles_subtitle')}
+          </p>
         </div>
         <div className="cards-grid">
           {loading ? (
