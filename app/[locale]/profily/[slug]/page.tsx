@@ -157,6 +157,7 @@ interface Girl {
   videos?: Video[];
   // For online girls list
   primary_photo?: string;
+  secondary_photo?: string;
   is_working_now?: boolean;
   schedule_from?: string;
   schedule_to?: string;
