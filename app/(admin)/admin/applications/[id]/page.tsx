@@ -321,43 +321,6 @@ export default function ApplicationDetailPage() {
           )}
 
           <div className="detail-section">
-            <h3>📸 Fotografie</h3>
-            {application.photo_main && (
-              <div style={{ marginBottom: '1.5rem' }}>
-                <p><strong>Hlavní fotka:</strong></p>
-                <div style={{ position: 'relative', width: '100%', maxWidth: '400px', height: '500px', borderRadius: '12px', overflow: 'hidden', marginTop: '1rem' }}>
-                  <Image
-                    src={application.photo_main}
-                    alt="Hlavní fotka"
-                    fill
-                    style={{ objectFit: 'cover' }}
-                  />
-                </div>
-              </div>
-            )}
-            {application.photo_gallery && parseJSON(application.photo_gallery).length > 0 && (
-              <div>
-                <p><strong>Galerie ({parseJSON(application.photo_gallery).length} fotek):</strong></p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-                  {parseJSON(application.photo_gallery).map((url: string, idx: number) => (
-                    <div key={idx} style={{ position: 'relative', width: '100%', height: '250px', borderRadius: '8px', overflow: 'hidden' }}>
-                      <Image
-                        src={url}
-                        alt={`Galerie ${idx + 1}`}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {!application.photo_main && (!application.photo_gallery || parseJSON(application.photo_gallery).length === 0) && (
-              <p style={{ color: '#9ca3af' }}>Žádné fotky nebyly nahrány</p>
-            )}
-          </div>
-
-          <div className="detail-section">
             <h3>💎 Služby</h3>
             {application.services && parseJSON(application.services).length > 0 ? (
               <>
