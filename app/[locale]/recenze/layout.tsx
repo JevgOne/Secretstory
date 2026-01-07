@@ -6,7 +6,7 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
-  const pagePath = `/${locale}/join`
+  const pagePath = `/${locale}/recenze`
 
   // Load SEO from database (no fallback - noindex if not in DB)
   const metadata = await generatePageMetadata(pagePath)
@@ -16,15 +16,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     alternates: {
       ...metadata.alternates,
       languages: {
-        'cs': '/cs/join',
-        'en': '/en/join',
-        'de': '/de/join',
-        'uk': '/uk/join'
+        'cs': '/cs/recenze',
+        'en': '/en/recenze',
+        'de': '/de/recenze',
+        'uk': '/uk/recenze'
       }
     }
   }
 }
 
-export default function JoinLayout({ children }: { children: React.ReactNode }) {
+export default function RecenzeLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
