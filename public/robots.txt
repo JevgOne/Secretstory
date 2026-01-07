@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
 
+# Block admin panel and sensitive areas
+Disallow: /admin
+Disallow: /admin/
+Disallow: /*/join
+Disallow: /*/join/
+Disallow: /api/admin
+Disallow: /api/auth
+
 Sitemap: https://www.lovelygirls.cz/sitemap.xml
