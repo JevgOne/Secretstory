@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AdminHeader from '@/components/AdminHeader';
 
+// Force dynamic rendering - admin pages should never be cached
+export const dynamic = 'force-dynamic';
+
 interface Application {
   id: number;
   name: string;

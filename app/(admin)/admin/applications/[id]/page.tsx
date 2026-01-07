@@ -6,6 +6,9 @@ import AdminHeader from '@/components/AdminHeader';
 import { getServiceName, getBasicServices, getExtraServices } from '@/lib/services';
 import Image from 'next/image';
 
+// Force dynamic rendering - admin pages should never be cached
+export const dynamic = 'force-dynamic';
+
 interface Application {
   id: number;
   name: string;
