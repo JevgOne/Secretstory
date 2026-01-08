@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
 import { getAllPages } from '@/lib/pages';
 import { HASHTAGS } from '@/lib/hashtags';
 
@@ -30,23 +29,7 @@ export async function GET() {
       });
     }
 
-    // 4. Get active girls from database for dynamic profile pages
-    const girlsResult = await db.execute({
-      sql: 'SELECT slug, name FROM girls WHERE status = ?',
-      args: ['active']
-    });
-
-    for (const girl of girlsResult.rows) {
-      for (const locale of locales) {
-        allPages.push({
-          path: `/${locale}/profily/${girl.slug}`,
-          type: 'girl',
-          name: `Profile - ${girl.name} (${locale.toUpperCase()})`
-        });
-      }
-    }
-
-    // 5. Add hashtag pages for each hashtag and locale
+    // 4. Add hashtag pages for each hashtag and locale
     for (const hashtag of HASHTAGS) {
       for (const locale of locales) {
         allPages.push({

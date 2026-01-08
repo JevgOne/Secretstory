@@ -181,9 +181,8 @@ export default function AdminSEOPage() {
   const getTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
       static: 'Statická stránka',
-      dynamic: 'Dynamická stránka',
-      blog: 'Blog',
-      girl: 'Profil dívky'
+      hashtag: 'Hashtag stránka',
+      blog: 'Blog'
     };
     return labels[type] || type;
   };
@@ -191,9 +190,8 @@ export default function AdminSEOPage() {
   const getTypeBadge = (type: string) => {
     const colors: Record<string, { bg: string; color: string }> = {
       static: { bg: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6' },
-      dynamic: { bg: 'rgba(139, 92, 246, 0.2)', color: '#8b5cf6' },
-      blog: { bg: 'rgba(34, 197, 94, 0.2)', color: '#22c55e' },
-      girl: { bg: 'rgba(236, 72, 153, 0.2)', color: '#ec4899' }
+      hashtag: { bg: 'rgba(236, 72, 153, 0.2)', color: '#ec4899' },
+      blog: { bg: 'rgba(34, 197, 94, 0.2)', color: '#22c55e' }
     };
 
     const style = colors[type] || { bg: 'rgba(107, 114, 128, 0.2)', color: '#6b7280' };
@@ -347,9 +345,8 @@ export default function AdminSEOPage() {
             <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
               <option value="all">Všechny</option>
               <option value="static">Statická</option>
-              <option value="dynamic">Dynamická</option>
+              <option value="hashtag">Hashtag</option>
               <option value="blog">Blog</option>
-              <option value="girl">Profil dívky</option>
             </select>
           </div>
 
