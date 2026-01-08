@@ -6575,7 +6575,7 @@ body > div > button[title*="Next"],
 
 .stat-label {
     color: var(--text-secondary);
-    font-size: 0.58rem;
+    font-size: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 3px;
@@ -6585,7 +6585,7 @@ body > div > button[title*="Next"],
 .stat-value {
     color: var(--text-primary);
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     line-height: 1.2;
 }
 
@@ -6707,11 +6707,11 @@ body > div > button[title*="Next"],
         padding: 7px 12px;
     }
     .stat-label {
-        font-size: 0.56rem;
+        font-size: 0.48rem;
         margin-bottom: 2px;
     }
     .stat-value {
-        font-size: 0.85rem;
+        font-size: 0.7rem;
     }
 
     /* Disable hover effects on mobile to prevent skewed/rotated cards */
@@ -7399,7 +7399,7 @@ body > div > button[title*="Next"],
   }
 
   .stat-label {
-    font-size: 0.58rem;
+    font-size: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 500;
@@ -7407,7 +7407,7 @@ body > div > button[title*="Next"],
   }
 
   .stat-value {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: 700;
   }
 
@@ -7434,7 +7434,7 @@ body > div > button[title*="Next"],
   }
 
   .stat-label {
-    font-size: 0.56rem;
+    font-size: 0.48rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 500;
@@ -7442,7 +7442,7 @@ body > div > button[title*="Next"],
   }
 
   .stat-value {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     font-weight: 700;
   }
 }

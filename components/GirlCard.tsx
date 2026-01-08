@@ -278,7 +278,7 @@ export default function GirlCard({
         }
 
         .girl-card-stat-label {
-          font-size: 0.62rem;
+          font-size: 0.5rem;
           color: var(--gray);
           text-transform: uppercase;
           letter-spacing: 0.08em;
@@ -286,7 +286,7 @@ export default function GirlCard({
         }
 
         .girl-card-stat-value {
-          font-size: 1rem;
+          font-size: 0.75rem;
           font-weight: 700;
           color: var(--white);
         }
