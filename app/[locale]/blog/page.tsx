@@ -5,6 +5,9 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
 import BlogContent from './BlogContent';
 
+// Force dynamic rendering to avoid build timeout
+export const dynamic = 'force-dynamic';
+
 // ISR: Revalidate every 5 minutes
 export const revalidate = 300;
 

@@ -230,7 +230,7 @@ async function getHomepageData() {
     console.error('Homepage data fetch error:', error);
     return {
       girls: [],
-      featuredGirl: null,
+      featuredGirls: [],
       newGirls: [],
       locations: [],
       stories: [],
