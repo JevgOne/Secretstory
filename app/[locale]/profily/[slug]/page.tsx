@@ -1267,13 +1267,14 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
         .detail-grid {
           display: grid;
-          grid-template-columns: 500px 1fr;
+          grid-template-columns: minmax(min(100%, 400px), 500px) 1fr;
           grid-template-areas:
             "gallery header"
             "gallery content";
           gap: 0 3rem;
           max-width: 1200px;
           margin: 0 auto;
+          padding: 0 2%;
         }
 
         .gallery {
@@ -2396,7 +2397,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             grid-template-columns: 1fr;
           }
           .similar-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
+            gap: 1rem;
           }
           .profile-name {
             font-size: 2.5rem;
@@ -2410,6 +2412,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           }
           .location-name {
             font-size: 0.75rem;
+          }
+          .similar-section {
+            padding: 2rem 4%;
           }
         }
 
