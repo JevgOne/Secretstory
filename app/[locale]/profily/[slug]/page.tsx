@@ -938,10 +938,10 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                           {timeRange && <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`}>{timeRange}</span>}
                         </div>
                         <div className="card-stats">
-                          <span className="stat"><span className="stat-value">{girl.age || '?'}</span><span className="stat-label">{t('girls.age_years')}</span></span>
-                          <span className="stat"><span className="stat-value">{girl.height || '?'}</span><span className="stat-label">cm</span></span>
-                          <span className="stat"><span className="stat-value">{girl.weight || '?'}</span><span className="stat-label">kg</span></span>
-                          <span className="stat"><span className="stat-value">{breastSize}</span><span className="stat-label">{t('girls.bust')}</span></span>
+                          <span className="stat"><span className="stat-label">{t('girls.age_years')}</span><span className="stat-value">{girl.age || '?'}</span></span>
+                          <span className="stat"><span className="stat-label">cm</span><span className="stat-value">{girl.height || '?'}</span></span>
+                          <span className="stat"><span className="stat-label">kg</span><span className="stat-value">{girl.weight || '?'}</span></span>
+                          <span className="stat"><span className="stat-label">{t('girls.bust')}</span><span className="stat-value">{breastSize}</span></span>
                         </div>
                         <div className="card-location-wrapper">
                           <div className="card-location">
