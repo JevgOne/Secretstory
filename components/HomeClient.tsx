@@ -73,7 +73,7 @@ interface Location {
 interface HomeClientProps {
   initialData: {
     girls: Girl[];
-    featuredGirl: Girl | null;
+    featuredGirls: Girl[];
     newGirls: Girl[];
     locations: Location[];
     stories: any[];
@@ -84,7 +84,8 @@ interface HomeClientProps {
 
 export default function HomeClient({ initialData }: HomeClientProps) {
   const [girls] = useState<Girl[]>(initialData.girls);
-  const [featuredGirl] = useState<Girl | null>(initialData.featuredGirl);
+  const [featuredGirls] = useState<Girl[]>(initialData.featuredGirls);
+  const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
   const [newGirls] = useState<Girl[]>(initialData.newGirls);
   const [locations] = useState<Location[]>(initialData.locations);
   const [stories] = useState<any[]>(initialData.stories);
@@ -101,6 +102,17 @@ export default function HomeClient({ initialData }: HomeClientProps) {
   const pathname = usePathname();
   const [showAgeModal, setShowAgeModal] = useState(false);
   const { isFavorite, toggleFavorite } = useFavorites();
+
+  // Auto-rotate featured girls every 5 seconds
+  useEffect(() => {
+    if (featuredGirls.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentFeaturedIndex((prev) => (prev + 1) % featuredGirls.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [featuredGirls.length]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -216,18 +228,20 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               <a href="#booking" className="btn">{tHome('hero_cta_secondary')}</a>
             </div>
           </div>
-          {featuredGirl && (
+          {featuredGirls.length > 0 && (
             <div className="hero-new">
               <div className="new-label">✦ {tHome('new_label')}</div>
               <div className="new-girl-card">
                 <div className="new-girl-img">
-                  {featuredGirl.primary_photo ? (
+                  {featuredGirls[currentFeaturedIndex].primary_photo ? (
                     <img
-                      src={featuredGirl.primary_photo}
-                      alt={featuredGirl.name}
+                      key={currentFeaturedIndex}
+                      src={featuredGirls[currentFeaturedIndex].primary_photo}
+                      alt={featuredGirls[currentFeaturedIndex].name}
                       loading="eager"
                       decoding="async"
                       fetchPriority="high"
+                      className="featured-img-animate"
                     />
                   ) : (
                     <div className="placeholder">FOTO</div>
@@ -235,12 +249,24 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                   <span className="new-badge">{tHome('new_badge')}</span>
                 </div>
                 <div className="new-girl-info">
-                  <div className="new-girl-name">{featuredGirl.name}</div>
-                  <div className="new-girl-meta">{featuredGirl.age} let • {featuredGirl.height} cm</div>
+                  <div className="new-girl-name">{featuredGirls[currentFeaturedIndex].name}</div>
+                  <div className="new-girl-meta">{featuredGirls[currentFeaturedIndex].age} let • {featuredGirls[currentFeaturedIndex].height} cm</div>
                   <div className="new-girl-desc">{tHome('new_girl_desc')}</div>
-                  <Link href={`/${locale}/profily/${featuredGirl.slug}`} className="btn btn-fill" style={{ marginTop: '1rem', width: '100%', justifyContent: 'center' }}>{tHome('view_profile')}</Link>
+                  <Link href={`/${locale}/profily/${featuredGirls[currentFeaturedIndex].slug}`} className="btn btn-fill" style={{ marginTop: '1rem', width: '100%', justifyContent: 'center' }}>{tHome('view_profile')}</Link>
                 </div>
               </div>
+              {featuredGirls.length > 1 && (
+                <div className="featured-dots">
+                  {featuredGirls.map((_, index) => (
+                    <button
+                      key={index}
+                      className={`featured-dot ${index === currentFeaturedIndex ? 'active' : ''}`}
+                      onClick={() => setCurrentFeaturedIndex(index)}
+                      aria-label={`View ${featuredGirls[index].name}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

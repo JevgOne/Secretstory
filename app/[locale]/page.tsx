@@ -214,11 +214,12 @@ async function getHomepageData() {
       return 0;
     });
 
-    const featuredGirl = activeGirls.find((g: any) => g.is_new) || newGirls[0] || null;
+    // Get all new girls for hero rotation
+    const featuredGirls = newGirls.length > 0 ? newGirls : (activeGirls.filter((g: any) => g.is_new).length > 0 ? activeGirls.filter((g: any) => g.is_new) : [activeGirls[0]].filter(Boolean));
 
     return {
       girls: activeGirls.slice(0, 4),
-      featuredGirl,
+      featuredGirls,
       newGirls,
       locations: locationsResult.rows as any[],
       stories: Object.values(storiesByGirl),
