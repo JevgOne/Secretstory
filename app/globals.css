@@ -6573,7 +6573,8 @@ body > div > button[title*="Next"],
     transform: translateY(-1px);
 }
 
-.stat-label {
+.card-stats .stat-label,
+.cards-grid .stat-label {
     color: var(--text-secondary);
     font-size: 0.3rem;
     text-transform: uppercase;
@@ -6582,7 +6583,8 @@ body > div > button[title*="Next"],
     font-weight: 500;
 }
 
-.stat-value {
+.card-stats .stat-value,
+.cards-grid .stat-value {
     color: var(--text-primary);
     font-weight: 700;
     font-size: 0.5rem;
