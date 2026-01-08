@@ -1300,7 +1300,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           display: flex;
           flex-direction: column;
           gap: 1rem;
-          align-self: flex-start;
+          align-self: start;
         }
 
         .gallery-main {
