@@ -616,23 +616,23 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             <div className="stats-section">
               <div className="stats-row">
                 <div className="stat-item">
-                  <div className={`stat-value ${cormorant.className}`}>{profile.age}</div>
-                  <div className="stat-label">{t('girls.age_years')}</div>
+                  <div className={`profile-stat-value ${cormorant.className}`}>{profile.age}</div>
+                  <div className="profile-stat-label">{t('girls.age_years')}</div>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
-                  <div className={`stat-value ${cormorant.className}`}>{profile.height}</div>
-                  <div className="stat-label">{t('girls.height_cm')}</div>
+                  <div className={`profile-stat-value ${cormorant.className}`}>{profile.height}</div>
+                  <div className="profile-stat-label">{t('girls.height_cm')}</div>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
-                  <div className={`stat-value ${cormorant.className}`}>{profile.weight}</div>
-                  <div className="stat-label">{t('girls.weight_kg')}</div>
+                  <div className={`profile-stat-value ${cormorant.className}`}>{profile.weight}</div>
+                  <div className="profile-stat-label">{t('girls.weight_kg')}</div>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
-                  <div className={`stat-value ${cormorant.className}`}>{getBreastSize()}</div>
-                  <div className="stat-label">{t('girls.bust')}</div>
+                  <div className={`profile-stat-value ${cormorant.className}`}>{getBreastSize()}</div>
+                  <div className="profile-stat-label">{t('girls.bust')}</div>
                 </div>
               </div>
               <div className="languages-row">
@@ -1693,14 +1693,15 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           background: rgba(255,255,255,0.1);
         }
 
-        .stat-value {
+        /* Profile header stats use different classes */
+        .profile-stat-value {
           font-size: 2rem;
           font-weight: 400;
           line-height: 1;
           margin-bottom: 0.25rem;
         }
 
-        .stat-label {
+        .profile-stat-label {
           font-size: 0.7rem;
           color: var(--gray);
           text-transform: uppercase;
