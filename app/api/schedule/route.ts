@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
 
-// Revalidate every 60 seconds (ISR)
-export const revalidate = 60;
+// Force dynamic rendering (uses searchParams)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // GET /api/schedule - Get girls available on specified date with their schedule
 export async function GET(request: NextRequest) {
