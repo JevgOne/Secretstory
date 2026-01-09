@@ -2,8 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { VIBE_OPTIONS, TAG_OPTIONS } from '@/lib/review-constants';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import MobileMenu from '@/components/MobileMenu';
+import BigFooter from '@/components/BigFooter';
 
 interface Review {
   id: number;
@@ -30,7 +34,9 @@ interface Girl {
 
 export default function ReviewsPage() {
   const locale = useLocale();
+  const pathname = usePathname();
   const t = useTranslations('home');
+  const tNav = useTranslations('nav');
 
   const [reviews, setReviews] = useState<Review[]>([]);
   const [girls, setGirls] = useState<Girl[]>([]);
@@ -123,307 +129,199 @@ export default function ReviewsPage() {
   const activeFiltersCount = [selectedGirl, selectedRating, selectedVibe].filter(Boolean).length;
 
   return (
-    <section style={{ padding: '2.5rem 0', background: 'rgba(0, 0, 0, 0.2)', minHeight: '70vh' }}>
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h2 className="section-title">{t('reviews_title')}</h2>
-          <p className="section-subtitle">{t('reviews_subtitle')}</p>
+    <>
+      {/* MOBILE MENU */}
+      <MobileMenu currentPath={pathname} />
+
+      {/* NAVIGATION */}
+      <nav className="main-nav">
+        <Link href={`/${locale}`} className="logo">
+          <span className="logo-L">L</span>
+          ovely Girls
+        </Link>
+        <div className="nav-links">
+          <Link href={`/${locale}`}>{tNav('home')}</Link>
+          <Link href={`/${locale}/divky`}>{tNav('girls')}</Link>
+          <Link href={`/${locale}/cenik`}>{tNav('pricing')}</Link>
+          <Link href={`/${locale}/schedule`}>{tNav('schedule')}</Link>
+          <Link href={`/${locale}/discounts`}>{tNav('discounts')}</Link>
+          <Link href={`/${locale}/faq`}>{tNav('faq')}</Link>
         </div>
+        <div className="nav-contact">
+          <LanguageSwitcher />
+          <a href="https://t.me/+420734332131" className="btn">{tNav('telegram')}</a>
+          <a href="https://wa.me/420734332131" className="btn btn-fill">{tNav('whatsapp')}</a>
+        </div>
+      </nav>
 
-        {/* Filters */}
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '16px',
-          padding: '1.5rem',
-          marginBottom: '2rem'
-        }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1rem',
-            alignItems: 'end'
-          }}>
-            {/* Girl Filter */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Dívka</label>
-              <select
-                style={{
-                  padding: '0.75rem 1rem',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '8px',
-                  color: '#ffffff',
-                  fontSize: '0.95rem',
-                  cursor: 'pointer'
-                }}
-                value={selectedGirl}
-                onChange={(e) => setSelectedGirl(e.target.value)}
-              >
-                <option value="">Všechny dívky</option>
-                {girls.map((girl) => (
-                  <option key={girl.id} value={girl.id}>{girl.name}</option>
-                ))}
-              </select>
-            </div>
+      {/* PAGE CONTENT */}
+      <section className="reviews-page">
+        <div className="container">
+          {/* Page Header */}
+          <div className="page-header">
+            <h1 className="page-title">{t('reviews_title')}</h1>
+            <p className="page-subtitle">{t('reviews_subtitle')}</p>
+          </div>
 
-            {/* Rating Filter */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Hodnocení</label>
-              <select
-                style={{
-                  padding: '0.75rem 1rem',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '8px',
-                  color: '#ffffff',
-                  fontSize: '0.95rem',
-                  cursor: 'pointer'
-                }}
-                value={selectedRating}
-                onChange={(e) => setSelectedRating(e.target.value)}
-              >
-                <option value="">Všechna hodnocení</option>
-                <option value="5">⭐⭐⭐⭐⭐ Z5 (5 hvězd)</option>
-                <option value="4">⭐⭐⭐⭐ (4+ hvězd)</option>
-                <option value="3">⭐⭐⭐ (3+ hvězd)</option>
-              </select>
-            </div>
-
-            {/* Vibe Filter */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: '600', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Atmosféra</label>
-              <select
-                style={{
-                  padding: '0.75rem 1rem',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '8px',
-                  color: '#ffffff',
-                  fontSize: '0.95rem',
-                  cursor: 'pointer'
-                }}
-                value={selectedVibe}
-                onChange={(e) => setSelectedVibe(e.target.value)}
-              >
-                <option value="">Všechny</option>
-                {Object.entries(VIBE_OPTIONS).map(([key, vibe]) => (
-                  <option key={key} value={key}>
-                    {vibe.emoji} {vibe.label_cs}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Reset Button */}
-            {activeFiltersCount > 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <label style={{ fontSize: '0.875rem', fontWeight: '600', color: 'transparent', textTransform: 'uppercase', letterSpacing: '0.5px' }}>.</label>
-                <button
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    background: 'rgba(139, 21, 56, 0.8)',
-                    border: 'none',
-                    borderRadius: '8px',
-                    color: '#ffffff',
-                    fontSize: '0.9rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onClick={resetFilters}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(139, 21, 56, 1)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(139, 21, 56, 0.8)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
+          {/* Modern Filters */}
+          <div className="reviews-filters">
+            <div className="filters-grid">
+              {/* Girl Filter */}
+              <div className="filter-item">
+                <label className="filter-label">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  Dívka
+                </label>
+                <select
+                  className="filter-select"
+                  value={selectedGirl}
+                  onChange={(e) => setSelectedGirl(e.target.value)}
                 >
-                  ✕ Vymazat ({activeFiltersCount})
-                </button>
+                  <option value="">Všechny dívky</option>
+                  {girls.map((girl) => (
+                    <option key={girl.id} value={girl.id}>{girl.name}</option>
+                  ))}
+                </select>
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* Loading / No Results */}
-        {loading ? (
-          <div style={{ textAlign: 'center', color: '#9ca3af', padding: '3rem 0' }}>Načítání recenzí...</div>
-        ) : reviews.length === 0 ? (
-          <div style={{ textAlign: 'center', color: '#9ca3af', padding: '3rem 0' }}>
-            <p style={{ marginBottom: '1rem' }}>Žádné recenze nebyly nalezeny.</p>
-            {activeFiltersCount > 0 && (
-              <button
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  background: 'rgba(139, 21, 56, 0.8)',
-                  border: 'none',
-                  borderRadius: '8px',
-                  color: '#ffffff',
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}
-                onClick={resetFilters}
-              >
-                Vymazat filtry
-              </button>
-            )}
+              {/* Rating Filter */}
+              <div className="filter-item">
+                <label className="filter-label">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  Hodnocení
+                </label>
+                <select
+                  className="filter-select"
+                  value={selectedRating}
+                  onChange={(e) => setSelectedRating(e.target.value)}
+                >
+                  <option value="">Všechna hodnocení</option>
+                  <option value="5">★★★★★ (5 hvězd)</option>
+                  <option value="4">★★★★ (4+ hvězd)</option>
+                  <option value="3">★★★ (3+ hvězd)</option>
+                </select>
+              </div>
+
+              {/* Vibe Filter */}
+              <div className="filter-item">
+                <label className="filter-label">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                    <line x1="9" y1="9" x2="9.01" y2="9"/>
+                    <line x1="15" y1="9" x2="15.01" y2="9"/>
+                  </svg>
+                  Atmosféra
+                </label>
+                <select
+                  className="filter-select"
+                  value={selectedVibe}
+                  onChange={(e) => setSelectedVibe(e.target.value)}
+                >
+                  <option value="">Všechny</option>
+                  {Object.entries(VIBE_OPTIONS).map(([key, vibe]) => (
+                    <option key={key} value={key}>
+                      {vibe.emoji} {vibe.label_cs}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Reset Button */}
+              {activeFiltersCount > 0 && (
+                <div className="filter-item filter-reset">
+                  <button className="reset-btn" onClick={resetFilters}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                    Vymazat ({activeFiltersCount})
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        ) : (
-          <>
-            <div style={{ textAlign: 'center', color: '#9ca3af', fontSize: '0.95rem', fontWeight: '500', marginBottom: '1.5rem' }}>
+
+          {/* Results Count */}
+          {!loading && reviews.length > 0 && (
+            <div className="results-count">
               Zobrazeno {reviews.length} {reviews.length === 1 ? 'recenze' : reviews.length < 5 ? 'recenze' : 'recenzí'}
             </div>
+          )}
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-              gap: '24px',
-              marginBottom: '2rem'
-            }}>
+          {/* Loading / No Results / Reviews Grid */}
+          {loading ? (
+            <div className="loading-state">
+              <div className="loading-spinner"></div>
+              <p>Načítání recenzí...</p>
+            </div>
+          ) : reviews.length === 0 ? (
+            <div className="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="64" height="64">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <p>Žádné recenze nebyly nalezeny.</p>
+              {activeFiltersCount > 0 && (
+                <button className="reset-btn" onClick={resetFilters}>
+                  Vymazat filtry
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="reviews-grid">
               {reviews.map((review) => (
-                <div
-                  key={review.id}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
-                    e.currentTarget.style.borderColor = '#d4af37';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                  }}
-                >
-                  {/* Girl name with photo at the top */}
+                <article key={review.id} className="review-card">
+                  {/* Girl Info */}
                   {review.girl_name && (
-                    <Link
-                      href={`/${locale}/profily/${review.girl_slug}`}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        marginBottom: '16px',
-                        textDecoration: 'none'
-                      }}
-                    >
+                    <Link href={`/${locale}/profily/${review.girl_slug}`} className="review-girl">
                       {review.girl_photo && (
                         <img
                           src={review.girl_photo}
                           alt={review.girl_name}
-                          style={{
-                            width: '48px',
-                            height: '48px',
-                            borderRadius: '50%',
-                            objectFit: 'cover',
-                            border: '2px solid var(--wine)'
-                          }}
+                          className="review-girl-photo"
                         />
                       )}
-                      <div>
-                        <div style={{
-                          fontSize: '18px',
-                          fontWeight: '700',
-                          color: '#fff',
-                          marginBottom: '4px'
-                        }}>
-                          {review.girl_name}
-                        </div>
-                        <div style={{
-                          fontSize: '12px',
-                          color: 'var(--wine)',
-                          fontWeight: '500'
-                        }}>
-                          {t('view_profile')}
-                        </div>
+                      <div className="review-girl-info">
+                        <span className="review-girl-name">{review.girl_name}</span>
+                        <span className="review-girl-link">{t('view_profile')}</span>
                       </div>
                     </Link>
                   )}
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                    <div>
-                      <div style={{ color: '#9ca3af', fontWeight: '500', fontSize: '13px' }}>
-                        {review.author_name}
-                        {review.status === 'approved' && (
-                          <span style={{ marginLeft: '6px', color: '#10b981', fontSize: '13px' }} title="Ověřeno">✓</span>
-                        )}
-                        <span style={{ margin: '0 8px', color: '#4b5563' }}>•</span>
-                        {formatDate(review.created_at)}
-                      </div>
+                  {/* Review Header */}
+                  <div className="review-header">
+                    <div className="review-author">
+                      <span className="author-name">{review.author_name}</span>
+                      {review.status === 'approved' && (
+                        <span className="verified-badge" title="Ověřeno">✓</span>
+                      )}
+                      <span className="review-date">{formatDate(review.created_at)}</span>
                     </div>
-                    <div style={{ display: 'flex', gap: '2px' }}>
+                    <div className="review-stars">
                       {renderStars(review.rating)}
                     </div>
                   </div>
 
-                  {review.title && (
-                    <h3 style={{
-                      color: '#fff',
-                      fontSize: '15px',
-                      fontWeight: '600',
-                      marginBottom: '8px'
-                    }}>
-                      {review.title}
-                    </h3>
-                  )}
-
-                  <p style={{
-                    color: '#e5e7eb',
-                    fontSize: '14px',
-                    lineHeight: '1.6',
-                    marginBottom: '12px',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 4,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden'
-                  }}>
-                    {review.content}
-                  </p>
+                  {/* Review Content */}
+                  {review.title && <h3 className="review-title">{review.title}</h3>}
+                  <p className="review-content">{review.content}</p>
 
                   {/* Vibe and Tags */}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
-                    {/* Vibe emoji */}
+                  <div className="review-tags">
                     {review.vibe && VIBE_OPTIONS[review.vibe as keyof typeof VIBE_OPTIONS] && (
-                      <div style={{
-                        fontSize: '20px',
-                        padding: '4px 8px',
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        borderRadius: '6px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px'
-                      }}>
+                      <span className="vibe-tag">
                         {VIBE_OPTIONS[review.vibe as keyof typeof VIBE_OPTIONS].emoji}
-                      </div>
+                      </span>
                     )}
-
-                    {/* Tags */}
                     {review.tags && JSON.parse(review.tags).map((tagId: string) => {
                       const tag = TAG_OPTIONS[tagId as keyof typeof TAG_OPTIONS];
                       if (!tag) return null;
                       return (
-                        <span
-                          key={tagId}
-                          style={{
-                            fontSize: '12px',
-                            padding: '4px 10px',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '12px',
-                            color: '#9ca3af',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                          }}
-                        >
+                        <span key={tagId} className="tag">
                           <span>{tag.emoji}</span>
                           <span>{tag.label_cs}</span>
                         </span>
@@ -431,44 +329,23 @@ export default function ReviewsPage() {
                     })}
                   </div>
 
-                  {/* Helpful count */}
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    color: '#9ca3af',
-                    fontSize: '13px',
-                    fontWeight: '500'
-                  }}>
+                  {/* Helpful */}
+                  <div className="review-helpful">
                     <span>👍</span>
                     <span>Užitečné</span>
                     {review.helpful_count !== undefined && review.helpful_count > 0 && (
-                      <span style={{
-                        background: 'rgba(212, 175, 55, 0.15)',
-                        color: '#d4af37',
-                        padding: '2px 8px',
-                        borderRadius: '10px',
-                        fontSize: '12px',
-                        fontWeight: '600'
-                      }}>
-                        {review.helpful_count}
-                      </span>
+                      <span className="helpful-count">{review.helpful_count}</span>
                     )}
                   </div>
-                </div>
+                </article>
               ))}
             </div>
-          </>
-        )}
-      </div>
+          )}
+        </div>
+      </section>
 
-      <style jsx>{`
-        @media (max-width: 768px) {
-          section {
-            padding: 2rem 0 !important;
-          }
-        }
-      `}</style>
-    </section>
+      {/* FOOTER */}
+      <BigFooter />
+    </>
   );
 }
