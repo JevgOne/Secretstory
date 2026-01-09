@@ -59,6 +59,24 @@ export default function GirlCard({
     return t(`languages.${code}` as any) || code;
   };
 
+  // Convert bust (A, B, C, D, E or measurement) to number (1, 2, 3)
+  const getBustNumber = (bust: string): number | string => {
+    if (!bust) return '-';
+    const bustUpper = bust.toUpperCase();
+    // Check for cup sizes
+    if (bustUpper.includes('A')) return 1;
+    if (bustUpper.includes('B')) return 2;
+    if (bustUpper.includes('C') || bustUpper.includes('D') || bustUpper.includes('E')) return 3;
+    // If it's just a number, try to convert based on measurement
+    const num = parseInt(bust);
+    if (!isNaN(num)) {
+      if (num >= 95) return 3;
+      if (num >= 80) return 2;
+      return 1;
+    }
+    return '-';
+  };
+
   const handleWhatsApp = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -104,7 +122,7 @@ export default function GirlCard({
               <span className="girl-card-stat-label">{translations.weight_kg}</span>
             </div>
             <div className="girl-card-stat">
-              <span className="girl-card-stat-value">{girl.bust || '-'}</span>
+              <span className="girl-card-stat-value">{getBustNumber(girl.bust)}</span>
               <span className="girl-card-stat-label">{translations.bust}</span>
             </div>
           </div>
