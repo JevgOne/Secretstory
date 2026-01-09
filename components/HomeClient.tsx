@@ -266,20 +266,6 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             const badgeText = badge === 'new' ? tGirls('new') : badge === 'top' ? tGirls('top_reviews') : badge === 'recommended' ? tGirls('recommended') : badge === 'asian' ? 'Asian' : '';
             const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
 
-            // Calculate breast size from bust measurement
-            const getBreastSize = (bust: string): number => {
-              if (!bust) return 2;
-              if (bust.includes('-')) {
-                const size = parseInt(bust.split('-')[0]);
-                if (size >= 95) return 3;
-                if (size >= 85) return 2;
-                return 1;
-              }
-              const cups: Record<string, number> = { 'A': 1, 'B': 2, 'C': 3, 'D': 3, 'DD': 3 };
-              return cups[bust] || 2;
-            };
-
-            const breastSize = getBreastSize(girl.bust);
             // Use schedule data from API
             const timeRange = girl.schedule_from && girl.schedule_to ? `${girl.schedule_from} - ${girl.schedule_to}` : null;
             const isWorking = girl.schedule_status === 'working';
@@ -375,7 +361,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                       <span className="stat"><span className="stat-label">{t('girls.age_years')}</span><span className="stat-value">{girl.age || '?'}</span></span>
                       <span className="stat"><span className="stat-label">cm</span><span className="stat-value">{girl.height || '?'}</span></span>
                       <span className="stat"><span className="stat-label">kg</span><span className="stat-value">{girl.weight || '?'}</span></span>
-                      <span className="stat"><span className="stat-label">{t('girls.bust')}</span><span className="stat-value">{breastSize}</span></span>
+                      <span className="stat"><span className="stat-label">{t('girls.bust')}</span><span className="stat-value">{girl.bust || '-'}</span></span>
                     </div>
                     <div className="card-location-wrapper">
                       <div className="card-location">
