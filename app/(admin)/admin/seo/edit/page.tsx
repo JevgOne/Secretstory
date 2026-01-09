@@ -24,7 +24,14 @@ function EditSEOForm() {
     og_image: '',
     og_image_alt: '',
     canonical_url: '',
+    h1_title: '',
+    h2_subtitle: '',
+    page_content: '',
   });
+  const [generating, setGenerating] = useState(false);
+
+  // Check if this is a hashtag page
+  const isHashtagPage = pagePath.includes('/hashtag/') || pagePath.includes('/sluzby/');
 
   useEffect(() => {
     if (!pagePath) {
@@ -55,6 +62,9 @@ function EditSEOForm() {
             og_image: ogImage,
             og_image_alt: data.metadata.og_image_alt || '',
             canonical_url: data.metadata.canonical_url || '',
+            h1_title: data.metadata.h1_title || '',
+            h2_subtitle: data.metadata.h2_subtitle || '',
+            page_content: data.metadata.page_content || '',
           });
         }
       } catch (err: any) {
@@ -479,6 +489,151 @@ function EditSEOForm() {
             <small style={{ color: '#9ca3af', fontSize: '0.85rem' }}>
               Preferovaná URL stránky
             </small>
+          </div>
+
+          {/* Page Content Section - mainly for hashtag/service pages */}
+          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#fff', marginBottom: '1.5rem', marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            Obsah stránky (H1, H2, SEO text)
+            {isHashtagPage && <span style={{ fontSize: '0.85rem', fontWeight: 'normal', color: '#d4af37', marginLeft: '0.75rem' }}>✓ Hashtag/Služba stránka</span>}
+          </h3>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#9ca3af' }}>
+              H1 Nadpis
+            </label>
+            <input
+              type="text"
+              value={formData.h1_title}
+              onChange={(e) => setFormData({ ...formData, h1_title: e.target.value })}
+              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', color: '#fff' }}
+              placeholder="Hlavní nadpis stránky (H1)"
+            />
+            <small style={{ color: '#9ca3af', fontSize: '0.85rem' }}>
+              Hlavní nadpis viditelný na stránce
+            </small>
+          </div>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#9ca3af' }}>
+              H2 Podnadpis
+            </label>
+            <input
+              type="text"
+              value={formData.h2_subtitle}
+              onChange={(e) => setFormData({ ...formData, h2_subtitle: e.target.value })}
+              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', color: '#fff' }}
+              placeholder="Podnadpis stránky (H2)"
+            />
+            <small style={{ color: '#9ca3af', fontSize: '0.85rem' }}>
+              Sekundární nadpis pod H1
+            </small>
+          </div>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#9ca3af' }}>
+              SEO Text / Obsah
+            </label>
+            <textarea
+              value={formData.page_content}
+              onChange={(e) => setFormData({ ...formData, page_content: e.target.value })}
+              rows={8}
+              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', color: '#fff', fontFamily: 'inherit', resize: 'vertical' }}
+              placeholder="SEO text zobrazený na stránce pod seznamem..."
+            />
+            <small style={{ color: '#9ca3af', fontSize: '0.85rem' }}>
+              Text zobrazený na stránce pro SEO účely. Může obsahovat HTML.
+            </small>
+          </div>
+
+          {/* Auto-generate section */}
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(212, 175, 55, 0.1)', border: '1px solid rgba(212, 175, 55, 0.3)', borderRadius: '12px' }}>
+            <h4 style={{ color: '#d4af37', marginBottom: '1rem', fontSize: '1rem', fontWeight: '600' }}>
+              ✨ Automatické generování
+            </h4>
+            <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '1rem' }}>
+              Automaticky vyplní pole na základě cesty stránky a obsahu.
+            </p>
+            <button
+              type="button"
+              disabled={generating}
+              onClick={async () => {
+                setGenerating(true);
+                try {
+                  // Extract page name from path
+                  const pathParts = pagePath.split('/').filter(Boolean);
+                  const pageName = pathParts[pathParts.length - 1] || '';
+                  const locale = pathParts[0] || 'cs';
+
+                  // Format name (convert slug to readable)
+                  const readableName = pageName
+                    .replace(/-/g, ' ')
+                    .replace(/\b\w/g, l => l.toUpperCase());
+
+                  // Generate content based on page type
+                  let generated: any = {};
+
+                  if (pagePath.includes('/hashtag/') || pagePath.includes('/sluzby/')) {
+                    generated = {
+                      meta_title: `${readableName} | LovelyGirls Praha`,
+                      meta_description: `Najděte nejlepší ${readableName.toLowerCase()} escort dívky v Praze. Prémiové služby, diskrétní setkání. LovelyGirls.`,
+                      og_title: `${readableName} - Escort Praha`,
+                      og_description: `${readableName} escort dívky v Praze. Luxusní společnice pro nezapomenutelné zážitky.`,
+                      h1_title: readableName,
+                      h2_subtitle: `Nejlepší ${readableName.toLowerCase()} v Praze`,
+                      focus_keyword: readableName.toLowerCase(),
+                      meta_keywords: `${readableName.toLowerCase()}, escort praha, escort služby`,
+                    };
+                  } else if (pagePath.includes('/profily/')) {
+                    generated = {
+                      meta_title: `${readableName} | Escort Praha | LovelyGirls`,
+                      meta_description: `Seznamte se s ${readableName} - prémiová escort Praha. Profesionální společnice, diskrétní setkání.`,
+                      og_title: `${readableName} - Escort Praha`,
+                      og_description: `${readableName} - luxusní escort společnice v Praze.`,
+                      focus_keyword: readableName.toLowerCase(),
+                    };
+                  } else {
+                    generated = {
+                      meta_title: `${readableName} | LovelyGirls Praha`,
+                      meta_description: `${readableName} - prémiové escort služby v Praze. LovelyGirls.`,
+                      og_title: `${readableName} | LovelyGirls`,
+                      og_description: `${readableName} - LovelyGirls Praha`,
+                    };
+                  }
+
+                  // Only fill empty fields
+                  setFormData(prev => ({
+                    ...prev,
+                    meta_title: prev.meta_title || generated.meta_title || '',
+                    meta_description: prev.meta_description || generated.meta_description || '',
+                    og_title: prev.og_title || generated.og_title || '',
+                    og_description: prev.og_description || generated.og_description || '',
+                    h1_title: prev.h1_title || generated.h1_title || '',
+                    h2_subtitle: prev.h2_subtitle || generated.h2_subtitle || '',
+                    focus_keyword: prev.focus_keyword || generated.focus_keyword || '',
+                    meta_keywords: prev.meta_keywords || generated.meta_keywords || '',
+                  }));
+
+                  setSuccess('✨ Prázdná pole byla automaticky vyplněna!');
+                  setTimeout(() => setSuccess(''), 3000);
+                } catch (err) {
+                  setError('Chyba při generování');
+                } finally {
+                  setGenerating(false);
+                }
+              }}
+              style={{
+                padding: '12px 24px',
+                background: generating ? '#6b7280' : 'linear-gradient(135deg, #d4af37 0%, #b8963e 100%)',
+                border: 'none',
+                borderRadius: '8px',
+                color: '#1f1f23',
+                fontWeight: '600',
+                cursor: generating ? 'not-allowed' : 'pointer',
+                fontSize: '0.95rem'
+              }}
+            >
+              {generating ? 'Generuji...' : '✨ Automaticky vyplnit prázdná pole'}
+            </button>
           </div>
 
           <div style={{ display: 'flex', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>

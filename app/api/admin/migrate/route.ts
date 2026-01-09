@@ -88,6 +88,19 @@ export async function POST(request: NextRequest) {
       {
         sql: 'ALTER TABLE girls ADD COLUMN piercing_description_uk TEXT',
         name: 'piercing_description_uk'
+      },
+      // SEO metadata - H1/H2/Content for hashtag pages
+      {
+        sql: 'ALTER TABLE seo_metadata ADD COLUMN h1_title TEXT',
+        name: 'seo_metadata.h1_title'
+      },
+      {
+        sql: 'ALTER TABLE seo_metadata ADD COLUMN h2_subtitle TEXT',
+        name: 'seo_metadata.h2_subtitle'
+      },
+      {
+        sql: 'ALTER TABLE seo_metadata ADD COLUMN page_content TEXT',
+        name: 'seo_metadata.page_content'
       }
     ];
 

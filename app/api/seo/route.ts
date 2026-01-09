@@ -89,7 +89,10 @@ export async function POST(request: NextRequest) {
       robots_index,
       robots_follow,
       focus_keyword,
-      seo_score
+      seo_score,
+      h1_title,
+      h2_subtitle,
+      page_content
     } = body;
 
     // Validation
@@ -130,6 +133,9 @@ export async function POST(request: NextRequest) {
           robots_follow ?? 1,
           focus_keyword || null,
           seo_score ?? 0,
+          h1_title || null,
+          h2_subtitle || null,
+          page_content || null,
           page_path
         ];
 
@@ -158,6 +164,9 @@ export async function POST(request: NextRequest) {
           robots_follow = ?,
           focus_keyword = ?,
           seo_score = ?,
+          h1_title = ?,
+          h2_subtitle = ?,
+          page_content = ?,
           updated_at = CURRENT_TIMESTAMP
         WHERE page_path = ?`,
         args
@@ -201,7 +210,10 @@ export async function POST(request: NextRequest) {
           robots_index ?? 1,
           robots_follow ?? 1,
           focus_keyword || null,
-          seo_score ?? 0
+          seo_score ?? 0,
+          h1_title || null,
+          h2_subtitle || null,
+          page_content || null
         ];
 
       console.log('[SEO API] INSERT args:', args.map((v, i) => `${i}: ${typeof v} = ${JSON.stringify(v)}`));
@@ -213,8 +225,9 @@ export async function POST(request: NextRequest) {
           og_title, og_description, og_image, og_image_alt, og_type,
           twitter_card, twitter_title, twitter_description, twitter_image,
           schema_type, schema_data, canonical_url,
-          robots_index, robots_follow, focus_keyword, seo_score
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          robots_index, robots_follow, focus_keyword, seo_score,
+          h1_title, h2_subtitle, page_content
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         args
       });
 
