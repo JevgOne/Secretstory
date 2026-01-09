@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
 
-// Revalidate every 1 hour (ISR)
-export const revalidate = 3600;
+// Force dynamic rendering (uses searchParams)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // GET /api/pricing - Get pricing data for public pages
 export async function GET(request: NextRequest) {

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
-// Revalidate every 60 seconds
-export const revalidate = 60;
+// Force dynamic rendering (uses searchParams)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // GET /api/girls/online-today - Get girls working today, sorted by schedule
 export async function GET(request: NextRequest) {
