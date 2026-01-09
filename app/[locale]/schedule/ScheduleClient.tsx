@@ -230,20 +230,13 @@ export default function ScheduleClient({
         .date-scroll-container {
           display: flex;
           justify-content: center;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-
-        .date-scroll-container::-webkit-scrollbar {
-          display: none;
+          overflow: visible;
         }
 
         .date-pills {
           display: inline-flex;
           gap: 12px;
-          padding-bottom: 4px;
+          padding: 8px;
         }
 
         .date-pill {
@@ -273,7 +266,6 @@ export default function ScheduleClient({
           background: linear-gradient(135deg, #8b3a4a 0%, #6b2a3a 100%);
           border-color: var(--wine);
           box-shadow: 0 4px 16px rgba(139, 58, 74, 0.4), inset 0 1px 2px rgba(255,255,255,0.1);
-          transform: scale(1.05);
         }
 
         .day-label {
