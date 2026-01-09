@@ -42,6 +42,9 @@ export default function RootLayout({
   return (
     <html lang="cs">
       <head>
+        {/* Favicon */}
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-icon.svg" />
         {/* Preconnect to external domains for faster resource loading */}
         <link rel="dns-prefetch" href="https://qktyf1ozcve7804i.public.blob.vercel-storage.com" />
         <link rel="preconnect" href="https://qktyf1ozcve7804i.public.blob.vercel-storage.com" crossOrigin="anonymous" />
