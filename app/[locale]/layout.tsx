@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { locales } from '@/i18n';
 import { FavoritesProvider } from '@/contexts/FavoritesContext';
 import { ToasterProvider } from '@/components/ToasterProvider';
-import AgeVerificationModal from '@/components/AgeVerificationModal';
 import { Metadata } from 'next';
 import { generatePageMetadata, getDefaultSEO } from '@/lib/seo-metadata';
 
@@ -55,7 +54,6 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider messages={messages}>
       <FavoritesProvider>
-        <AgeVerificationModal />
         {children}
         <ToasterProvider />
       </FavoritesProvider>
