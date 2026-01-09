@@ -585,9 +585,9 @@ function EditSEOForm() {
                     };
                   } else if (pagePath.includes('/profily/')) {
                     generated = {
-                      meta_title: `${readableName} - Escort Praha | LovelyGirls`,
+                      meta_title: `${readableName} - Escort Praha`,
                       meta_description: `Seznamte se s ${readableName} - prémiová escort Praha. Profesionální společnice, diskrétní setkání.`,
-                      og_title: `${readableName} - Escort Praha | LovelyGirls`,
+                      og_title: `${readableName} - Escort Praha`,
                       og_description: `${readableName} - luxusní escort společnice v Praze.`,
                       focus_keyword: readableName.toLowerCase(),
                     };
