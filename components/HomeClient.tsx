@@ -207,7 +207,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                   )}
                   <span className="new-badge">{tHome('new_badge')}</span>
                 </div>
-                <div className="new-girl-info">
+                <div className="new-girl-info featured-info-animate" key={`info-${currentFeaturedIndex}`}>
                   <div className="new-girl-name">{featuredGirls[currentFeaturedIndex].name}</div>
                   <div className="new-girl-meta">{featuredGirls[currentFeaturedIndex].age} let • {featuredGirls[currentFeaturedIndex].height} cm</div>
                   <div className="new-girl-desc">{tHome('new_girl_desc')}</div>
