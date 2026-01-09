@@ -545,35 +545,31 @@ function EditSEOForm() {
             </small>
           </div>
 
-          {/* Auto-generate section */}
-          <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(212, 175, 55, 0.1)', border: '1px solid rgba(212, 175, 55, 0.3)', borderRadius: '12px' }}>
-            <h4 style={{ color: '#d4af37', marginBottom: '1rem', fontSize: '1rem', fontWeight: '600' }}>
-              ✨ Automatické generování
-            </h4>
-            <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '1rem' }}>
-              Automaticky vyplní pole na základě cesty stránky a obsahu.
-            </p>
-            <button
-              type="button"
-              disabled={generating}
-              onClick={async () => {
-                setGenerating(true);
-                try {
-                  // Extract page name from path
-                  const pathParts = pagePath.split('/').filter(Boolean);
-                  const pageName = pathParts[pathParts.length - 1] || '';
-                  const locale = pathParts[0] || 'cs';
+          {/* Auto-generate section - only for hashtag and sluzby pages */}
+          {(pagePath.includes('/hashtag/') || pagePath.includes('/sluzby/')) && (
+            <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(212, 175, 55, 0.1)', border: '1px solid rgba(212, 175, 55, 0.3)', borderRadius: '12px' }}>
+              <h4 style={{ color: '#d4af37', marginBottom: '1rem', fontSize: '1rem', fontWeight: '600' }}>
+                ✨ Automatické generování
+              </h4>
+              <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '1rem' }}>
+                Automaticky vyplní pole na základě cesty stránky.
+              </p>
+              <button
+                type="button"
+                disabled={generating}
+                onClick={async () => {
+                  setGenerating(true);
+                  try {
+                    // Extract page name from path
+                    const pathParts = pagePath.split('/').filter(Boolean);
+                    const pageName = pathParts[pathParts.length - 1] || '';
 
-                  // Format name (convert slug to readable)
-                  const readableName = pageName
-                    .replace(/-/g, ' ')
-                    .replace(/\b\w/g, l => l.toUpperCase());
+                    // Format name (convert slug to readable)
+                    const readableName = pageName
+                      .replace(/-/g, ' ')
+                      .replace(/\b\w/g, l => l.toUpperCase());
 
-                  // Generate content based on page type
-                  let generated: any = {};
-
-                  if (pagePath.includes('/hashtag/') || pagePath.includes('/sluzby/')) {
-                    generated = {
+                    const generated = {
                       meta_title: `${readableName} Praha | LovelyGirls`,
                       meta_description: `Najděte nejlepší ${readableName.toLowerCase()} escort dívky v Praze. Prémiové služby, diskrétní setkání. LovelyGirls.`,
                       og_title: `${readableName} Praha | LovelyGirls`,
@@ -583,58 +579,43 @@ function EditSEOForm() {
                       focus_keyword: readableName.toLowerCase(),
                       meta_keywords: `${readableName.toLowerCase()}, escort praha, escort služby`,
                     };
-                  } else if (pagePath.includes('/profily/')) {
-                    generated = {
-                      meta_title: `${readableName} - Escort Praha`,
-                      meta_description: `Seznamte se s ${readableName} - prémiová escort Praha. Profesionální společnice, diskrétní setkání.`,
-                      og_title: `${readableName} - Escort Praha`,
-                      og_description: `${readableName} - luxusní escort společnice v Praze.`,
-                      focus_keyword: readableName.toLowerCase(),
-                    };
-                  } else {
-                    generated = {
-                      meta_title: `${readableName} | LovelyGirls`,
-                      meta_description: `${readableName} - prémiové escort služby v Praze. LovelyGirls.`,
-                      og_title: `${readableName} | LovelyGirls`,
-                      og_description: `${readableName} - LovelyGirls Praha`,
-                    };
+
+                    // Only fill empty fields
+                    setFormData(prev => ({
+                      ...prev,
+                      meta_title: prev.meta_title || generated.meta_title,
+                      meta_description: prev.meta_description || generated.meta_description,
+                      og_title: prev.og_title || generated.og_title,
+                      og_description: prev.og_description || generated.og_description,
+                      h1_title: prev.h1_title || generated.h1_title,
+                      h2_subtitle: prev.h2_subtitle || generated.h2_subtitle,
+                      focus_keyword: prev.focus_keyword || generated.focus_keyword,
+                      meta_keywords: prev.meta_keywords || generated.meta_keywords,
+                    }));
+
+                    setSuccess('✨ Prázdná pole byla automaticky vyplněna!');
+                    setTimeout(() => setSuccess(''), 3000);
+                  } catch (err) {
+                    setError('Chyba při generování');
+                  } finally {
+                    setGenerating(false);
                   }
-
-                  // Only fill empty fields
-                  setFormData(prev => ({
-                    ...prev,
-                    meta_title: prev.meta_title || generated.meta_title || '',
-                    meta_description: prev.meta_description || generated.meta_description || '',
-                    og_title: prev.og_title || generated.og_title || '',
-                    og_description: prev.og_description || generated.og_description || '',
-                    h1_title: prev.h1_title || generated.h1_title || '',
-                    h2_subtitle: prev.h2_subtitle || generated.h2_subtitle || '',
-                    focus_keyword: prev.focus_keyword || generated.focus_keyword || '',
-                    meta_keywords: prev.meta_keywords || generated.meta_keywords || '',
-                  }));
-
-                  setSuccess('✨ Prázdná pole byla automaticky vyplněna!');
-                  setTimeout(() => setSuccess(''), 3000);
-                } catch (err) {
-                  setError('Chyba při generování');
-                } finally {
-                  setGenerating(false);
-                }
-              }}
-              style={{
-                padding: '12px 24px',
-                background: generating ? '#6b7280' : 'linear-gradient(135deg, #d4af37 0%, #b8963e 100%)',
-                border: 'none',
-                borderRadius: '8px',
-                color: '#1f1f23',
-                fontWeight: '600',
-                cursor: generating ? 'not-allowed' : 'pointer',
-                fontSize: '0.95rem'
-              }}
-            >
-              {generating ? 'Generuji...' : '✨ Automaticky vyplnit prázdná pole'}
-            </button>
-          </div>
+                }}
+                style={{
+                  padding: '12px 24px',
+                  background: generating ? '#6b7280' : 'linear-gradient(135deg, #d4af37 0%, #b8963e 100%)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: '#1f1f23',
+                  fontWeight: '600',
+                  cursor: generating ? 'not-allowed' : 'pointer',
+                  fontSize: '0.95rem'
+                }}
+              >
+                {generating ? 'Generuji...' : '✨ Automaticky vyplnit prázdná pole'}
+              </button>
+            </div>
+          )}
 
           <div style={{ display: 'flex', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <Link
