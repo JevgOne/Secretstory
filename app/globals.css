@@ -2563,8 +2563,10 @@ footer {
 }
 
 .gallery {
-    position: relative;
+    position: sticky;
+    top: 100px;
     height: fit-content;
+    align-self: start;
 }
 
 .gallery-main {

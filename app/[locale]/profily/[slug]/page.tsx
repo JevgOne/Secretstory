@@ -1292,7 +1292,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
         /* Gallery */
         .gallery {
-          position: relative;
+          position: sticky;
+          top: 100px;
           height: fit-content;
           display: flex;
           flex-direction: column;
