@@ -171,32 +171,31 @@ export default function ScheduleClient({
       <style jsx>{`
         .schedule-page-header {
           text-align: center;
-          padding: 120px 20px 24px;
+          padding: 140px 20px 16px;
         }
         .schedule-page-title {
           font-family: 'Cormorant', serif;
           font-size: clamp(1.75rem, 4vw, 2.5rem);
           font-weight: 300;
           color: var(--wine-light);
-          margin: 0 0 8px 0;
+          margin: 0 0 6px 0;
           letter-spacing: 0.02em;
         }
         .schedule-page-subtitle {
-          font-size: 0.95rem;
+          font-size: 0.9rem;
           color: var(--gray);
-          margin: 0;
-          max-width: 500px;
           margin: 0 auto;
+          max-width: 500px;
         }
         @media (max-width: 768px) {
           .schedule-page-header {
-            padding: 100px 16px 20px;
+            padding: 120px 16px 12px;
           }
           .schedule-page-title {
             font-size: 1.5rem;
           }
           .schedule-page-subtitle {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
           }
         }
       `}</style>
@@ -219,21 +218,12 @@ export default function ScheduleClient({
           </div>
         </div>
 
-        {currentTime && (
-          <div className="current-time-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 6v6l4 2"/>
-            </svg>
-            <span>{currentTime}</span>
-          </div>
-        )}
       </section>
 
       <style jsx>{`
         .schedule-date-selector {
           max-width: 1200px;
-          margin: 0 auto 32px;
+          margin: 0 auto 20px;
           padding: 0 20px;
         }
 
@@ -318,28 +308,6 @@ export default function ScheduleClient({
           box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
         }
 
-        .current-time-badge {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          margin-top: 20px;
-          padding: 10px 20px;
-          background: rgba(139, 58, 74, 0.1);
-          border: 1px solid rgba(139, 58, 74, 0.2);
-          border-radius: 12px;
-          color: #d4af37;
-          font-size: 14px;
-          font-weight: 600;
-          width: fit-content;
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        .current-time-badge svg {
-          color: var(--wine);
-        }
-
         @media (max-width: 768px) {
           .schedule-date-selector {
             margin-bottom: 24px;
@@ -364,12 +332,6 @@ export default function ScheduleClient({
           .day-number {
             font-size: 26px;
           }
-
-          .current-time-badge {
-            font-size: 13px;
-            padding: 8px 16px;
-            margin-top: 16px;
-          }
         }
 
         @media (max-width: 480px) {
@@ -390,7 +352,6 @@ export default function ScheduleClient({
 
       {/* Schedule Grid */}
       <section className="schedule">
-        <h2 className="sr-only">{t('legend.available')}</h2>
         {loading && (
           <div className="text-center py-8">
             <p>{t('loading')}</p>
