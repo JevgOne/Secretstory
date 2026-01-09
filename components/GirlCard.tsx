@@ -106,20 +106,20 @@ export default function GirlCard({
 
           <div className="girl-card-stats">
             <div className="girl-card-stat">
-              <span className="girl-card-stat-label">{translations.age_years}</span>
               <span className="girl-card-stat-value">{girl.age}</span>
+              <span className="girl-card-stat-label">{translations.age_years}</span>
             </div>
             <div className="girl-card-stat">
-              <span className="girl-card-stat-label">{translations.bust}</span>
-              <span className="girl-card-stat-value">{getBreastSize(girl.bust)}</span>
-            </div>
-            <div className="girl-card-stat">
-              <span className="girl-card-stat-label">{translations.height_cm}</span>
               <span className="girl-card-stat-value">{girl.height}</span>
+              <span className="girl-card-stat-label">{translations.height_cm}</span>
             </div>
             <div className="girl-card-stat">
-              <span className="girl-card-stat-label">{translations.weight_kg}</span>
               <span className="girl-card-stat-value">{girl.weight}</span>
+              <span className="girl-card-stat-label">{translations.weight_kg}</span>
+            </div>
+            <div className="girl-card-stat">
+              <span className="girl-card-stat-value">{getBreastSize(girl.bust)}</span>
+              <span className="girl-card-stat-label">{translations.bust}</span>
             </div>
           </div>
 
@@ -277,18 +277,16 @@ export default function GirlCard({
           text-align: center;
         }
 
-        .girl-card-stat-label {
-          font-size: 0.35rem;
-          color: var(--gray);
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          margin-bottom: 2px;
+        .girl-card-stat-value {
+          font-size: 1.1rem;
+          font-weight: 500;
+          color: var(--white);
         }
 
-        .girl-card-stat-value {
-          font-size: 0.6rem;
-          font-weight: 700;
-          color: var(--white);
+        .girl-card-stat-label {
+          font-size: 0.7rem;
+          color: var(--gray);
+          margin-top: 2px;
         }
 
         .girl-card-languages {
@@ -302,7 +300,7 @@ export default function GirlCard({
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 0.8rem;
+          font-size: 1.05rem;
           color: rgba(255, 255, 255, 0.9);
           font-weight: 500;
           margin-top: 0.5rem;
