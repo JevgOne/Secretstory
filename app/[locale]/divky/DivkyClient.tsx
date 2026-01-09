@@ -203,15 +203,13 @@ export default function DivkyClient({ initialGirls, locale }: DivkyClientProps) 
           </div>
         </nav>
 
-        {/* Main Container */}
-        <div className="container">
+        {/* Main Container - same as homepage */}
+        <section className="profiles" id="profiles">
           {/* Section Header */}
-          <header className="section-header">
-            <div>
-              <h1 className="section-title">{t('girls.title')}</h1>
-              <p className="section-subtitle">{t('girls.subtitle')}</p>
-            </div>
-          </header>
+          <div className="profiles-header">
+            <h1 className="section-title">{t('girls.title')}</h1>
+            <p className="section-subtitle">{t('girls.subtitle')}</p>
+          </div>
 
           {/* Cards Grid */}
           <div className="cards-grid">
@@ -303,7 +301,7 @@ export default function DivkyClient({ initialGirls, locale }: DivkyClientProps) 
               })
             )}
           </div>
-        </div>
+        </section>
 
         {/* FOOTER */}
         <footer>
