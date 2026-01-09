@@ -266,6 +266,25 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             const badgeText = badge === 'new' ? tGirls('new') : badge === 'top' ? tGirls('top_reviews') : badge === 'recommended' ? tGirls('recommended') : badge === 'asian' ? 'Asian' : '';
             const badgeClass = badge === 'new' ? 'badge-new' : badge === 'top' ? 'badge-top' : 'badge-asian';
 
+            // Convert bust to display number (1, 2, 3)
+            const getBustNumber = (bust: string): number | string => {
+              if (!bust) return '-';
+              const bustUpper = bust.toUpperCase();
+              // Check for cup sizes
+              if (bustUpper.includes('A')) return 1;
+              if (bustUpper.includes('B')) return 2;
+              if (bustUpper.includes('C') || bustUpper.includes('D') || bustUpper.includes('E')) return 3;
+              // If it's just a number, try to convert
+              const num = parseInt(bust);
+              if (!isNaN(num)) {
+                if (num >= 95) return 3;
+                if (num >= 80) return 2;
+                return 1;
+              }
+              return '-';
+            };
+            const bustDisplay = getBustNumber(girl.bust);
+
             // Use schedule data from API
             const timeRange = girl.schedule_from && girl.schedule_to ? `${girl.schedule_from} - ${girl.schedule_to}` : null;
             const isWorking = girl.schedule_status === 'working';
