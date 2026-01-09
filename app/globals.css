@@ -6687,22 +6687,23 @@ body > div > button[title*="Next"],
 @media (max-width: 600px) {
     .cards-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-        padding: 10px !important;
+        gap: 8px !important;
+        padding: 0 !important;
+        margin: 0 !important;
         max-width: 100% !important;
         width: 100% !important;
         box-sizing: border-box !important;
-        overflow: hidden;
     }
 
     .profiles {
-        padding: 16px 2% !important;
-        overflow: hidden;
+        padding: 16px 12px !important;
+        overflow-x: hidden;
     }
 
     .card {
-        min-width: 0;
-        max-width: 100%;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden;
     }
     .card-image-container {
         aspect-ratio: 3/4;
