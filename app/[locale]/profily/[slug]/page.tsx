@@ -2374,6 +2374,23 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         }
 
         @media (max-width: 768px) {
+          .detail-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 0;
+          }
+          .gallery {
+            position: relative !important;
+            top: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            align-self: auto;
+          }
+          .gallery-main {
+            aspect-ratio: 3/4;
+            max-height: 500px;
+          }
           .main-nav {
             padding: 1rem 4%;
           }
