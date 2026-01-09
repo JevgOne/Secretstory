@@ -58,28 +58,44 @@ export default function HashtagPage() {
   const id = params.id as string;
   const [girls, setGirls] = useState<Girl[]>([]);
   const [loading, setLoading] = useState(true);
+  const [seoData, setSeoData] = useState<{
+    h1_title?: string;
+    h2_subtitle?: string;
+    page_content?: string;
+  } | null>(null);
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const hashtag = getHashtagById(id);
   const hashtagName = getHashtagName(id, locale);
 
   useEffect(() => {
-    async function fetchGirls() {
+    async function fetchData() {
       try {
-        const response = await fetch(`/api/girls?status=active&hashtag=${id}`);
-        const data = await response.json();
-        if (data.success) {
-          setGirls(data.girls);
+        // Fetch girls and SEO data in parallel
+        const [girlsResponse, seoResponse] = await Promise.all([
+          fetch(`/api/girls?status=active&hashtag=${id}`),
+          fetch(`/api/seo?page_path=/${locale}/hashtag/${id}`)
+        ]);
+
+        const girlsData = await girlsResponse.json();
+        const seoDataResult = await seoResponse.json();
+
+        if (girlsData.success) {
+          setGirls(girlsData.girls);
+        }
+
+        if (seoDataResult.success && seoDataResult.metadata) {
+          setSeoData(seoDataResult.metadata);
         }
       } catch (error) {
-        console.error('Error fetching girls:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchGirls();
-  }, [id]);
+    fetchData();
+  }, [id, locale]);
 
   if (!hashtag) {
     return (
@@ -143,15 +159,33 @@ export default function HashtagPage() {
         <section className="profiles hashtag-page" id="profiles">
           <div className="profiles-header">
             <div>
-              <h1 className="section-title">{hashtagName}</h1>
+              <h1 className="section-title">{seoData?.h1_title || hashtagName}</h1>
               <h2 className="section-subtitle" style={{ fontWeight: 400, fontSize: '1.1rem', marginTop: '0.5rem' }}>
                 {loading && 'Načítání...'}
-                {!loading && girls.length === 0 && 'Žádné dívky s tímto hashtagem'}
-                {!loading && girls.length === 1 && 'Luxusní erotické služby v centru Prahy'}
-                {!loading && girls.length > 1 && `Prohlédni si ${girls.length} dívek - ověřené profily, profesionální služby`}
+                {!loading && (seoData?.h2_subtitle || (
+                  girls.length === 0 ? 'Žádné dívky s tímto hashtagem' :
+                  girls.length === 1 ? 'Luxusní erotické služby v centru Prahy' :
+                  `Prohlédni si ${girls.length} dívek - ověřené profily, profesionální služby`
+                ))}
               </h2>
             </div>
           </div>
+
+          {/* SEO Content */}
+          {seoData?.page_content && (
+            <div
+              className="seo-content"
+              style={{
+                maxWidth: '900px',
+                margin: '0 auto 2rem',
+                padding: '0 20px',
+                color: 'var(--gray)',
+                fontSize: '0.95rem',
+                lineHeight: '1.7'
+              }}
+              dangerouslySetInnerHTML={{ __html: seoData.page_content }}
+            />
+          )}
 
           {!loading && girls.length > 0 && (
             <div className="cards-grid">

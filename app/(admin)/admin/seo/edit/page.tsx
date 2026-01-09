@@ -575,7 +575,7 @@ function EditSEOForm() {
                       og_title: `${readableName} Praha | LovelyGirls`,
                       og_description: `${readableName} escort dívky v Praze. Luxusní společnice pro nezapomenutelné zážitky.`,
                       h1_title: readableName,
-                      h2_subtitle: `Nejlepší ${readableName.toLowerCase()} v Praze`,
+                      h2_subtitle: `Nejlepší ${readableName.toLowerCase()} escort v Praze`,
                       focus_keyword: readableName.toLowerCase(),
                       meta_keywords: `${readableName.toLowerCase()}, escort praha, escort služby`,
                     };
