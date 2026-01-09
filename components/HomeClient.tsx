@@ -100,7 +100,6 @@ export default function HomeClient({ initialData }: HomeClientProps) {
   const tFooter = useTranslations('footer');
   const locale = useLocale();
   const pathname = usePathname();
-  const [showAgeModal, setShowAgeModal] = useState(false);
   const { isFavorite, toggleFavorite } = useFavorites();
 
   // Auto-rotate featured girls every 5 seconds
@@ -113,28 +112,6 @@ export default function HomeClient({ initialData }: HomeClientProps) {
 
     return () => clearInterval(interval);
   }, [featuredGirls.length]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const ageConfirmed = localStorage.getItem("age");
-      if (!ageConfirmed) {
-        setShowAgeModal(true);
-      }
-    }
-  }, []);
-
-  const confirmAge = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("age", "1");
-      setShowAgeModal(false);
-    }
-  };
-
-  const denyAge = () => {
-    if (typeof window !== "undefined") {
-      window.location.href = "https://google.com";
-    }
-  };
 
   return (
     <>
@@ -158,24 +135,6 @@ export default function HomeClient({ initialData }: HomeClientProps) {
       <div className={`${cormorant.variable} ${dmSans.variable}`}>
         {/* Ambient Background */}
         <div className="ambient-bg"></div>
-
-        {/* AGE MODAL */}
-        {showAgeModal && (
-          <div className="age-modal">
-            <div className="age-box">
-              <h2>{tHome('age_modal_title')}</h2>
-              <p>{tHome('age_modal_text')}</p>
-              <div className="age-buttons">
-                <button className="age-btn yes" onClick={confirmAge}>
-                  {tHome('age_enter')}
-                </button>
-                <button className="age-btn no" onClick={denyAge}>
-                  {tHome('age_leave')}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* MOBILE MENU - outside nav for proper z-index */}
         <MobileMenu currentPath={pathname} />

@@ -6577,7 +6577,7 @@ body > div > button[title*="Next"],
 .card-stats .stat-label,
 .cards-grid .stat-label {
     color: var(--text-secondary);
-    font-size: 0.3rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 2px;
@@ -6588,7 +6588,7 @@ body > div > button[title*="Next"],
 .cards-grid .stat-value {
     color: var(--text-primary);
     font-weight: 700;
-    font-size: 0.5rem;
+    font-size: 1.1rem;
     line-height: 1.2;
 }
 
@@ -6601,7 +6601,7 @@ body > div > button[title*="Next"],
     align-items: center;
     gap: 6px;
     color: var(--text-primary);
-    font-size: 0.65rem;
+    font-size: 1.05rem;
     font-weight: 500;
     background: rgba(139,58,92,0.2);
     padding: 6px 10px;
@@ -6706,15 +6706,15 @@ body > div > button[title*="Next"],
         padding: 5px 10px;
     }
     .card-location {
-        font-size: 0.6rem;
+        font-size: 0.95rem;
         padding: 5px 8px;
     }
     .stat-label {
-        font-size: 0.28rem;
+        font-size: 0.65rem;
         margin-bottom: 2px;
     }
     .stat-value {
-        font-size: 0.48rem;
+        font-size: 1rem;
     }
 
     /* Disable hover effects on mobile to prevent skewed/rotated cards */
@@ -7402,7 +7402,7 @@ body > div > button[title*="Next"],
   }
 
   .stat-label {
-    font-size: 0.3rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 500;
@@ -7410,12 +7410,12 @@ body > div > button[title*="Next"],
   }
 
   .stat-value {
-    font-size: 0.5rem;
+    font-size: 1rem;
     font-weight: 700;
   }
 
   .card-location {
-    font-size: 0.65rem;
+    font-size: 0.95rem;
     padding: 6px 10px;
   }
 
@@ -7437,7 +7437,7 @@ body > div > button[title*="Next"],
   }
 
   .stat-label {
-    font-size: 0.28rem;
+    font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 500;
@@ -7445,7 +7445,7 @@ body > div > button[title*="Next"],
   }
 
   .stat-value {
-    font-size: 0.48rem;
+    font-size: 0.95rem;
     font-weight: 700;
   }
 }
