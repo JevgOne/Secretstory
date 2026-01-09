@@ -163,10 +163,43 @@ export default function ScheduleClient({
       </nav>
 
       {/* Page Header */}
-      <section className="page-header">
-        <h1 className="page-title">{t('title')}</h1>
-        {t('subtitle') && <p className="page-subtitle">{t('subtitle')}</p>}
+      <section className="schedule-page-header">
+        <h1 className="schedule-page-title">{t('title')}</h1>
+        {t('subtitle') && <p className="schedule-page-subtitle">{t('subtitle')}</p>}
       </section>
+
+      <style jsx>{`
+        .schedule-page-header {
+          text-align: center;
+          padding: 120px 20px 24px;
+        }
+        .schedule-page-title {
+          font-family: 'Cormorant', serif;
+          font-size: clamp(1.75rem, 4vw, 2.5rem);
+          font-weight: 300;
+          color: var(--wine-light);
+          margin: 0 0 8px 0;
+          letter-spacing: 0.02em;
+        }
+        .schedule-page-subtitle {
+          font-size: 0.95rem;
+          color: var(--gray);
+          margin: 0;
+          max-width: 500px;
+          margin: 0 auto;
+        }
+        @media (max-width: 768px) {
+          .schedule-page-header {
+            padding: 100px 16px 20px;
+          }
+          .schedule-page-title {
+            font-size: 1.5rem;
+          }
+          .schedule-page-subtitle {
+            font-size: 0.875rem;
+          }
+        }
+      `}</style>
 
       {/* Modern Date Selector - Mobile-first with horizontal scroll */}
       <section className="schedule-date-selector">
@@ -200,17 +233,17 @@ export default function ScheduleClient({
       <style jsx>{`
         .schedule-date-selector {
           max-width: 1200px;
-          margin: 0 auto 48px;
+          margin: 0 auto 32px;
           padding: 0 20px;
         }
 
         .date-scroll-container {
+          display: flex;
+          justify-content: center;
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
           -ms-overflow-style: none;
-          margin: 0 -20px;
-          padding: 0 20px;
         }
 
         .date-scroll-container::-webkit-scrollbar {
@@ -218,7 +251,7 @@ export default function ScheduleClient({
         }
 
         .date-pills {
-          display: flex;
+          display: inline-flex;
           gap: 12px;
           padding-bottom: 4px;
         }
@@ -309,11 +342,12 @@ export default function ScheduleClient({
 
         @media (max-width: 768px) {
           .schedule-date-selector {
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             padding: 0 16px;
           }
 
           .date-scroll-container {
+            justify-content: flex-start;
             margin: 0 -16px;
             padding: 0 16px 8px;
           }
