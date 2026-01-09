@@ -1304,7 +1304,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         }
 
         .gallery-main {
-          aspect-ratio: 3/4;
           background: var(--wine-dark);
           border-radius: 12px;
           display: flex;
@@ -2388,8 +2387,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             align-self: auto;
           }
           .gallery-main {
-            aspect-ratio: 3/4;
-            max-height: 500px;
+            max-height: none;
           }
           .main-nav {
             padding: 1rem 4%;
