@@ -1919,6 +1919,8 @@ footer {
 .schedule {
     background: var(--black);
     padding: 60px 4%;
+    padding-top: 20px;
+    overflow: visible;
 }
 
 .schedule-grid {
@@ -6348,7 +6350,9 @@ body > div > button[title*="Next"],
     width: 100%;
     margin: 0 auto;
     padding: 24px;
+    padding-top: 16px;
     box-sizing: border-box;
+    overflow: visible;
 }
 
 /* Card */
