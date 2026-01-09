@@ -2556,9 +2556,9 @@ footer {
 
 .detail-grid {
     display: grid;
-    grid-template-columns: 400px 1fr;
+    grid-template-columns: minmax(450px, 600px) 1fr;
     gap: 3rem;
-    max-width: 1300px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -7283,8 +7283,9 @@ body > div > button[title*="Next"],
 /* Working Today Section */
 .working-today-section {
   margin-top: 2rem;
-  padding-top: 2rem;
+  padding: 40px 4%;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--black);
 }
 
 .working-today-title {

@@ -1290,13 +1290,10 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           grid-area: content;
         }
 
-        /* Gallery - Sticky */
+        /* Gallery */
         .gallery {
-          position: sticky;
-          top: 100px;
+          position: relative;
           height: fit-content;
-          max-height: calc(100vh - 120px);
-          overflow-y: auto;
           display: flex;
           flex-direction: column;
           gap: 1rem;
@@ -2354,8 +2351,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           }
 
           .gallery {
-            position: sticky;
-            top: 80px;
+            position: relative;
           }
 
           .profile-content {
