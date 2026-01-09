@@ -139,8 +139,16 @@ interface Girl {
   subtitle_uk?: string;
   tattoo_percentage?: number;
   tattoo_description?: string;
+  tattoo_description_cs?: string;
+  tattoo_description_en?: string;
+  tattoo_description_de?: string;
+  tattoo_description_uk?: string;
   piercing?: boolean;
   piercing_description?: string;
+  piercing_description_cs?: string;
+  piercing_description_en?: string;
+  piercing_description_de?: string;
+  piercing_description_uk?: string;
   meta_title?: string;
   meta_description?: string;
   og_title?: string;
@@ -720,8 +728,10 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                       <div className="body-art-details">
                         <div className="body-art-label">{t('profile.tattoo')}</div>
                         <div className="body-art-value">{profile.tattoo_percentage}% {t('profile.body_coverage')}</div>
-                        {profile.tattoo_description && (
-                          <div className="body-art-description">{profile.tattoo_description}</div>
+                        {(profile[`tattoo_description_${locale}` as keyof Girl] || profile.tattoo_description) && (
+                          <div className="body-art-description">
+                            {(profile[`tattoo_description_${locale}` as keyof Girl] as string) || profile.tattoo_description}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -737,8 +747,10 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                       <div className="body-art-details">
                         <div className="body-art-label">{t('profile.piercing')}</div>
                         <div className="body-art-value">{t('profile.yes')}</div>
-                        {profile.piercing_description && (
-                          <div className="body-art-description">{profile.piercing_description}</div>
+                        {(profile[`piercing_description_${locale}` as keyof Girl] || profile.piercing_description) && (
+                          <div className="body-art-description">
+                            {(profile[`piercing_description_${locale}` as keyof Girl] as string) || profile.piercing_description}
+                          </div>
                         )}
                       </div>
                     </div>

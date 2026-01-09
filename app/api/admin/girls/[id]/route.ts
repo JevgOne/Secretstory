@@ -35,7 +35,11 @@ export async function PATCH(
     const allowedFields = [
       'name', 'email', 'phone', 'age', 'nationality', 'height', 'weight',
       'bust', 'hair', 'eyes', 'color', 'status', 'verified', 'online',
-      'bio', 'bio_cs', 'bio_de', 'bio_uk', 'tattoo_percentage', 'tattoo_description', 'piercing', 'piercing_description',
+      'bio', 'bio_cs', 'bio_de', 'bio_uk',
+      'tattoo_percentage', 'tattoo_description',
+      'tattoo_description_cs', 'tattoo_description_en', 'tattoo_description_de', 'tattoo_description_uk',
+      'piercing', 'piercing_description',
+      'piercing_description_cs', 'piercing_description_en', 'piercing_description_de', 'piercing_description_uk',
       'description_cs', 'description_en', 'description_de', 'description_uk', 'location',
       'is_new', 'is_top', 'is_featured', 'featured_section', 'badge_type',
       // Subtitle fields (H2 on profile page)

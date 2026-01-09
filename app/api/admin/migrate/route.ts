@@ -54,6 +54,40 @@ export async function POST(request: NextRequest) {
       {
         sql: 'ALTER TABLE girls ADD COLUMN badge_type TEXT',
         name: 'badge_type'
+      },
+      // Multilingual tattoo descriptions
+      {
+        sql: 'ALTER TABLE girls ADD COLUMN tattoo_description_cs TEXT',
+        name: 'tattoo_description_cs'
+      },
+      {
+        sql: 'ALTER TABLE girls ADD COLUMN tattoo_description_en TEXT',
+        name: 'tattoo_description_en'
+      },
+      {
+        sql: 'ALTER TABLE girls ADD COLUMN tattoo_description_de TEXT',
+        name: 'tattoo_description_de'
+      },
+      {
+        sql: 'ALTER TABLE girls ADD COLUMN tattoo_description_uk TEXT',
+        name: 'tattoo_description_uk'
+      },
+      // Multilingual piercing descriptions
+      {
+        sql: 'ALTER TABLE girls ADD COLUMN piercing_description_cs TEXT',
+        name: 'piercing_description_cs'
+      },
+      {
+        sql: 'ALTER TABLE girls ADD COLUMN piercing_description_en TEXT',
+        name: 'piercing_description_en'
+      },
+      {
+        sql: 'ALTER TABLE girls ADD COLUMN piercing_description_de TEXT',
+        name: 'piercing_description_de'
+      },
+      {
+        sql: 'ALTER TABLE girls ADD COLUMN piercing_description_uk TEXT',
+        name: 'piercing_description_uk'
       }
     ];
 
