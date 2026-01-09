@@ -47,20 +47,6 @@ export default function GirlCard({
   const t = useTranslations('common');
   const { locationNames, primaryLocation } = useLocations();
 
-  const getBreastSize = (bust: string): number => {
-    if (!bust) return 2;
-    if (bust.includes('-')) {
-      const size = parseInt(bust.split('-')[0]);
-      if (size >= 95) return 3;
-      if (size >= 85) return 2;
-      return 1;
-    }
-    const cups: Record<string, number> = { 'A': 1, 'B': 2, 'C': 3, 'D': 3, 'DD': 3 };
-    return cups[bust] || 2;
-  };
-
-  // Removed fake time - real schedule should come from database
-
   const getLocation = (): string => {
     // Use location from database if available
     if (girl.location) return girl.location;
@@ -118,7 +104,7 @@ export default function GirlCard({
               <span className="girl-card-stat-label">{translations.weight_kg}</span>
             </div>
             <div className="girl-card-stat">
-              <span className="girl-card-stat-value">{getBreastSize(girl.bust)}</span>
+              <span className="girl-card-stat-value">{girl.bust || '-'}</span>
               <span className="girl-card-stat-label">{translations.bust}</span>
             </div>
           </div>
