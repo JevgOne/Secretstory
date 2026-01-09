@@ -177,8 +177,6 @@ export default function ReviewsList({
 
   return (
     <div className="reviews-list">
-      <h3 className="reviews-title">{translations.title}</h3>
-
       <div className="reviews-grid">
         {reviews.map((review) => {
           const vibe = review.vibe && VIBE_OPTIONS[review.vibe as VibeId];
@@ -268,14 +266,7 @@ export default function ReviewsList({
 
       <style jsx>{`
         .reviews-list {
-          margin-top: 2rem;
-        }
-
-        .reviews-title {
-          font-size: 1.5rem;
-          font-weight: 600;
-          color: var(--white);
-          margin-bottom: 1.5rem;
+          margin-top: 0;
         }
 
         .reviews-loading {
