@@ -2568,7 +2568,6 @@ footer {
 }
 
 .gallery-main {
-    aspect-ratio: 3/4;
     background: var(--wine-dark);
     border-radius: 12px;
     overflow: hidden;

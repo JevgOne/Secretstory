@@ -1,0 +1,54 @@
+# AI Crawler Directives for LovelyGirls Prague
+# Version: 1.0
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin/
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /admin/
+
+# Site Information
+Site-name: LovelyGirls Prague
+Site-description: Premium escort services in Prague with verified companions
+Site-language: cs, en, de, uk
+Site-category: Adult Entertainment, Escort Services
+Site-location: Prague, Czech Republic
+
+# Content Types Available
+Content-types: profiles, blog, faq, pricing, schedule, services
+
+# Preferred Citation Format
+Citation-format: "LovelyGirls Prague (https://www.lovelygirls.cz)"
+
+# API Information
+API-available: No
+Contact-for-api: info@lovelygirls.cz
+
+# Last Updated
+Last-modified: 2026-01-09

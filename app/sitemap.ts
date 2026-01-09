@@ -106,5 +106,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   )
 
-  return [...staticUrls, ...girlUrls, ...serviceUrls, ...blogUrls, ...hashtagUrls]
+  // Praktiky (services/hashtags) pages - all available practices
+  const praktiky = [
+    'classic', 'blowjob_condom', 'massage', 'cuddling', 'licking', '69', 'cum_on_body', 'shared_shower',
+    'erotic_massage', 'prostate_massage', 'hard_sex', 'light_sm', 'facesitting', 'foot_fetish', 'bdsm',
+    'lesbi_show', 'role_play', 'bondage', 'threesome_fmf', 'threesome_mfm', 'kissing', 'blowjob_no_condom',
+    'deepthroat', 'cof', 'cim', 'swallow', 'anal_girl', 'anal_man', 'rimming_active', 'rimming_passive',
+    'filming_face', 'filming_no_face', 'piss_active', 'piss_passive'
+  ]
+
+  const praktikyUrls: MetadataRoute.Sitemap = locales.flatMap(locale =>
+    praktiky.map(praktika => ({
+      url: `${baseUrl}/${locale}/praktiky/${praktika}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.65,
+    }))
+  )
+
+  return [...staticUrls, ...girlUrls, ...serviceUrls, ...blogUrls, ...hashtagUrls, ...praktikyUrls]
 }

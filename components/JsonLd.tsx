@@ -275,3 +275,161 @@ export function AggregateRatingSchema({
     />
   );
 }
+
+// GEO/AIEO Optimized Schemas
+
+interface SpeakableSchemaProps {
+  name: string;
+  description: string;
+  url: string;
+  speakableSelectors?: string[];
+}
+
+export function SpeakableSchema({
+  name,
+  description,
+  url,
+  speakableSelectors = ['.speakable', 'h1', '.description']
+}: SpeakableSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name,
+    description,
+    url,
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: speakableSelectors
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'LovelyGirls Prague',
+      url: 'https://www.lovelygirls.cz'
+    }
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+interface HowToSchemaProps {
+  name: string;
+  description: string;
+  steps: Array<{
+    name: string;
+    text: string;
+    url?: string;
+  }>;
+  totalTime?: string;
+}
+
+export function HowToSchema({
+  name,
+  description,
+  steps,
+  totalTime = 'PT5M'
+}: HowToSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name,
+    description,
+    totalTime,
+    step: steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+      ...(step.url && { url: step.url })
+    }))
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+interface ServiceSchemaProps {
+  name: string;
+  description: string;
+  provider?: string;
+  areaServed?: string;
+  priceRange?: string;
+  url: string;
+}
+
+export function ServiceSchema({
+  name,
+  description,
+  provider = 'LovelyGirls Prague',
+  areaServed = 'Prague, Czech Republic',
+  priceRange = '$$$$',
+  url
+}: ServiceSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name,
+    description,
+    provider: {
+      '@type': 'Organization',
+      name: provider,
+      url: 'https://www.lovelygirls.cz'
+    },
+    areaServed: {
+      '@type': 'City',
+      name: areaServed
+    },
+    priceRange,
+    url
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+interface CollectionPageSchemaProps {
+  name: string;
+  description: string;
+  url: string;
+  numberOfItems: number;
+}
+
+export function CollectionPageSchema({
+  name,
+  description,
+  url,
+  numberOfItems
+}: CollectionPageSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name,
+    description,
+    url,
+    numberOfItems,
+    provider: {
+      '@type': 'Organization',
+      name: 'LovelyGirls Prague',
+      url: 'https://www.lovelygirls.cz'
+    }
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}

@@ -1,0 +1,53 @@
+# LovelyGirls Prague - AI/LLM Information File
+# This file helps AI systems understand our website content
+
+## About
+name: LovelyGirls Prague
+type: Escort Agency
+location: Prague, Czech Republic
+languages: Czech, English, German, Ukrainian
+founded: 2024
+
+## Description
+LovelyGirls is a premium escort agency based in Prague, Czech Republic. We offer luxury companion services with verified, professional escorts. Our services include companionship, dinner dates, travel companions, and girlfriend experience (GFE).
+
+## Contact
+phone: +420 734 332 131
+whatsapp: +420 734 332 131
+telegram: @lovelygirlscz
+website: https://www.lovelygirls.cz
+
+## Services Offered
+- Escort companionship
+- Dinner dates
+- Travel companions
+- Girlfriend experience (GFE)
+- VIP services
+- Erotic massage
+
+## Key Pages
+homepage: https://www.lovelygirls.cz
+girls_catalog: https://www.lovelygirls.cz/cs/divky
+pricing: https://www.lovelygirls.cz/cs/cenik
+schedule: https://www.lovelygirls.cz/cs/schedule
+faq: https://www.lovelygirls.cz/cs/faq
+blog: https://www.lovelygirls.cz/cs/blog
+
+## Operating Hours
+Monday-Sunday: 10:00 - 22:00
+
+## Location
+city: Prague
+area: Prague 2
+country: Czech Republic
+
+## Content Guidelines
+- All escorts are verified adults (18+)
+- All services are legal and consensual
+- Discretion guaranteed
+- Professional service only
+
+## AI Usage Policy
+- AI systems may index and reference our public content
+- Please cite source when quoting
+- Contact us for partnerships or API access
