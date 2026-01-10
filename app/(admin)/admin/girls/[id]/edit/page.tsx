@@ -67,8 +67,16 @@ export default function EditGirlPage({ params }: PageProps) {
     subtitle_uk: '',
     tattoo_percentage: '0',
     tattoo_description: '',
+    tattoo_description_cs: '',
+    tattoo_description_en: '',
+    tattoo_description_de: '',
+    tattoo_description_uk: '',
     piercing: false,
     piercing_description: '',
+    piercing_description_cs: '',
+    piercing_description_en: '',
+    piercing_description_de: '',
+    piercing_description_uk: '',
     languages: ['cs'],
     location: 'Praha 2',
     services: [] as string[],
@@ -194,6 +202,9 @@ export default function EditGirlPage({ params }: PageProps) {
       setGirlId(resolvedParams.id);
 
       try {
+        // Auto-run migrations for new columns (runs silently)
+        fetch('/api/admin/auto-migrate', { method: 'POST' }).catch(() => {});
+
         // Load locations first
         const locationsResponse = await fetch('/api/homepage');
         const locationsData = await locationsResponse.json();
@@ -235,8 +246,16 @@ export default function EditGirlPage({ params }: PageProps) {
             subtitle_uk: girl.subtitle_uk || '',
             tattoo_percentage: girl.tattoo_percentage?.toString() || '0',
             tattoo_description: girl.tattoo_description || '',
+            tattoo_description_cs: girl.tattoo_description_cs || '',
+            tattoo_description_en: girl.tattoo_description_en || '',
+            tattoo_description_de: girl.tattoo_description_de || '',
+            tattoo_description_uk: girl.tattoo_description_uk || '',
             piercing: girl.piercing || false,
             piercing_description: girl.piercing_description || '',
+            piercing_description_cs: girl.piercing_description_cs || '',
+            piercing_description_en: girl.piercing_description_en || '',
+            piercing_description_de: girl.piercing_description_de || '',
+            piercing_description_uk: girl.piercing_description_uk || '',
             languages: girl.languages || ['cs'],
             location: girl.location || 'Praha 2',
             services: girl.services || [],
@@ -342,45 +361,30 @@ export default function EditGirlPage({ params }: PageProps) {
   };
 
   const handleLanguageToggle = (lang: string) => {
-    if (formData.languages.includes(lang)) {
-      setFormData({
-        ...formData,
-        languages: formData.languages.filter(l => l !== lang)
-      });
-    } else {
-      setFormData({
-        ...formData,
-        languages: [...formData.languages, lang]
-      });
-    }
+    setFormData(prev => ({
+      ...prev,
+      languages: prev.languages.includes(lang)
+        ? prev.languages.filter(l => l !== lang)
+        : [...prev.languages, lang]
+    }));
   };
 
   const handleServiceToggle = (serviceId: string) => {
-    if (formData.services.includes(serviceId)) {
-      setFormData({
-        ...formData,
-        services: formData.services.filter(s => s !== serviceId)
-      });
-    } else {
-      setFormData({
-        ...formData,
-        services: [...formData.services, serviceId]
-      });
-    }
+    setFormData(prev => ({
+      ...prev,
+      services: prev.services.includes(serviceId)
+        ? prev.services.filter(s => s !== serviceId)
+        : [...prev.services, serviceId]
+    }));
   };
 
   const handleHashtagToggle = (hashtagId: string) => {
-    if (formData.hashtags.includes(hashtagId)) {
-      setFormData({
-        ...formData,
-        hashtags: formData.hashtags.filter(h => h !== hashtagId)
-      });
-    } else {
-      setFormData({
-        ...formData,
-        hashtags: [...formData.hashtags, hashtagId]
-      });
-    }
+    setFormData(prev => ({
+      ...prev,
+      hashtags: prev.hashtags.includes(hashtagId)
+        ? prev.hashtags.filter(h => h !== hashtagId)
+        : [...prev.hashtags, hashtagId]
+    }));
   };
 
   if (loadingData) {
@@ -611,19 +615,9 @@ export default function EditGirlPage({ params }: PageProps) {
               <input
                 type="number"
                 value={formData.tattoo_percentage}
-                onChange={(e) => setFormData({ ...formData, tattoo_percentage: e.target.value })}
+                onChange={(e) => setFormData(prev => ({ ...prev, tattoo_percentage: e.target.value }))}
                 min="0"
                 max="100"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Popis tetování</label>
-              <input
-                type="text"
-                value={formData.tattoo_description}
-                onChange={(e) => setFormData({ ...formData, tattoo_description: e.target.value })}
-                placeholder="např. Malé tetování na rameni"
               />
             </div>
 
@@ -632,22 +626,226 @@ export default function EditGirlPage({ params }: PageProps) {
                 <input
                   type="checkbox"
                   checked={formData.piercing}
-                  onChange={(e) => setFormData({ ...formData, piercing: e.target.checked })}
+                  onChange={(e) => setFormData(prev => ({ ...prev, piercing: e.target.checked }))}
                 />
                 Má piercing
               </label>
             </div>
-
-            <div className="form-group">
-              <label>Popis piercingu</label>
-              <input
-                type="text"
-                value={formData.piercing_description}
-                onChange={(e) => setFormData({ ...formData, piercing_description: e.target.value })}
-                placeholder="např. Piercing v nose"
-              />
-            </div>
           </div>
+
+          {/* Tattoo Descriptions - Multi-language */}
+          {parseInt(formData.tattoo_percentage) > 0 && (
+            <div style={{ marginTop: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '600', margin: 0, color: 'var(--white)' }}>
+                  🎨 Popis tetování (vícejazyčně)
+                </h3>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!formData.tattoo_description_cs) {
+                      alert('Nejdříve vyplň český popis tetování');
+                      return;
+                    }
+                    setIsTranslating(true);
+                    try {
+                      const translations = await Promise.all([
+                        fetch('/api/translate', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ text: formData.tattoo_description_cs, targetLang: 'en', sourceLang: 'cs' })
+                        }).then(r => r.json()),
+                        fetch('/api/translate', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ text: formData.tattoo_description_cs, targetLang: 'de', sourceLang: 'cs' })
+                        }).then(r => r.json()),
+                        fetch('/api/translate', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ text: formData.tattoo_description_cs, targetLang: 'uk', sourceLang: 'cs' })
+                        }).then(r => r.json())
+                      ]);
+                      if (translations[0].success && translations[1].success && translations[2].success) {
+                        setFormData(prev => ({
+                          ...prev,
+                          tattoo_description_en: translations[0].translatedText,
+                          tattoo_description_de: translations[1].translatedText,
+                          tattoo_description_uk: translations[2].translatedText
+                        }));
+                      } else {
+                        alert('Chyba při překladu');
+                      }
+                    } catch (error) {
+                      console.error('Translation error:', error);
+                      alert('Chyba při překladu');
+                    } finally {
+                      setIsTranslating(false);
+                    }
+                  }}
+                  disabled={isTranslating || !formData.tattoo_description_cs}
+                  style={{
+                    padding: '6px 12px',
+                    background: isTranslating ? '#6b7280' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: isTranslating || !formData.tattoo_description_cs ? 'not-allowed' : 'pointer',
+                    fontWeight: '500',
+                    fontSize: '12px',
+                    opacity: isTranslating || !formData.tattoo_description_cs ? 0.6 : 1
+                  }}
+                >
+                  {isTranslating ? '⏳ Překládám...' : '🔄 Přeložit z CS'}
+                </button>
+              </div>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Popis CS (Čeština)</label>
+                  <input
+                    type="text"
+                    value={formData.tattoo_description_cs}
+                    onChange={(e) => setFormData(prev => ({ ...prev, tattoo_description_cs: e.target.value }))}
+                    placeholder="např. Malé tetování na rameni"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Popis EN (English)</label>
+                  <input
+                    type="text"
+                    value={formData.tattoo_description_en}
+                    onChange={(e) => setFormData(prev => ({ ...prev, tattoo_description_en: e.target.value }))}
+                    placeholder="e.g., Small tattoo on shoulder"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Popis DE (Deutsch)</label>
+                  <input
+                    type="text"
+                    value={formData.tattoo_description_de}
+                    onChange={(e) => setFormData(prev => ({ ...prev, tattoo_description_de: e.target.value }))}
+                    placeholder="z.B., Kleines Tattoo auf der Schulter"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Popis UK (Українська)</label>
+                  <input
+                    type="text"
+                    value={formData.tattoo_description_uk}
+                    onChange={(e) => setFormData(prev => ({ ...prev, tattoo_description_uk: e.target.value }))}
+                    placeholder="напр., Маленьке тату на плечі"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Piercing Descriptions - Multi-language */}
+          {formData.piercing && (
+            <div style={{ marginTop: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '600', margin: 0, color: 'var(--white)' }}>
+                  💎 Popis piercingu (vícejazyčně)
+                </h3>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!formData.piercing_description_cs) {
+                      alert('Nejdříve vyplň český popis piercingu');
+                      return;
+                    }
+                    setIsTranslating(true);
+                    try {
+                      const translations = await Promise.all([
+                        fetch('/api/translate', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ text: formData.piercing_description_cs, targetLang: 'en', sourceLang: 'cs' })
+                        }).then(r => r.json()),
+                        fetch('/api/translate', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ text: formData.piercing_description_cs, targetLang: 'de', sourceLang: 'cs' })
+                        }).then(r => r.json()),
+                        fetch('/api/translate', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ text: formData.piercing_description_cs, targetLang: 'uk', sourceLang: 'cs' })
+                        }).then(r => r.json())
+                      ]);
+                      if (translations[0].success && translations[1].success && translations[2].success) {
+                        setFormData(prev => ({
+                          ...prev,
+                          piercing_description_en: translations[0].translatedText,
+                          piercing_description_de: translations[1].translatedText,
+                          piercing_description_uk: translations[2].translatedText
+                        }));
+                      } else {
+                        alert('Chyba při překladu');
+                      }
+                    } catch (error) {
+                      console.error('Translation error:', error);
+                      alert('Chyba při překladu');
+                    } finally {
+                      setIsTranslating(false);
+                    }
+                  }}
+                  disabled={isTranslating || !formData.piercing_description_cs}
+                  style={{
+                    padding: '6px 12px',
+                    background: isTranslating ? '#6b7280' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: isTranslating || !formData.piercing_description_cs ? 'not-allowed' : 'pointer',
+                    fontWeight: '500',
+                    fontSize: '12px',
+                    opacity: isTranslating || !formData.piercing_description_cs ? 0.6 : 1
+                  }}
+                >
+                  {isTranslating ? '⏳ Překládám...' : '🔄 Přeložit z CS'}
+                </button>
+              </div>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Popis CS (Čeština)</label>
+                  <input
+                    type="text"
+                    value={formData.piercing_description_cs}
+                    onChange={(e) => setFormData(prev => ({ ...prev, piercing_description_cs: e.target.value }))}
+                    placeholder="např. Piercing v nose a pupíku"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Popis EN (English)</label>
+                  <input
+                    type="text"
+                    value={formData.piercing_description_en}
+                    onChange={(e) => setFormData(prev => ({ ...prev, piercing_description_en: e.target.value }))}
+                    placeholder="e.g., Nose and belly button piercing"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Popis DE (Deutsch)</label>
+                  <input
+                    type="text"
+                    value={formData.piercing_description_de}
+                    onChange={(e) => setFormData(prev => ({ ...prev, piercing_description_de: e.target.value }))}
+                    placeholder="z.B., Nasen- und Bauchnabelpiercing"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Popis UK (Українська)</label>
+                  <input
+                    type="text"
+                    value={formData.piercing_description_uk}
+                    onChange={(e) => setFormData(prev => ({ ...prev, piercing_description_uk: e.target.value }))}
+                    placeholder="напр., Пірсинг в носі та пупку"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="form-section">

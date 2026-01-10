@@ -286,7 +286,7 @@ export default function DivkyClient({ initialGirls, locale }: DivkyClientProps) 
                           <span className="stat"><span className="stat-label">{t('girls.age_years')}</span><span className="stat-value">{girl.age}</span></span>
                           <span className="stat"><span className="stat-label">cm</span><span className="stat-value">{girl.height}</span></span>
                           <span className="stat"><span className="stat-label">kg</span><span className="stat-value">{girl.weight}</span></span>
-                          <span className="stat"><span className="stat-label">{t('girls.bust')}</span><span className="stat-value">{breastSize}</span></span>
+                          <span className="stat"><span className="stat-label">{t('girls.bust')}</span><span className="stat-value">{girl.bust || '?'}</span></span>
                         </div>
                         <div className="card-location-wrapper">
                           <div className="card-location">

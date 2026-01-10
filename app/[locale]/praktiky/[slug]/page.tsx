@@ -215,7 +215,7 @@ export default function PraktikaDetailPage() {
                           <span className="stat-label">kg</span>
                         </span>
                         <span className="stat">
-                          <span className="stat-value">{breastSize}</span>
+                          <span className="stat-value">{girl.bust || '?'}</span>
                           <span className="stat-label">{tGirls('bust')}</span>
                         </span>
                       </div>

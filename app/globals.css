@@ -6709,17 +6709,19 @@ body > div > button[title*="Next"],
 /* Responsive */
 @media (max-width: 600px) {
     .cards-grid {
+        display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 8px !important;
-        padding: 0 !important;
-        margin: 0 !important;
+        gap: 10px !important;
+        padding: 0 12px !important;
+        margin: 0 auto !important;
         max-width: 100% !important;
         width: 100% !important;
         box-sizing: border-box !important;
+        justify-content: center !important;
     }
 
     .profiles {
-        padding: 16px 12px !important;
+        padding: 16px 0 !important;
         overflow-x: hidden;
     }
 
