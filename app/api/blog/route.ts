@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
-// Cache blog posts for 5 minutes - reduces DB load significantly
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // GET /api/blog - Get published blog posts (public)
 export async function GET(request: NextRequest) {
