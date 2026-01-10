@@ -233,7 +233,7 @@ export default function DivkyClient({ initialGirls, locale }: DivkyClientProps) 
                 return (
                   <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <article className="card">
-                      <div className="card-image-container" style={{ width: '100%', paddingBottom: '133.33%', height: 0, position: 'relative', overflow: 'hidden' }}>
+                      <div className="card-image-container" style={{ width: '100%', aspectRatio: '3/4', position: 'relative', overflow: 'hidden' }}>
                         {badge && (
                           <span className={`badge ${badgeClass}`}>{badgeText}</span>
                         )}

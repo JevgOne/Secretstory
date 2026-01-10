@@ -151,7 +151,7 @@ export default function PraktikaDetailPage() {
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   <article className="card">
-                    <div className="card-image-container" style={{ width: '100%', paddingBottom: '133.33%', height: 0, position: 'relative', overflow: 'hidden' }}>
+                    <div className="card-image-container" style={{ width: '100%', aspectRatio: '3/4', position: 'relative', overflow: 'hidden' }}>
                       {girl.primary_photo || girl.thumbnail ? (
                         <img
                           src={girl.thumbnail || girl.primary_photo}
