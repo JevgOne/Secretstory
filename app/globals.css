@@ -6739,13 +6739,31 @@ body > div > button[title*="Next"],
         overflow: hidden !important;
         flex-shrink: 0 !important;
     }
-    .card-image {
+    .card-image-container > * {
+        position: absolute !important;
+    }
+    .card-image,
+    .card-placeholder {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
         position: absolute !important;
         top: 0 !important;
         left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+    }
+    .card-overlay {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+    }
+    .quick-actions {
+        position: absolute !important;
+        bottom: 10px !important;
+        right: 10px !important;
     }
     .card-info {
         flex: 1 !important;
