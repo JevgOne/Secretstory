@@ -1,9 +1,48 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function AdminSettingsPage() {
   const router = useRouter();
+  const [whatsappBlocked, setWhatsappBlocked] = useState<boolean | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch('/api/settings');
+      const data = await res.json();
+      if (data.success) {
+        setWhatsappBlocked(data.settings?.whatsapp_blocked ?? false);
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      setWhatsappBlocked(false);
+    }
+  };
+
+  const toggleWhatsApp = async () => {
+    if (whatsappBlocked === null) return;
+    setSaving(true);
+    const newValue = !whatsappBlocked;
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'whatsapp_blocked', value: newValue })
+      });
+      if (res.ok) {
+        setWhatsappBlocked(newValue);
+      }
+    } catch (error) {
+      console.error('Error updating WhatsApp setting:', error);
+    }
+    setSaving(false);
+  };
 
   return (
     <>
@@ -70,6 +109,63 @@ export default function AdminSettingsPage() {
               />
             </div>
           ))}
+        </section>
+
+        {/* WHATSAPP SETTINGS */}
+        <section style={{ marginBottom: '32px' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '16px', color: '#e8e8e8' }}>
+            📱 WhatsApp
+          </h3>
+
+          <div style={{
+            background: whatsappBlocked ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+            borderRadius: '12px',
+            padding: '20px',
+            marginBottom: '12px',
+            border: `1px solid ${whatsappBlocked ? 'rgba(239, 68, 68, 0.3)' : 'rgba(34, 197, 94, 0.3)'}`,
+            transition: 'all 0.3s'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  WhatsApp stav
+                  <span style={{
+                    padding: '4px 10px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    background: whatsappBlocked ? '#ef4444' : '#22c55e',
+                    color: 'white'
+                  }}>
+                    {whatsappBlocked === null ? '...' : whatsappBlocked ? 'BLOKOVÁN' : 'AKTIVNÍ'}
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.85rem', color: '#9a8a8e' }}>
+                  {whatsappBlocked
+                    ? 'Banner s varováním je zobrazen na webu'
+                    : 'WhatsApp funguje normálně, banner je skrytý'}
+                </div>
+              </div>
+              <button
+                onClick={toggleWhatsApp}
+                disabled={saving || whatsappBlocked === null}
+                style={{
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: whatsappBlocked ? '#22c55e' : '#ef4444',
+                  color: 'white',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  cursor: saving ? 'wait' : 'pointer',
+                  opacity: saving ? 0.7 : 1,
+                  transition: 'all 0.2s'
+                }}
+              >
+                {saving ? 'Ukládám...' : whatsappBlocked ? 'Odblokovat' : 'Zablokovat'}
+              </button>
+            </div>
+          </div>
         </section>
 
         {/* BOOKING SETTINGS */}
