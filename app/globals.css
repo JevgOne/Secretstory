@@ -6727,16 +6727,20 @@ body > div > button[title*="Next"],
     .card {
         min-width: 0 !important;
         max-width: 100% !important;
-        overflow: hidden;
+        overflow: hidden !important;
         display: flex !important;
         flex-direction: column !important;
+        height: calc(55vw + 145px) !important;
+        min-height: calc(55vw + 145px) !important;
+        max-height: calc(55vw + 145px) !important;
     }
     .cards-grid .card .card-image-container,
     .card-image-container {
         width: 100% !important;
-        height: 60vw !important;
-        min-height: 60vw !important;
-        max-height: 60vw !important;
+        height: 55vw !important;
+        min-height: 55vw !important;
+        max-height: 55vw !important;
+        flex: 0 0 55vw !important;
         aspect-ratio: unset !important;
         position: relative !important;
         overflow: hidden !important;
@@ -6775,6 +6779,7 @@ body > div > button[title*="Next"],
         height: 145px !important;
         min-height: 145px !important;
         max-height: 145px !important;
+        flex: 0 0 145px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
