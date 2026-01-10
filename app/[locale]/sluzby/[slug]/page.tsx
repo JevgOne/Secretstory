@@ -160,9 +160,9 @@ export default function ServicePage() {
                 {girls.map(girl => (
                   <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id}>
                     <article className="card">
-                      <div className="card-image-container" style={{ width: '100%', aspectRatio: '3/4', position: 'relative', overflow: 'hidden' }}>
+                      <div className="card-image-container">
                         {girl.online && <span className="badge badge-online">{tServices('online_badge')}</span>}
-                        <div className="card-placeholder" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>{tServices('photo_placeholder')}</div>
+                        <div className="card-placeholder">{tServices('photo_placeholder')}</div>
                       </div>
                       <div className="card-info">
                         <div className="card-header">

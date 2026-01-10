@@ -6706,8 +6706,8 @@ body > div > button[title*="Next"],
     color: #ff6b5b;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
+/* Responsive - Mobile cards */
+@media (max-width: 768px) {
     .cards-grid {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;

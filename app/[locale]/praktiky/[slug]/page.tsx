@@ -151,18 +151,17 @@ export default function PraktikaDetailPage() {
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   <article className="card">
-                    <div className="card-image-container" style={{ width: '100%', aspectRatio: '3/4', position: 'relative', overflow: 'hidden' }}>
+                    <div className="card-image-container">
                       {girl.primary_photo || girl.thumbnail ? (
                         <img
                           src={girl.thumbnail || girl.primary_photo}
                           alt={girl.name}
                           className="card-image"
-                          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                       ) : (
-                        <div className="card-placeholder" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>FOTO</div>
+                        <div className="card-placeholder">FOTO</div>
                       )}
-                      <div className="card-overlay" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}></div>
+                      <div className="card-overlay"></div>
                       <div className="quick-actions">
                         <button
                           className="action-btn"

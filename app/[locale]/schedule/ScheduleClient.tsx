@@ -378,7 +378,7 @@ export default function ScheduleClient({
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   <article className="card">
-                    <div className="card-image-container" style={{ width: '100%', aspectRatio: '3/4', position: 'relative', overflow: 'hidden' }}>
+                    <div className="card-image-container">
                       {badge && (
                         <span className={`badge ${badgeClass}`}>{badgeText}</span>
                       )}
@@ -387,12 +387,11 @@ export default function ScheduleClient({
                           src={girl.photos[0]}
                           alt={girl.name}
                           className="card-image"
-                          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                       ) : (
-                        <div className="card-placeholder" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>{tCommon('photo')}</div>
+                        <div className="card-placeholder">{tCommon('photo')}</div>
                       )}
-                      <div className="card-overlay" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}></div>
+                      <div className="card-overlay"></div>
                     </div>
                     <div className="card-info">
                       <div className="card-header">
