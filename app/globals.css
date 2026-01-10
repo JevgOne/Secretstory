@@ -6731,22 +6731,28 @@ body > div > button[title*="Next"],
         display: flex !important;
         flex-direction: column !important;
     }
+    .cards-grid .card .card-image-container,
     .card-image-container {
         width: 100% !important;
-        height: 60vw !important;
-        min-height: 60vw !important;
-        max-height: 60vw !important;
+        height: 55vw !important;
+        min-height: 55vw !important;
+        max-height: 55vw !important;
+        aspect-ratio: unset !important;
         position: relative !important;
         overflow: hidden !important;
     }
+    .cards-grid .card .card-image-container > *,
     .card-image-container > * {
         position: absolute !important;
     }
+    .cards-grid .card .card-image,
+    .cards-grid .card .card-placeholder,
     .card-image,
     .card-placeholder {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
+        object-position: center top !important;
         position: absolute !important;
         top: 0 !important;
         left: 0 !important;
