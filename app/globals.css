@@ -6734,9 +6734,9 @@ body > div > button[title*="Next"],
     .cards-grid .card .card-image-container,
     .card-image-container {
         width: 100% !important;
-        height: 55vw !important;
-        min-height: 55vw !important;
-        max-height: 55vw !important;
+        height: 45vw !important;
+        min-height: 45vw !important;
+        max-height: 45vw !important;
         aspect-ratio: unset !important;
         position: relative !important;
         overflow: hidden !important;
@@ -6772,11 +6772,14 @@ body > div > button[title*="Next"],
         right: 10px !important;
     }
     .card-info {
-        flex: 1 !important;
+        height: 140px !important;
+        min-height: 140px !important;
+        max-height: 140px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
-        padding: 14px 12px;
+        padding: 10px 10px !important;
+        overflow: hidden !important;
     }
     .card-name {
         font-size: 1.05rem;
