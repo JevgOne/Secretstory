@@ -296,6 +296,22 @@ export default function AdminHeader({ title, showBack = false, backUrl = "/admin
         </div>
 
         <Link
+          href="/admin/settings"
+          style={{
+            padding: '8px 16px',
+            background: 'rgba(139, 92, 246, 0.15)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+            borderRadius: '8px',
+            color: '#a78bfa',
+            fontSize: '0.85rem',
+            fontWeight: '500',
+            textDecoration: 'none',
+            transition: 'all 0.2s'
+          }}
+        >
+          ⚙️ Nastavení
+        </Link>
+        <Link
           href="/cs"
           style={{
             padding: '8px 16px',
