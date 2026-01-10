@@ -6733,6 +6733,7 @@ body > div > button[title*="Next"],
     }
     .card-image-container {
         width: 100% !important;
+        aspect-ratio: unset !important;
         padding-bottom: 133.33% !important; /* 4:3 aspect ratio */
         height: 0 !important;
         position: relative !important;
