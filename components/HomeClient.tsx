@@ -244,6 +244,27 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             {tHome('profiles_subtitle')}
           </p>
         </div>
+        <style jsx global>{`
+          @media (max-width: 768px) {
+            .cards-grid .card .card-image-container {
+              width: 100% !important;
+              height: 55vw !important;
+              min-height: 55vw !important;
+              max-height: 55vw !important;
+              position: relative !important;
+              overflow: hidden !important;
+            }
+            .cards-grid .card .card-image-container img,
+            .cards-grid .card .card-image {
+              position: absolute !important;
+              top: 0 !important;
+              left: 0 !important;
+              width: 100% !important;
+              height: 100% !important;
+              object-fit: cover !important;
+            }
+          }
+        `}</style>
         <div className="cards-grid">
           {loading ? (
             <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', color: '#9a8a8e' }}>
