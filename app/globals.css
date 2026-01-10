@@ -6733,8 +6733,9 @@ body > div > button[title*="Next"],
     }
     .card-image-container {
         width: 100% !important;
-        aspect-ratio: 3/4 !important;
-        height: auto !important;
+        height: 60vw !important;
+        min-height: 60vw !important;
+        max-height: 60vw !important;
         position: relative !important;
         overflow: hidden !important;
     }
