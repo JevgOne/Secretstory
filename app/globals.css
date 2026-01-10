@@ -6772,9 +6772,9 @@ body > div > button[title*="Next"],
         right: 10px !important;
     }
     .card-info {
-        height: 130px !important;
-        min-height: 130px !important;
-        max-height: 130px !important;
+        height: 145px !important;
+        min-height: 145px !important;
+        max-height: 145px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;

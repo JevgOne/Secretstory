@@ -264,11 +264,11 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               object-fit: cover !important;
             }
             .cards-grid .card .card-info {
-              padding: 12px 10px !important;
+              padding: 10px 10px !important;
               overflow: hidden !important;
-              height: 130px !important;
-              min-height: 130px !important;
-              max-height: 130px !important;
+              height: 145px !important;
+              min-height: 145px !important;
+              max-height: 145px !important;
             }
           }
         `}</style>
