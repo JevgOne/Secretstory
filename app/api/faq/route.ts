@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
 
-export const revalidate = 3600; // 1 hour ISR
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 // GET - Fetch FAQ items for public (localized)
 export async function GET(request: NextRequest) {
