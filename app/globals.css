@@ -6711,12 +6711,19 @@ body > div > button[title*="Next"],
     .cards-grid {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
+        grid-auto-rows: auto !important;
+        align-items: stretch !important;
         gap: 10px !important;
         padding: 0 12px !important;
         margin: 0 auto !important;
         max-width: 100% !important;
         width: 100% !important;
         box-sizing: border-box !important;
+    }
+
+    .cards-grid > a {
+        display: block !important;
+        height: 100% !important;
     }
 
     .profiles {
@@ -6730,18 +6737,16 @@ body > div > button[title*="Next"],
         overflow: hidden !important;
         display: flex !important;
         flex-direction: column !important;
-        height: calc(55vw + 145px) !important;
-        min-height: calc(55vw + 145px) !important;
-        max-height: calc(55vw + 145px) !important;
+        height: 100% !important;
     }
     .cards-grid .card .card-image-container,
     .card-image-container {
         width: 100% !important;
-        height: 55vw !important;
-        min-height: 55vw !important;
-        max-height: 55vw !important;
-        flex: 0 0 55vw !important;
-        aspect-ratio: unset !important;
+        aspect-ratio: 3/4 !important;
+        height: auto !important;
+        min-height: unset !important;
+        max-height: unset !important;
+        flex-shrink: 0 !important;
         position: relative !important;
         overflow: hidden !important;
     }
@@ -6776,10 +6781,7 @@ body > div > button[title*="Next"],
         right: 10px !important;
     }
     .card-info {
-        height: 145px !important;
-        min-height: 145px !important;
-        max-height: 145px !important;
-        flex: 0 0 145px !important;
+        flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;

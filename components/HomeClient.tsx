@@ -246,22 +246,31 @@ export default function HomeClient({ initialData }: HomeClientProps) {
         </div>
         <style jsx global>{`
           @media (max-width: 768px) {
+            .cards-grid {
+              display: grid !important;
+              grid-template-columns: repeat(2, 1fr) !important;
+              grid-auto-rows: auto !important;
+              align-items: stretch !important;
+            }
+            .cards-grid > a {
+              display: block !important;
+              height: 100% !important;
+            }
             .cards-grid .card {
-              height: calc(55vw + 145px) !important;
-              min-height: calc(55vw + 145px) !important;
-              max-height: calc(55vw + 145px) !important;
+              height: 100% !important;
               display: flex !important;
               flex-direction: column !important;
               overflow: hidden !important;
             }
             .cards-grid .card .card-image-container {
               width: 100% !important;
-              height: 55vw !important;
-              min-height: 55vw !important;
-              max-height: 55vw !important;
-              flex: 0 0 55vw !important;
+              aspect-ratio: 3/4 !important;
+              height: auto !important;
+              min-height: unset !important;
+              max-height: unset !important;
               position: relative !important;
               overflow: hidden !important;
+              flex-shrink: 0 !important;
             }
             .cards-grid .card .card-image-container img,
             .cards-grid .card .card-image {
@@ -275,10 +284,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             .cards-grid .card .card-info {
               padding: 10px 10px !important;
               overflow: hidden !important;
-              height: 145px !important;
-              min-height: 145px !important;
-              max-height: 145px !important;
-              flex: 0 0 145px !important;
+              flex: 1 !important;
             }
           }
         `}</style>
