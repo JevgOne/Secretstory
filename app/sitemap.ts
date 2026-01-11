@@ -41,15 +41,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     blogPosts = []
   }
 
-  // Static pages for each locale
-  const staticPages = ['', 'divky', 'cenik', 'faq', 'schedule', 'discounts', 'blog', 'sluzby', 'podminky', 'soukromi', 'join']
+  // Static pages for each locale (removed 'join' - it's blocked in robots.txt)
+  const staticPages = ['', 'divky', 'cenik', 'faq', 'schedule', 'discounts', 'blog', 'sluzby', 'podminky', 'soukromi']
 
   const staticUrls: MetadataRoute.Sitemap = locales.flatMap(locale =>
     staticPages.map(page => ({
       url: `${baseUrl}/${locale}${page ? '/' + page : ''}`,
       lastModified: new Date(),
       changeFrequency: (page === '' || page === 'divky' || page === 'schedule') ? 'hourly' as const : 'daily' as const,
-      priority: page === '' ? 1.0 : page === 'divky' ? 0.9 : page === 'join' ? 0.3 : 0.7,
+      priority: page === '' ? 1.0 : page === 'divky' ? 0.9 : 0.7,
     }))
   )
 
