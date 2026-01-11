@@ -55,49 +55,56 @@ export default async function FAQPage({
   const faqs = await getFAQData(locale);
 
   // Schema.org structured data - FAQPage is very important for SEO
+  // Only include FAQPage if there are actual FAQs (Google requires mainEntity to be non-empty)
+  const schemaGraph: any[] = [];
+
+  if (faqs.length > 0) {
+    schemaGraph.push({
+      "@type": "FAQPage",
+      "name": "FAQ - LovelyGirls Prague",
+      "description": "Často kladené otázky o escort službách v Praze",
+      "mainEntity": faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    });
+  }
+
+  schemaGraph.push({
+    "@type": "LocalBusiness",
+    "@id": "https://www.lovelygirls.cz/#business",
+    "name": "LovelyGirls Prague",
+    "url": `https://www.lovelygirls.cz/${locale}/faq`,
+    "telephone": "+420734332131",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Prague",
+      "addressCountry": "CZ"
+    }
+  });
+
+  schemaGraph.push({
+    "@type": "WebPage",
+    "@id": `https://www.lovelygirls.cz/${locale}/faq#webpage`,
+    "url": `https://www.lovelygirls.cz/${locale}/faq`,
+    "name": "FAQ - LovelyGirls Prague",
+    "description": "Často kladené otázky o escort službách v Praze",
+    "inLanguage": locale,
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": "https://www.lovelygirls.cz/#website",
+      "name": "LovelyGirls Prague",
+      "url": "https://www.lovelygirls.cz"
+    }
+  });
+
   const schemaData = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "FAQPage",
-        "name": "FAQ - LovelyGirls Prague",
-        "description": "Často kladené otázky o escort službách v Praze",
-        "mainEntity": faqs.map(faq => ({
-          "@type": "Question",
-          "name": faq.question,
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": faq.answer
-          }
-        }))
-      },
-      {
-        "@type": "LocalBusiness",
-        "@id": "https://www.lovelygirls.cz/#business",
-        "name": "LovelyGirls Prague",
-        "url": `https://www.lovelygirls.cz/${locale}/faq`,
-        "telephone": "+420734332131",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Prague",
-          "addressCountry": "CZ"
-        }
-      },
-      {
-        "@type": "WebPage",
-        "@id": `https://www.lovelygirls.cz/${locale}/faq#webpage`,
-        "url": `https://www.lovelygirls.cz/${locale}/faq`,
-        "name": "FAQ - LovelyGirls Prague",
-        "description": "Často kladené otázky o escort službách v Praze",
-        "inLanguage": locale,
-        "isPartOf": {
-          "@type": "WebSite",
-          "@id": "https://www.lovelygirls.cz/#website",
-          "name": "LovelyGirls Prague",
-          "url": "https://www.lovelygirls.cz"
-        }
-      }
-    ]
+    "@graph": schemaGraph
   };
 
   return (
