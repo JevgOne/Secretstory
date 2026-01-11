@@ -6711,7 +6711,7 @@ body > div > button[title*="Next"],
     .cards-grid {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
-        grid-auto-rows: 350px !important;
+        grid-auto-rows: 400px !important;
         gap: 10px !important;
         padding: 0 12px !important;
         margin: 0 auto !important;
@@ -6722,7 +6722,7 @@ body > div > button[title*="Next"],
 
     .cards-grid > a {
         display: block !important;
-        height: 350px !important;
+        height: 400px !important;
         overflow: hidden !important;
     }
 
@@ -6737,16 +6737,16 @@ body > div > button[title*="Next"],
         overflow: hidden !important;
         display: flex !important;
         flex-direction: column !important;
-        height: 350px !important;
-        max-height: 350px !important;
+        height: 400px !important;
+        max-height: 400px !important;
     }
     .cards-grid .card .card-image-container,
     .card-image-container {
         width: 100% !important;
-        height: 200px !important;
-        min-height: 200px !important;
-        max-height: 200px !important;
-        flex: 0 0 200px !important;
+        height: 230px !important;
+        min-height: 230px !important;
+        max-height: 230px !important;
+        flex: 0 0 230px !important;
         position: relative !important;
         overflow: hidden !important;
     }
@@ -6781,14 +6781,14 @@ body > div > button[title*="Next"],
         right: 10px !important;
     }
     .card-info {
-        height: 150px !important;
-        min-height: 150px !important;
-        max-height: 150px !important;
-        flex: 0 0 150px !important;
+        height: 170px !important;
+        min-height: 170px !important;
+        max-height: 170px !important;
+        flex: 0 0 170px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
-        padding: 10px 10px !important;
+        padding: 12px !important;
         overflow: hidden !important;
     }
     .card-name {
