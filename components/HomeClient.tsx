@@ -343,9 +343,9 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             const location = girl.location || tHome('default_location');
 
             return (
-              <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <article className="card">
-                  <div className="card-image-container">
+              <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '350px', overflow: 'hidden' }}>
+                <article className="card" style={{ height: '350px', maxHeight: '350px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  <div className="card-image-container" style={{ width: '100%', height: '200px', minHeight: '200px', maxHeight: '200px', position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
                     {badge && (
                       <span className={`badge ${badgeClass}`}>{badgeText}</span>
                     )}
@@ -356,9 +356,10 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                         className="card-image"
                         loading="lazy"
                         decoding="async"
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                     ) : (
-                      <div className="card-placeholder">FOTO</div>
+                      <div className="card-placeholder" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>FOTO</div>
                     )}
                     <div className="card-overlay"></div>
                     <div className="quick-actions">
@@ -386,7 +387,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                       </button>
                     </div>
                   </div>
-                  <div className="card-info">
+                  <div className="card-info" style={{ height: '150px', minHeight: '150px', maxHeight: '150px', padding: '10px', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div className="card-header">
                       <h3 className="card-name">
                         {isWorking && <span className="online-dot"></span>}
