@@ -249,31 +249,33 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             .cards-grid {
               display: grid !important;
               grid-template-columns: repeat(2, 1fr) !important;
-              grid-auto-rows: auto !important;
-              align-items: stretch !important;
+              grid-auto-rows: 350px !important;
+              gap: 10px !important;
             }
             .cards-grid > a {
               display: block !important;
-              height: 100% !important;
+              height: 350px !important;
+              overflow: hidden !important;
             }
             .cards-grid .card {
-              height: 100% !important;
+              height: 350px !important;
+              max-height: 350px !important;
               display: flex !important;
               flex-direction: column !important;
               overflow: hidden !important;
             }
             .cards-grid .card .card-image-container {
               width: 100% !important;
-              aspect-ratio: 3/4 !important;
-              height: auto !important;
-              min-height: unset !important;
-              max-height: unset !important;
+              height: 200px !important;
+              min-height: 200px !important;
+              max-height: 200px !important;
               position: relative !important;
               overflow: hidden !important;
-              flex-shrink: 0 !important;
+              flex: 0 0 200px !important;
             }
             .cards-grid .card .card-image-container img,
-            .cards-grid .card .card-image {
+            .cards-grid .card .card-image,
+            .cards-grid .card .card-placeholder {
               position: absolute !important;
               top: 0 !important;
               left: 0 !important;
@@ -282,9 +284,15 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               object-fit: cover !important;
             }
             .cards-grid .card .card-info {
-              padding: 10px 10px !important;
+              height: 150px !important;
+              min-height: 150px !important;
+              max-height: 150px !important;
+              flex: 0 0 150px !important;
+              padding: 10px !important;
               overflow: hidden !important;
-              flex: 1 !important;
+              display: flex !important;
+              flex-direction: column !important;
+              justify-content: space-between !important;
             }
           }
         `}</style>
