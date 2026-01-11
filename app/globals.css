@@ -6794,8 +6794,8 @@ body > div > button[title*="Next"],
         padding: 5px 10px;
     }
     .card-location {
-        font-size: 0.95rem;
-        padding: 5px 8px;
+        font-size: 1.2rem;
+        padding: 8px 12px;
     }
     .stat-label {
         font-size: 0.65rem;
@@ -7494,8 +7494,8 @@ body > div > button[title*="Next"],
   }
 
   .card-location {
-    font-size: 0.95rem;
-    padding: 6px 10px;
+    font-size: 1.2rem;
+    padding: 8px 12px;
   }
 
   .time-badge {
