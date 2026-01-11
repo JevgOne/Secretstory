@@ -356,7 +356,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                         className="card-image"
                         loading="lazy"
                         decoding="async"
-                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
                       />
                     ) : (
                       <div className="card-placeholder" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>FOTO</div>
