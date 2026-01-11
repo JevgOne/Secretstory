@@ -96,15 +96,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   )
 
-  // Blog pages
-  const blogUrls: MetadataRoute.Sitemap = locales.flatMap(locale =>
-    blogPosts.map(post => ({
-      url: `${baseUrl}/${locale}/blog/${post.slug}`,
-      lastModified: post.updated_at ? new Date(post.updated_at) : new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-    }))
-  )
+  // Blog pages - ONLY English (en) since all blog posts are in English only
+  const blogUrls: MetadataRoute.Sitemap = blogPosts.map(post => ({
+    url: `${baseUrl}/en/blog/${post.slug}`,
+    lastModified: post.updated_at ? new Date(post.updated_at) : new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.5,
+  }))
 
   // Praktiky (services/hashtags) pages - all available practices
   const praktiky = [

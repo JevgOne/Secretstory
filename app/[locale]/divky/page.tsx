@@ -1,8 +1,8 @@
 import DivkyClient from './DivkyClient';
 import { db } from '@/lib/db';
 
-// ISR - Revalidate every 60 seconds
-export const revalidate = 60;
+// ISR - Revalidate every 15 minutes (900 seconds)
+export const revalidate = 900;
 
 interface Girl {
   id: number;

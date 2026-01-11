@@ -16,6 +16,13 @@ const intlMiddleware = createMiddleware({
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Redirect /profiles to /cs/profily - 301 permanent redirect
+  if (pathname === '/profiles') {
+    const newUrl = request.nextUrl.clone();
+    newUrl.pathname = '/cs/profily';
+    return NextResponse.redirect(newUrl, 301);
+  }
+
   // Remove trailing slash (except for root) - 301 redirect
   if (pathname.endsWith('/') && pathname.length > 1) {
     const newUrl = request.nextUrl.clone();

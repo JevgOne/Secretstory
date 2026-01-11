@@ -1,8 +1,8 @@
 import HomeClient from '@/components/HomeClient';
 import { db } from '@/lib/db';
 
-// ISR - Revalidate every 60 seconds for SEO
-export const revalidate = 60;
+// ISR - Revalidate every 30 minutes (1800 seconds) for SEO
+export const revalidate = 1800;
 
 // Server-side data fetching DIRECTLY from database (no API)
 async function getHomepageData() {
