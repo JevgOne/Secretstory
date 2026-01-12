@@ -6626,13 +6626,13 @@ body > div > button[title*="Next"],
 .card-location {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     color: var(--text-primary);
-    font-size: 1.3rem;
+    font-size: 1.05rem;
     font-weight: 500;
     background: rgba(139,58,92,0.2);
-    padding: 8px 14px;
-    border-radius: 16px;
+    padding: 7px 12px;
+    border-radius: 14px;
     border: 1px solid rgba(139,58,92,0.35);
     transition: all 0.3s ease;
 }
@@ -6643,8 +6643,8 @@ body > div > button[title*="Next"],
 }
 
 .location-icon {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     color: #e84a7f;
 }
 
