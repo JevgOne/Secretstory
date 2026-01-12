@@ -6628,10 +6628,10 @@ body > div > button[title*="Next"],
     align-items: center;
     gap: 6px;
     color: var(--text-primary);
-    font-size: 1.05rem;
+    font-size: 1.3rem;
     font-weight: 500;
     background: rgba(139,58,92,0.2);
-    padding: 6px 10px;
+    padding: 8px 14px;
     border-radius: 16px;
     border: 1px solid rgba(139,58,92,0.35);
     transition: all 0.3s ease;
@@ -6799,8 +6799,8 @@ body > div > button[title*="Next"],
         padding: 5px 10px;
     }
     .card-location {
-        font-size: 1.2rem;
-        padding: 8px 12px;
+        font-size: 1.8rem;
+        padding: 12px 16px;
     }
     .stat-label {
         font-size: 0.65rem;
@@ -7499,8 +7499,8 @@ body > div > button[title*="Next"],
   }
 
   .card-location {
-    font-size: 1.2rem;
-    padding: 8px 12px;
+    font-size: 1.8rem;
+    padding: 12px 16px;
   }
 
   .time-badge {

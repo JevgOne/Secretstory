@@ -246,36 +246,25 @@ export default function HomeClient({ initialData }: HomeClientProps) {
         </div>
         <style jsx global>{`
           @media (max-width: 768px) {
-            .cards-grid {
-              display: grid !important;
-              grid-template-columns: repeat(2, 1fr) !important;
-              grid-auto-rows: 350px !important;
-              gap: 10px !important;
-            }
-            .cards-grid > a {
-              display: block !important;
-              height: 350px !important;
-              overflow: hidden !important;
-            }
             .cards-grid .card {
-              height: 350px !important;
-              max-height: 350px !important;
+              height: calc(55vw + 165px) !important;
+              min-height: calc(55vw + 165px) !important;
+              max-height: calc(55vw + 165px) !important;
               display: flex !important;
               flex-direction: column !important;
               overflow: hidden !important;
             }
             .cards-grid .card .card-image-container {
               width: 100% !important;
-              height: 200px !important;
-              min-height: 200px !important;
-              max-height: 200px !important;
+              height: 55vw !important;
+              min-height: 55vw !important;
+              max-height: 55vw !important;
+              flex: 0 0 55vw !important;
               position: relative !important;
               overflow: hidden !important;
-              flex: 0 0 200px !important;
             }
             .cards-grid .card .card-image-container img,
-            .cards-grid .card .card-image,
-            .cards-grid .card .card-placeholder {
+            .cards-grid .card .card-image {
               position: absolute !important;
               top: 0 !important;
               left: 0 !important;
@@ -284,15 +273,12 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               object-fit: cover !important;
             }
             .cards-grid .card .card-info {
-              height: 150px !important;
-              min-height: 150px !important;
-              max-height: 150px !important;
-              flex: 0 0 150px !important;
-              padding: 10px !important;
+              padding: 10px 10px !important;
               overflow: hidden !important;
-              display: flex !important;
-              flex-direction: column !important;
-              justify-content: space-between !important;
+              height: 165px !important;
+              min-height: 165px !important;
+              max-height: 165px !important;
+              flex: 0 0 165px !important;
             }
           }
         `}</style>
@@ -343,9 +329,9 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             const location = girl.location || tHome('default_location');
 
             return (
-              <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '400px', overflow: 'hidden' }}>
-                <article className="card" style={{ height: '400px', maxHeight: '400px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  <div className="card-image-container" style={{ width: '100%', height: '230px', minHeight: '230px', maxHeight: '230px', position: 'relative', overflow: 'hidden', flexShrink: 0 }}>
+              <Link href={`/${locale}/profily/${girl.slug}`} key={girl.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <article className="card">
+                  <div className="card-image-container">
                     {badge && (
                       <span className={`badge ${badgeClass}`}>{badgeText}</span>
                     )}
@@ -356,10 +342,9 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                         className="card-image"
                         loading="lazy"
                         decoding="async"
-                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
                       />
                     ) : (
-                      <div className="card-placeholder" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>FOTO</div>
+                      <div className="card-placeholder">FOTO</div>
                     )}
                     <div className="card-overlay"></div>
                     <div className="quick-actions">
@@ -387,7 +372,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                       </button>
                     </div>
                   </div>
-                  <div className="card-info" style={{ height: '170px', minHeight: '170px', maxHeight: '170px', padding: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div className="card-info">
                     <div className="card-header">
                       <h3 className="card-name">
                         {isWorking && <span className="online-dot"></span>}
