@@ -2347,6 +2347,20 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           color: var(--wine-light);
         }
 
+        /* Desktop card-location badge - match homepage */
+        :global(.card-location) {
+          font-size: 1.05rem !important;
+          padding: 7px 12px !important;
+          gap: 5px !important;
+          border-radius: 14px !important;
+          font-weight: 500 !important;
+        }
+
+        :global(.location-icon) {
+          width: 16px !important;
+          height: 16px !important;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
           .detail-grid {
@@ -2443,6 +2457,12 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           }
           .similar-section {
             padding: 2rem 4%;
+          }
+          /* Mobile card-location badge - match homepage */
+          .card-location {
+            font-size: 0.85rem !important;
+            padding: 5px 10px !important;
+            font-weight: 500 !important;
           }
         }
 
