@@ -95,7 +95,18 @@ export default async function BlogPage({ params }: Props) {
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
   return {
-    title: 'Blog',
+    title: 'Blog | LovelyGirls Prague',
     description: 'Erotic stories, guides, and tips for escort experiences in Prague.',
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   };
 }
