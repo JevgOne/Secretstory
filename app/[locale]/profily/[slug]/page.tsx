@@ -2816,12 +2816,16 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             padding: 0;
           }
 
-          /* Mobile order: badges/name → gallery → content */
+          /* Mobile order: badges/name → stats → gallery → rest */
           .profile-header {
             order: 1;
           }
-          .gallery {
+          .stats-section {
             order: 2;
+            margin-bottom: 1.5rem;
+          }
+          .gallery {
+            order: 3;
             position: relative !important;
             top: auto !important;
             max-height: none !important;
@@ -2829,7 +2833,10 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             align-self: auto;
           }
           .profile-content {
-            order: 3;
+            display: contents;
+          }
+          .profile-content > *:not(.stats-section) {
+            order: 4;
           }
           .gallery-main {
             max-height: none;
