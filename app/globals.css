@@ -6812,14 +6812,24 @@ body > div > button[title*="Next"],
         flex-direction: column !important;
         justify-content: space-between !important;
         padding: 12px !important;
-        overflow: hidden !important;
+        overflow: visible !important;
+    }
+    .card-header {
+        flex-wrap: nowrap !important;
+        gap: 6px !important;
     }
     .card-name {
         font-size: 1.05rem;
+        flex-shrink: 1 !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
     }
     .time-badge {
-        font-size: 0.7rem;
-        padding: 5px 10px;
+        font-size: 0.65rem;
+        padding: 4px 8px;
+        flex-shrink: 0 !important;
     }
     .card-location {
         font-size: 0.85rem;
