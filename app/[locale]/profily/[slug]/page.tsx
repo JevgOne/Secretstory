@@ -270,7 +270,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               'professional': '👑',
               'passionate': '❤️‍🔥',
               'friendly': '🤗',
-              'mysterious': '🌙'
+              'gfe': '💕'
             };
 
             reviews.forEach((review: any) => {

@@ -128,13 +128,13 @@ export const TAG_OPTIONS = {
     label_de: 'Freundlich',
     label_uk: 'Дружелюбна'
   },
-  mysterious: {
-    id: 'mysterious',
-    emoji: '🌙',
-    label_cs: 'Tajemná',
-    label_en: 'Mysterious',
-    label_de: 'Geheimnisvoll',
-    label_uk: 'Загадкова'
+  gfe: {
+    id: 'gfe',
+    emoji: '💕',
+    label_cs: 'GFE',
+    label_en: 'GFE',
+    label_de: 'GFE',
+    label_uk: 'GFE'
   }
 } as const;
 
