@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
@@ -192,6 +192,23 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   const [actualReviewsCount, setActualReviewsCount] = useState<number>(0);
   const [actualRating, setActualRating] = useState<number | null>(null);
   const [activeTagFilter, setActiveTagFilter] = useState<string | null>(null);
+  const reviewsListRef = useRef<HTMLDivElement>(null);
+
+  const handleTagFilterClick = (tag: string) => {
+    // Toggle filter
+    const newFilter = activeTagFilter === tag ? null : tag;
+    setActiveTagFilter(newFilter);
+
+    // Scroll to reviews list if activating filter
+    if (newFilter && reviewsListRef.current) {
+      setTimeout(() => {
+        reviewsListRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
+    }
+  };
 
   useEffect(() => {
     fetchProfile();
@@ -1100,7 +1117,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                     <button
                       key={index}
                       className={`vibe-stat-item ${activeTagFilter === vibe.vibe ? 'active' : ''}`}
-                      onClick={() => setActiveTagFilter(activeTagFilter === vibe.vibe ? null : vibe.vibe)}
+                      onClick={() => handleTagFilterClick(vibe.vibe)}
                       title={`Filtrovat recenze: ${vibe.vibe}`}
                     >
                       <span className="vibe-emoji">{vibe.emoji}</span>
@@ -1146,7 +1163,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             </div>
 
             {/* Reviews List - MOVED BELOW FORM */}
-            <div className="reviews-list-section">
+            <div className="reviews-list-section" ref={reviewsListRef}>
               <div className="section-header">
                 <h3 className={`section-title ${cormorant.className}`}>
                   Všechny recenze
