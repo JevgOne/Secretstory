@@ -1,49 +1,35 @@
 import createMiddleware from 'next-intl/middleware';
-import { NextRequest, NextResponse } from 'next/server';
 import { locales, defaultLocale } from './i18n';
 
+// Create next-intl middleware
 const intlMiddleware = createMiddleware({
-  // A list of all locales that are supported
   locales,
-
-  // Used when no locale matches
   defaultLocale,
-
-  // Always use locale prefix (e.g., /cs, /en, /de, /uk)
-  localePrefix: 'always'
+  localePrefix: 'as-needed'
 });
 
-export default function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export default function middleware(request: Request) {
+  const { pathname } = new URL(request.url);
 
-  // Redirect /profiles to /cs/profily - 301 permanent redirect
-  if (pathname === '/profiles') {
-    const newUrl = request.nextUrl.clone();
-    newUrl.pathname = '/cs/profily';
-    return NextResponse.redirect(newUrl, 301);
+  // Exclude admin and manager routes from i18n (they don't need locale prefix)
+  if (
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/manager') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/static')
+  ) {
+    return;
   }
 
-  // Remove trailing slash (except for root) - 301 redirect
-  if (pathname.endsWith('/') && pathname.length > 1) {
-    const newUrl = request.nextUrl.clone();
-    newUrl.pathname = pathname.slice(0, -1);
-    return NextResponse.redirect(newUrl, 301);
-  }
-
-  // Run the intl middleware
+  // Apply i18n middleware to all other routes
   return intlMiddleware(request);
 }
 
 export const config = {
-  // Match only internationalized pathnames
-  matcher: [
-    // Match all pathnames except for
-    // - … if they start with `/api`, `/_next` or `/_vercel`
-    // - … if they start with `/admin`
-    // - … the ones containing a dot (e.g. `favicon.ico`)
-    '/((?!api|_next|_vercel|admin|.*\\..*).*)',
-    // However, match all locales
-    '/',
-    '/(cs|en|de|uk)/:path*'
-  ]
+  // Match all pathnames except for:
+  // - API routes
+  // - Static files (images, fonts, etc.)
+  // - Next.js internals
+  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)']
 };

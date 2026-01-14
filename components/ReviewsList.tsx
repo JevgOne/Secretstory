@@ -16,6 +16,9 @@ interface Review {
   helpful_count?: number;
   created_at: string;
   girl_name?: string;
+  girl_photo?: string;
+  girl_slug?: string;
+  girl_color?: string;
 }
 
 interface ReviewsListProps {
@@ -43,6 +46,7 @@ export default function ReviewsList({
   const [error, setError] = useState('');
   const [votingReview, setVotingReview] = useState<number | null>(null);
   const [translating, setTranslating] = useState(false);
+  const [expandedReviews, setExpandedReviews] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     fetchReviews();
@@ -134,10 +138,82 @@ export default function ReviewsList({
     return date.toLocaleDateString(localeCode, { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
+  // Generate consistent color for user based on name (WhatsApp style)
+  const getAvatarColor = (name: string) => {
+    const colors = [
+      '#FF6B6B', // red
+      '#4ECDC4', // teal
+      '#45B7D1', // blue
+      '#FFA07A', // salmon
+      '#98D8C8', // mint
+      '#F7DC6F', // yellow
+      '#BB8FCE', // purple
+      '#85C1E2', // sky blue
+      '#F8B500', // orange
+      '#E74C3C', // dark red
+      '#3498DB', // bright blue
+      '#2ECC71', // green
+      '#E67E22', // dark orange
+      '#9B59B6', // violet
+      '#1ABC9C', // turquoise
+      '#34495E', // dark gray blue
+    ];
+
+    // Generate hash from name
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  const toggleExpanded = (reviewId: number) => {
+    setExpandedReviews(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(reviewId)) {
+        newSet.delete(reviewId);
+      } else {
+        newSet.add(reviewId);
+      }
+      return newSet;
+    });
+  };
+
   if (loading) {
     return (
       <div className="reviews-loading">
-        {translations.loading}
+        <div className="loading-spinner"></div>
+        <p>{translations.loading}</p>
+
+        <style jsx>{`
+          .reviews-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            gap: 1rem;
+          }
+
+          .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--wine);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+          }
+
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+
+          .reviews-loading p {
+            color: var(--gray);
+            font-size: 0.9rem;
+          }
+        `}</style>
       </div>
     );
   }
@@ -149,26 +225,52 @@ export default function ReviewsList({
   if (reviews.length === 0) {
     return (
       <div className="reviews-empty">
-        <div className="empty-icon">📝</div>
+        <div className="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M7 8h10M7 12h10M7 16h6"/>
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+          </svg>
+        </div>
+        <h4>Zatím žádné recenze</h4>
         <p>{translations.no_reviews}</p>
 
         <style jsx>{`
           .reviews-empty {
             text-align: center;
-            padding: 3rem 1.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
           }
 
           .empty-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, rgba(139, 41, 66, 0.2), rgba(92, 28, 46, 0.1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .empty-icon svg {
+            width: 36px;
+            height: 36px;
+            color: var(--wine);
+          }
+
+          .reviews-empty h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.5rem;
           }
 
           .reviews-empty p {
             color: var(--gray);
+            font-size: 0.95rem;
           }
         `}</style>
       </div>
@@ -178,7 +280,7 @@ export default function ReviewsList({
   return (
     <div className="reviews-list">
       <div className="reviews-grid">
-        {reviews.map((review) => {
+        {reviews.map((review, index) => {
           const vibe = review.vibe && VIBE_OPTIONS[review.vibe as VibeId];
           const vibeLabel = vibe ? (vibe[`label_${locale}`] || vibe.label_cs) : null;
 
@@ -190,41 +292,67 @@ export default function ReviewsList({
           }
 
           return (
-            <div key={review.id} className="review-card">
+            <div
+              key={review.id}
+              className="review-card"
+              style={{
+                animationDelay: `${index * 0.1}s`
+              }}
+            >
+              {/* Header with Avatar & Vibe */}
               <div className="review-header">
                 <div className="review-author">
-                  <div className="author-avatar">
-                    {review.author_name.charAt(0).toUpperCase()}
+                  <div className="author-avatar" style={{
+                    background: getAvatarColor(review.author_name)
+                  }}>
+                    <span className="avatar-letter">{review.author_name.charAt(0).toUpperCase()}</span>
                   </div>
                   <div className="author-info">
                     <div className="author-name">{review.author_name}</div>
-                    <div className="review-date">{formatDate(review.created_at)}</div>
+                    <div className="review-meta">
+                      <ReviewStars rating={review.rating} size="small" />
+                      <span className="meta-dot">•</span>
+                      <span className="review-date">{formatDate(review.created_at)}</span>
+                    </div>
                   </div>
                 </div>
-                <div className="header-right">
-                  {vibe && (
-                    <div
-                      className="vibe-badge"
-                      style={{
-                        background: `${vibe.color}20`,
-                        border: `1px solid ${vibe.color}40`
-                      }}
-                    >
-                      <span className="vibe-emoji">{vibe.emoji}</span>
-                      <span className="vibe-label" style={{ color: vibe.color }}>
-                        {vibeLabel}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                {vibe && (
+                  <div
+                    className="vibe-badge"
+                    style={{
+                      background: `linear-gradient(135deg, ${vibe.color}25, ${vibe.color}10)`,
+                      borderColor: `${vibe.color}40`
+                    }}
+                  >
+                    <span className="vibe-emoji">{vibe.emoji}</span>
+                    <span className="vibe-label" style={{ color: vibe.color }}>
+                      {vibeLabel}
+                    </span>
+                  </div>
+                )}
               </div>
 
+              {/* Title */}
               {review.title && (
                 <h4 className="review-title">{review.title}</h4>
               )}
 
-              <p className="review-content">{review.content}</p>
+              {/* Content */}
+              <div className="review-content-wrapper">
+                <p className={`review-content ${expandedReviews.has(review.id) ? 'expanded' : ''}`}>
+                  {review.content}
+                </p>
+                {review.content.length > 200 && (
+                  <button
+                    className="read-more-btn"
+                    onClick={() => toggleExpanded(review.id)}
+                  >
+                    {expandedReviews.has(review.id) ? 'Zobrazit méně' : 'Zobrazit více'}
+                  </button>
+                )}
+              </div>
 
+              {/* Tags */}
               {reviewTags.length > 0 && (
                 <div className="review-tags">
                   {reviewTags.map((tagId) => {
@@ -241,18 +369,16 @@ export default function ReviewsList({
                 </div>
               )}
 
+              {/* Footer */}
               <div className="review-footer">
-                {review.girl_name && (
-                  <div className="review-girl">
-                    Recenze na: <strong>{review.girl_name}</strong>
-                  </div>
-                )}
                 <button
                   className={`helpful-button ${votingReview === review.id ? 'voting' : ''}`}
                   onClick={() => handleHelpfulVote(review.id)}
                   disabled={votingReview === review.id}
                 >
-                  <span className="helpful-icon">👍</span>
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                    <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                  </svg>
                   <span className="helpful-text">{translations.helpful || 'Užitečné'}</span>
                   {review.helpful_count !== undefined && review.helpful_count > 0 && (
                     <span className="helpful-count">{review.helpful_count}</span>
@@ -269,110 +395,195 @@ export default function ReviewsList({
           margin-top: 0;
         }
 
-        .reviews-loading {
-          text-align: center;
-          padding: 2rem;
-          color: var(--gray);
-        }
-
         .reviews-grid {
-          display: grid;
+          display: flex;
+          flex-direction: column;
           gap: 1.5rem;
         }
 
         .review-card {
-          background: rgba(255, 255, 255, 0.03);
+          position: relative;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
           border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          padding: 1.5rem;
-          transition: all 0.3s;
+          border-radius: 20px;
+          padding: 1.75rem;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(12px);
+          overflow: hidden;
+          animation: fadeIn 0.5s ease-out both;
+          display: flex;
+          flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .review-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 100%;
+          background: linear-gradient(135deg, rgba(139, 41, 66, 0.05) 0%, transparent 50%);
+          opacity: 0;
+          transition: opacity 0.4s;
+          pointer-events: none;
         }
 
         .review-card:hover {
-          background: rgba(255, 255, 255, 0.05);
-          border-color: rgba(255, 255, 255, 0.15);
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
+          border-color: rgba(255, 255, 255, 0.2);
+          transform: translateY(-4px);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .review-card:hover::before {
+          opacity: 1;
         }
 
         .review-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-bottom: 1rem;
+          margin-bottom: 1.25rem;
+          gap: 1rem;
         }
 
         .review-author {
           display: flex;
-          gap: 12px;
+          gap: 14px;
+          align-items: center;
         }
 
         .author-avatar {
-          width: 40px;
-          height: 40px;
+          position: relative;
+          width: 52px;
+          height: 52px;
           border-radius: 50%;
-          background: var(--wine);
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-shrink: 0;
+          overflow: hidden;
+        }
+
+        .avatar-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .avatar-letter {
           color: white;
-          font-weight: 600;
-          font-size: 1.1rem;
+          font-weight: 700;
+          font-size: 1.25rem;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         }
 
         .author-info {
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 6px;
         }
 
         .author-name {
-          font-weight: 500;
+          font-weight: 600;
+          font-size: 1.05rem;
           color: var(--white);
+          letter-spacing: -0.01em;
         }
 
-        .review-date {
+        .review-meta {
+          display: flex;
+          align-items: center;
+          gap: 8px;
           font-size: 0.85rem;
           color: var(--gray);
         }
 
+        .meta-dot {
+          opacity: 0.5;
+        }
+
+        .review-date {
+          font-size: 0.85rem;
+        }
+
         .review-title {
-          font-size: 1.1rem;
-          font-weight: 500;
+          font-size: 1.15rem;
+          font-weight: 600;
           color: var(--white);
-          margin-bottom: 0.75rem;
+          margin-bottom: 0.875rem;
+          line-height: 1.4;
+          letter-spacing: -0.02em;
+        }
+
+        .review-content-wrapper {
+          position: relative;
+          flex-grow: 1;
         }
 
         .review-content {
-          color: var(--gray);
-          line-height: 1.6;
+          color: rgba(255, 255, 255, 0.75);
+          line-height: 1.7;
           margin-bottom: 0;
+          font-size: 0.95rem;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          transition: all 0.3s ease;
         }
 
-        .review-girl {
-          margin-top: 1rem;
-          padding-top: 1rem;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          font-size: 0.9rem;
-          color: var(--gray);
+        .review-content.expanded {
+          display: block;
+          -webkit-line-clamp: unset;
         }
 
-        .review-girl strong {
-          color: var(--white);
+        .read-more-btn {
+          background: none;
+          border: none;
+          color: var(--wine);
+          font-size: 0.875rem;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0.5rem 0 0 0;
+          margin-top: 0.5rem;
+          transition: all 0.2s;
+          display: block;
+        }
+
+        .read-more-btn:hover {
+          color: #a33352;
+          text-decoration: underline;
         }
 
         /* VIBE BADGE */
-        .header-right {
-          display: flex;
-          align-items: center;
-        }
-
         .vibe-badge {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          padding: 0.5rem 0.875rem;
-          border-radius: 20px;
+          gap: 0.625rem;
+          padding: 0.625rem 1rem;
+          border-radius: 100px;
           font-size: 0.875rem;
-          font-weight: 500;
+          font-weight: 600;
+          border: 1px solid;
+          backdrop-filter: blur(8px);
+          white-space: nowrap;
+          transition: all 0.3s;
+        }
+
+        .vibe-badge:hover {
+          transform: scale(1.05);
         }
 
         .vibe-emoji {
@@ -381,106 +592,132 @@ export default function ReviewsList({
         }
 
         .vibe-label {
-          font-weight: 600;
+          font-weight: 700;
+          letter-spacing: 0.02em;
         }
 
         /* REVIEW TAGS */
         .review-tags {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.5rem;
-          margin-top: 1rem;
+          gap: 0.625rem;
+          margin-top: 1.25rem;
         }
 
         .review-tag {
           display: flex;
           align-items: center;
-          gap: 0.375rem;
-          padding: 0.375rem 0.75rem;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 6px;
-          font-size: 0.8rem;
+          gap: 0.5rem;
+          padding: 0.5rem 0.875rem;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 100px;
+          font-size: 0.85rem;
+          transition: all 0.3s;
+        }
+
+        .review-tag:hover {
+          background: rgba(255, 255, 255, 0.09);
+          transform: translateY(-2px);
         }
 
         .tag-emoji {
-          font-size: 1rem;
+          font-size: 1.1rem;
+          line-height: 1;
         }
 
         .tag-text {
-          color: rgba(255, 255, 255, 0.8);
+          color: rgba(255, 255, 255, 0.85);
+          font-weight: 500;
         }
 
         /* REVIEW FOOTER */
         .review-footer {
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-end;
           align-items: center;
-          margin-top: 1rem;
-          padding-top: 1rem;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          gap: 1rem;
+          margin-top: auto;
+          padding-top: 1.25rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .helpful-button {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 0.5rem 1rem;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 8px;
-          color: var(--white);
+          padding: 0.625rem 1.125rem;
+          background: rgba(34, 197, 94, 0.08);
+          border: 1px solid rgba(34, 197, 94, 0.25);
+          border-radius: 100px;
+          color: rgba(34, 197, 94, 0.9);
           font-size: 0.875rem;
+          font-weight: 600;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .helpful-button:hover:not(:disabled) {
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(255, 255, 255, 0.2);
-          transform: translateY(-2px);
+          background: rgba(34, 197, 94, 0.15);
+          border-color: rgba(34, 197, 94, 0.4);
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
         }
 
         .helpful-button:disabled {
-          opacity: 0.6;
+          opacity: 0.5;
           cursor: not-allowed;
         }
 
         .helpful-button.voting {
-          opacity: 0.8;
+          opacity: 0.7;
+          pointer-events: none;
         }
 
-        .helpful-icon {
-          font-size: 1rem;
+        .helpful-button svg {
+          transition: transform 0.3s;
+        }
+
+        .helpful-button:hover:not(:disabled) svg {
+          transform: scale(1.1);
         }
 
         .helpful-text {
-          font-weight: 500;
-        }
-
-        .helpful-count {
-          background: rgba(255, 255, 255, 0.1);
-          padding: 0.125rem 0.5rem;
-          border-radius: 12px;
-          font-size: 0.75rem;
           font-weight: 600;
         }
 
+        .helpful-count {
+          background: rgba(34, 197, 94, 0.15);
+          padding: 0.25rem 0.625rem;
+          border-radius: 100px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          min-width: 24px;
+          text-align: center;
+          color: rgba(34, 197, 94, 0.95);
+        }
+
         @media (max-width: 768px) {
+          .reviews-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .review-card {
+            padding: 1.5rem;
+            border-radius: 16px;
+          }
+
           .review-header {
             flex-direction: column;
-            gap: 12px;
+            gap: 1rem;
             align-items: stretch;
           }
 
-          .header-right {
-            justify-content: flex-start;
+          .vibe-badge {
+            align-self: flex-start;
           }
 
           .review-footer {
-            flex-direction: column;
-            align-items: stretch;
+            justify-content: center;
           }
 
           .helpful-button {
@@ -493,8 +730,17 @@ export default function ReviewsList({
             padding: 1.25rem;
           }
 
+          .author-avatar {
+            width: 46px;
+            height: 46px;
+          }
+
+          .avatar-letter {
+            font-size: 1.1rem;
+          }
+
           .vibe-badge {
-            padding: 0.375rem 0.75rem;
+            padding: 0.5rem 0.875rem;
             font-size: 0.8rem;
           }
 
@@ -503,17 +749,17 @@ export default function ReviewsList({
           }
 
           .review-tags {
-            gap: 0.375rem;
+            gap: 0.5rem;
           }
 
           .review-tag {
-            padding: 0.25rem 0.625rem;
-            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.8rem;
           }
 
           .helpful-button {
-            padding: 0.625rem 0.875rem;
-            font-size: 0.8rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
           }
         }
       `}</style>

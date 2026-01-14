@@ -26,6 +26,7 @@ interface Event {
   location: string;
   status: 'confirmed' | 'pending' | 'completed';
   notes?: string;
+  communication_type?: 'sms' | 'call' | 'whatsapp' | 'telegram';
 }
 
 interface Schedule {
@@ -126,7 +127,8 @@ export default function CalendarPage() {
     startTime: '14:00',
     endTime: '16:00',
     location: primaryLocation?.display_name || 'Praha 2',
-    status: 'confirmed' as const
+    status: 'confirmed' as const,
+    communicationType: 'call' as 'sms' | 'call' | 'whatsapp' | 'telegram'
   });
 
   // Get week days
@@ -331,7 +333,8 @@ export default function CalendarPage() {
           duration: duration,
           location: newEvent.location,
           location_type: 'incall',
-          status: newEvent.status
+          status: newEvent.status,
+          communication_type: newEvent.communicationType
         })
       });
 
@@ -347,7 +350,8 @@ export default function CalendarPage() {
           startTime: '14:00',
           endTime: '16:00',
           location: primaryLocation?.display_name || 'Praha 2',
-          status: 'confirmed'
+          status: 'confirmed',
+          communicationType: 'call'
         });
       } else {
         console.error('Failed to create booking');
@@ -637,6 +641,28 @@ export default function CalendarPage() {
                   </span>
                 </div>
               </div>
+              {selectedEvent.communication_type && (
+                <div className="detail-section">
+                  <div className="detail-label">Typ komunikace</div>
+                  <div className="detail-value">
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '4px 12px',
+                      background: 'rgba(139, 41, 66, 0.15)',
+                      borderRadius: '6px',
+                      fontSize: '0.9rem',
+                      fontWeight: '600'
+                    }}>
+                      {selectedEvent.communication_type === 'sms' && '💬 SMS'}
+                      {selectedEvent.communication_type === 'call' && '📞 Hovor'}
+                      {selectedEvent.communication_type === 'whatsapp' && '💚 WhatsApp'}
+                      {selectedEvent.communication_type === 'telegram' && '✈️ Telegram'}
+                    </span>
+                  </div>
+                </div>
+              )}
               {selectedEvent.notes && (
                 <div className="detail-section">
                   <div className="detail-label">Poznámky</div>
@@ -727,6 +753,61 @@ export default function CalendarPage() {
                   value={newEvent.client}
                   onChange={(e) => setNewEvent({...newEvent, client: e.target.value})}
                 />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Typ komunikace</label>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: '8px',
+                  marginTop: '8px'
+                }}>
+                  {[
+                    { value: 'sms', label: 'SMS', icon: '💬' },
+                    { value: 'call', label: 'Hovor', icon: '📞' },
+                    { value: 'whatsapp', label: 'WhatsApp', icon: '💚' },
+                    { value: 'telegram', label: 'Telegram', icon: '✈️' }
+                  ].map(option => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setNewEvent({...newEvent, communicationType: option.value as any})}
+                      style={{
+                        padding: '12px 8px',
+                        background: newEvent.communicationType === option.value
+                          ? 'rgba(139, 41, 66, 0.2)'
+                          : 'rgba(255, 255, 255, 0.05)',
+                        border: newEvent.communicationType === option.value
+                          ? '2px solid #8b2942'
+                          : '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '8px',
+                        color: '#e0d0d5',
+                        fontSize: '0.85rem',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (newEvent.communicationType !== option.value) {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (newEvent.communicationType !== option.value) {
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                        }
+                      }}
+                    >
+                      <span style={{ fontSize: '1.2rem' }}>{option.icon}</span>
+                      <span>{option.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="form-group">

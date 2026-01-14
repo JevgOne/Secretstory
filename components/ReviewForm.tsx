@@ -137,13 +137,16 @@ export default function ReviewForm({
   if (success) {
     return (
       <div className="review-form-success">
-        <div className="success-icon">✓</div>
-        <div className="success-title">{translations.success_message}</div>
-        <p className="success-text">
-          {translations.approval_pending}
-        </p>
+        <div className="success-animation">
+          <svg viewBox="0 0 52 52" className="checkmark">
+            <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path className="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+          </svg>
+        </div>
+        <h3 className="success-title">{translations.success_message}</h3>
+        <p className="success-text">{translations.approval_pending}</p>
         <button
-          className="btn"
+          className="btn-secondary"
           onClick={() => setSuccess(false)}
         >
           {translations.write_another}
@@ -152,49 +155,98 @@ export default function ReviewForm({
         <style jsx>{`
           .review-form-success {
             text-align: center;
-            padding: 3rem 1.5rem;
-            background: rgba(34, 197, 94, 0.1);
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%);
             border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 12px;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
           }
 
-          .success-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 1rem;
-            background: rgba(34, 197, 94, 0.2);
+          .success-animation {
+            margin: 0 auto 2rem;
+          }
+
+          .checkmark {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: var(--green);
+            display: block;
+            stroke-width: 3;
+            stroke: #22c55e;
+            stroke-miterlimit: 10;
+            margin: 0 auto;
+            animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+          }
+
+          .checkmark-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 3;
+            stroke-miterlimit: 10;
+            stroke: #22c55e;
+            fill: rgba(34, 197, 94, 0.1);
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+          }
+
+          .checkmark-check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+          }
+
+          @keyframes stroke {
+            100% {
+              stroke-dashoffset: 0;
+            }
+          }
+
+          @keyframes scale {
+            0%, 100% {
+              transform: none;
+            }
+            50% {
+              transform: scale3d(1.1, 1.1, 1);
+            }
+          }
+
+          @keyframes fill {
+            100% {
+              box-shadow: inset 0px 0px 0px 30px rgba(34, 197, 94, 0.2);
+            }
           }
 
           .success-title {
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 1.75rem;
+            font-weight: 700;
             color: var(--white);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
           }
 
           .success-text {
-            color: var(--gray);
-            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            line-height: 1.6;
           }
 
-          .btn {
-            background: rgba(255, 255, 255, 0.1);
+          .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
             color: var(--white);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95rem;
           }
 
-          .btn:hover {
-            background: rgba(255, 255, 255, 0.15);
+          .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
           }
         `}</style>
       </div>
@@ -203,19 +255,33 @@ export default function ReviewForm({
 
   return (
     <form className="review-form" onSubmit={handleSubmit}>
+      {/* Header */}
       <div className="form-header">
+        <div className="header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </div>
         <h3 className="form-title">{translations.title}</h3>
         <p className="form-subtitle">{translations.subtitle.replace('{name}', girlName)}</p>
       </div>
 
       {error && (
         <div className="form-error">
-          {error}
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+          </svg>
+          <span>{error}</span>
         </div>
       )}
 
+      {/* Name Input */}
       <div className="form-group">
-        <label htmlFor="author_name">{translations.your_name} *</label>
+        <label htmlFor="author_name">
+          {translations.your_name}
+          <span className="required">*</span>
+        </label>
         <input
           type="text"
           id="author_name"
@@ -223,13 +289,17 @@ export default function ReviewForm({
           onChange={(e) => setFormData({ ...formData, author_name: e.target.value })}
           placeholder={translations.your_name_placeholder}
           required
+          className="form-input"
         />
       </div>
 
-      {/* RATING & VIBE IN ONE ROW */}
+      {/* Rating & Vibe Section */}
       <div className="rating-vibe-section">
         <div className="rating-group">
-          <label>{translations.rating_label} *</label>
+          <label>
+            {translations.rating_label}
+            <span className="required">*</span>
+          </label>
           <ReviewStars
             rating={formData.rating}
             size="large"
@@ -252,13 +322,15 @@ export default function ReviewForm({
                 type="button"
                 className={`vibe-option ${isSelected ? 'active' : ''}`}
                 style={{
-                  borderColor: isSelected ? vibe.color : 'rgba(255, 255, 255, 0.1)',
-                  background: isSelected ? `${vibe.color}20` : 'rgba(255, 255, 255, 0.03)'
+                  borderColor: isSelected ? vibe.color : 'rgba(255, 255, 255, 0.12)',
+                  background: isSelected
+                    ? `linear-gradient(135deg, ${vibe.color}20, ${vibe.color}08)`
+                    : 'rgba(255, 255, 255, 0.04)'
                 }}
                 onClick={() => setFormData({ ...formData, vibe: vibeId })}
               >
                 <span className="vibe-emoji">{vibe.emoji}</span>
-                <span className="vibe-label" style={{ color: isSelected ? vibe.color : '#9ca3af' }}>
+                <span className="vibe-label" style={{ color: isSelected ? vibe.color : 'rgba(255, 255, 255, 0.6)' }}>
                   {label}
                 </span>
               </button>
@@ -268,11 +340,11 @@ export default function ReviewForm({
         </div>
       </div>
 
-      {/* TAG SELECTOR */}
+      {/* Tag Selector */}
       <div className="form-group">
         <label>
           {translations.tags_label || 'Tagy'}
-          <span className="tag-info"> ({formData.tags.length}/4)</span>
+          <span className="tag-count">({formData.tags.length}/4)</span>
         </label>
         <div className="tag-picker">
           {Object.entries(TAG_OPTIONS).map(([key, tag]) => {
@@ -291,19 +363,25 @@ export default function ReviewForm({
               >
                 <span className="tag-emoji">{tag.emoji}</span>
                 <span className="tag-label">{label}</span>
+                {isSelected && (
+                  <svg className="tag-check" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                  </svg>
+                )}
               </button>
             );
           })}
         </div>
         {translations.tags_max_info && (
-          <p className="tag-max-info">{translations.tags_max_info}</p>
+          <p className="helper-text">{translations.tags_max_info}</p>
         )}
       </div>
 
+      {/* Title Input (Optional) */}
       <div className="form-group">
         <label htmlFor="title">
           {translations.review_title}
-          <span className="optional"> ({translations.optional})</span>
+          <span className="optional">({translations.optional})</span>
         </label>
         <input
           type="text"
@@ -311,11 +389,16 @@ export default function ReviewForm({
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           placeholder={translations.review_title_placeholder}
+          className="form-input"
         />
       </div>
 
+      {/* Content Textarea */}
       <div className="form-group">
-        <label htmlFor="content">{translations.review_content} *</label>
+        <label htmlFor="content">
+          {translations.review_content}
+          <span className="required">*</span>
+        </label>
         <textarea
           id="content"
           value={formData.content}
@@ -323,190 +406,201 @@ export default function ReviewForm({
           placeholder={translations.review_content_placeholder}
           rows={6}
           required
+          className="form-textarea"
         />
       </div>
 
+      {/* Submit Button */}
       <button
         type="submit"
         className="submit-btn"
         disabled={loading}
       >
         {loading ? (
-          <>
+          <div className="loading-content">
+            <div className="spinner"></div>
             <span>{translations.submitting}</span>
             <div className="progress-bar">
               <div className="progress-fill" style={{ width: `${loadingProgress}%` }}></div>
             </div>
-            <span className="progress-percent">{loadingProgress}%</span>
-          </>
+          </div>
         ) : (
-          translations.submit
+          <>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+              <path d="M22 2L11 13"/>
+              <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
+            </svg>
+            <span>{translations.submit}</span>
+          </>
         )}
       </button>
 
       <style jsx>{`
         .review-form {
-          background: rgba(255, 255, 255, 0.03);
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
           border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          padding: 2rem;
+          border-radius: 24px;
+          padding: 2.5rem;
+          backdrop-filter: blur(12px);
         }
 
         .form-header {
-          margin-bottom: 2rem;
+          text-align: center;
+          margin-bottom: 2.5rem;
+        }
+
+        .header-icon {
+          width: 64px;
+          height: 64px;
+          margin: 0 auto 1.25rem;
+          background: linear-gradient(135deg, rgba(139, 41, 66, 0.2), rgba(92, 28, 46, 0.1));
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .header-icon svg {
+          width: 28px;
+          height: 28px;
+          color: var(--wine);
         }
 
         .form-title {
-          font-size: 1.5rem;
-          font-weight: 600;
+          font-size: 1.875rem;
+          font-weight: 700;
           color: var(--white);
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.75rem;
+          letter-spacing: -0.02em;
         }
 
         .form-subtitle {
-          color: var(--gray);
-          font-size: 0.95rem;
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 1rem;
+          line-height: 1.6;
         }
 
         .form-error {
-          background: rgba(239, 68, 68, 0.1);
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          background: rgba(239, 68, 68, 0.12);
           border: 1px solid rgba(239, 68, 68, 0.3);
-          color: #ef4444;
-          padding: 1rem;
-          border-radius: 8px;
+          color: #ff6b6b;
+          padding: 1rem 1.25rem;
+          border-radius: 12px;
           margin-bottom: 1.5rem;
+          font-size: 0.9rem;
         }
 
         .rating-vibe-section {
           display: grid;
-          grid-template-columns: 200px 1fr;
+          grid-template-columns: 1fr;
           gap: 2rem;
-          margin-bottom: 1.5rem;
-          padding: 1.5rem;
-          background: rgba(255, 255, 255, 0.02);
+          margin-bottom: 2rem;
+          padding: 2rem;
+          background: rgba(255, 255, 255, 0.03);
           border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 12px;
-        }
-
-        @media (max-width: 768px) {
-          .rating-vibe-section {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-          }
+          border-radius: 16px;
         }
 
         .rating-group,
         .vibe-group {
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
+          gap: 1rem;
         }
 
         .form-group {
-          margin-bottom: 1.5rem;
+          margin-bottom: 1.75rem;
         }
 
         .form-group label {
           display: block;
-          font-size: 0.9rem;
-          color: var(--gray);
-          margin-bottom: 0.5rem;
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.85);
+          margin-bottom: 0.75rem;
+        }
+
+        .required {
+          color: #ff6b6b;
+          margin-left: 0.25rem;
         }
 
         .optional {
-          color: #666;
-          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.4);
+          font-size: 0.875rem;
+          font-weight: 400;
+          margin-left: 0.5rem;
         }
 
-        .form-group input,
-        .form-group textarea {
+        .tag-count {
+          color: rgba(255, 255, 255, 0.5);
+          font-size: 0.875rem;
+          font-weight: 500;
+          margin-left: 0.5rem;
+        }
+
+        .form-input,
+        .form-textarea {
           width: 100%;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 8px;
-          padding: 0.75rem 1rem;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 12px;
+          padding: 0.875rem 1.125rem;
           color: var(--white);
           font-size: 0.95rem;
           transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-          outline: none;
-          border-color: var(--accent);
-          background: rgba(255, 255, 255, 0.08);
-        }
-
-        .form-group textarea {
-          resize: vertical;
           font-family: inherit;
-          line-height: 1.6;
         }
 
-        .submit-btn {
-          width: 100%;
-          background: var(--wine);
-          color: white;
-          border: none;
-          padding: 1rem;
-          border-radius: 8px;
-          font-size: 1rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s;
+        .form-input:focus,
+        .form-textarea:focus {
+          outline: none;
+          border-color: var(--wine);
+          background: rgba(255, 255, 255, 0.09);
+          box-shadow: 0 0 0 4px rgba(139, 41, 66, 0.1);
         }
 
-        .submit-btn:hover:not(:disabled) {
-          background: #9a2942;
+        .form-textarea {
+          resize: vertical;
+          line-height: 1.7;
+          min-height: 140px;
         }
 
-        .submit-btn:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
+        .helper-text {
+          margin-top: 0.625rem;
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.5);
         }
 
         .vibe-picker {
-          display: flex;
-          gap: 0.5rem;
-          flex-wrap: wrap;
-        }
-
-        @media (max-width: 768px) {
-          .vibe-picker {
-            justify-content: space-between;
-          }
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 0.75rem;
         }
 
         .vibe-option {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          padding: 0.75rem 1rem;
-          border: 2px solid rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
-          background: rgba(255, 255, 255, 0.03);
+          justify-content: center;
+          gap: 0.625rem;
+          padding: 1rem;
+          border: 2px solid;
+          border-radius: 12px;
           cursor: pointer;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-          flex: 1;
-          min-width: fit-content;
-        }
-
-        @media (max-width: 768px) {
-          .vibe-option {
-            flex: 1 1 calc(50% - 0.25rem);
-          }
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .vibe-option:hover {
-          transform: translateY(-2px);
-          background: rgba(255, 255, 255, 0.06);
-          border-color: rgba(255, 255, 255, 0.2);
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
         .vibe-option.active {
           transform: scale(1.05);
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25),
-                      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .vibe-emoji {
@@ -516,56 +610,43 @@ export default function ReviewForm({
 
         .vibe-label {
           font-size: 0.9rem;
-          font-weight: 600;
+          font-weight: 700;
           transition: color 0.3s;
-          white-space: nowrap;
-        }
-
-        /* TAG PICKER STYLES */
-        .tag-info {
-          color: rgba(255, 255, 255, 0.5);
-          font-size: 0.85rem;
-          font-weight: normal;
         }
 
         .tag-picker {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
           gap: 0.75rem;
-        }
-
-        @media (max-width: 640px) {
-          .tag-picker {
-            grid-template-columns: repeat(2, 1fr);
-          }
         }
 
         .tag-option {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          padding: 0.75rem 1rem;
-          border: 2px solid rgba(255, 255, 255, 0.1);
-          border-radius: 8px;
-          background: rgba(255, 255, 255, 0.03);
+          gap: 0.625rem;
+          padding: 0.875rem 1rem;
+          border: 2px solid rgba(255, 255, 255, 0.12);
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.04);
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.3s;
+          position: relative;
         }
 
         .tag-option:hover:not(.disabled) {
           transform: translateY(-2px);
-          background: rgba(255, 255, 255, 0.06);
+          background: rgba(255, 255, 255, 0.07);
           border-color: rgba(255, 255, 255, 0.2);
         }
 
         .tag-option.selected {
-          background: rgba(139, 21, 56, 0.2);
+          background: rgba(139, 41, 66, 0.2);
           border-color: var(--wine);
-          box-shadow: 0 0 0 1px rgba(139, 21, 56, 0.3);
+          box-shadow: 0 4px 16px rgba(139, 41, 66, 0.2);
         }
 
         .tag-option.disabled {
-          opacity: 0.4;
+          opacity: 0.35;
           cursor: not-allowed;
         }
 
@@ -575,45 +656,123 @@ export default function ReviewForm({
         }
 
         .tag-label {
-          font-size: 0.875rem;
+          font-size: 0.9rem;
           font-weight: 500;
           color: var(--white);
+          flex: 1;
         }
 
-        .tag-max-info {
-          margin-top: 0.5rem;
-          font-size: 0.8rem;
-          color: rgba(255, 255, 255, 0.5);
+        .tag-check {
+          color: var(--wine);
+        }
+
+        .submit-btn {
+          width: 100%;
+          background: linear-gradient(135deg, var(--wine) 0%, #9a2942 100%);
+          color: white;
+          border: none;
+          padding: 1.125rem 1.5rem;
+          border-radius: 12px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+          box-shadow: 0 4px 16px rgba(139, 41, 66, 0.3);
+        }
+
+        .submit-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 32px rgba(139, 41, 66, 0.5);
+        }
+
+        .submit-btn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        .loading-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.75rem;
+          width: 100%;
+        }
+
+        .spinner {
+          width: 24px;
+          height: 24px;
+          border: 3px solid rgba(255, 255, 255, 0.3);
+          border-top-color: white;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
 
         .progress-bar {
           position: relative;
           width: 100%;
-          height: 4px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 2px;
-          margin: 0.5rem 0;
+          height: 6px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 100px;
           overflow: hidden;
         }
 
         .progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, var(--wine), #c41e3a);
-          border-radius: 2px;
+          background: linear-gradient(90deg, white, rgba(255, 255, 255, 0.8));
+          border-radius: 100px;
           transition: width 0.3s ease;
         }
 
-        .progress-percent {
-          font-size: 0.85rem;
-          color: rgba(255, 255, 255, 0.7);
-          font-weight: 500;
+        @media (max-width: 768px) {
+          .review-form {
+            padding: 2rem;
+            border-radius: 20px;
+          }
+
+          .form-header {
+            margin-bottom: 2rem;
+          }
+
+          .form-title {
+            font-size: 1.5rem;
+          }
+
+          .rating-vibe-section {
+            padding: 1.5rem;
+            gap: 1.5rem;
+          }
+
+          .vibe-picker {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .tag-picker {
+            grid-template-columns: repeat(2, 1fr);
+          }
         }
 
-        .submit-btn {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 0.25rem;
+        @media (max-width: 480px) {
+          .review-form {
+            padding: 1.5rem;
+          }
+
+          .header-icon {
+            width: 56px;
+            height: 56px;
+          }
+
+          .vibe-picker {
+            grid-template-columns: 1fr;
+          }
         }
       `}</style>
     </form>

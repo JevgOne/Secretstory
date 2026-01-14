@@ -89,7 +89,8 @@ export async function POST(request: NextRequest) {
       services,
       price,
       status,
-      notes
+      notes,
+      communication_type
     } = body;
 
     // Validate required fields
@@ -129,8 +130,8 @@ export async function POST(request: NextRequest) {
         INSERT INTO bookings (
           girl_id, created_by, client_name, client_phone, client_email,
           date, start_time, end_time, duration, location, location_type,
-          services, price, status, notes
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          services, price, status, notes, communication_type
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         girl_id,
@@ -147,7 +148,8 @@ export async function POST(request: NextRequest) {
         services ? JSON.stringify(services) : null,
         price || null,
         status || 'pending',
-        notes || null
+        notes || null,
+        communication_type || null
       ]
     });
 

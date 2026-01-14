@@ -188,6 +188,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   const [onlineGirls, setOnlineGirls] = useState<Girl[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [vibeStats, setVibeStats] = useState<{vibe: string, emoji: string, count: number}[]>([]);
 
   useEffect(() => {
     fetchProfile();
@@ -202,7 +203,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
     try {
       const resolvedParams = await params;
 
-      // PARALLEL FETCH - both requests at same time
+      // PARALLEL FETCH - profile and online girls first
       const [profileResponse, onlineResponse] = await Promise.all([
         fetch(`/api/girls/${resolvedParams.slug}`),
         fetch(`/api/girls/online-today?limit=4`).catch(() => null)
@@ -213,12 +214,53 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
       if (profileData.success) {
         setProfile(profileData.girl);
 
+        // Fetch reviews with actual girl ID
+        const reviewsResponse = await fetch(`/api/reviews?status=approved&girl_id=${profileData.girl.id}`).catch(() => null);
+
         // Process online girls if fetched
         if (onlineResponse) {
           const onlineData = await onlineResponse.json();
           if (onlineData.success) {
             // Filter out current girl from online list
             setOnlineGirls((onlineData.girls || []).filter((g: Girl) => g.id !== profileData.girl.id));
+          }
+        }
+
+        // Process reviews to calculate vibe stats
+        if (reviewsResponse) {
+          const reviewsData = await reviewsResponse.json();
+          if (reviewsData.success && reviewsData.reviews) {
+            const vibes: {[key: string]: {count: number, emoji: string}} = {};
+            const VIBE_EMOJIS: {[key: string]: string} = {
+              'unforgettable': '🔥',
+              'magical': '✨',
+              'great': '💫',
+              'nice': '😊',
+              'meh': '😐'
+            };
+
+            reviewsData.reviews.forEach((review: any) => {
+              if (review.vibe && VIBE_EMOJIS[review.vibe]) {
+                if (!vibes[review.vibe]) {
+                  vibes[review.vibe] = {
+                    count: 0,
+                    emoji: VIBE_EMOJIS[review.vibe]
+                  };
+                }
+                vibes[review.vibe].count++;
+              }
+            });
+
+            // Convert to array and sort by count
+            const vibeArray = Object.entries(vibes)
+              .map(([vibe, data]) => ({
+                vibe,
+                emoji: data.emoji,
+                count: data.count
+              }))
+              .sort((a, b) => b.count - a.count);
+
+            setVibeStats(vibeArray);
           }
         }
       } else {
@@ -970,59 +1012,106 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         </section>
       )}
 
-      {/* Reviews Section */}
+      {/* Reviews Section - Two Column Layout */}
       <section className="reviews-section">
-        <div className="reviews-header">
-          <h2 className={`reviews-title ${cormorant.className}`}>{t('reviews.title')}</h2>
-          {profile.reviews_count > 0 && (
-            <div className="reviews-rating">
-              <span className="rating-stars">★★★★★</span>
-              <span className="rating-value">{profile.rating || 4.9}</span>
-              <span className="rating-count">({profile.reviews_count} {t('reviews.reviews_count')})</span>
+        <div className="reviews-container">
+          {/* LEFT COLUMN - Girl Profile Sidebar */}
+          <aside className="reviews-sidebar">
+            <div className="sidebar-content">
+              {/* Girl Photo Circle */}
+              {profile.photos && profile.photos.length > 0 && (
+                <div className="sidebar-photo-circle">
+                  <img
+                    src={profile.photos[0].url}
+                    alt={profile.name}
+                    className="sidebar-photo"
+                  />
+                  {profile.online && (
+                    <div className="sidebar-online-dot"></div>
+                  )}
+                </div>
+              )}
+
+              {/* Girl Name */}
+              <h3 className={`sidebar-name ${cormorant.className}`}>{profile.name}</h3>
+
+              {/* Rating */}
+              <div className="sidebar-rating">
+                <ReviewStars rating={profile.rating || 4.9} size="medium" />
+                <div className="sidebar-rating-value">{profile.rating || 4.9}</div>
+              </div>
+
+              {/* Review Stats */}
+              <div className="sidebar-review-stats">
+                <div className="review-stat">
+                  <div className="stat-number">{profile.reviews_count}</div>
+                  <div className="stat-label">Recenzí</div>
+                </div>
+              </div>
+
+              {/* Vibe Stats */}
+              {vibeStats.length > 0 && (
+                <div className="sidebar-vibe-stats">
+                  {vibeStats.map((vibe, index) => (
+                    <div key={index} className="vibe-stat-item">
+                      <span className="vibe-emoji">{vibe.emoji}</span>
+                      <span className="vibe-count">{vibe.count}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </aside>
 
-        {/* Existing Reviews First */}
-        <div className="reviews-grid" style={{ marginBottom: '3rem' }}>
-          <ReviewsList
-            girlId={profile.id}
-            limit={3}
-            translations={{
-              title: t('reviews.title') || 'Recenze od klientů',
-              no_reviews: t('reviews.no_reviews') || 'Zatím žádné recenze. Buďte první!',
-              loading: t('reviews.loading'),
-              verified_booking: t('reviews.verified_booking') || 'Ověřená rezervace',
-              reviewed_on: t('reviews.reviewed_on') || 'Hodnoceno'
-            }}
-          />
-        </div>
+          {/* RIGHT COLUMN - Reviews List */}
+          <div className="reviews-main">
+            <div className="reviews-header">
+              <h2 className={`reviews-title ${cormorant.className}`}>{t('reviews.title')}</h2>
+            </div>
 
-        {/* Write Review Form - Now Below Reviews */}
-        <div>
-          <ReviewForm
-            girlId={profile.id}
-            girlName={profile.name}
-            translations={{
-              title: t('reviews.write_title') || 'Napište recenzi',
-              subtitle: t('reviews.write_subtitle')?.replace('{name}', profile.name) || `Sdílejte svou zkušenost s ${profile.name}`,
-              your_name: t('reviews.your_name') || 'Vaše jméno',
-              your_name_placeholder: t('reviews.your_name_placeholder') || 'Jak vám máme říkat?',
-              rating_label: t('reviews.rating_label') || 'Hodnocení',
-              vibe_label: t('reviews.vibe_label') || 'Jak byla celková vibe?',
-              review_title: t('reviews.review_title') || 'Nadpis',
-              review_title_placeholder: t('reviews.review_title_placeholder') || 'Shrňte svou zkušenost',
-              review_content: t('reviews.review_content') || 'Vaše recenze',
-              review_content_placeholder: t('reviews.review_content_placeholder') || 'Popište svou zkušenost podrobněji (min. 10 znaků)',
-              submit: t('reviews.submit') || 'Odeslat recenzi',
-              submitting: t('reviews.submitting') || 'Odesílání...',
-              success_message: t('reviews.success_message') || 'Děkujeme! Vaše recenze byla odeslána a čeká na schválení.',
-              approval_pending: t('reviews.approval_pending') || 'Vaše recenze čeká na schválení',
-              optional: t('reviews.optional') || 'nepovinné',
-              error_message: t('reviews.error_message') || 'Něco se pokazilo. Zkuste to prosím znovu.',
-              write_another: t('reviews.write_another') || 'Napsat další recenzi'
-            }}
-          />
+            {/* Reviews List */}
+            <div className="reviews-scroll-area">
+              <ReviewsList
+                girlId={profile.id}
+                translations={{
+                  title: t('reviews.title') || 'Recenze od klientů',
+                  no_reviews: t('reviews.no_reviews') || 'Zatím žádné recenze. Buďte první!',
+                  loading: t('reviews.loading'),
+                  verified_booking: t('reviews.verified_booking') || 'Ověřená rezervace',
+                  reviewed_on: t('reviews.reviewed_on') || 'Hodnoceno',
+                  helpful: t('reviews.helpful') || 'Užitečné'
+                }}
+                locale={locale as 'cs' | 'en' | 'de' | 'uk'}
+              />
+            </div>
+
+            {/* Write Review Form - Below Reviews */}
+            <div className="review-form-wrapper">
+              <ReviewForm
+                girlId={profile.id}
+                girlName={profile.name}
+                translations={{
+                  title: t('reviews.write_title') || 'Napište recenzi',
+                  subtitle: t('reviews.write_subtitle')?.replace('{name}', profile.name) || `Sdílejte svou zkušenost s ${profile.name}`,
+                  your_name: t('reviews.your_name') || 'Vaše jméno',
+                  your_name_placeholder: t('reviews.your_name_placeholder') || 'Jak vám máme říkat?',
+                  rating_label: t('reviews.rating_label') || 'Hodnocení',
+                  vibe_label: t('reviews.vibe_label') || 'Jak byla celková vibe?',
+                  review_title: t('reviews.review_title') || 'Nadpis',
+                  review_title_placeholder: t('reviews.review_title_placeholder') || 'Shrňte svou zkušenost',
+                  review_content: t('reviews.review_content') || 'Vaše recenze',
+                  review_content_placeholder: t('reviews.review_content_placeholder') || 'Popište svou zkušenost podrobněji (min. 10 znaků)',
+                  submit: t('reviews.submit') || 'Odeslat recenzi',
+                  submitting: t('reviews.submitting') || 'Odesílání...',
+                  success_message: t('reviews.success_message') || 'Děkujeme! Vaše recenze byla odeslána a čeká na schválení.',
+                  approval_pending: t('reviews.approval_pending') || 'Vaše recenze čeká na schválení',
+                  optional: t('reviews.optional') || 'nepovinné',
+                  error_message: t('reviews.error_message') || 'Něco se pokazilo. Zkuste to prosím znovu.',
+                  write_another: t('reviews.write_another') || 'Napsat další recenzi'
+                }}
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -2182,52 +2271,219 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           transform: translateY(-2px);
         }
 
-        /* Reviews Section */
+        /* Reviews Section - Two Column Layout */
         .reviews-section {
           padding: 4rem 4%;
           background: var(--bg);
         }
 
-        .reviews-header {
-          max-width: 1200px;
-          margin: 0 auto 2rem;
+        .reviews-container {
+          max-width: 1400px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 350px 1fr;
+          gap: 3rem;
+          align-items: flex-start;
+        }
+
+        /* LEFT SIDEBAR - Girl Profile */
+        .reviews-sidebar {
+          position: sticky;
+          top: 100px;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 24px;
+          padding: 2rem 1.75rem;
+          overflow: hidden;
+          backdrop-filter: blur(12px);
+          margin-top: 5.5rem;
+        }
+
+        .sidebar-content {
           display: flex;
-          justify-content: space-between;
+          flex-direction: column;
           align-items: center;
+          gap: 1.25rem;
         }
 
-        .reviews-title {
-          font-size: 1.75rem;
-          font-weight: 300;
+        .sidebar-photo-circle {
+          position: relative;
+          width: 160px;
+          height: 160px;
+          border-radius: 50%;
+          overflow: hidden;
+          border: 3px solid rgba(139, 41, 66, 0.3);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .reviews-rating {
+        .sidebar-photo {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .sidebar-online-dot {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 24px;
+          height: 24px;
+          background: #22c55e;
+          border: 3px solid var(--bg);
+          border-radius: 50%;
+          animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.7;
+            transform: scale(0.95);
+          }
+        }
+
+        .sidebar-name {
+          font-size: 1.875rem;
+          font-weight: 400;
+          color: var(--white);
+          text-align: center;
+          margin: 0;
+          line-height: 1.2;
+        }
+
+        .sidebar-rating {
           display: flex;
+          flex-direction: column;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.625rem;
         }
 
-        .rating-stars {
-          color: #fbbf24;
-          font-size: 1.1rem;
+        .sidebar-rating-value {
+          font-size: 2rem;
+          font-weight: 700;
+          color: var(--white);
+          line-height: 1;
         }
 
-        .rating-value {
-          font-size: 1.25rem;
+        .sidebar-review-stats {
+          width: 100%;
+          padding-top: 1.25rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.15);
+          display: flex;
+          justify-content: center;
+        }
+
+        .review-stat {
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.375rem;
+        }
+
+        .stat-number {
+          font-size: 2rem;
+          font-weight: 700;
+          color: var(--wine);
+          line-height: 1;
+        }
+
+        .stat-label {
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.4);
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
           font-weight: 500;
         }
 
-        .rating-count {
-          font-size: 0.85rem;
-          color: var(--gray);
+        .sidebar-vibe-stats {
+          width: 100%;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.75rem;
+          padding-top: 1.25rem;
         }
 
-        .reviews-grid {
-          max-width: 1200px;
-          margin: 0 auto;
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.25rem;
+        .vibe-stat-item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          padding: 0.625rem 0.875rem;
+          transition: all 0.3s;
+        }
+
+        .vibe-stat-item:hover {
+          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(139, 41, 66, 0.3);
+          transform: translateY(-2px);
+        }
+
+        .vibe-emoji {
+          font-size: 1.25rem;
+          line-height: 1;
+        }
+
+        .vibe-count {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* RIGHT COLUMN - Reviews */
+        .reviews-main {
+          min-height: 600px;
+        }
+
+        .reviews-header {
+          margin-bottom: 3rem;
+          text-align: center;
+          position: relative;
+        }
+
+        .reviews-title {
+          font-size: 2.5rem;
+          font-weight: 400;
+          color: var(--white);
+          position: relative;
+          display: inline-block;
+          padding-bottom: 1rem;
+        }
+
+        .reviews-title::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 80px;
+          height: 3px;
+          background: linear-gradient(90deg, transparent, var(--wine), transparent);
+          border-radius: 2px;
+        }
+
+        .reviews-title::before {
+          content: '✨';
+          position: absolute;
+          left: -2.5rem;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 1.5rem;
+          opacity: 0.6;
+        }
+
+        .reviews-scroll-area {
+          margin-bottom: 3rem;
+        }
+
+        .review-form-wrapper {
+          margin-top: 3rem;
         }
 
         /* Similar Section */
@@ -2384,8 +2640,25 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           .profile-content {
             padding-top: 0;
           }
-          .reviews-grid {
-            grid-template-columns: repeat(2, 1fr);
+          .reviews-container {
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+          }
+          .reviews-sidebar {
+            margin-top: 4.5rem;
+          }
+          .sidebar-photo-circle {
+            width: 140px;
+            height: 140px;
+          }
+          .sidebar-name {
+            font-size: 1.625rem;
+          }
+          .sidebar-rating-value {
+            font-size: 1.75rem;
+          }
+          .stat-number {
+            font-size: 1.625rem;
           }
           .similar-grid {
             grid-template-columns: repeat(3, 1fr);
@@ -2435,8 +2708,43 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           .profile-cta {
             grid-template-columns: 1fr;
           }
-          .reviews-grid {
+          .reviews-container {
             grid-template-columns: 1fr;
+            gap: 2rem;
+          }
+          .reviews-sidebar {
+            position: relative;
+            top: 0;
+            padding: 1.75rem 1.5rem;
+            margin-top: 0;
+          }
+          .sidebar-photo-circle {
+            width: 120px;
+            height: 120px;
+          }
+          .sidebar-name {
+            font-size: 1.5rem;
+          }
+          .sidebar-rating-value {
+            font-size: 1.625rem;
+          }
+          .stat-number {
+            font-size: 1.375rem;
+          }
+          .sidebar-vibe-stats {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+          }
+          .vibe-stat-item {
+            flex-direction: column;
+            padding: 0.5rem 0.375rem;
+            gap: 0.375rem;
+          }
+          .vibe-emoji {
+            font-size: 1.25rem;
+          }
+          .vibe-count {
+            font-size: 0.75rem;
           }
           .similar-grid {
             grid-template-columns: 1fr;
