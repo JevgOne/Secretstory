@@ -1112,23 +1112,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               <h2 className={`reviews-title ${cormorant.className}`}>{t('reviews.title')}</h2>
             </div>
 
-            {/* Reviews List */}
-            <div className="reviews-scroll-area">
-              <ReviewsList
-                girlId={profile.id}
-                translations={{
-                  title: t('reviews.title') || 'Recenze od klientů',
-                  no_reviews: t('reviews.no_reviews') || 'Zatím žádné recenze. Buďte první!',
-                  loading: t('reviews.loading'),
-                  verified_booking: t('reviews.verified_booking') || 'Ověřená rezervace',
-                  reviewed_on: t('reviews.reviewed_on') || 'Hodnoceno',
-                  helpful: t('reviews.helpful') || 'Užitečné'
-                }}
-                locale={locale as 'cs' | 'en' | 'de' | 'uk'}
-              />
-            </div>
-
-            {/* Write Review Form - Below Reviews */}
+            {/* Write Review Form - MOVED TO TOP */}
             <div className="review-form-wrapper">
               <ReviewForm
                 girlId={profile.id}
@@ -1152,6 +1136,22 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                   error_message: t('reviews.error_message') || 'Něco se pokazilo. Zkuste to prosím znovu.',
                   write_another: t('reviews.write_another') || 'Napsat další recenzi'
                 }}
+              />
+            </div>
+
+            {/* Reviews List - MOVED BELOW FORM */}
+            <div className="reviews-scroll-area">
+              <ReviewsList
+                girlId={profile.id}
+                translations={{
+                  title: t('reviews.title') || 'Recenze od klientů',
+                  no_reviews: t('reviews.no_reviews') || 'Zatím žádné recenze. Buďte první!',
+                  loading: t('reviews.loading'),
+                  verified_booking: t('reviews.verified_booking') || 'Ověřená rezervace',
+                  reviewed_on: t('reviews.reviewed_on') || 'Hodnoceno',
+                  helpful: t('reviews.helpful') || 'Užitečné'
+                }}
+                locale={locale as 'cs' | 'en' | 'de' | 'uk'}
               />
             </div>
           </div>
@@ -2775,44 +2775,130 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           .profile-cta {
             grid-template-columns: 1fr;
           }
+
+          /* Mobile profile header - fix time badge overflow */
+          .profile-top-row {
+            flex-wrap: wrap;
+            gap: 0.75rem;
+          }
+
+          .profile-status,
+          .profile-viewers,
+          .profile-time {
+            font-size: 0.7rem;
+            padding: 0.35rem 0.7rem;
+            white-space: nowrap;
+          }
+
+          .profile-time svg,
+          .profile-viewers svg {
+            width: 12px;
+            height: 12px;
+          }
+
+          /* IMPROVED MOBILE REVIEWS SECTION */
           .reviews-container {
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 1.5rem;
+            padding: 0 4%;
           }
+
           .reviews-sidebar {
             position: relative;
             top: 0;
-            padding: 1.75rem 1.5rem;
+            padding: 2rem 1.5rem;
             margin-top: 0;
+            border-radius: 20px;
           }
+
           .sidebar-photo-circle {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1.25rem;
           }
+
           .sidebar-name {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+          }
+
+          .sidebar-rating {
+            margin-bottom: 1rem;
+          }
+
+          .sidebar-rating-value {
             font-size: 1.5rem;
           }
-          .sidebar-rating-value {
-            font-size: 1.625rem;
+
+          .sidebar-review-stats {
+            margin-bottom: 1.5rem;
           }
+
           .stat-number {
-            font-size: 1.375rem;
+            font-size: 1.5rem;
           }
-          .sidebar-vibe-stats {
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.5rem;
-          }
-          .vibe-stat-item {
-            flex-direction: column;
-            padding: 0.5rem 0.375rem;
-            gap: 0.375rem;
-          }
-          .vibe-emoji {
-            font-size: 1.25rem;
-          }
-          .vibe-count {
+
+          .stat-label {
             font-size: 0.75rem;
           }
+
+          .sidebar-vibe-stats {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+          }
+
+          .vibe-stat-item {
+            flex-direction: column;
+            padding: 0.75rem 0.5rem;
+            gap: 0.375rem;
+            border-radius: 12px;
+          }
+
+          .vibe-emoji {
+            font-size: 1.5rem;
+          }
+
+          .vibe-count {
+            font-size: 0.8rem;
+            font-weight: 600;
+          }
+
+          .no-reviews-message {
+            padding: 1.5rem;
+            text-align: center;
+          }
+
+          /* Reviews main column */
+          .reviews-main {
+            padding: 0;
+          }
+
+          .reviews-header {
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+          }
+
+          .reviews-title {
+            font-size: 2rem;
+            padding-bottom: 1rem;
+          }
+
+          .reviews-title::after {
+            width: 60px;
+            height: 2px;
+          }
+
+          /* Review form styling for mobile */
+          .review-form-wrapper {
+            margin-bottom: 2.5rem;
+            padding: 0 0.5rem;
+          }
+
+          /* Reviews list */
+          .reviews-scroll-area {
+            padding: 0 0.5rem;
+          }
+
           .similar-grid {
             grid-template-columns: 1fr;
             gap: 1rem;
@@ -2850,6 +2936,68 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           }
           .gallery-thumbs {
             grid-template-columns: repeat(4, 1fr);
+          }
+
+          /* Small mobile reviews improvements */
+          .reviews-container {
+            padding: 0 3%;
+          }
+
+          .reviews-sidebar {
+            padding: 1.5rem 1.25rem;
+            border-radius: 16px;
+          }
+
+          .sidebar-photo-circle {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 1rem;
+          }
+
+          .sidebar-name {
+            font-size: 1.5rem;
+          }
+
+          .sidebar-rating-value {
+            font-size: 1.375rem;
+          }
+
+          .stat-number {
+            font-size: 1.25rem;
+          }
+
+          .sidebar-vibe-stats {
+            gap: 0.5rem;
+          }
+
+          .vibe-stat-item {
+            padding: 0.625rem 0.375rem;
+          }
+
+          .vibe-emoji {
+            font-size: 1.25rem;
+          }
+
+          .vibe-count {
+            font-size: 0.7rem;
+          }
+
+          .reviews-title {
+            font-size: 1.75rem;
+          }
+
+          .reviews-header {
+            margin-bottom: 1.5rem;
+            padding: 0 0.5rem;
+          }
+
+          .review-form-wrapper {
+            margin-bottom: 2rem;
+            padding: 0 0.25rem;
+          }
+
+          .reviews-scroll-area {
+            padding: 0 0.25rem;
           }
         }
       `}</style>
