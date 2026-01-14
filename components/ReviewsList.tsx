@@ -24,6 +24,7 @@ interface Review {
 interface ReviewsListProps {
   girlId?: number;
   limit?: number;
+  filterTag?: string | null;
   locale?: 'cs' | 'en' | 'de' | 'uk';
   translations: {
     title: string;
@@ -38,6 +39,7 @@ interface ReviewsListProps {
 export default function ReviewsList({
   girlId,
   limit,
+  filterTag,
   locale = 'cs',
   translations
 }: ReviewsListProps) {
@@ -222,6 +224,18 @@ export default function ReviewsList({
     return null;
   }
 
+  // Filter reviews by active tag
+  const filteredReviews = filterTag
+    ? reviews.filter(review => {
+        try {
+          const reviewTags = review.tags ? JSON.parse(review.tags) : [];
+          return reviewTags.includes(filterTag);
+        } catch (e) {
+          return false;
+        }
+      })
+    : reviews;
+
   if (reviews.length === 0) {
     return (
       <div className="reviews-empty">
@@ -279,8 +293,15 @@ export default function ReviewsList({
 
   return (
     <div className="reviews-list">
+      {filteredReviews.length === 0 && filterTag && (
+        <div className="reviews-empty" style={{ padding: '2rem', textAlign: 'center' }}>
+          <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.95rem' }}>
+            Žádné recenze s tímto tagem. Zkuste jiný tag nebo zrušte filtr.
+          </p>
+        </div>
+      )}
       <div className="reviews-grid">
-        {reviews.map((review, index) => {
+        {filteredReviews.map((review, index) => {
           const vibe = review.vibe && VIBE_OPTIONS[review.vibe as VibeId];
           const vibeLabel = vibe ? (vibe[`label_${locale}`] || vibe.label_cs) : null;
 

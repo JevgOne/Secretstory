@@ -191,6 +191,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   const [vibeStats, setVibeStats] = useState<{vibe: string, emoji: string, count: number}[]>([]);
   const [actualReviewsCount, setActualReviewsCount] = useState<number>(0);
   const [actualRating, setActualRating] = useState<number | null>(null);
+  const [activeTagFilter, setActiveTagFilter] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProfile();
@@ -1092,14 +1093,19 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                 </div>
               )}
 
-              {/* Vibe Stats */}
+              {/* Vibe Stats - Clickable Filters */}
               {vibeStats.length > 0 && (
                 <div className="sidebar-vibe-stats">
                   {vibeStats.map((vibe, index) => (
-                    <div key={index} className="vibe-stat-item">
+                    <button
+                      key={index}
+                      className={`vibe-stat-item ${activeTagFilter === vibe.vibe ? 'active' : ''}`}
+                      onClick={() => setActiveTagFilter(activeTagFilter === vibe.vibe ? null : vibe.vibe)}
+                      title={`Filtrovat recenze: ${vibe.vibe}`}
+                    >
                       <span className="vibe-emoji">{vibe.emoji}</span>
                       <span className="vibe-count">{vibe.count}</span>
-                    </div>
+                    </button>
                   ))}
                 </div>
               )}
@@ -1143,6 +1149,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             <div className="reviews-scroll-area">
               <ReviewsList
                 girlId={profile.id}
+                filterTag={activeTagFilter}
                 translations={{
                   title: t('reviews.title') || 'Recenze od klientů',
                   no_reviews: t('reviews.no_reviews') || 'Zatím žádné recenze. Buďte první!',
@@ -2492,12 +2499,26 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           border-radius: 12px;
           padding: 0.625rem 0.875rem;
           transition: all 0.3s;
+          cursor: pointer;
+          outline: none;
+          font-family: inherit;
+          width: 100%;
         }
 
         .vibe-stat-item:hover {
           background: rgba(255, 255, 255, 0.06);
           border-color: rgba(139, 41, 66, 0.3);
           transform: translateY(-2px);
+        }
+
+        .vibe-stat-item.active {
+          background: rgba(139, 41, 66, 0.2);
+          border-color: var(--wine);
+          box-shadow: 0 0 12px rgba(139, 41, 66, 0.3);
+        }
+
+        .vibe-stat-item:active {
+          transform: translateY(0);
         }
 
         .vibe-emoji {
