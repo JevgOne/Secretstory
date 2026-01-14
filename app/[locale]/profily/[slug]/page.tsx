@@ -2798,12 +2798,21 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             gap: 1.5rem;
             padding: 0;
           }
+
+          /* Mobile order: badges/name → gallery → content */
+          .profile-header {
+            order: 1;
+          }
           .gallery {
+            order: 2;
             position: relative !important;
             top: auto !important;
             max-height: none !important;
             overflow: visible !important;
             align-self: auto;
+          }
+          .profile-content {
+            order: 3;
           }
           .gallery-main {
             max-height: none;
