@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth-helpers';
+import { syncBookingToGoogle, deleteBookingFromGoogle } from '@/lib/calendar-sync';
 
 // GET /api/bookings/:id - Get single booking
 export async function GET(
@@ -108,6 +109,11 @@ export async function PATCH(
       args
     });
 
+    // Sync to Google Calendar (non-blocking)
+    syncBookingToGoogle(parseInt(id), user.id).catch(error => {
+      console.error('Failed to sync booking update to Google Calendar:', error);
+    });
+
     return NextResponse.json({
       success: true,
       message: 'Rezervace aktualizována'
@@ -132,9 +138,16 @@ export async function DELETE(
 
   try {
     const { id } = await params;
+    const bookingId = parseInt(id);
+
+    // Delete from Google Calendar first (non-blocking)
+    deleteBookingFromGoogle(bookingId, user.id).catch(error => {
+      console.error('Failed to delete booking from Google Calendar:', error);
+    });
+
     await db.execute({
       sql: 'DELETE FROM bookings WHERE id = ?',
-      args: [parseInt(id)]
+      args: [bookingId]
     });
 
     return NextResponse.json({

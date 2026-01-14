@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth-helpers';
 import { sendBookingNotification } from '@/lib/email';
+import { syncBookingToGoogle } from '@/lib/calendar-sync';
 
 // GET /api/bookings - Get all bookings (with filters)
 export async function GET(request: NextRequest) {
@@ -18,6 +19,7 @@ export async function GET(request: NextRequest) {
     let sql = `
       SELECT
         b.*,
+        b.booking_source,
         g.name as girl_name,
         g.color as girl_color
       FROM bookings b
@@ -90,7 +92,7 @@ export async function POST(request: NextRequest) {
       price,
       status,
       notes,
-      communication_type
+booking_source
     } = body;
 
     // Validate required fields
@@ -130,7 +132,7 @@ export async function POST(request: NextRequest) {
         INSERT INTO bookings (
           girl_id, created_by, client_name, client_phone, client_email,
           date, start_time, end_time, duration, location, location_type,
-          services, price, status, notes, communication_type
+services, price, status, notes, booking_source
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
@@ -149,7 +151,7 @@ export async function POST(request: NextRequest) {
         price || null,
         status || 'pending',
         notes || null,
-        communication_type || null
+booking_source || 'call'
       ]
     });
 
@@ -209,6 +211,12 @@ export async function POST(request: NextRequest) {
       }
     }).catch(error => {
       console.error('Failed to fetch email data:', error);
+    });
+
+    // Sync to Google Calendar (non-blocking)
+    syncBookingToGoogle(bookingId, created_by).catch(error => {
+      console.error('Failed to sync booking to Google Calendar:', error);
+      // Google sync failure doesn't affect booking creation
     });
 
     return NextResponse.json({

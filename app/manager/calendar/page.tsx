@@ -26,8 +26,18 @@ interface Event {
   location: string;
   status: 'confirmed' | 'pending' | 'completed';
   notes?: string;
-  communication_type?: 'sms' | 'call' | 'whatsapp' | 'telegram';
+bookingSource?: 'sms' | 'call' | 'whatsapp' | 'telegram' | 'web' | 'google_calendar';
 }
+
+// Booking source options with icons
+const BOOKING_SOURCES = {
+  call: { label: 'Hovor', icon: '📞' },
+  sms: { label: 'SMS', icon: '💬' },
+  whatsapp: { label: 'WhatsApp', icon: '📱' },
+  telegram: { label: 'Telegram', icon: '✈️' },
+  web: { label: 'Web', icon: '🌐' },
+  google_calendar: { label: 'Google', icon: '📅' }
+} as const;
 
 interface Schedule {
   id: number;
@@ -94,7 +104,8 @@ export default function CalendarPage() {
           endTime: booking.end_time.substring(0, 5),
           location: booking.location || '',
           status: booking.status,
-          notes: booking.notes
+          notes: booking.notes,
+          bookingSource: booking.booking_source || 'call'
         }));
         setEvents(convertedEvents);
       }
@@ -128,7 +139,7 @@ export default function CalendarPage() {
     endTime: '16:00',
     location: primaryLocation?.display_name || 'Praha 2',
     status: 'confirmed' as const,
-    communicationType: 'call' as 'sms' | 'call' | 'whatsapp' | 'telegram'
+bookingSource: 'call' as 'sms' | 'call' | 'whatsapp' | 'telegram' | 'web' | 'google_calendar'
   });
 
   // Get week days
@@ -334,7 +345,7 @@ export default function CalendarPage() {
           location: newEvent.location,
           location_type: 'incall',
           status: newEvent.status,
-          communication_type: newEvent.communicationType
+booking_source: newEvent.bookingSource
         })
       });
 
@@ -351,7 +362,7 @@ export default function CalendarPage() {
           endTime: '16:00',
           location: primaryLocation?.display_name || 'Praha 2',
           status: 'confirmed',
-          communicationType: 'call'
+bookingSource: 'call'
         });
       } else {
         console.error('Failed to create booking');
@@ -376,7 +387,17 @@ export default function CalendarPage() {
             </button>
             <span className="current-date">{formatDate(currentDate)}</span>
           </div>
-          <div className="header-right">
+          <div className="header-right" style={{ display: 'flex', gap: '8px' }}>
+            <button
+              className="header-btn"
+              onClick={() => router.push('/manager/settings/calendar')}
+              title="Nastaveni Google Calendar"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </button>
             <button
               className={`header-btn ${showFilterBar ? 'active' : ''}`}
               onClick={() => setShowFilterBar(!showFilterBar)}
@@ -641,28 +662,17 @@ export default function CalendarPage() {
                   </span>
                 </div>
               </div>
-              {selectedEvent.communication_type && (
-                <div className="detail-section">
-                  <div className="detail-label">Typ komunikace</div>
-                  <div className="detail-value">
-                    <span style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '4px 12px',
-                      background: 'rgba(139, 41, 66, 0.15)',
-                      borderRadius: '6px',
-                      fontSize: '0.9rem',
-                      fontWeight: '600'
-                    }}>
-                      {selectedEvent.communication_type === 'sms' && '💬 SMS'}
-                      {selectedEvent.communication_type === 'call' && '📞 Hovor'}
-                      {selectedEvent.communication_type === 'whatsapp' && '💚 WhatsApp'}
-                      {selectedEvent.communication_type === 'telegram' && '✈️ Telegram'}
-                    </span>
-                  </div>
+<div className="detail-section">
+                <div className="detail-label">Zdroj</div>
+                <div className="detail-value" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '1.2rem' }}>
+                    {selectedEvent.bookingSource && BOOKING_SOURCES[selectedEvent.bookingSource]?.icon}
+                  </span>
+                  <span>
+                    {selectedEvent.bookingSource && BOOKING_SOURCES[selectedEvent.bookingSource]?.label}
+                  </span>
                 </div>
-              )}
+              </div>
               {selectedEvent.notes && (
                 <div className="detail-section">
                   <div className="detail-label">Poznámky</div>
@@ -756,61 +766,6 @@ export default function CalendarPage() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Typ komunikace</label>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(4, 1fr)',
-                  gap: '8px',
-                  marginTop: '8px'
-                }}>
-                  {[
-                    { value: 'sms', label: 'SMS', icon: '💬' },
-                    { value: 'call', label: 'Hovor', icon: '📞' },
-                    { value: 'whatsapp', label: 'WhatsApp', icon: '💚' },
-                    { value: 'telegram', label: 'Telegram', icon: '✈️' }
-                  ].map(option => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => setNewEvent({...newEvent, communicationType: option.value as any})}
-                      style={{
-                        padding: '12px 8px',
-                        background: newEvent.communicationType === option.value
-                          ? 'rgba(139, 41, 66, 0.2)'
-                          : 'rgba(255, 255, 255, 0.05)',
-                        border: newEvent.communicationType === option.value
-                          ? '2px solid #8b2942'
-                          : '1px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: '8px',
-                        color: '#e0d0d5',
-                        fontSize: '0.85rem',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '4px'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (newEvent.communicationType !== option.value) {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (newEvent.communicationType !== option.value) {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                        }
-                      }}
-                    >
-                      <span style={{ fontSize: '1.2rem' }}>{option.icon}</span>
-                      <span>{option.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="form-group">
                 <label className="form-label">Datum</label>
                 <input
                   type="date"
@@ -850,6 +805,44 @@ export default function CalendarPage() {
                   value={newEvent.location}
                   onChange={(e) => setNewEvent({...newEvent, location: e.target.value})}
                 />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Zdroj rezervace</label>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '8px'
+                }}>
+                  {Object.entries(BOOKING_SOURCES).map(([key, { label, icon }]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setNewEvent({...newEvent, bookingSource: key as typeof newEvent.bookingSource})}
+                      style={{
+                        padding: '10px 8px',
+                        border: newEvent.bookingSource === key
+                          ? '2px solid #8b2942'
+                          : '1px solid rgba(255,255,255,0.2)',
+                        borderRadius: '8px',
+                        background: newEvent.bookingSource === key
+                          ? 'rgba(139, 41, 66, 0.2)'
+                          : 'rgba(255,255,255,0.05)',
+                        color: newEvent.bookingSource === key ? '#e0d0d5' : '#9a8a8e',
+                        fontSize: '0.85rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <span style={{ fontSize: '1.2rem' }}>{icon}</span>
+                      <span>{label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="modal-footer">
