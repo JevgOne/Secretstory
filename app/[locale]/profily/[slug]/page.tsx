@@ -189,6 +189,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [vibeStats, setVibeStats] = useState<{vibe: string, emoji: string, count: number}[]>([]);
+  const [actualReviewsCount, setActualReviewsCount] = useState<number>(0);
+  const [actualRating, setActualRating] = useState<number | null>(null);
 
   useEffect(() => {
     fetchProfile();
@@ -226,41 +228,62 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           }
         }
 
-        // Process reviews to calculate vibe stats
+        // Process reviews to calculate tag stats
         if (reviewsResponse) {
           const reviewsData = await reviewsResponse.json();
           if (reviewsData.success && reviewsData.reviews) {
-            const vibes: {[key: string]: {count: number, emoji: string}} = {};
-            const VIBE_EMOJIS: {[key: string]: string} = {
-              'unforgettable': '🔥',
-              'magical': '✨',
-              'great': '💫',
-              'nice': '😊',
-              'meh': '😐'
+            const reviews = reviewsData.reviews;
+
+            // Set actual reviews count
+            setActualReviewsCount(reviews.length);
+
+            // Calculate actual average rating
+            if (reviews.length > 0) {
+              const totalRating = reviews.reduce((sum: number, review: any) => sum + (review.rating || 0), 0);
+              setActualRating(totalRating / reviews.length);
+            }
+
+            const tags: {[key: string]: {count: number, emoji: string}} = {};
+            const TAG_EMOJIS: {[key: string]: string} = {
+              'intimate': '💋',
+              'playful': '😜',
+              'relaxed': '🧘',
+              'communicative': '💬',
+              'professional': '👑',
+              'passionate': '❤️‍🔥',
+              'friendly': '🤗',
+              'mysterious': '🌙'
             };
 
-            reviewsData.reviews.forEach((review: any) => {
-              if (review.vibe && VIBE_EMOJIS[review.vibe]) {
-                if (!vibes[review.vibe]) {
-                  vibes[review.vibe] = {
-                    count: 0,
-                    emoji: VIBE_EMOJIS[review.vibe]
-                  };
+            reviews.forEach((review: any) => {
+              // Parse tags if it's a string
+              const reviewTags = typeof review.tags === 'string'
+                ? JSON.parse(review.tags || '[]')
+                : (review.tags || []);
+
+              reviewTags.forEach((tag: string) => {
+                if (TAG_EMOJIS[tag]) {
+                  if (!tags[tag]) {
+                    tags[tag] = {
+                      count: 0,
+                      emoji: TAG_EMOJIS[tag]
+                    };
+                  }
+                  tags[tag].count++;
                 }
-                vibes[review.vibe].count++;
-              }
+              });
             });
 
             // Convert to array and sort by count
-            const vibeArray = Object.entries(vibes)
-              .map(([vibe, data]) => ({
-                vibe,
+            const tagArray = Object.entries(tags)
+              .map(([tag, data]) => ({
+                vibe: tag,
                 emoji: data.emoji,
                 count: data.count
               }))
               .sort((a, b) => b.count - a.count);
 
-            setVibeStats(vibeArray);
+            setVibeStats(tagArray);
           }
         }
       } else {
@@ -639,6 +662,13 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                       : t('girls.offline')
                   }
                 </span>
+              </div>
+              <div className="profile-viewers">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                </svg>
+                <span className="viewers-count">{(profile.id * 7) % 15 + 3}</span>
+                <span className="viewers-text">se dívá</span>
               </div>
               {getTodayTimeRange() && !isClosedToday() && (
                 <div className="profile-time">
@@ -1035,19 +1065,32 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               {/* Girl Name */}
               <h3 className={`sidebar-name ${cormorant.className}`}>{profile.name}</h3>
 
-              {/* Rating */}
-              <div className="sidebar-rating">
-                <ReviewStars rating={profile.rating || 4.9} size="medium" />
-                <div className="sidebar-rating-value">{profile.rating || 4.9}</div>
-              </div>
+              {/* Rating - only show if reviews exist */}
+              {actualReviewsCount > 0 && actualRating && (
+                <>
+                  <div className="sidebar-rating">
+                    <ReviewStars rating={actualRating} size="medium" />
+                    <div className="sidebar-rating-value">{actualRating.toFixed(1)}</div>
+                  </div>
 
-              {/* Review Stats */}
-              <div className="sidebar-review-stats">
-                <div className="review-stat">
-                  <div className="stat-number">{profile.reviews_count}</div>
-                  <div className="stat-label">Recenzí</div>
+                  {/* Review Stats */}
+                  <div className="sidebar-review-stats">
+                    <div className="review-stat">
+                      <div className="stat-number">{actualReviewsCount}</div>
+                      <div className="stat-label">Recenzí</div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* No reviews message */}
+              {actualReviewsCount === 0 && (
+                <div className="no-reviews-message">
+                  <div style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.5)', textAlign: 'center' }}>
+                    Zatím bez recenzí
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Vibe Stats */}
               {vibeStats.length > 0 && (
@@ -1658,8 +1701,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           display: flex;
           align-items: center;
           gap: 0.4rem;
-          font-size: 0.75rem;
-          color: var(--gray);
+          font-size: 0.875rem;
+          color: rgba(255, 255, 255, 0.85);
+          font-weight: 500;
         }
 
         .schedule-card-location svg {
@@ -1734,6 +1778,32 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           color: #ef4444;
         }
 
+        .profile-viewers {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          background: rgba(139, 41, 66, 0.15);
+          border: 1px solid rgba(139, 41, 66, 0.3);
+          color: var(--wine-light);
+          font-size: 0.75rem;
+          font-weight: 500;
+          padding: 0.4rem 0.8rem;
+          border-radius: 100px;
+        }
+
+        .profile-viewers svg {
+          color: var(--wine-light);
+        }
+
+        .viewers-count {
+          font-weight: 700;
+          color: var(--white);
+        }
+
+        .viewers-text {
+          color: rgba(255, 255, 255, 0.7);
+        }
+
         .profile-time {
           display: inline-flex;
           align-items: center;
@@ -1761,9 +1831,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         }
 
         .profile-tagline {
-          font-size: 1.1rem;
-          color: var(--gray);
-          font-weight: 300;
+          font-size: 1.25rem;
+          color: rgba(255, 255, 255, 0.9);
+          font-weight: 500;
         }
 
         /* Stats + Languages */
@@ -1796,17 +1866,19 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
         /* Profile header stats use different classes */
         .profile-stat-value {
-          font-size: 1.5rem;
-          font-weight: 400;
+          font-size: 1.75rem;
+          font-weight: 600;
           line-height: 1;
           margin-bottom: 0.25rem;
+          color: var(--white);
         }
 
         .profile-stat-label {
-          font-size: 0.5rem;
-          color: var(--gray);
+          font-size: 0.65rem;
+          color: rgba(255, 255, 255, 0.7);
           text-transform: uppercase;
           letter-spacing: 0.1em;
+          font-weight: 600;
         }
 
         .languages-row {
@@ -1818,10 +1890,11 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         }
 
         .lang-label {
-          font-size: 0.75rem;
-          color: var(--gray);
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.8);
           text-transform: uppercase;
           letter-spacing: 0.1em;
+          font-weight: 600;
         }
 
         .lang-flags {
@@ -1836,9 +1909,10 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           background: rgba(255,255,255,0.05);
           padding: 0.4rem 0.75rem;
           border-radius: 100px;
-          font-size: 0.75rem;
+          font-size: 0.85rem;
           color: var(--white);
           transition: all 0.3s;
+          font-weight: 600;
         }
 
         .lang-flag:hover {
@@ -1972,14 +2046,15 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         }
 
         .location-name {
-          font-size: 0.65rem;
-          font-weight: 500;
-          margin-bottom: 0.1rem;
+          font-size: 1.25rem;
+          font-weight: 700;
+          margin-bottom: 0.25rem;
+          color: rgba(255, 255, 255, 1);
         }
 
         .location-address {
-          font-size: 1.05rem;
-          color: rgba(255, 255, 255, 0.9);
+          font-size: 0.875rem;
+          color: rgba(255, 255, 255, 0.65);
           font-weight: 500;
         }
 
@@ -2296,7 +2371,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           padding: 2rem 1.75rem;
           overflow: hidden;
           backdrop-filter: blur(12px);
-          margin-top: 5.5rem;
+          margin-top: 2rem;
         }
 
         .sidebar-content {
@@ -2442,9 +2517,11 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         }
 
         .reviews-header {
-          margin-bottom: 3rem;
+          margin-bottom: 4.5rem;
+          margin-top: 2rem;
           text-align: center;
           position: relative;
+          padding: 0 2rem;
         }
 
         .reviews-title {
@@ -2453,7 +2530,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           color: var(--white);
           position: relative;
           display: inline-block;
-          padding-bottom: 1rem;
+          padding-bottom: 1.5rem;
         }
 
         .reviews-title::after {
@@ -2466,16 +2543,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           height: 3px;
           background: linear-gradient(90deg, transparent, var(--wine), transparent);
           border-radius: 2px;
-        }
-
-        .reviews-title::before {
-          content: '✨';
-          position: absolute;
-          left: -2.5rem;
-          top: 50%;
-          transform: translateY(-50%);
-          font-size: 1.5rem;
-          opacity: 0.6;
         }
 
         .reviews-scroll-area {

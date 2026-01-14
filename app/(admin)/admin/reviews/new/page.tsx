@@ -244,7 +244,7 @@ export default function NewReviewPage() {
               <div className="form-group">
                 <label>Datum recenze (nepovinné)</label>
                 <input
-                  type="datetime-local"
+                  type="date"
                   value={formData.created_at}
                   onChange={(e) => setFormData({ ...formData, created_at: e.target.value })}
                 />

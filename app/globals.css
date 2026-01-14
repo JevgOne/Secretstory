@@ -6510,6 +6510,29 @@ body > div > button[title*="Next"],
     box-shadow: 0 4px 20px rgba(139,92,246,0.4);
 }
 
+/* Viewers badge */
+.card-viewers-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #ffffff;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.card-viewers-badge svg {
+    color: rgba(255, 255, 255, 0.9);
+}
+
 /* Online indicator */
 .online-dot {
     width: 7px;
