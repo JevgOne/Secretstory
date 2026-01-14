@@ -1120,16 +1120,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
             {/* Write Review Form - MOVED TO TOP */}
             <div className="review-form-section">
-              <div className="section-header">
-                <h3 className={`section-title ${cormorant.className}`}>
-                  Napište recenzi
-                </h3>
-                <p className="section-subtitle">
-                  Sdílejte svou zkušenost s ostatními
-                </p>
-              </div>
-              <div className="review-form-wrapper">
-                <ReviewForm
+              <ReviewForm
                   girlId={profile.id}
                   girlName={profile.name}
                   translations={{
@@ -1152,7 +1143,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                     write_another: t('reviews.write_another') || 'Napsat další recenzi'
                   }}
                 />
-              </div>
             </div>
 
             {/* Reviews List - MOVED BELOW FORM */}
@@ -2607,12 +2597,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           margin-bottom: 0.5rem;
         }
 
-        .section-subtitle {
-          font-size: 0.95rem;
-          color: rgba(255, 255, 255, 0.6);
-          margin: 0;
-        }
-
         .section-divider {
           width: 60px;
           height: 2px;
@@ -2623,10 +2607,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
         .reviews-scroll-area {
           margin-bottom: 3rem;
-        }
-
-        .review-form-wrapper {
-          margin-top: 2rem;
         }
 
         /* Similar Section */
@@ -2964,7 +2944,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             height: 2px;
           }
 
-          /* Section headers for mobile */
+          /* Section spacing for mobile */
           .review-form-section {
             margin-bottom: 3rem;
             padding-bottom: 2rem;
@@ -2983,20 +2963,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             font-size: 1.5rem;
           }
 
-          .section-subtitle {
-            font-size: 0.85rem;
-          }
-
           .section-divider {
             width: 50px;
             margin-top: 1rem;
-          }
-
-          /* Review form styling for mobile */
-          .review-form-wrapper {
-            margin-top: 1.5rem;
-            margin-bottom: 0;
-            padding: 0 0.5rem;
           }
 
           /* Reviews list */
@@ -3111,18 +3080,8 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             font-size: 1.375rem;
           }
 
-          .section-subtitle {
-            font-size: 0.8rem;
-          }
-
           .section-divider {
             width: 40px;
-          }
-
-          .review-form-wrapper {
-            margin-top: 1rem;
-            margin-bottom: 0;
-            padding: 0 0.25rem;
           }
 
           .reviews-scroll-area {
