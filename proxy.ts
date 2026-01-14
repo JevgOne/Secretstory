@@ -1,4 +1,5 @@
 import createMiddleware from 'next-intl/middleware';
+import { NextRequest } from 'next/server';
 import { locales, defaultLocale } from './i18n';
 
 // Create next-intl middleware
@@ -8,7 +9,7 @@ const intlMiddleware = createMiddleware({
   localePrefix: 'as-needed'
 });
 
-export default function middleware(request: Request) {
+export default function middleware(request: NextRequest) {
   const { pathname } = new URL(request.url);
 
   // Exclude admin and manager routes from i18n (they don't need locale prefix)
