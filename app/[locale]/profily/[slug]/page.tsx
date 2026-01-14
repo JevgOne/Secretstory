@@ -1119,35 +1119,52 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             </div>
 
             {/* Write Review Form - MOVED TO TOP */}
-            <div className="review-form-wrapper">
-              <ReviewForm
-                girlId={profile.id}
-                girlName={profile.name}
-                translations={{
-                  title: t('reviews.write_title') || 'Napište recenzi',
-                  subtitle: t('reviews.write_subtitle')?.replace('{name}', profile.name) || `Sdílejte svou zkušenost s ${profile.name}`,
-                  your_name: t('reviews.your_name') || 'Vaše jméno',
-                  your_name_placeholder: t('reviews.your_name_placeholder') || 'Jak vám máme říkat?',
-                  rating_label: t('reviews.rating_label') || 'Hodnocení',
-                  vibe_label: t('reviews.vibe_label') || 'Jak byla celková vibe?',
-                  review_title: t('reviews.review_title') || 'Nadpis',
-                  review_title_placeholder: t('reviews.review_title_placeholder') || 'Shrňte svou zkušenost',
-                  review_content: t('reviews.review_content') || 'Vaše recenze',
-                  review_content_placeholder: t('reviews.review_content_placeholder') || 'Popište svou zkušenost podrobněji (min. 10 znaků)',
-                  submit: t('reviews.submit') || 'Odeslat recenzi',
-                  submitting: t('reviews.submitting') || 'Odesílání...',
-                  success_message: t('reviews.success_message') || 'Děkujeme! Vaše recenze byla odeslána a čeká na schválení.',
-                  approval_pending: t('reviews.approval_pending') || 'Vaše recenze čeká na schválení',
-                  optional: t('reviews.optional') || 'nepovinné',
-                  error_message: t('reviews.error_message') || 'Něco se pokazilo. Zkuste to prosím znovu.',
-                  write_another: t('reviews.write_another') || 'Napsat další recenzi'
-                }}
-              />
+            <div className="review-form-section">
+              <div className="section-header">
+                <h3 className={`section-title ${cormorant.className}`}>
+                  Napište recenzi
+                </h3>
+                <p className="section-subtitle">
+                  Sdílejte svou zkušenost s ostatními
+                </p>
+              </div>
+              <div className="review-form-wrapper">
+                <ReviewForm
+                  girlId={profile.id}
+                  girlName={profile.name}
+                  translations={{
+                    title: t('reviews.write_title') || 'Napište recenzi',
+                    subtitle: t('reviews.write_subtitle')?.replace('{name}', profile.name) || `Sdílejte svou zkušenost s ${profile.name}`,
+                    your_name: t('reviews.your_name') || 'Vaše jméno',
+                    your_name_placeholder: t('reviews.your_name_placeholder') || 'Jak vám máme říkat?',
+                    rating_label: t('reviews.rating_label') || 'Hodnocení',
+                    vibe_label: t('reviews.vibe_label') || 'Jak byla celková vibe?',
+                    review_title: t('reviews.review_title') || 'Nadpis',
+                    review_title_placeholder: t('reviews.review_title_placeholder') || 'Shrňte svou zkušenost',
+                    review_content: t('reviews.review_content') || 'Vaše recenze',
+                    review_content_placeholder: t('reviews.review_content_placeholder') || 'Popište svou zkušenost podrobněji (min. 10 znaků)',
+                    submit: t('reviews.submit') || 'Odeslat recenzi',
+                    submitting: t('reviews.submitting') || 'Odesílání...',
+                    success_message: t('reviews.success_message') || 'Děkujeme! Vaše recenze byla odeslána a čeká na schválení.',
+                    approval_pending: t('reviews.approval_pending') || 'Vaše recenze čeká na schválení',
+                    optional: t('reviews.optional') || 'nepovinné',
+                    error_message: t('reviews.error_message') || 'Něco se pokazilo. Zkuste to prosím znovu.',
+                    write_another: t('reviews.write_another') || 'Napsat další recenzi'
+                  }}
+                />
+              </div>
             </div>
 
             {/* Reviews List - MOVED BELOW FORM */}
-            <div className="reviews-scroll-area">
-              <ReviewsList
+            <div className="reviews-list-section">
+              <div className="section-header">
+                <h3 className={`section-title ${cormorant.className}`}>
+                  Všechny recenze
+                </h3>
+                <div className="section-divider"></div>
+              </div>
+              <div className="reviews-scroll-area">
+                <ReviewsList
                 girlId={profile.id}
                 filterTag={activeTagFilter}
                 translations={{
@@ -1160,6 +1177,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                 }}
                 locale={locale as 'cs' | 'en' | 'de' | 'uk'}
               />
+              </div>
             </div>
           </div>
         </div>
@@ -2566,12 +2584,49 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           border-radius: 2px;
         }
 
+        /* Review Form Section */
+        .review-form-section {
+          margin-bottom: 5rem;
+          padding-bottom: 3rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .reviews-list-section {
+          margin-top: 3rem;
+        }
+
+        .section-header {
+          margin-bottom: 2rem;
+          text-align: center;
+        }
+
+        .section-title {
+          font-size: 1.75rem;
+          font-weight: 400;
+          color: var(--white);
+          margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+          font-size: 0.95rem;
+          color: rgba(255, 255, 255, 0.6);
+          margin: 0;
+        }
+
+        .section-divider {
+          width: 60px;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, var(--wine), transparent);
+          margin: 1.5rem auto 0;
+          border-radius: 2px;
+        }
+
         .reviews-scroll-area {
           margin-bottom: 3rem;
         }
 
         .review-form-wrapper {
-          margin-top: 3rem;
+          margin-top: 2rem;
         }
 
         /* Similar Section */
@@ -2909,9 +2964,38 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             height: 2px;
           }
 
+          /* Section headers for mobile */
+          .review-form-section {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+          }
+
+          .reviews-list-section {
+            margin-top: 2rem;
+          }
+
+          .section-header {
+            margin-bottom: 1.5rem;
+            padding: 0 1rem;
+          }
+
+          .section-title {
+            font-size: 1.5rem;
+          }
+
+          .section-subtitle {
+            font-size: 0.85rem;
+          }
+
+          .section-divider {
+            width: 50px;
+            margin-top: 1rem;
+          }
+
           /* Review form styling for mobile */
           .review-form-wrapper {
-            margin-bottom: 2.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0;
             padding: 0 0.5rem;
           }
 
@@ -3012,8 +3096,32 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             padding: 0 0.5rem;
           }
 
+          /* Small mobile section adjustments */
+          .review-form-section {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+          }
+
+          .section-header {
+            margin-bottom: 1.25rem;
+            padding: 0 0.5rem;
+          }
+
+          .section-title {
+            font-size: 1.375rem;
+          }
+
+          .section-subtitle {
+            font-size: 0.8rem;
+          }
+
+          .section-divider {
+            width: 40px;
+          }
+
           .review-form-wrapper {
-            margin-bottom: 2rem;
+            margin-top: 1rem;
+            margin-bottom: 0;
             padding: 0 0.25rem;
           }
 
