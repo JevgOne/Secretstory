@@ -29,6 +29,9 @@ export default function NewBlogPostPage() {
     meta_title: '',
     meta_description: '',
     meta_keywords: '',
+    og_title: '',
+    og_description: '',
+    og_image: '',
     published: false,
     featured: false
   });
@@ -195,6 +198,7 @@ export default function NewBlogPostPage() {
                   <option value="cs">Čeština</option>
                   <option value="en">English</option>
                   <option value="de">Deutsch</option>
+                  <option value="uk">Українська</option>
                 </select>
               </div>
 
@@ -302,6 +306,41 @@ export default function NewBlogPostPage() {
                 placeholder="klíčové, slovo, další"
               />
               <small>Klíčová slova oddělená čárkami</small>
+            </div>
+
+            <div className="form-group">
+              <label>OG Title (Open Graph)</label>
+              <input
+                type="text"
+                value={formData.og_title}
+                onChange={(e) => setFormData({ ...formData, og_title: e.target.value })}
+                placeholder="Název pro sdílení na sociálních sítích"
+                maxLength={60}
+              />
+              <small>Název při sdílení na Facebooku, Twitteru atd. Ponechte prázdné pro použití Meta Title.</small>
+            </div>
+
+            <div className="form-group">
+              <label>OG Description (Open Graph)</label>
+              <textarea
+                value={formData.og_description}
+                onChange={(e) => setFormData({ ...formData, og_description: e.target.value })}
+                rows={2}
+                placeholder="Popis pro sociální sítě..."
+                maxLength={160}
+              />
+              <small>Popis při sdílení. Ponechte prázdné pro použití Meta Description.</small>
+            </div>
+
+            <div className="form-group">
+              <label>OG Image (Open Graph)</label>
+              <input
+                type="url"
+                value={formData.og_image}
+                onChange={(e) => setFormData({ ...formData, og_image: e.target.value })}
+                placeholder="https://example.com/og-image.jpg"
+              />
+              <small>URL obrázku pro sdílení na sociálních sítích (1200x630px doporučeno). Ponechte prázdné pro použití hlavního obrázku.</small>
             </div>
           </div>
 

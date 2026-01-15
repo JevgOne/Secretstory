@@ -24,6 +24,8 @@ export async function POST(request: NextRequest) {
       meta_title,
       meta_description,
       meta_keywords,
+      og_title,
+      og_description,
       og_image,
       locale,
       tags
@@ -64,8 +66,8 @@ export async function POST(request: NextRequest) {
         INSERT INTO blog_posts (
           slug, title, excerpt, content, category, featured_image, girl_id,
           author, read_time, is_featured, is_published, published_at,
-          meta_title, meta_description, meta_keywords, og_image, locale
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          meta_title, meta_description, meta_keywords, og_title, og_description, og_image, locale
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         slug,
@@ -83,6 +85,8 @@ export async function POST(request: NextRequest) {
         meta_title || title,
         meta_description || excerpt || null,
         meta_keywords || null,
+        og_title || meta_title || title,
+        og_description || meta_description || excerpt || null,
         og_image || featured_image || null,
         locale || 'cs'
       ]

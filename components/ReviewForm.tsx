@@ -137,6 +137,22 @@ export default function ReviewForm({
   if (success) {
     return (
       <div className="review-form-success">
+        {/* Confetti Animation */}
+        <div className="confetti-container">
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className="confetti"
+              style={{
+                left: `${50 + (Math.random() - 0.5) * 100}%`,
+                animationDelay: `${Math.random() * 0.5}s`,
+                animationDuration: `${2 + Math.random() * 2}s`,
+                background: ['#ff6b6b', '#ffd93d', '#6bcf7f', '#4d96ff', '#b185db', '#ff85a1'][Math.floor(Math.random() * 6)]
+              }}
+            />
+          ))}
+        </div>
+
         <div className="success-animation">
           <svg viewBox="0 0 52 52" className="checkmark">
             <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>

@@ -246,6 +246,7 @@ export default function EditBlogPostPage({ params }: PageProps) {
                   <option value="cs">Čeština</option>
                   <option value="en">English</option>
                   <option value="de">Deutsch</option>
+                  <option value="uk">Українська</option>
                 </select>
               </div>
 
