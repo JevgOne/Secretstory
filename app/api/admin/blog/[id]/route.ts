@@ -83,7 +83,7 @@ export async function PATCH(
     const allowedFields = [
       'title', 'excerpt', 'content', 'category', 'featured_image', 'girl_id',
       'author', 'read_time', 'is_featured', 'is_published', 'published_at',
-      'meta_title', 'meta_description', 'meta_keywords', 'og_image', 'locale'
+      'meta_title', 'meta_description', 'meta_keywords', 'og_title', 'og_description', 'og_image', 'locale'
     ];
 
     for (const field of allowedFields) {
