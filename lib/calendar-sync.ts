@@ -369,9 +369,10 @@ export async function importFromGoogleCalendar(
       }
 
       // Check if event already imported (by google_event_id)
+      const eventId = event.id || '';
       const existingResult = await db.execute({
         sql: 'SELECT id FROM bookings WHERE google_event_id = ?',
-        args: [event.id]
+        args: [eventId]
       });
 
       if (existingResult.rows.length > 0) {
@@ -390,8 +391,8 @@ export async function importFromGoogleCalendar(
               bookingUpdate.date,
               bookingUpdate.start_time,
               bookingUpdate.end_time,
-              bookingUpdate.location,
-              event.id
+              bookingUpdate.location || null,
+              eventId
             ]
           });
           result.bookingsUpdated++;
@@ -423,8 +424,8 @@ export async function importFromGoogleCalendar(
             bookingData.start_time,
             bookingData.end_time,
             duration,
-            bookingData.location,
-            event.id
+            bookingData.location || null,
+            eventId
           ]
         });
         result.bookingsCreated++;

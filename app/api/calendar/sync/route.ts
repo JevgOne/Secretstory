@@ -33,21 +33,23 @@ export async function POST(request: NextRequest) {
 
     let result;
 
+    const userId = parseInt(user.id);
+
     switch (direction) {
       case 'import':
         // Only import from Google
-        result = await importFromGoogleCalendar(user.id, targetGirlId);
+        result = await importFromGoogleCalendar(userId, targetGirlId);
         break;
 
       case 'export':
         // Only export to Google
-        result = await syncAllBookingsForGirl(targetGirlId, user.id);
+        result = await syncAllBookingsForGirl(targetGirlId, userId);
         break;
 
       case 'both':
       default:
         // Full bidirectional sync
-        result = await fullSync(user.id, targetGirlId);
+        result = await fullSync(userId, targetGirlId);
         break;
     }
 

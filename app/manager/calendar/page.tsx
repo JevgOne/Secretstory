@@ -673,28 +673,6 @@ bookingSource: 'call'
                   </span>
                 </div>
               </div>
-              {selectedEvent.communication_type && (
-                <div className="detail-section">
-                  <div className="detail-label">Typ komunikace</div>
-                  <div className="detail-value">
-                    <span style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '4px 12px',
-                      background: 'rgba(139, 41, 66, 0.15)',
-                      borderRadius: '6px',
-                      fontSize: '0.9rem',
-                      fontWeight: '600'
-                    }}>
-                      {selectedEvent.communication_type === 'sms' && 'SMS'}
-                      {selectedEvent.communication_type === 'call' && 'Hovor'}
-                      {selectedEvent.communication_type === 'whatsapp' && 'WhatsApp'}
-                      {selectedEvent.communication_type === 'telegram' && 'Telegram'}
-                    </span>
-                  </div>
-                </div>
-              )}
               {selectedEvent.notes && (
                 <div className="detail-section">
                   <div className="detail-label">Poznámky</div>
@@ -804,13 +782,13 @@ bookingSource: 'call'
                     <button
                       key={option.value}
                       type="button"
-                      onClick={() => setNewEvent({...newEvent, communicationType: option.value as any})}
+                      onClick={() => setNewEvent({...newEvent, bookingSource: option.value as any})}
                       style={{
                         padding: '12px 8px',
-                        background: newEvent.communicationType === option.value
+                        background: newEvent.bookingSource === option.value
                           ? 'rgba(139, 41, 66, 0.2)'
                           : 'rgba(255, 255, 255, 0.05)',
-                        border: newEvent.communicationType === option.value
+                        border: newEvent.bookingSource === option.value
                           ? '2px solid #8b2942'
                           : '1px solid rgba(255, 255, 255, 0.1)',
                         borderRadius: '8px',
@@ -824,12 +802,12 @@ bookingSource: 'call'
                         justifyContent: 'center'
                       }}
                       onMouseEnter={(e) => {
-                        if (newEvent.communicationType !== option.value) {
+                        if (newEvent.bookingSource !== option.value) {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
                         }
                       }}
                       onMouseLeave={(e) => {
-                        if (newEvent.communicationType !== option.value) {
+                        if (newEvent.bookingSource !== option.value) {
                           e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
                         }
                       }}
