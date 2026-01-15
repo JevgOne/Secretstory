@@ -141,7 +141,7 @@ export async function DELETE(
     const bookingId = parseInt(id);
 
     // Delete from Google Calendar first (non-blocking)
-    deleteBookingFromGoogle(bookingId, user.id).catch(error => {
+    deleteBookingFromGoogle(bookingId, parseInt(user.id)).catch(error => {
       console.error('Failed to delete booking from Google Calendar:', error);
     });
 
