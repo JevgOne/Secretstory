@@ -189,3 +189,63 @@ export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
     />
   )
 }
+
+interface LocalBusinessSchemaProps {
+  locale?: string
+}
+
+export function LocalBusinessSchema({ locale = 'cs' }: LocalBusinessSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "LovelyGirls Prague",
+    "description": "Premium escort services in Prague. Verified profiles, discreet meetings, professional companions for discerning gentlemen.",
+    "url": "https://www.lovelygirls.cz",
+    "telephone": "+420734332131",
+    "email": "info@lovelygirls.cz",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Praha 2",
+      "addressLocality": "Prague",
+      "addressRegion": "Prague",
+      "postalCode": "120 00",
+      "addressCountry": "CZ"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 50.0755,
+      "longitude": 14.4378
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "00:00",
+        "closes": "23:59"
+      }
+    ],
+    "priceRange": "2500-5000 CZK",
+    "currenciesAccepted": "CZK, EUR",
+    "paymentAccepted": "Cash, Card",
+    "areaServed": {
+      "@type": "City",
+      "name": "Prague",
+      "addressCountry": "CZ"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "150",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  }
+
+  return (
+    <Script
+      id="local-business-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}

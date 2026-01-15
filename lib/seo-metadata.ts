@@ -46,11 +46,53 @@ export async function getSEOMetadata(pagePath: string): Promise<SEOData | null> 
 export async function generatePageMetadata(pagePath: string): Promise<Metadata> {
   const seoData = await getSEOMetadata(pagePath);
 
-  // If no SEO data in database -> return empty (no noindex)
+  // If no SEO data in database -> use smart fallbacks based on page path
   if (!seoData || !seoData.meta_title || !seoData.meta_description) {
+    // Extract locale from path
+    const locale = pagePath.split('/')[1] || 'cs';
+    const defaults = getDefaultSEO(locale);
+
+    // Generate smart fallback based on page type
+    let fallbackTitle = defaults.title;
+    let fallbackDescription = defaults.description;
+    let fallbackKeywords = defaults.keywords;
+
+    // Check if it's a profile page
+    if (pagePath.includes('/profily/')) {
+      const slug = pagePath.split('/profily/')[1];
+      fallbackTitle = `${slug.charAt(0).toUpperCase() + slug.slice(1)} | ${defaults.title}`;
+      fallbackDescription = `Profil ${slug}. ${defaults.description}`;
+    }
+    // Check if it's a hashtag page
+    else if (pagePath.includes('/hashtag/')) {
+      const hashtag = pagePath.split('/hashtag/')[1];
+      const readableHashtag = hashtag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      fallbackTitle = `${readableHashtag} | ${defaults.title}`;
+      fallbackDescription = `Najděte ${readableHashtag.toLowerCase()} v Praze. ${defaults.description}`;
+    }
+    // Check if it's a service page
+    else if (pagePath.includes('/sluzby/')) {
+      const service = pagePath.split('/sluzby/')[1];
+      const readableService = service.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      fallbackTitle = `${readableService} | ${defaults.title}`;
+      fallbackDescription = `Profesionální ${readableService.toLowerCase()} v Praze. ${defaults.description}`;
+    }
+
     return {
-      title: '',
-      description: ''
+      title: fallbackTitle,
+      description: fallbackDescription,
+      keywords: fallbackKeywords,
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-video-preview': -1,
+          'max-image-preview': 'large',
+          'max-snippet': -1
+        }
+      }
     };
   }
 

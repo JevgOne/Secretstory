@@ -196,7 +196,10 @@ export default function AdminDiscountsPage() {
               color: '#1f1f23',
               fontSize: '0.9rem',
               boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              zIndex: 10,
+              pointerEvents: 'auto'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
@@ -237,7 +240,10 @@ export default function AdminDiscountsPage() {
                   <td>{discount.is_featured ? '✓' : ''}</td>
                   <td>
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Upravit discount clicked:', discount.id);
                         setEditingDiscount(discount);
                         setShowDiscountModal(true);
                       }}
@@ -252,7 +258,10 @@ export default function AdminDiscountsPage() {
                         color: '#ffffff',
                         marginRight: '8px',
                         boxShadow: '0 2px 6px rgba(59, 130, 246, 0.3)',
-                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        position: 'relative',
+                        zIndex: 10,
+                        pointerEvents: 'auto'
                       }}
                       onMouseOver={(e) => {
                         e.currentTarget.style.transform = 'translateY(-1px)';
@@ -266,7 +275,12 @@ export default function AdminDiscountsPage() {
                       ✏️ Upravit
                     </button>
                     <button
-                      onClick={() => deleteDiscount(discount.id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Delete discount clicked:', discount.id);
+                        deleteDiscount(discount.id);
+                      }}
                       style={{
                         padding: '6px 12px',
                         borderRadius: '6px',
@@ -277,7 +291,10 @@ export default function AdminDiscountsPage() {
                         background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
                         color: '#ffffff',
                         boxShadow: '0 2px 6px rgba(239, 68, 68, 0.3)',
-                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        position: 'relative',
+                        zIndex: 10,
+                        pointerEvents: 'auto'
                       }}
                       onMouseOver={(e) => {
                         e.currentTarget.style.transform = 'translateY(-1px)';
@@ -317,7 +334,10 @@ export default function AdminDiscountsPage() {
               color: '#1f1f23',
               fontSize: '0.9rem',
               boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              position: 'relative',
+              zIndex: 10,
+              pointerEvents: 'auto'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
@@ -371,7 +391,10 @@ export default function AdminDiscountsPage() {
                         color: '#ffffff',
                         marginRight: '8px',
                         boxShadow: '0 2px 6px rgba(59, 130, 246, 0.3)',
-                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        position: 'relative',
+                        zIndex: 10,
+                        pointerEvents: 'auto'
                       }}
                       onMouseOver={(e) => {
                         e.currentTarget.style.transform = 'translateY(-1px)';
@@ -396,7 +419,10 @@ export default function AdminDiscountsPage() {
                         background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
                         color: '#ffffff',
                         boxShadow: '0 2px 6px rgba(239, 68, 68, 0.3)',
-                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        position: 'relative',
+                        zIndex: 10,
+                        pointerEvents: 'auto'
                       }}
                       onMouseOver={(e) => {
                         e.currentTarget.style.transform = 'translateY(-1px)';
@@ -568,7 +594,7 @@ export default function AdminDiscountsPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 1000;
+          z-index: 99999;
           padding: 20px;
         }
 

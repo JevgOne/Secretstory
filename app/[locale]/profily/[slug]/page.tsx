@@ -2821,21 +2821,21 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             padding: 0;
           }
 
-          /* Mobile order: badges/name → stats → gallery → rest */
+          /* Mobile order: badges/name → gallery → stats → rest */
           .profile-header {
             order: 1;
           }
-          .stats-section {
-            order: 2;
-            margin-bottom: 1.5rem;
-          }
           .gallery {
-            order: 3;
+            order: 2;
             position: relative !important;
             top: auto !important;
             max-height: none !important;
             overflow: visible !important;
             align-self: auto;
+          }
+          .stats-section {
+            order: 3;
+            margin-bottom: 1.5rem;
           }
           .profile-content {
             display: contents;
