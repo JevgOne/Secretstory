@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import GoogleCalendarConnect from "@/components/GoogleCalendarConnect";
 
 export default function AdminSettingsPage() {
   const router = useRouter();
@@ -116,6 +117,14 @@ export default function AdminSettingsPage() {
               </button>
             </div>
           </div>
+        </section>
+
+        {/* GOOGLE CALENDAR SETTINGS */}
+        <section style={{ marginBottom: '32px' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '16px', color: '#e8e8e8' }}>
+            📅 Google Calendar
+          </h3>
+          <GoogleCalendarConnect />
         </section>
 
       </main>
