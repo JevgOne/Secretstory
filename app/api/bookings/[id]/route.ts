@@ -110,7 +110,7 @@ export async function PATCH(
     });
 
     // Sync to Google Calendar (non-blocking)
-    syncBookingToGoogle(parseInt(id), user.id).catch(error => {
+    syncBookingToGoogle(parseInt(id), parseInt(user.id)).catch(error => {
       console.error('Failed to sync booking update to Google Calendar:', error);
     });
 
