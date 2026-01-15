@@ -1263,7 +1263,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                     </div>
                     {girl.rating > 0 && (
                       <div className="similar-girl-rating">
-                        <ReviewStars rating={girl.rating} size={14} />
+                        <ReviewStars rating={girl.rating} size="small" />
                         <span className="rating-text">
                           {girl.rating.toFixed(1)} ({girl.reviews_count})
                         </span>
