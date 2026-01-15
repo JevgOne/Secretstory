@@ -7,7 +7,7 @@ import { syncBookingToGoogle } from '@/lib/calendar-sync';
 // GET /api/bookings - Get all bookings (with filters)
 export async function GET(request: NextRequest) {
   // Require authentication - admin, manager, or girl
-  const user = await requireAuth(['admin', 'manager', 'girl']);
+  const user = await requireAuth(['admin', 'manager', 'girl'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
 // POST /api/bookings - Create new booking
 export async function POST(request: NextRequest) {
   // Require authentication - admin or manager only
-  const user = await requireAuth(['admin', 'manager']);
+  const user = await requireAuth(['admin', 'manager'], request);
   if (user instanceof NextResponse) return user;
 
   try {

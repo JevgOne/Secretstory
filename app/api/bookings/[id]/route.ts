@@ -9,7 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   // Require authentication
-  const user = await requireAuth(['admin', 'manager', 'girl']);
+  const user = await requireAuth(['admin', 'manager', 'girl'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -66,7 +66,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   // Only admin and manager can update bookings
-  const user = await requireAuth(['admin', 'manager']);
+  const user = await requireAuth(['admin', 'manager'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -133,7 +133,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   // Only admin and manager can delete bookings
-  const user = await requireAuth(['admin', 'manager']);
+  const user = await requireAuth(['admin', 'manager'], request);
   if (user instanceof NextResponse) return user;
 
   try {

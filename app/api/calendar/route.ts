@@ -7,7 +7,7 @@ import { db } from '@/lib/db';
  */
 export async function GET(request: NextRequest) {
   // Require authentication
-  const user = await requireAuth(['admin', 'manager', 'girl']);
+  const user = await requireAuth(['admin', 'manager', 'girl'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
  */
 export async function PATCH(request: NextRequest) {
   // Require authentication
-  const user = await requireAuth(['admin', 'manager', 'girl']);
+  const user = await requireAuth(['admin', 'manager', 'girl'], request);
   if (user instanceof NextResponse) return user;
 
   try {

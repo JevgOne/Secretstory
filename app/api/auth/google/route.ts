@@ -10,7 +10,7 @@ import crypto from 'crypto';
  */
 export async function GET(request: NextRequest) {
   // Require authentication - manager or girl
-  const user = await requireAuth(['admin', 'manager', 'girl']);
+  const user = await requireAuth(['admin', 'manager', 'girl'], request);
   if (user instanceof NextResponse) return user;
 
   try {
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
  */
 export async function DELETE(request: NextRequest) {
   // Require authentication
-  const user = await requireAuth(['admin', 'manager', 'girl']);
+  const user = await requireAuth(['admin', 'manager', 'girl'], request);
   if (user instanceof NextResponse) return user;
 
   try {
