@@ -247,9 +247,9 @@ export default function HomeClient({ initialData }: HomeClientProps) {
         <style jsx global>{`
           @media (max-width: 768px) {
             .cards-grid .card {
-              height: calc(55vw + 165px) !important;
-              min-height: calc(55vw + 165px) !important;
-              max-height: calc(55vw + 165px) !important;
+              height: calc(55vw + 195px) !important;
+              min-height: calc(55vw + 195px) !important;
+              max-height: calc(55vw + 195px) !important;
               display: flex !important;
               flex-direction: column !important;
               overflow: hidden !important;
