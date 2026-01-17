@@ -148,44 +148,15 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                   animation: 'gradientShift 3s ease infinite'
                 }}>
                   {/* Inner circle */}
-                  <div style={{
-                    width: '84px',
-                    height: '84px',
-                    borderRadius: '50%',
-                    background: '#1a1a1a',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    {girlStories.stories[0]?.media_type === 'video' ? (
-                      <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="auto"
-                        style={{
-                          width: '84px',
-                          height: '84px',
-                          objectFit: 'cover',
-                          borderRadius: '50%'
-                        }}
-                      >
-                        <source src={girlStories.stories[0].media_url} type="video/mp4" />
-                      </video>
-                    ) : (
-                      <img
-                        src={girlStories.stories[0]?.media_url}
-                        alt={girlStories.girl_name}
-                        style={{
-                          width: '84px',
-                          height: '84px',
-                          objectFit: 'cover',
-                          borderRadius: '50%'
-                        }}
-                      />
-                    )}
+                  <div className="story-circle">
+                    <video
+                      className="story-video"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      src={girlStories.stories[0]?.media_url}
+                    />
                   </div>
 
                   {/* Story count badge */}
@@ -256,6 +227,21 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
 
         .stories-container::-webkit-scrollbar {
           display: none;
+        }
+
+        .story-circle {
+          width: 84px;
+          height: 84px;
+          border-radius: 50%;
+          overflow: hidden;
+          background: #1a1a1a;
+        }
+
+        .story-video {
+          width: 84px;
+          height: 84px;
+          object-fit: cover;
+          border-radius: 50%;
         }
 
         @media (max-width: 768px) {
