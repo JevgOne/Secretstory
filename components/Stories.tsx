@@ -153,7 +153,7 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                     height: '84px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    background: '#1a1a1a'
+                    background: 'red'
                   }}>
                     <video
                       autoPlay
@@ -165,7 +165,8 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                         width: '84px',
                         height: '84px',
                         objectFit: 'cover',
-                        display: 'block'
+                        display: 'block',
+                        background: 'blue'
                       }}
                     />
                   </div>
