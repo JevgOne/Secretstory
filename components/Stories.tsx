@@ -149,39 +149,40 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                 }}>
                   {/* Inner circle */}
                   <div style={{
-                    width: '100%',
-                    height: '100%',
+                    width: '84px',
+                    height: '84px',
                     borderRadius: '50%',
                     background: '#1a1a1a',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                   }}>
                     {girlStories.stories[0]?.media_type === 'video' ? (
                       <video
-                        src={girlStories.stories[0].media_url}
                         autoPlay
                         loop
                         muted
                         playsInline
                         preload="auto"
-                        ref={(el) => {
-                          if (el) {
-                            el.play().catch(() => {});
-                          }
-                        }}
                         style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover'
+                          width: '84px',
+                          height: '84px',
+                          objectFit: 'cover',
+                          borderRadius: '50%'
                         }}
-                      />
+                      >
+                        <source src={girlStories.stories[0].media_url} type="video/mp4" />
+                      </video>
                     ) : (
                       <img
                         src={girlStories.stories[0]?.media_url}
                         alt={girlStories.girl_name}
                         style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover'
+                          width: '84px',
+                          height: '84px',
+                          objectFit: 'cover',
+                          borderRadius: '50%'
                         }}
                       />
                     )}
