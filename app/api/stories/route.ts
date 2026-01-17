@@ -10,9 +10,12 @@ export async function GET(request: NextRequest) {
       SELECT
         s.*,
         g.name as girl_name,
-        g.slug as girl_slug
+        g.slug as girl_slug,
+        gp.url as girl_photo_url,
+        gp.thumbnail_url as girl_thumbnail_url
       FROM stories s
       JOIN girls g ON s.girl_id = g.id
+      LEFT JOIN girl_photos gp ON gp.girl_id = g.id AND gp.is_primary = 1
       WHERE s.is_active = 1
       AND (s.expires_at IS NULL OR s.expires_at > datetime('now'))
     `;
@@ -37,6 +40,7 @@ export async function GET(request: NextRequest) {
           girl_id: row.girl_id,
           girl_name: row.girl_name,
           girl_slug: row.girl_slug,
+          girl_photo: row.girl_photo_url || row.girl_thumbnail_url,
           stories: []
         };
       }

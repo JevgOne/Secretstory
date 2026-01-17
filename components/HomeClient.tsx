@@ -275,10 +275,10 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             .cards-grid .card .card-info {
               padding: 10px 10px !important;
               overflow: hidden !important;
-              height: 165px !important;
-              min-height: 165px !important;
-              max-height: 165px !important;
-              flex: 0 0 165px !important;
+              height: 195px !important;
+              min-height: 195px !important;
+              max-height: 195px !important;
+              flex: 0 0 195px !important;
             }
           }
         `}</style>

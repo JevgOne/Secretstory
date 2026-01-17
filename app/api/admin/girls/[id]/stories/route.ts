@@ -130,8 +130,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     // Insert into database
     const insertResult = await db.execute({
       sql: `INSERT INTO stories
-            (girl_id, media_url, media_type, duration, order_index, expires_at)
-            VALUES (?, ?, ?, ?, ?, ?)`,
+            (girl_id, media_url, media_type, duration, order_index, expires_at, is_active, created_at, views_count)
+            VALUES (?, ?, ?, ?, ?, ?, 1, datetime('now'), 0)`,
       args: [
         girlId,
         url,

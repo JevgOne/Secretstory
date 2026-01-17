@@ -18,6 +18,7 @@ interface GirlStories {
   girl_id: number;
   girl_name: string;
   girl_slug: string;
+  girl_photo?: string;
   stories: Story[];
 }
 
@@ -157,18 +158,67 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    border: '2px solid rgba(0, 0, 0, 0.5)'
+                    border: '2px solid rgba(0, 0, 0, 0.5)',
+                    overflow: 'hidden'
                   }}>
-                    <img
-                      src={girlStories.stories[0]?.thumbnail_url || girlStories.stories[0]?.media_url}
-                      alt={girlStories.girl_name}
-                      style={{
+                    {girlStories.stories[0]?.media_type === 'video' && girlStories.stories[0]?.media_url ? (
+                      <video
+                        src={girlStories.stories[0].media_url}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="auto"
+                        onError={(e) => {
+                          const target = e.target as HTMLVideoElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.style.background = 'linear-gradient(135deg, #8b2942 0%, #4a1525 100%)';
+                          }
+                        }}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '50%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    ) : girlStories.stories[0]?.media_url ? (
+                      <img
+                        src={girlStories.stories[0].media_url}
+                        alt={girlStories.girl_name}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.style.background = 'linear-gradient(135deg, #8b2942 0%, #4a1525 100%)';
+                          }
+                        }}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '50%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    ) : (
+                      <div style={{
                         width: '100%',
                         height: '100%',
                         borderRadius: '50%',
-                        objectFit: 'cover'
-                      }}
-                    />
+                        background: 'linear-gradient(135deg, #8b2942 0%, #4a1525 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#fff',
+                        fontSize: '24px',
+                        fontWeight: '600'
+                      }}>
+                        {girlStories.girl_name.charAt(0)}
+                      </div>
+                    )}
                   </div>
 
                   {/* Story count badge */}
