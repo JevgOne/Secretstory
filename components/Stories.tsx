@@ -148,14 +148,25 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                   animation: 'gradientShift 3s ease infinite'
                 }}>
                   {/* Inner circle */}
-                  <div className="story-circle">
+                  <div style={{
+                    width: '84px',
+                    height: '84px',
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    background: '#1a1a1a'
+                  }}>
                     <video
-                      className="story-video"
                       autoPlay
                       loop
                       muted
                       playsInline
                       src={girlStories.stories[0]?.media_url}
+                      style={{
+                        width: '84px',
+                        height: '84px',
+                        objectFit: 'cover',
+                        display: 'block'
+                      }}
                     />
                   </div>
 
