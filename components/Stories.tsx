@@ -232,16 +232,16 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
         .story-circle {
           width: 84px;
           height: 84px;
-          border-radius: 50%;
-          overflow: hidden;
           background: #1a1a1a;
+          border-radius: 50%;
         }
 
         .story-video {
           width: 84px;
           height: 84px;
           object-fit: cover;
-          border-radius: 50%;
+          clip-path: circle(50%);
+          -webkit-clip-path: circle(50%);
         }
 
         @media (max-width: 768px) {
