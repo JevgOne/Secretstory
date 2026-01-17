@@ -147,108 +147,39 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                   animation: 'gradientShift 3s ease infinite'
                 }}>
-                  {/* Inner circle with glassmorphism */}
+                  {/* Inner circle */}
                   <div style={{
                     width: '100%',
                     height: '100%',
                     borderRadius: '50%',
-                    background: 'rgba(31, 31, 35, 0.9)',
-                    backdropFilter: 'blur(10px)',
-                    padding: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '2px solid rgba(0, 0, 0, 0.5)',
-                    overflow: 'hidden',
-                    position: 'relative'
+                    background: '#1a1a1a',
+                    overflow: 'hidden'
                   }}>
-                    {/* Background: girl photo as fallback */}
-                    {girlStories.girl_photo && (
-                      <img
-                        src={girlStories.girl_photo}
-                        alt=""
-                        style={{
-                          position: 'absolute',
-                          width: '100%',
-                          height: '100%',
-                          borderRadius: '50%',
-                          objectFit: 'cover',
-                          zIndex: 1
-                        }}
-                      />
-                    )}
-                    {/* Video on top if available */}
-                    {girlStories.stories[0]?.media_type === 'video' && girlStories.stories[0]?.media_url && (
+                    {girlStories.stories[0]?.media_type === 'video' ? (
                       <video
                         src={girlStories.stories[0].media_url}
                         autoPlay
                         loop
                         muted
                         playsInline
-                        preload="metadata"
-                        onLoadedData={(e) => {
-                          const video = e.target as HTMLVideoElement;
-                          video.play().catch(() => {});
-                        }}
+                        webkit-playsinline="true"
+                        preload="auto"
                         style={{
-                          position: 'absolute',
                           width: '100%',
                           height: '100%',
-                          borderRadius: '50%',
-                          objectFit: 'cover',
-                          zIndex: 2
+                          objectFit: 'cover'
                         }}
                       />
-                    )}
-                    {/* Image on top if it's an image story */}
-                    {girlStories.stories[0]?.media_type === 'image' && girlStories.stories[0]?.media_url && (
+                    ) : (
                       <img
-                        src={girlStories.stories[0].media_url}
+                        src={girlStories.stories[0]?.media_url}
                         alt={girlStories.girl_name}
                         style={{
-                          position: 'absolute',
                           width: '100%',
                           height: '100%',
-                          borderRadius: '50%',
-                          objectFit: 'cover',
-                          zIndex: 2
+                          objectFit: 'cover'
                         }}
                       />
-                    )}
-                    {/* Fallback if no photo */}
-                    {!girlStories.girl_photo && !girlStories.stories[0]?.media_url && (
-                      <div style={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #8b2942 0%, #4a1525 100%)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#fff',
-                        fontSize: '24px',
-                        fontWeight: '600'
-                      }}>
-                        {girlStories.girl_name.charAt(0)}
-                      </div>
-                    )}
-                    {/* Play icon for videos */}
-                    {girlStories.stories[0]?.media_type === 'video' && (
-                      <div style={{
-                        position: 'absolute',
-                        zIndex: 3,
-                        background: 'rgba(0,0,0,0.4)',
-                        borderRadius: '50%',
-                        width: '28px',
-                        height: '28px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                      </div>
                     )}
                   </div>
 
