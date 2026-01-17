@@ -247,9 +247,9 @@ export default function HomeClient({ initialData }: HomeClientProps) {
         <style jsx global>{`
           @media (max-width: 768px) {
             .cards-grid .card {
-              height: calc(55vw + 195px) !important;
-              min-height: calc(55vw + 195px) !important;
-              max-height: calc(55vw + 195px) !important;
+              height: calc(55vw + 220px) !important;
+              min-height: calc(55vw + 220px) !important;
+              max-height: calc(55vw + 220px) !important;
               display: flex !important;
               flex-direction: column !important;
               overflow: hidden !important;
@@ -275,10 +275,10 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             .cards-grid .card .card-info {
               padding: 10px 10px !important;
               overflow: hidden !important;
-              height: 195px !important;
-              min-height: 195px !important;
-              max-height: 195px !important;
-              flex: 0 0 195px !important;
+              height: 220px !important;
+              min-height: 220px !important;
+              max-height: 220px !important;
+              flex: 0 0 220px !important;
             }
           }
         `}</style>
