@@ -162,8 +162,12 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                         loop
                         muted
                         playsInline
-                        webkit-playsinline="true"
                         preload="auto"
+                        ref={(el) => {
+                          if (el) {
+                            el.play().catch(() => {});
+                          }
+                        }}
                         style={{
                           width: '100%',
                           height: '100%',
