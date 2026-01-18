@@ -324,6 +324,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             // Use schedule data from API
             const timeRange = girl.schedule_from && girl.schedule_to ? `${girl.schedule_from} - ${girl.schedule_to}` : null;
             const isWorking = girl.schedule_status === 'working';
+            const isWorkingToday = girl.schedule_status === 'working' || girl.schedule_status === 'later';
             const location = girl.location || tHome('default_location');
 
             return (
@@ -384,7 +385,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                       <span className="stat"><span className="stat-label">kg</span><span className="stat-value">{girl.weight || '?'}</span></span>
                       <span className="stat"><span className="stat-label">{t('girls.bust')}</span><span className="stat-value">{girl.bust || '-'}</span></span>
                     </div>
-                    {isWorking && (
+                    {isWorkingToday && (
                       <div className="card-location-wrapper" style={{ marginTop: '8px', textAlign: 'center' }}>
                         <div className="card-location" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: '#e8b4b8', fontSize: '0.9rem', padding: '6px 12px', background: 'rgba(139,58,92,0.2)', borderRadius: '12px' }}>
                           <svg className="location-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
