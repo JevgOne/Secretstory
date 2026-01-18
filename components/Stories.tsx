@@ -159,11 +159,12 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                     {girlStories.stories[0]?.media_type === 'video' ? (
                       <video
                         src={girlStories.stories[0].media_url}
+                        poster={girlStories.girl_photo || undefined}
                         autoPlay
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="auto"
                         style={{
                           width: '84px',
                           height: '84px',
@@ -171,20 +172,28 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                           display: 'block',
                           borderRadius: '50%'
                         }}
-                      />
-                    ) : (
-                      <img
-                        src={girlStories.stories[0]?.thumbnail_url || girlStories.stories[0]?.media_url || girlStories.girl_photo}
-                        alt={girlStories.girl_name}
-                        style={{
-                          width: '84px',
-                          height: '84px',
-                          objectFit: 'cover',
-                          display: 'block',
-                          borderRadius: '50%'
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          target.style.display = 'none';
+                          const img = target.nextElementSibling as HTMLImageElement;
+                          if (img) img.style.display = 'block';
                         }}
                       />
-                    )}
+                    ) : null}
+                    <img
+                      src={girlStories.stories[0]?.thumbnail_url || girlStories.girl_photo || '/placeholder.jpg'}
+                      alt={girlStories.girl_name}
+                      style={{
+                        width: '84px',
+                        height: '84px',
+                        objectFit: 'cover',
+                        display: girlStories.stories[0]?.media_type === 'video' ? 'none' : 'block',
+                        borderRadius: '50%',
+                        position: girlStories.stories[0]?.media_type === 'video' ? 'absolute' : 'relative',
+                        top: 0,
+                        left: 0
+                      }}
+                    />
                   </div>
 
                   {/* Story count badge */}
