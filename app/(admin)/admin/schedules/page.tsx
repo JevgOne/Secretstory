@@ -15,6 +15,7 @@ interface GirlSchedule {
   girl_id: number;
   girl_name: string;
   girl_color: string;
+  girl_photo?: string;
   schedules: Schedule[];
 }
 
@@ -407,16 +408,31 @@ export default function SchedulesPage() {
                 paddingBottom: '16px',
                 borderBottom: '1px solid rgba(255,255,255,0.05)'
               }}>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: girlSchedule.girl_color || '#5c1c2e',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.2rem'
-                }}>👩</div>
+                {girlSchedule.girl_photo ? (
+                  <img
+                    src={girlSchedule.girl_photo}
+                    alt={girlSchedule.girl_name}
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: `2px solid ${girlSchedule.girl_color || '#5c1c2e'}`
+                    }}
+                  />
+                ) : (
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    background: girlSchedule.girl_color || '#5c1c2e',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.2rem',
+                    color: '#fff'
+                  }}>{girlSchedule.girl_name.charAt(0)}</div>
+                )}
                 <div>
                   <div style={{ fontSize: '1.1rem', fontWeight: '600' }}>
                     {girlSchedule.girl_name}
