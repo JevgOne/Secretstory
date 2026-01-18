@@ -2957,24 +2957,41 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             grid-template-columns: 1fr;
           }
 
-          /* Mobile profile header - fix time badge overflow */
+          /* Mobile profile header - improved layout */
+          .profile-header {
+            text-align: center;
+          }
+
+          .profile-name {
+            margin-bottom: 0.5rem !important;
+          }
+
+          .profile-tagline {
+            font-size: 1rem !important;
+            color: rgba(255,255,255,0.7) !important;
+            margin-bottom: 1rem !important;
+            font-style: italic;
+          }
+
           .profile-top-row {
             flex-wrap: wrap;
-            gap: 0.75rem;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.75rem;
           }
 
           .profile-status,
           .profile-viewers,
           .profile-time {
-            font-size: 0.7rem;
-            padding: 0.35rem 0.7rem;
+            font-size: 0.65rem;
+            padding: 0.3rem 0.6rem;
             white-space: nowrap;
           }
 
           .profile-time svg,
           .profile-viewers svg {
-            width: 12px;
-            height: 12px;
+            width: 11px;
+            height: 11px;
           }
 
           /* IMPROVED MOBILE REVIEWS SECTION */
