@@ -147,25 +147,44 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                   animation: 'gradientShift 3s ease infinite'
                 }}>
-                  {/* Inner circle */}
+                  {/* Inner circle with video */}
                   <div style={{
                     width: '84px',
                     height: '84px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    background: '#1a1a1a'
+                    background: '#1a1a1a',
+                    position: 'relative'
                   }}>
-                    <img
-                      src={girlStories.stories[0]?.thumbnail_url || girlStories.girl_photo}
-                      alt={girlStories.girl_name}
-                      style={{
-                        width: '84px',
-                        height: '84px',
-                        objectFit: 'cover',
-                        display: 'block',
-                        borderRadius: '50%'
-                      }}
-                    />
+                    {girlStories.stories[0]?.media_type === 'video' ? (
+                      <video
+                        src={girlStories.stories[0].media_url}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        style={{
+                          width: '84px',
+                          height: '84px',
+                          objectFit: 'cover',
+                          display: 'block',
+                          borderRadius: '50%'
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={girlStories.stories[0]?.thumbnail_url || girlStories.stories[0]?.media_url || girlStories.girl_photo}
+                        alt={girlStories.girl_name}
+                        style={{
+                          width: '84px',
+                          height: '84px',
+                          objectFit: 'cover',
+                          display: 'block',
+                          borderRadius: '50%'
+                        }}
+                      />
+                    )}
                   </div>
 
                   {/* Story count badge */}
