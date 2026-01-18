@@ -248,7 +248,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
           @media (max-width: 768px) {
             .cards-grid .card {
               height: auto !important;
-              min-height: calc(55vw + 145px) !important;
+              min-height: calc(55vw + 160px) !important;
               display: flex !important;
               flex-direction: column !important;
               overflow: visible !important;
@@ -272,10 +272,10 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               object-fit: cover !important;
             }
             .cards-grid .card .card-info {
-              padding: 10px 10px 15px !important;
+              padding: 10px 10px 12px !important;
               overflow: visible !important;
               height: auto !important;
-              min-height: 140px !important;
+              min-height: 160px !important;
               flex: 1 1 auto !important;
               display: flex !important;
               flex-direction: column !important;
@@ -288,7 +288,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               align-items: center !important;
               justify-content: space-between !important;
               gap: 4px !important;
-              margin-bottom: 0px !important;
+              margin-bottom: 6px !important;
             }
             .cards-grid .card .card-name {
               flex: 0 1 auto !important;
@@ -305,7 +305,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               margin: 0 !important;
             }
             .cards-grid .card .card-stats {
-              margin-bottom: 0px !important;
+              margin-bottom: 6px !important;
             }
             .cards-grid .card .card-location-wrapper {
               margin-top: 0px !important;
