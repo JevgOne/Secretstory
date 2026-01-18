@@ -147,7 +147,7 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                   animation: 'gradientShift 3s ease infinite'
                 }}>
-                  {/* Inner circle with video */}
+                  {/* Inner circle with girl photo + play icon */}
                   <div style={{
                     width: '84px',
                     height: '84px',
@@ -156,44 +156,35 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                     background: '#1a1a1a',
                     position: 'relative'
                   }}>
-                    {girlStories.stories[0]?.media_type === 'video' ? (
-                      <video
-                        src={girlStories.stories[0].media_url}
-                        poster={girlStories.girl_photo || undefined}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="auto"
-                        style={{
-                          width: '84px',
-                          height: '84px',
-                          objectFit: 'cover',
-                          display: 'block',
-                          borderRadius: '50%'
-                        }}
-                        onError={(e) => {
-                          const target = e.currentTarget;
-                          target.style.display = 'none';
-                          const img = target.nextElementSibling as HTMLImageElement;
-                          if (img) img.style.display = 'block';
-                        }}
-                      />
-                    ) : null}
                     <img
-                      src={girlStories.stories[0]?.thumbnail_url || girlStories.girl_photo || '/placeholder.jpg'}
+                      src={girlStories.girl_photo || '/placeholder.jpg'}
                       alt={girlStories.girl_name}
                       style={{
                         width: '84px',
                         height: '84px',
                         objectFit: 'cover',
-                        display: girlStories.stories[0]?.media_type === 'video' ? 'none' : 'block',
-                        borderRadius: '50%',
-                        position: girlStories.stories[0]?.media_type === 'video' ? 'absolute' : 'relative',
-                        top: 0,
-                        left: 0
+                        display: 'block',
+                        borderRadius: '50%'
                       }}
                     />
+                    {/* Play icon overlay */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      width: '28px',
+                      height: '28px',
+                      background: 'rgba(0,0,0,0.5)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
                   </div>
 
                   {/* Story count badge */}
