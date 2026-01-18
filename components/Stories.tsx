@@ -147,7 +147,7 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                   animation: 'gradientShift 3s ease infinite'
                 }}>
-                  {/* Inner circle with girl photo + play icon */}
+                  {/* Inner circle with video */}
                   <div style={{
                     width: '84px',
                     height: '84px',
@@ -156,35 +156,22 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                     background: '#1a1a1a',
                     position: 'relative'
                   }}>
-                    <img
-                      src={girlStories.girl_photo || '/placeholder.jpg'}
-                      alt={girlStories.girl_name}
+                    <video
+                      src={girlStories.stories[0]?.media_url}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      // @ts-ignore
+                      webkit-playsinline="true"
+                      preload="auto"
                       style={{
                         width: '84px',
                         height: '84px',
                         objectFit: 'cover',
-                        display: 'block',
-                        borderRadius: '50%'
+                        display: 'block'
                       }}
                     />
-                    {/* Play icon overlay */}
-                    <div style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      width: '28px',
-                      height: '28px',
-                      background: 'rgba(0,0,0,0.5)',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
-                    </div>
                   </div>
 
                   {/* Story count badge */}
