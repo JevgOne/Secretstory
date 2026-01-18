@@ -6815,16 +6815,21 @@ body > div > button[title*="Next"],
         overflow: hidden !important;
     }
     .card-header {
-        flex-wrap: wrap !important;
-        gap: 4px !important;
+        flex-wrap: nowrap !important;
+        gap: 6px !important;
+        align-items: center !important;
     }
     .card-name {
-        font-size: 1.05rem;
-        width: 100% !important;
+        font-size: 1rem;
+        flex: 1 1 auto !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
     .time-badge {
-        font-size: 0.65rem;
-        padding: 4px 8px;
+        font-size: 0.55rem !important;
+        padding: 2px 5px !important;
+        flex-shrink: 0 !important;
     }
     .card-location {
         font-size: 0.85rem;
@@ -7534,16 +7539,31 @@ body > div > button[title*="Next"],
   }
 
   .time-badge {
-    font-size: 0.8rem;
-    padding: 6px 12px;
+    font-size: 0.55rem !important;
+    padding: 2px 5px !important;
   }
 }
 
 @media (max-width: 480px) {
+  .card-header {
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+  }
+
   .card-name {
     font-family: var(--font-playfair), 'Playfair Display', serif;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .time-badge {
+    font-size: 0.5rem !important;
+    padding: 2px 4px !important;
+    flex-shrink: 0 !important;
   }
 
   .card-stats {
