@@ -275,12 +275,12 @@ export default function DivkyClient({ initialGirls, locale }: DivkyClientProps) 
                         </div>
                       </div>
                       <div className="card-info">
-                        <div className="card-header">
-                          <h3 className="card-name">
+                        <div className="card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'nowrap' }}>
+                          <h3 className="card-name" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
                             {isWorking && <span className="online-dot"></span>}
                             {girl.name}
                           </h3>
-                          {timeRange && <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`}>{timeRange}</span>}
+                          {timeRange && <span className={`time-badge ${isWorking ? 'available' : 'tomorrow'}`} style={{ fontSize: '0.55rem', padding: '2px 5px', whiteSpace: 'nowrap' }}>{timeRange}</span>}
                         </div>
                         <div className="card-stats">
                           <span className="stat"><span className="stat-label">{t('girls.age_years')}</span><span className="stat-value">{girl.age}</span></span>
@@ -288,12 +288,14 @@ export default function DivkyClient({ initialGirls, locale }: DivkyClientProps) 
                           <span className="stat"><span className="stat-label">kg</span><span className="stat-value">{girl.weight}</span></span>
                           <span className="stat"><span className="stat-label">{t('girls.bust')}</span><span className="stat-value">{girl.bust || '?'}</span></span>
                         </div>
-                        <div className="card-location-wrapper">
-                          <div className="card-location">
-                            <svg className="location-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                            {location}
+                        {isWorkingToday && (
+                          <div className="card-location-wrapper" style={{ marginTop: '5px', textAlign: 'center' }}>
+                            <div className="card-location" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#e8b4b8', fontSize: '0.8rem', padding: '4px 10px', background: 'rgba(139,58,92,0.2)', borderRadius: '10px' }}>
+                              <svg className="location-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                              {location}
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </article>
                   </Link>
