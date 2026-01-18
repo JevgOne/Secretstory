@@ -194,6 +194,28 @@ export default function SchedulesPage() {
     }
   };
 
+  const handleDeleteAllSchedules = async () => {
+    if (!confirm('Opravdu smazat VŠECHNY rozvrhy? Tato akce je nevratná!')) return;
+    if (!confirm('Jste si opravdu jistí? Smažou se rozvrhy pro všechny dívky.')) return;
+
+    try {
+      const response = await fetch('/api/admin/schedules?id=all', {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(`✅ Smazáno ${data.deleted || 'všech'} rozvrhů`);
+        fetchSchedules();
+      } else {
+        alert('Chyba při mazání rozvrhů');
+      }
+    } catch (error) {
+      console.error('Error deleting all schedules:', error);
+      alert('Chyba při mazání rozvrhů');
+    }
+  };
+
   const filteredSchedules = selectedGirl
     ? schedules.filter(s => s.girl_id === selectedGirl)
     : schedules;
@@ -219,29 +241,56 @@ export default function SchedulesPage() {
               Definujte, kdy jsou dívky k dispozici pro rezervace
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowAddModal(true)}
-            style={{
-              padding: '12px 20px',
-              background: 'linear-gradient(135deg, #8b2942 0%, #5c1c2e 100%)',
-              border: 'none',
-              borderRadius: '12px',
-              color: 'white',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            Přidat rozvrh
-          </button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {schedules.length > 0 && (
+              <button
+                type="button"
+                onClick={handleDeleteAllSchedules}
+                style={{
+                  padding: '12px 20px',
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  borderRadius: '12px',
+                  color: '#ef4444',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+                Smazat vše
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setShowAddModal(true)}
+              style={{
+                padding: '12px 20px',
+                background: 'linear-gradient(135deg, #8b2942 0%, #5c1c2e 100%)',
+                border: 'none',
+                borderRadius: '12px',
+                color: 'white',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Přidat rozvrh
+            </button>
+          </div>
         </div>
 
         {/* FILTER BY GIRL - MODERN DESIGN */}

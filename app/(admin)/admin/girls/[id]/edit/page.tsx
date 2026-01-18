@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getBasicServices, getExtraServices } from '@/lib/services';
 import { HASHTAGS, Hashtag } from '@/lib/hashtags';
 import SEOFieldsSection from '@/components/SEOFieldsSection';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile, toBlobURL } from '@ffmpeg/util';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -40,6 +42,73 @@ export default function EditGirlPage({ params }: PageProps) {
   const [storiesPage, setStoriesPage] = useState(1);
   const [storiesPagination, setStoriesPagination] = useState<any>(null);
   const [loadingMoreStories, setLoadingMoreStories] = useState(false);
+
+  // FFmpeg for video conversion
+  const [convertingVideo, setConvertingVideo] = useState(false);
+  const [conversionProgress, setConversionProgress] = useState(0);
+  const ffmpegRef = useRef<FFmpeg | null>(null);
+  const ffmpegLoadedRef = useRef(false);
+
+  // Load FFmpeg
+  const loadFFmpeg = async () => {
+    if (ffmpegLoadedRef.current) return;
+
+    const ffmpeg = new FFmpeg();
+    ffmpegRef.current = ffmpeg;
+
+    ffmpeg.on('progress', ({ progress }) => {
+      setConversionProgress(Math.round(progress * 100));
+    });
+
+    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+    });
+
+    ffmpegLoadedRef.current = true;
+  };
+
+  // Convert video to MP4
+  const convertToMp4 = async (file: File): Promise<File> => {
+    await loadFFmpeg();
+    const ffmpeg = ffmpegRef.current!;
+
+    setConvertingVideo(true);
+    setConversionProgress(0);
+
+    try {
+      const inputName = 'input' + file.name.substring(file.name.lastIndexOf('.'));
+      const outputName = 'output.mp4';
+
+      await ffmpeg.writeFile(inputName, await fetchFile(file));
+
+      await ffmpeg.exec([
+        '-i', inputName,
+        '-c:v', 'libx264',
+        '-preset', 'ultrafast',
+        '-crf', '28',
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        '-movflags', '+faststart',
+        '-y',
+        outputName
+      ]);
+
+      const data = await ffmpeg.readFile(outputName);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const blob = new Blob([data as any], { type: 'video/mp4' });
+      const convertedFile = new File([blob], file.name.replace(/\.[^.]+$/, '.mp4'), { type: 'video/mp4' });
+
+      await ffmpeg.deleteFile(inputName);
+      await ffmpeg.deleteFile(outputName);
+
+      return convertedFile;
+    } finally {
+      setConvertingVideo(false);
+      setConversionProgress(0);
+    }
+  };
 
   const basicServices = getBasicServices();
   const extraServices = getExtraServices();
@@ -1618,14 +1687,17 @@ export default function EditGirlPage({ params }: PageProps) {
                 border: '2px dashed rgba(251, 191, 36, 0.5)',
                 borderRadius: '12px',
                 background: 'rgba(251, 191, 36, 0.05)',
-                cursor: 'pointer',
+                cursor: convertingVideo || uploadingStory ? 'not-allowed' : 'pointer',
                 transition: 'all 0.3s ease',
-                marginBottom: '2rem'
+                marginBottom: '2rem',
+                opacity: convertingVideo || uploadingStory ? 0.7 : 1
               }}
               onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = 'rgb(251, 191, 36)';
-                e.currentTarget.style.background = 'rgba(251, 191, 36, 0.1)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
+                if (!convertingVideo && !uploadingStory) {
+                  e.currentTarget.style.borderColor = 'rgb(251, 191, 36)';
+                  e.currentTarget.style.background = 'rgba(251, 191, 36, 0.1)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.borderColor = 'rgba(251, 191, 36, 0.5)';
@@ -1633,9 +1705,9 @@ export default function EditGirlPage({ params }: PageProps) {
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚡</div>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>{convertingVideo ? '🔄' : '⚡'}</div>
               <p style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--white)', marginBottom: '0.5rem' }}>
-                Klikni nebo přetáhni stories sem
+                {convertingVideo ? `Konvertuji video... ${conversionProgress}%` : uploadingStory ? 'Nahrávání...' : 'Klikni nebo přetáhni stories sem'}
               </p>
               <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
                 Fotky nebo videa • Automaticky zmizí po nastaveném čase
@@ -1645,6 +1717,7 @@ export default function EditGirlPage({ params }: PageProps) {
                 type="file"
                 accept="image/*,video/*"
                 multiple
+                disabled={convertingVideo || uploadingStory}
                 onChange={async (e) => {
                   const files = e.target.files;
                   if (!files || files.length === 0) return;
@@ -1654,7 +1727,19 @@ export default function EditGirlPage({ params }: PageProps) {
 
                   setUploadingStory(true);
                   for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
+                    let file = files[i];
+
+                    // Convert non-MP4 videos to MP4 in browser
+                    if (file.type.startsWith('video/') && !file.type.includes('mp4')) {
+                      try {
+                        file = await convertToMp4(file);
+                      } catch (error) {
+                        console.error('Video conversion failed:', error);
+                        alert(`Konverze videa selhala pro ${file.name}. Zkuste nahrát MP4 soubor.`);
+                        continue;
+                      }
+                    }
+
                     const formData = new FormData();
                     formData.append('file', file);
                     formData.append('duration', duration);

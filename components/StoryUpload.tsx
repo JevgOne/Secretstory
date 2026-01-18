@@ -1,11 +1,78 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile, toBlobURL } from '@ffmpeg/util';
 
 export default function StoryUpload() {
   const [stories, setStories] = useState<any[]>([]);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [convertingVideo, setConvertingVideo] = useState(false);
+  const [conversionProgress, setConversionProgress] = useState(0);
+  const ffmpegRef = useRef<FFmpeg | null>(null);
+  const ffmpegLoadedRef = useRef(false);
+
+  // Load FFmpeg
+  const loadFFmpeg = async () => {
+    if (ffmpegLoadedRef.current) return;
+
+    const ffmpeg = new FFmpeg();
+    ffmpegRef.current = ffmpeg;
+
+    ffmpeg.on('progress', ({ progress }) => {
+      setConversionProgress(Math.round(progress * 100));
+    });
+
+    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+    });
+
+    ffmpegLoadedRef.current = true;
+  };
+
+  // Convert video to MP4
+  const convertToMp4 = async (file: File): Promise<File> => {
+    await loadFFmpeg();
+    const ffmpeg = ffmpegRef.current!;
+
+    setConvertingVideo(true);
+    setConversionProgress(0);
+
+    try {
+      const inputName = 'input' + file.name.substring(file.name.lastIndexOf('.'));
+      const outputName = 'output.mp4';
+
+      await ffmpeg.writeFile(inputName, await fetchFile(file));
+
+      await ffmpeg.exec([
+        '-i', inputName,
+        '-c:v', 'libx264',
+        '-preset', 'ultrafast',
+        '-crf', '28',
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        '-movflags', '+faststart',
+        '-y',
+        outputName
+      ]);
+
+      const data = await ffmpeg.readFile(outputName);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const blob = new Blob([data as any], { type: 'video/mp4' });
+      const convertedFile = new File([blob], file.name.replace(/\.[^.]+$/, '.mp4'), { type: 'video/mp4' });
+
+      await ffmpeg.deleteFile(inputName);
+      await ffmpeg.deleteFile(outputName);
+
+      return convertedFile;
+    } finally {
+      setConvertingVideo(false);
+      setConversionProgress(0);
+    }
+  };
 
   // Load stories
   const loadStories = async () => {
@@ -35,7 +102,19 @@ export default function StoryUpload() {
 
     setUploading(true);
     for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+      let file = files[i];
+
+      // Convert non-MP4 videos to MP4 in browser
+      if (file.type.startsWith('video/') && !file.type.includes('mp4')) {
+        try {
+          file = await convertToMp4(file);
+        } catch (error) {
+          console.error('Video conversion failed:', error);
+          alert(`Konverze videa selhala pro ${file.name}. Zkuste nahrát MP4 soubor.`);
+          continue;
+        }
+      }
+
       const formData = new FormData();
       formData.append('file', file);
       formData.append('duration', duration);
@@ -156,21 +235,23 @@ export default function StoryUpload() {
           background: 'var(--wine)',
           color: 'white',
           borderRadius: '8px',
-          cursor: 'pointer',
+          cursor: uploading || convertingVideo ? 'not-allowed' : 'pointer',
           fontWeight: '500',
-          transition: 'all 0.2s'
+          transition: 'all 0.2s',
+          opacity: uploading || convertingVideo ? 0.7 : 1
         }}>
-          📸 Nahrát Story
+          {convertingVideo ? `🔄 Konvertuji video... ${conversionProgress}%` : '📸 Nahrát Story'}
           <input
             type="file"
             accept="image/*,video/*"
             multiple
             onChange={handleUpload}
+            disabled={uploading || convertingVideo}
             style={{ display: 'none' }}
           />
         </label>
 
-        {uploading && (
+        {uploading && !convertingVideo && (
           <p style={{ color: 'var(--gray)', marginTop: '1rem' }}>
             Nahrávání...
           </p>

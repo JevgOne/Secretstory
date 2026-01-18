@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
 
     // Generate unique filename
     const timestamp = Date.now();
-    const ext = file.name.split('.').pop();
+    const ext = file.name.split('.').pop()?.toLowerCase();
     const filename = `girls/${girlId}/stories/${timestamp}.${ext}`;
 
     // Upload to Vercel Blob

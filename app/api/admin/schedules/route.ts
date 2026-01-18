@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// DELETE /api/admin/schedules - Delete schedule
+// DELETE /api/admin/schedules - Delete schedule or all schedules
 export async function DELETE(request: NextRequest) {
   const session = await auth();
 
@@ -198,6 +198,20 @@ export async function DELETE(request: NextRequest) {
         { error: 'Schedule ID is required' },
         { status: 400 }
       );
+    }
+
+    // Delete all schedules if id=all
+    if (scheduleId === 'all') {
+      const result = await db.execute({
+        sql: 'DELETE FROM girl_schedules',
+        args: []
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: 'Všechny rozvrhy smazány',
+        deleted: result.rowsAffected
+      });
     }
 
     await db.execute({

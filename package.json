@@ -11,6 +11,8 @@
     "create-admin": "tsx scripts/create-admin.ts"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@libsql/client": "^0.15.15",
     "@types/bcryptjs": "^2.4.6",
     "@vercel/blob": "^2.0.0",
