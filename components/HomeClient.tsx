@@ -285,7 +285,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               align-items: center !important;
               justify-content: space-between !important;
               gap: 4px !important;
-              margin-bottom: 4px !important;
+              margin-bottom: 0px !important;
             }
             .cards-grid .card .card-name {
               flex: 0 1 auto !important;
