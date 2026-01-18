@@ -308,12 +308,27 @@ export default function GirlCard({
           color: rgba(255, 255, 255, 0.9);
           font-weight: 500;
           margin-top: 0.5rem;
+          overflow: hidden;
+          max-width: 100%;
         }
 
         .girl-card-location svg {
           width: 18px;
           height: 18px;
           color: var(--accent);
+          flex-shrink: 0;
+        }
+
+        @media (max-width: 480px) {
+          .girl-card-location {
+            font-size: 0.9rem;
+            gap: 6px;
+          }
+
+          .girl-card-location svg {
+            width: 16px;
+            height: 16px;
+          }
         }
 
         .girl-card-actions {

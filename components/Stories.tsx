@@ -88,9 +88,9 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
         filter: 'blur(80px)'
       }} />
 
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <h2 style={{
+      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div className="stories-header" style={{ textAlign: 'center', marginBottom: '1.5rem', padding: '0 20px' }}>
+          <h2 className="stories-title" style={{
             fontSize: '1.75rem',
             fontWeight: '600',
             color: '#fff',
@@ -99,14 +99,14 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
           }}>
             {t('stories_title')}
           </h2>
-          <p style={{ color: '#9ca3af', fontSize: '0.9rem' }}>{t('stories_subtitle')}</p>
+          <p className="stories-subtitle" style={{ color: '#9ca3af', fontSize: '0.9rem' }}>{t('stories_subtitle')}</p>
         </div>
 
         <div style={{
           display: 'flex',
           gap: '20px',
           overflowX: 'auto',
-          padding: '16px 8px',
+          padding: '16px 20px',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none'
         }}
@@ -136,7 +136,7 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                 }}
               >
                 {/* Story Ring with Animation */}
-                <div style={{
+                <div className="story-ring" style={{
                   width: '90px',
                   height: '90px',
                   borderRadius: '50%',
@@ -173,7 +173,7 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
 
                   {/* Story count badge */}
                   {girlStories.stories.length > 1 && (
-                    <div style={{
+                    <div className="story-badge" style={{
                       position: 'absolute',
                       bottom: '-2px',
                       right: '-2px',
@@ -196,7 +196,7 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                 </div>
 
                 {/* Name with glow effect */}
-                <div style={{
+                <div className="story-name" style={{
                   marginTop: '12px',
                   color: '#fff',
                   fontSize: '14px',
@@ -258,7 +258,93 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
 
         @media (max-width: 768px) {
           section {
-            padding: 2rem 0 !important;
+            padding: 1.5rem 0 2rem !important;
+          }
+
+          .stories-header {
+            margin-bottom: 1rem !important;
+            padding: 0 16px !important;
+          }
+
+          .stories-title {
+            font-size: 1.5rem !important;
+          }
+
+          .stories-subtitle {
+            font-size: 0.85rem !important;
+          }
+
+          .stories-container {
+            gap: 16px !important;
+            padding: 12px 16px !important;
+          }
+
+          .story-item {
+            min-width: 80px !important;
+          }
+
+          .story-ring {
+            width: 75px !important;
+            height: 75px !important;
+          }
+
+          .story-badge {
+            width: 22px !important;
+            height: 22px !important;
+            font-size: 10px !important;
+          }
+
+          .story-name {
+            margin-top: 10px !important;
+            font-size: 13px !important;
+            max-width: 80px !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          section {
+            padding: 1.25rem 0 1.75rem !important;
+          }
+
+          .stories-header {
+            margin-bottom: 0.875rem !important;
+            padding: 0 12px !important;
+          }
+
+          .stories-title {
+            font-size: 1.375rem !important;
+          }
+
+          .stories-subtitle {
+            font-size: 0.8rem !important;
+          }
+
+          .stories-container {
+            gap: 12px !important;
+            padding: 10px 12px !important;
+          }
+
+          .story-item {
+            min-width: 70px !important;
+          }
+
+          .story-ring {
+            width: 65px !important;
+            height: 65px !important;
+            padding: 2px !important;
+          }
+
+          .story-badge {
+            width: 20px !important;
+            height: 20px !important;
+            font-size: 9px !important;
+            border: 1.5px solid #1f1f23 !important;
+          }
+
+          .story-name {
+            margin-top: 8px !important;
+            font-size: 12px !important;
+            max-width: 70px !important;
           }
         }
       `}</style>
