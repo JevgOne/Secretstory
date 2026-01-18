@@ -2960,6 +2960,7 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           /* Mobile profile header - improved layout */
           .profile-header {
             text-align: center;
+            margin-top: 1.5rem;
           }
 
           .profile-name {
