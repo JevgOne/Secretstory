@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         s.*,
         g.name as girl_name,
         g.color as girl_color,
-        (SELECT media_url FROM girl_photos WHERE girl_id = g.id AND is_main = 1 LIMIT 1) as girl_photo
+        (SELECT url FROM girl_photos WHERE girl_id = g.id AND is_primary = 1 LIMIT 1) as girl_photo
       FROM girl_schedules s
       LEFT JOIN girls g ON s.girl_id = g.id
       WHERE s.is_active = 1
