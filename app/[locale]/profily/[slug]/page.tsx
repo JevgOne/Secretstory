@@ -730,6 +730,14 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
           {/* Header - Separate element for flexible ordering */}
           <div className="profile-header">
+            <h1 className={`profile-name ${cormorant.className}`}>{profile.name}</h1>
+            <p className="profile-tagline">
+              {locale === 'cs' && profile.subtitle_cs ? profile.subtitle_cs :
+               locale === 'en' && profile.subtitle_en ? profile.subtitle_en :
+               locale === 'de' && profile.subtitle_de ? profile.subtitle_de :
+               locale === 'uk' && profile.subtitle_uk ? profile.subtitle_uk :
+               t('detail.tagline')}
+            </p>
             <div className="profile-top-row">
               <div className="profile-status">
                 {isWorkingNow() && <span className="online-dot"></span>}
@@ -759,14 +767,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                 </div>
               )}
             </div>
-            <h1 className={`profile-name ${cormorant.className}`}>{profile.name}</h1>
-            <p className="profile-tagline">
-              {locale === 'cs' && profile.subtitle_cs ? profile.subtitle_cs :
-               locale === 'en' && profile.subtitle_en ? profile.subtitle_en :
-               locale === 'de' && profile.subtitle_de ? profile.subtitle_de :
-               locale === 'uk' && profile.subtitle_uk ? profile.subtitle_uk :
-               t('detail.tagline')}
-            </p>
           </div>
 
           {/* Profile Content - Scrollable */}
