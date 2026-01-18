@@ -248,7 +248,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
           @media (max-width: 768px) {
             .cards-grid .card {
               height: auto !important;
-              min-height: calc(55vw + 180px) !important;
+              min-height: calc(55vw + 150px) !important;
               display: flex !important;
               flex-direction: column !important;
               overflow: visible !important;
@@ -272,11 +272,34 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               object-fit: cover !important;
             }
             .cards-grid .card .card-info {
-              padding: 10px 10px !important;
+              padding: 8px 10px !important;
               overflow: visible !important;
               height: auto !important;
-              min-height: 180px !important;
+              min-height: 150px !important;
               flex: 1 1 auto !important;
+            }
+            .cards-grid .card .card-header {
+              display: flex !important;
+              flex-direction: row !important;
+              flex-wrap: nowrap !important;
+              align-items: center !important;
+              justify-content: space-between !important;
+              gap: 4px !important;
+              margin-bottom: 6px !important;
+            }
+            .cards-grid .card .card-name {
+              flex: 0 1 auto !important;
+              min-width: 0 !important;
+              overflow: hidden !important;
+              text-overflow: ellipsis !important;
+              white-space: nowrap !important;
+              font-size: 1rem !important;
+            }
+            .cards-grid .card .time-badge {
+              flex: 0 0 auto !important;
+              font-size: 0.5rem !important;
+              padding: 2px 4px !important;
+              margin: 0 !important;
             }
           }
         `}</style>
