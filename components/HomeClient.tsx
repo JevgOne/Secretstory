@@ -297,8 +297,8 @@ export default function HomeClient({ initialData }: HomeClientProps) {
             }
             .cards-grid .card .time-badge {
               flex: 0 0 auto !important;
-              font-size: 0.5rem !important;
-              padding: 2px 4px !important;
+              font-size: 0.6rem !important;
+              padding: 3px 6px !important;
               margin: 0 !important;
             }
             .cards-grid .card .card-stats {
