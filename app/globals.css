@@ -7561,9 +7561,10 @@ body > div > button[title*="Next"],
   }
 
   .time-badge {
-    font-size: 0.5rem !important;
-    padding: 2px 4px !important;
+    font-size: 0.45rem !important;
+    padding: 1px 3px !important;
     flex-shrink: 0 !important;
+    border-width: 1px !important;
   }
 
   .card-stats {
