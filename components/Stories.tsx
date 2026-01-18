@@ -155,19 +155,33 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                     overflow: 'hidden',
                     background: '#1a1a1a'
                   }}>
-                    <video
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      src={girlStories.stories[0]?.media_url}
-                      style={{
-                        width: '84px',
-                        height: '84px',
-                        objectFit: 'cover',
-                        display: 'block'
-                      }}
-                    />
+                    {girlStories.stories[0]?.media_type === 'video' ? (
+                      <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        poster={girlStories.girl_photo}
+                        src={girlStories.stories[0]?.media_url}
+                        style={{
+                          width: '84px',
+                          height: '84px',
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={girlStories.stories[0]?.media_url || girlStories.girl_photo}
+                        alt={girlStories.girl_name}
+                        style={{
+                          width: '84px',
+                          height: '84px',
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                      />
+                    )}
                   </div>
 
                   {/* Story count badge */}
