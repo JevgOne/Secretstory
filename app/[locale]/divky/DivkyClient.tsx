@@ -228,6 +228,7 @@ export default function DivkyClient({ initialGirls, locale }: DivkyClientProps) 
                 // Use schedule data from API (same as homepage)
                 const timeRange = girl.schedule_from && girl.schedule_to ? `${girl.schedule_from} - ${girl.schedule_to}` : null;
                 const isWorking = girl.schedule_status === 'working';
+                const isWorkingToday = girl.schedule_status === 'working' || girl.schedule_status === 'later';
                 const location = getLocation();
 
                 return (
