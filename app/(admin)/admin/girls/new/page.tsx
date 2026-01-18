@@ -46,19 +46,55 @@ export default function NewGirlPage() {
     badge_type: ''
   });
 
-  // Auto-assign color based on existing girls count
+  // Auto-assign unique color that's not already used
   const getAutoColor = async () => {
-    const colors = ['rose', 'purple', 'blue', 'green', 'orange', 'red'];
-    // Fetch current girls count to rotate through colors sequentially
+    // Extended color palette - 25 unique colors
+    const allColors = [
+      '#e91e63', // pink
+      '#9c27b0', // purple
+      '#673ab7', // deep purple
+      '#3f51b5', // indigo
+      '#2196f3', // blue
+      '#03a9f4', // light blue
+      '#00bcd4', // cyan
+      '#009688', // teal
+      '#4caf50', // green
+      '#8bc34a', // light green
+      '#cddc39', // lime
+      '#ffeb3b', // yellow
+      '#ffc107', // amber
+      '#ff9800', // orange
+      '#ff5722', // deep orange
+      '#f44336', // red
+      '#795548', // brown
+      '#607d8b', // blue grey
+      '#e040fb', // purple accent
+      '#7c4dff', // deep purple accent
+      '#448aff', // blue accent
+      '#18ffff', // cyan accent
+      '#69f0ae', // green accent
+      '#eeff41', // lime accent
+      '#ffab40', // orange accent
+    ];
+
     try {
       const response = await fetch('/api/admin/girls');
       const data = await response.json();
-      const girlsCount = data.girls?.length || 0;
-      // This will rotate through colors for each new girl
-      return colors[girlsCount % colors.length];
+      const usedColors = (data.girls || []).map((g: any) => g.color?.toLowerCase());
+
+      // Find first unused color
+      const unusedColor = allColors.find(color => !usedColors.includes(color.toLowerCase()));
+
+      // If all colors used, generate a random one
+      if (!unusedColor) {
+        const randomHue = Math.floor(Math.random() * 360);
+        return `hsl(${randomHue}, 70%, 50%)`;
+      }
+
+      return unusedColor;
     } catch {
       // Fallback to first color if fetch fails
-      return colors[0];
+      return allColors[0];
     }
   };
 
