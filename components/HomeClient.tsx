@@ -285,7 +285,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               align-items: center !important;
               justify-content: space-between !important;
               gap: 4px !important;
-              margin-bottom: 6px !important;
+              margin-bottom: 4px !important;
             }
             .cards-grid .card .card-name {
               flex: 0 1 auto !important;
@@ -300,6 +300,12 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               font-size: 0.5rem !important;
               padding: 2px 4px !important;
               margin: 0 !important;
+            }
+            .cards-grid .card .card-stats {
+              margin-bottom: 4px !important;
+            }
+            .cards-grid .card .card-location-wrapper {
+              margin-top: 4px !important;
             }
           }
         `}</style>
