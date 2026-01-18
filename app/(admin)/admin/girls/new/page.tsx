@@ -48,33 +48,23 @@ export default function NewGirlPage() {
 
   // Auto-assign unique color that's not already used
   const getAutoColor = async () => {
-    // Extended color palette - 25 unique colors
+    // High contrast color palette - 15 visually distinct colors
     const allColors = [
-      '#e91e63', // pink
-      '#9c27b0', // purple
-      '#673ab7', // deep purple
-      '#3f51b5', // indigo
-      '#2196f3', // blue
-      '#03a9f4', // light blue
-      '#00bcd4', // cyan
+      '#e91e63', // růžová (pink)
+      '#2196f3', // modrá (blue)
+      '#ff9800', // oranžová (orange)
+      '#4caf50', // zelená (green)
+      '#9c27b0', // fialová (purple)
+      '#00bcd4', // tyrkysová (cyan)
+      '#f44336', // červená (red)
+      '#ffeb3b', // žlutá (yellow)
+      '#673ab7', // tmavě fialová (deep purple)
       '#009688', // teal
-      '#4caf50', // green
-      '#8bc34a', // light green
-      '#cddc39', // lime
-      '#ffeb3b', // yellow
-      '#ffc107', // amber
-      '#ff9800', // orange
-      '#ff5722', // deep orange
-      '#f44336', // red
-      '#795548', // brown
-      '#607d8b', // blue grey
-      '#e040fb', // purple accent
-      '#7c4dff', // deep purple accent
-      '#448aff', // blue accent
-      '#18ffff', // cyan accent
-      '#69f0ae', // green accent
-      '#eeff41', // lime accent
-      '#ffab40', // orange accent
+      '#ff5722', // tmavě oranžová (deep orange)
+      '#3f51b5', // indigo
+      '#8bc34a', // světle zelená (light green)
+      '#795548', // hnědá (brown)
+      '#607d8b', // šedá (blue grey)
     ];
 
     try {
