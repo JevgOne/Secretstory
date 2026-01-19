@@ -18,6 +18,7 @@ import {
 import ReviewsList from '@/components/ReviewsList';
 import ReviewForm from '@/components/ReviewForm';
 import ReviewStars from '@/components/ReviewStars';
+import ServicesAccordion from '@/components/ServicesAccordion';
 import { getHashtagById, getHashtagName } from '@/lib/hashtags';
 import { SERVICES, getServiceName } from '@/lib/services';
 import type { Service } from '@/lib/services';
@@ -193,7 +194,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
   const [actualRating, setActualRating] = useState<number | null>(null);
   const [activeTagFilter, setActiveTagFilter] = useState<string | null>(null);
   const reviewsListRef = useRef<HTMLDivElement>(null);
-  const [similarGirls, setSimilarGirls] = useState<Girl[]>([]);
 
   const handleTagFilterClick = (tag: string) => {
     // Toggle filter
@@ -234,30 +234,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
       if (profileData.success) {
         setProfile(profileData.girl);
-
-        // Fetch similar girls based on services
-        if (profileData.girl.services && profileData.girl.services.length > 0) {
-          // Get first 2 services for matching
-          const primaryServices = profileData.girl.services.slice(0, 2);
-
-          // Fetch all girls and filter client-side for similar services
-          const similarResponse = await fetch(`/api/girls?status=active`).catch(() => null);
-          if (similarResponse) {
-            const similarData = await similarResponse.json();
-            if (similarData.success && similarData.girls) {
-              // Find girls with matching services (exclude current girl)
-              const matches = similarData.girls
-                .filter((g: Girl) =>
-                  g.id !== profileData.girl.id && // Not current girl
-                  g.services &&
-                  g.services.some((s: string) => primaryServices.includes(s)) // Has at least 1 matching service
-                )
-                .slice(0, 4); // Take first 4 matches
-
-              setSimilarGirls(matches);
-            }
-          }
-        }
 
         // Fetch reviews with actual girl ID
         const reviewsResponse = await fetch(`/api/reviews?status=approved&girl_id=${profileData.girl.id}`).catch(() => null);
@@ -892,40 +868,17 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               });
 
               return (
-                <>
-                  {/* Basic Services (Included in price) */}
-                  {basicServices.length > 0 && (
-                    <div className="profile-section">
-                      <h3 className={`section-title ${cormorant.className}`}>{t('profile.services')}</h3>
-                      <div className="services-grid">
-                        {basicServices.map((service) => (
-                          <div key={service.id} className="service-card basic">
-                            <div className="service-name">
-                              {service.translations[locale as 'cs' | 'en' | 'de' | 'uk']}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Extra Services */}
-                  {extraServices.length > 0 && (
-                    <div className="profile-section">
-                      <h3 className={`section-title ${cormorant.className}`}>{t('profile.extra_services')}</h3>
-                      <div className="services-grid">
-                        {extraServices.map((service) => (
-                          <div key={service.id} className="service-card extra">
-                            <div className="service-name">
-                              {service.translations[locale as 'cs' | 'en' | 'de' | 'uk']}
-                            </div>
-                            <span className="service-badge">Extra</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </>
+                <div className="profile-section">
+                  <ServicesAccordion
+                    basicServices={basicServices}
+                    extraServices={extraServices}
+                    locale={locale}
+                    translations={{
+                      servicesIncluded: t('profile.services'),
+                      extraServices: t('profile.extra_services')
+                    }}
+                  />
+                </div>
               );
             })()}
 
@@ -1214,68 +1167,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           </div>
         </div>
       </section>
-
-      {/* Similar Girls Section */}
-      {similarGirls.length > 0 && (
-        <section className="similar-girls-section">
-          <div className="similar-girls-container">
-            <div className="section-header">
-              <h2 className={`section-title ${cormorant.className}`}>
-                {locale === 'cs' && 'Podobné dívky'}
-                {locale === 'en' && 'Similar Girls'}
-                {locale === 'de' && 'Ähnliche Mädchen'}
-                {locale === 'uk' && 'Схожі дівчата'}
-              </h2>
-              <div className="section-divider"></div>
-            </div>
-            <div className="similar-girls-grid">
-              {similarGirls.map((girl) => (
-                <Link
-                  key={girl.id}
-                  href={`/${locale}/profily/${girl.slug}`}
-                  className="similar-girl-card"
-                >
-                  <div className="similar-girl-image-wrapper">
-                    {girl.primary_photo && (
-                      <img
-                        src={girl.thumbnail || girl.primary_photo}
-                        alt={girl.name}
-                        className="similar-girl-image"
-                      />
-                    )}
-                    {girl.verified && (
-                      <span className="similar-girl-badge verified">
-                        {t('girls.verified')}
-                      </span>
-                    )}
-                    {girl.online && (
-                      <span className="similar-girl-badge online">
-                        {t('girls.online')}
-                      </span>
-                    )}
-                  </div>
-                  <div className="similar-girl-info">
-                    <h3 className="similar-girl-name">{girl.name}</h3>
-                    <div className="similar-girl-stats">
-                      <span>{girl.age} {locale === 'cs' ? 'let' : locale === 'en' ? 'years' : locale === 'de' ? 'Jahre' : 'років'}</span>
-                      <span>•</span>
-                      <span>{girl.height} cm</span>
-                    </div>
-                    {girl.rating > 0 && (
-                      <div className="similar-girl-rating">
-                        <ReviewStars rating={girl.rating} size="small" />
-                        <span className="rating-text">
-                          {girl.rating.toFixed(1)} ({girl.reviews_count})
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* FOOTER */}
       <footer>
@@ -2712,29 +2603,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           margin-bottom: 3rem;
         }
 
-        /* Similar Section */
-        .similar-section {
-          padding: 4rem 4%;
-        }
-
-        .similar-header {
-          max-width: 1200px;
-          margin: 0 auto 2rem;
-        }
-
-        .similar-title {
-          font-size: 1.75rem;
-          font-weight: 300;
-        }
-
-        .similar-grid {
-          max-width: 1200px;
-          margin: 0 auto;
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.25rem;
-        }
-
         .girl-card {
           background: var(--bg);
           border-radius: 16px;
@@ -2885,9 +2753,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           }
           .stat-number {
             font-size: 1.625rem;
-          }
-          .similar-grid {
-            grid-template-columns: repeat(3, 1fr);
           }
           .services-grid {
             grid-template-columns: 1fr;
@@ -3110,10 +2975,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
             padding: 0 0.5rem;
           }
 
-          .similar-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
           .profile-name {
             font-size: 2.5rem;
           }
@@ -3130,9 +2991,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           .location-address {
             font-size: 0.9rem;
           }
-          .similar-section {
-            padding: 2rem 4%;
-          }
           /* Mobile card-location badge - match homepage */
           .card-location {
             font-size: 0.85rem !important;
@@ -3144,9 +3002,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
         @media (max-width: 480px) {
           .profile-name {
             font-size: 2rem;
-          }
-          .similar-grid {
-            grid-template-columns: 1fr;
           }
           .gallery-thumbs {
             grid-template-columns: repeat(4, 1fr);
@@ -3229,172 +3084,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           }
         }
 
-        /* Similar Girls Section */
-        .similar-girls-section {
-          padding: 4rem 4%;
-          background: linear-gradient(180deg, var(--bg) 0%, rgba(20, 20, 20, 0.98) 100%);
-        }
-
-        .similar-girls-container {
-          max-width: 1400px;
-          margin: 0 auto;
-        }
-
-        .similar-girls-section .section-header {
-          text-align: center;
-          margin-bottom: 3rem;
-        }
-
-        .similar-girls-section .section-title {
-          font-size: 2.5rem;
-          font-weight: 300;
-          color: var(--white);
-          margin-bottom: 1rem;
-        }
-
-        .similar-girls-section .section-divider {
-          width: 80px;
-          height: 2px;
-          background: linear-gradient(90deg, transparent 0%, #8b2942 50%, transparent 100%);
-          margin: 0 auto;
-        }
-
-        .similar-girls-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 2rem;
-        }
-
-        .similar-girl-card {
-          display: flex;
-          flex-direction: column;
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 16px;
-          overflow: hidden;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          cursor: pointer;
-          text-decoration: none;
-          color: inherit;
-        }
-
-        .similar-girl-card:hover {
-          transform: translateY(-8px);
-          border-color: rgba(139, 41, 66, 0.5);
-          box-shadow: 0 12px 40px rgba(139, 41, 66, 0.25);
-        }
-
-        .similar-girl-image-wrapper {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 3/4;
-          overflow: hidden;
-          background: rgba(0, 0, 0, 0.2);
-        }
-
-        .similar-girl-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        }
-
-        .similar-girl-card:hover .similar-girl-image {
-          transform: scale(1.05);
-        }
-
-        .similar-girl-badge {
-          position: absolute;
-          top: 12px;
-          left: 12px;
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          backdrop-filter: blur(8px);
-          z-index: 2;
-        }
-
-        .similar-girl-badge.verified {
-          background: rgba(59, 130, 246, 0.9);
-          color: white;
-        }
-
-        .similar-girl-badge.online {
-          background: rgba(34, 197, 94, 0.9);
-          color: white;
-          top: auto;
-          bottom: 12px;
-          left: 12px;
-        }
-
-        .similar-girl-info {
-          padding: 1.25rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-
-        .similar-girl-name {
-          font-size: 1.25rem;
-          font-weight: 500;
-          color: var(--white);
-          margin: 0;
-        }
-
-        .similar-girl-stats {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.875rem;
-          color: rgba(255, 255, 255, 0.6);
-        }
-
-        .similar-girl-rating {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-
-        .similar-girl-rating .rating-text {
-          font-size: 0.875rem;
-          color: rgba(255, 255, 255, 0.8);
-        }
-
-        @media (max-width: 1200px) {
-          .similar-girls-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-
-        @media (max-width: 768px) {
-          .similar-girls-section {
-            padding: 3rem 4%;
-          }
-
-          .similar-girls-section .section-title {
-            font-size: 1.875rem;
-          }
-
-          .similar-girls-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
-          }
-
-          .similar-girl-info {
-            padding: 1rem;
-          }
-
-          .similar-girl-name {
-            font-size: 1.125rem;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .similar-girls-grid {
-            grid-template-columns: 1fr;
-          }
-        }
       `}</style>
     </>
   );
