@@ -26,77 +26,50 @@ interface StoriesProps {
   initialStories?: GirlStories[];
 }
 
-// Video circle component - plays on click like Telegram
+// Simple video circle - click to play
 function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?: string; girlName: string }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (story.media_type !== 'video') return;
-
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isPlaying) {
-      video.pause();
-      setIsPlaying(false);
-    } else {
-      video.play().catch(console.error);
-      setIsPlaying(true);
-    }
-  };
-
-  // Debug: log the photo URL
-  console.log('VideoCircle render:', girlName, 'photo:', girlPhoto?.substring(0, 50));
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   return (
     <div
-      onClick={handleClick}
       style={{
-        width: '84px',
-        height: '84px',
+        width: 84,
+        height: 84,
         borderRadius: '50%',
         overflow: 'hidden',
-        background: '#1a1a1a',
         position: 'relative',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        backgroundColor: '#2a1a1f'
+      }}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (story.media_type === 'video' && videoRef.current) {
+          if (isPlaying) {
+            videoRef.current.pause();
+          } else {
+            videoRef.current.play();
+          }
+          setIsPlaying(!isPlaying);
+        }
       }}
     >
-      {/* Profile photo background */}
-      <div
-        style={{
-          width: '84px',
-          height: '84px',
-          backgroundImage: girlPhoto ? `url(${girlPhoto})` : 'linear-gradient(135deg, #8b2942 0%, #2a1a1f 100%)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          display: isPlaying ? 'none' : 'block'
-        }}
-      >
-        {/* Show initial if no photo */}
-        {!girlPhoto && (
-          <div style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '28px',
-            fontWeight: 'bold'
-          }}>
-            {girlName.charAt(0)}
-          </div>
-        )}
-      </div>
+      {/* Photo */}
+      {!isPlaying && (
+        <img
+          src={girlPhoto || `https://ui-avatars.com/api/?name=${girlName}&background=8b2942&color=fff&size=84`}
+          alt={girlName}
+          width={84}
+          height={84}
+          style={{ objectFit: 'cover', display: 'block' }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${girlName}&background=8b2942&color=fff&size=84`;
+          }}
+        />
+      )}
 
-      {/* Video element */}
+      {/* Video */}
       {story.media_type === 'video' && (
         <video
           ref={videoRef}
@@ -104,43 +77,38 @@ function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?:
           muted
           loop
           playsInline
-          preload="metadata"
           style={{
-            width: '84px',
-            height: '84px',
+            width: 84,
+            height: 84,
             objectFit: 'cover',
+            display: isPlaying ? 'block' : 'none',
             position: 'absolute',
             top: 0,
-            left: 0,
-            display: isPlaying ? 'block' : 'none'
+            left: 0
           }}
         />
       )}
 
-      {/* Play button overlay */}
+      {/* Play icon */}
       {story.media_type === 'video' && !isPlaying && (
         <div style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '32px',
-          height: '32px',
-          background: 'rgba(139, 41, 66, 0.9)',
+          width: 28,
+          height: 28,
           borderRadius: '50%',
+          backgroundColor: 'rgba(139, 41, 66, 0.9)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.3)',
-          zIndex: 10
+          justifyContent: 'center'
         }}>
-          <div style={{
-            width: 0,
-            height: 0,
-            borderLeft: '12px solid white',
-            borderTop: '7px solid transparent',
-            borderBottom: '7px solid transparent',
-            marginLeft: '3px'
+          <span style={{
+            marginLeft: 3,
+            borderLeft: '10px solid white',
+            borderTop: '6px solid transparent',
+            borderBottom: '6px solid transparent'
           }} />
         </div>
       )}
