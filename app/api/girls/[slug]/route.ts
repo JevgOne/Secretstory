@@ -13,15 +13,15 @@ export async function GET(
   try {
     const { slug } = await params;
 
-    // Check cache first (1 hour cache)
+    // Check cache first (60 second cache - short to show new photos quickly)
     const cacheKey = `girl-profile-${slug}`;
-    const cached = cache.get(cacheKey, 3600000); // 1 hour cache
+    const cached = cache.get(cacheKey, 60000); // 60 second cache
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200, max-age=1800',
-          'CDN-Cache-Control': 'public, s-maxage=7200',
-          'Vercel-CDN-Cache-Control': 'public, s-maxage=7200',
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120, max-age=30',
+          'CDN-Cache-Control': 'public, s-maxage=60',
+          'Vercel-CDN-Cache-Control': 'public, s-maxage=60',
           'X-Cache': 'HIT',
           'X-Content-Type-Options': 'nosniff'
         }
@@ -179,9 +179,9 @@ export async function GET(
 
     return NextResponse.json(responseData, {
       headers: {
-        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200, max-age=1800',
-        'CDN-Cache-Control': 'public, s-maxage=7200',
-        'Vercel-CDN-Cache-Control': 'public, s-maxage=7200',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120, max-age=30',
+        'CDN-Cache-Control': 'public, s-maxage=60',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=60',
         'X-Cache': 'MISS',
         'X-Content-Type-Options': 'nosniff'
       }

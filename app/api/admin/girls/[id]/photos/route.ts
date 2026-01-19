@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@libsql/client';
 import { put, del } from '@vercel/blob';
 import { requireAuth } from '@/lib/auth-helpers';
+import { cache } from '@/lib/cache';
 
 const db = createClient({
   url: process.env.TURSO_DATABASE_URL!,
@@ -184,12 +185,13 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       });
       console.log('[PHOTO UPLOAD] Database INSERT OK, ID:', insertResult.lastInsertRowid);
 
-      // Get girl name for activity log
+      // Get girl name and slug for activity log and cache invalidation
       const girlData = await db.execute({
-        sql: 'SELECT name FROM girls WHERE id = ?',
+        sql: 'SELECT name, slug FROM girls WHERE id = ?',
         args: [girlId]
       });
       const girlName = girlData.rows[0]?.name || 'Unknown';
+      const girlSlug = girlData.rows[0]?.slug as string;
 
       // Log activity
       await db.execute({
@@ -206,6 +208,12 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         ]
       });
       console.log('[PHOTO UPLOAD] Activity log OK');
+
+      // Invalidate cache for this girl's profile
+      if (girlSlug) {
+        cache.clear(`girl-profile-${girlSlug}`);
+        console.log('[PHOTO UPLOAD] Cache invalidated for:', girlSlug);
+      }
 
       return NextResponse.json({
         success: true,
