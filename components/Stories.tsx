@@ -166,8 +166,11 @@ function VideoModal({
           ref={videoRef}
           src={story.media_url}
           playsInline
+          muted
+          autoPlay
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleEnded}
+          onError={(e) => console.error('Video error:', e)}
           onClick={(e) => {
             e.stopPropagation();
             if (videoRef.current?.paused) {
@@ -181,7 +184,8 @@ function VideoModal({
             height: '100%',
             objectFit: 'cover',
             borderRadius: '50%',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            backgroundColor: '#1a1a1a'
           }}
         />
       </div>
@@ -340,25 +344,11 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                   borderRadius: '50%',
                   overflow: 'hidden',
                   backgroundColor: '#1a1a1a',
-                  border: '3px solid #1f1f23'
-                }}>
-                  <img
-                    src={girlStories.girl_photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(girlStories.girl_name)}&background=8b2942&color=fff&size=168`}
-                    alt={girlStories.girl_name}
-                    width={84}
-                    height={84}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block'
-                    }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(girlStories.girl_name)}&background=8b2942&color=fff&size=168`;
-                    }}
-                  />
-                </div>
+                  border: '3px solid #1f1f23',
+                  backgroundImage: `url(${girlStories.girl_photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(girlStories.girl_name)}&background=8b2942&color=fff&size=168`})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }} />
 
                 {/* Play indicator */}
                 <div style={{
