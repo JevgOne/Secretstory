@@ -30,7 +30,6 @@ interface StoriesProps {
 function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?: string; girlName: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -50,6 +49,9 @@ function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?:
     }
   };
 
+  // Debug: log the photo URL
+  console.log('VideoCircle render:', girlName, 'photo:', girlPhoto?.substring(0, 50));
+
   return (
     <div
       onClick={handleClick}
@@ -63,24 +65,38 @@ function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?:
         cursor: 'pointer'
       }}
     >
-      {/* Profile photo - shows when not playing */}
-      {girlPhoto && (
-        <img
-          src={girlPhoto}
-          alt={girlName}
-          style={{
-            width: '84px',
-            height: '84px',
-            objectFit: 'cover',
-            display: isPlaying && isLoaded ? 'none' : 'block',
-            position: 'absolute',
-            top: 0,
-            left: 0
-          }}
-        />
-      )}
+      {/* Profile photo background */}
+      <div
+        style={{
+          width: '84px',
+          height: '84px',
+          backgroundImage: girlPhoto ? `url(${girlPhoto})` : 'linear-gradient(135deg, #8b2942 0%, #2a1a1f 100%)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          display: isPlaying ? 'none' : 'block'
+        }}
+      >
+        {/* Show initial if no photo */}
+        {!girlPhoto && (
+          <div style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '28px',
+            fontWeight: 'bold'
+          }}>
+            {girlName.charAt(0)}
+          </div>
+        )}
+      </div>
 
-      {/* Video element - always present for video stories */}
+      {/* Video element */}
       {story.media_type === 'video' && (
         <video
           ref={videoRef}
@@ -89,21 +105,19 @@ function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?:
           loop
           playsInline
           preload="metadata"
-          onLoadedData={() => setIsLoaded(true)}
-          onEnded={() => setIsPlaying(false)}
           style={{
             width: '84px',
             height: '84px',
             objectFit: 'cover',
-            display: isPlaying ? 'block' : 'none',
             position: 'absolute',
             top: 0,
-            left: 0
+            left: 0,
+            display: isPlaying ? 'block' : 'none'
           }}
         />
       )}
 
-      {/* Play button overlay - shows when not playing */}
+      {/* Play button overlay */}
       {story.media_type === 'video' && !isPlaying && (
         <div style={{
           position: 'absolute',
@@ -117,7 +131,8 @@ function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?:
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+          boxShadow: '0 2px 10px rgba(0,0,0,0.3)',
+          zIndex: 10
         }}>
           <div style={{
             width: 0,
@@ -127,23 +142,6 @@ function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?:
             borderBottom: '7px solid transparent',
             marginLeft: '3px'
           }} />
-        </div>
-      )}
-
-      {/* Fallback if no photo */}
-      {!girlPhoto && !isPlaying && (
-        <div style={{
-          width: '84px',
-          height: '84px',
-          background: 'linear-gradient(135deg, #8b2942 0%, #2a1a1f 100%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white',
-          fontSize: '28px',
-          fontWeight: 'bold'
-        }}>
-          {girlName.charAt(0)}
         </div>
       )}
     </div>
