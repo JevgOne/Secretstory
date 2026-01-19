@@ -3,6 +3,27 @@ import { createClient } from '@libsql/client';
 import { put, del } from '@vercel/blob';
 import { requireAuth } from '@/lib/auth-helpers';
 import { cache } from '@/lib/cache';
+import { revalidatePath } from 'next/cache';
+
+// Helper to invalidate all caches for a girl
+async function invalidateGirlCaches(girlSlug: string) {
+  cache.clear(`girl-profile-${girlSlug}`);
+  cache.clearByPrefix('girls-');
+  cache.clearByPrefix('homepage-');
+  cache.clearByPrefix('stories-');
+
+  try {
+    revalidatePath('/');
+    revalidatePath('/cs');
+    revalidatePath('/en');
+    revalidatePath('/cs/divky');
+    revalidatePath('/en/divky');
+    revalidatePath(`/cs/profily/${girlSlug}`);
+    revalidatePath(`/en/profily/${girlSlug}`);
+  } catch (e) {
+    console.error('[CACHE] Revalidation error:', e);
+  }
+}
 
 const db = createClient({
   url: process.env.TURSO_DATABASE_URL!,
@@ -209,10 +230,10 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       });
       console.log('[PHOTO UPLOAD] Activity log OK');
 
-      // Invalidate cache for this girl's profile
+      // Invalidate all caches for this girl
       if (girlSlug) {
-        cache.clear(`girl-profile-${girlSlug}`);
-        console.log('[PHOTO UPLOAD] Cache invalidated for:', girlSlug);
+        await invalidateGirlCaches(girlSlug);
+        console.log('[PHOTO UPLOAD] All caches invalidated for:', girlSlug);
       }
 
       return NextResponse.json({
@@ -314,6 +335,16 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
           args: [nextPhotoResult.rows[0].id]
         });
       }
+    }
+
+    // Invalidate caches
+    const girlResult = await db.execute({
+      sql: 'SELECT slug FROM girls WHERE id = ?',
+      args: [girlId]
+    });
+    const girlSlug = girlResult.rows[0]?.slug as string;
+    if (girlSlug) {
+      await invalidateGirlCaches(girlSlug);
     }
 
     return NextResponse.json({

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@libsql/client';
 import { requireAuth } from '@/lib/auth-helpers';
+import { cache } from '@/lib/cache';
+import { revalidatePath } from 'next/cache';
 
 const db = createClient({
   url: process.env.TURSO_DATABASE_URL!,
@@ -52,7 +54,39 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       args: [photoId]
     });
 
-    console.log(`[SET PRIMARY] Successfully set photo ${photoId} as primary for girl ${girlId}`);
+    // Get girl slug for cache invalidation
+    const girlResult = await db.execute({
+      sql: 'SELECT slug FROM girls WHERE id = ?',
+      args: [girlId]
+    });
+    const girlSlug = girlResult.rows[0]?.slug as string;
+
+    // Invalidate all relevant caches
+    if (girlSlug) {
+      cache.clear(`girl-profile-${girlSlug}`);
+    }
+    cache.clearByPrefix('girls-');
+    cache.clearByPrefix('homepage-');
+    cache.clearByPrefix('stories-');
+
+    // Revalidate Next.js pages (clears CDN cache)
+    try {
+      revalidatePath('/');
+      revalidatePath('/cs');
+      revalidatePath('/en');
+      revalidatePath('/de');
+      revalidatePath('/uk');
+      revalidatePath('/cs/divky');
+      revalidatePath('/en/divky');
+      if (girlSlug) {
+        revalidatePath(`/cs/profily/${girlSlug}`);
+        revalidatePath(`/en/profily/${girlSlug}`);
+      }
+    } catch (e) {
+      console.error('[SET PRIMARY] Revalidation error:', e);
+    }
+
+    console.log(`[SET PRIMARY] Photo ${photoId} set as primary for girl ${girlId}, all caches invalidated`);
 
     return NextResponse.json({
       success: true,

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+import { createPortal } from 'react-dom';
 
 interface Story {
   id: number;
@@ -26,100 +26,191 @@ interface StoriesProps {
   initialStories?: GirlStories[];
 }
 
-// Simple video circle - click to play
-function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?: string; girlName: string }) {
-  const [isPlaying, setIsPlaying] = useState(false);
+// Video Modal - Telegram style circle popup
+function VideoModal({
+  story,
+  girlName,
+  onClose
+}: {
+  story: Story;
+  girlName: string;
+  onClose: () => void;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [progress, setProgress] = useState(0);
 
-  return (
+  useEffect(() => {
+    // Play video when modal opens
+    if (videoRef.current) {
+      videoRef.current.play().catch(console.error);
+    }
+
+    // Close on escape key
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const pct = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+      setProgress(pct);
+    }
+  };
+
+  const handleEnded = () => {
+    // Auto close after video ends
+    setTimeout(onClose, 300);
+  };
+
+  return createPortal(
     <div
+      onClick={onClose}
       style={{
-        width: 84,
-        height: 84,
-        borderRadius: '50%',
-        overflow: 'hidden',
-        position: 'relative',
-        cursor: 'pointer',
-        backgroundColor: '#2a1a1f'
-      }}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (story.media_type === 'video' && videoRef.current) {
-          if (isPlaying) {
-            videoRef.current.pause();
-          } else {
-            videoRef.current.play();
-          }
-          setIsPlaying(!isPlaying);
-        }
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 99999,
+        animation: 'fadeIn 0.2s ease'
       }}
     >
-      {/* Photo */}
-      {!isPlaying && (
-        <img
-          src={girlPhoto || `https://ui-avatars.com/api/?name=${girlName}&background=8b2942&color=fff&size=84`}
-          alt={girlName}
-          width={84}
-          height={84}
-          style={{ objectFit: 'cover', display: 'block' }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${girlName}&background=8b2942&color=fff&size=84`;
-          }}
-        />
-      )}
+      {/* Close button */}
+      <button
+        onClick={onClose}
+        style={{
+          position: 'absolute',
+          top: 20,
+          right: 20,
+          width: 44,
+          height: 44,
+          borderRadius: '50%',
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          border: 'none',
+          color: '#fff',
+          fontSize: 24,
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 100000
+        }}
+      >
+        ×
+      </button>
 
-      {/* Video */}
-      {story.media_type === 'video' && (
+      {/* Girl name */}
+      <div style={{
+        position: 'absolute',
+        top: 20,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 600,
+        textShadow: '0 2px 8px rgba(0,0,0,0.5)'
+      }}>
+        {girlName}
+      </div>
+
+      {/* Video circle container */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: 'relative',
+          width: 'min(80vw, 80vh, 400px)',
+          height: 'min(80vw, 80vh, 400px)',
+          animation: 'scaleIn 0.3s ease'
+        }}
+      >
+        {/* Progress ring */}
+        <svg
+          style={{
+            position: 'absolute',
+            top: -4,
+            left: -4,
+            width: 'calc(100% + 8px)',
+            height: 'calc(100% + 8px)',
+            transform: 'rotate(-90deg)'
+          }}
+        >
+          <circle
+            cx="50%"
+            cy="50%"
+            r="calc(50% - 2px)"
+            fill="none"
+            stroke="rgba(255, 255, 255, 0.2)"
+            strokeWidth="4"
+          />
+          <circle
+            cx="50%"
+            cy="50%"
+            r="calc(50% - 2px)"
+            fill="none"
+            stroke="#8b2942"
+            strokeWidth="4"
+            strokeDasharray={`${progress * 3.14159} 314.159`}
+            strokeLinecap="round"
+          />
+        </svg>
+
+        {/* Video */}
         <video
           ref={videoRef}
           src={story.media_url}
-          muted
-          loop
           playsInline
+          onTimeUpdate={handleTimeUpdate}
+          onEnded={handleEnded}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (videoRef.current?.paused) {
+              videoRef.current.play();
+            } else {
+              videoRef.current?.pause();
+            }
+          }}
           style={{
-            width: 84,
-            height: 84,
+            width: '100%',
+            height: '100%',
             objectFit: 'cover',
-            display: isPlaying ? 'block' : 'none',
-            position: 'absolute',
-            top: 0,
-            left: 0
+            borderRadius: '50%',
+            cursor: 'pointer'
           }}
         />
-      )}
+      </div>
 
-      {/* Play icon */}
-      {story.media_type === 'video' && !isPlaying && (
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 28,
-          height: 28,
-          borderRadius: '50%',
-          backgroundColor: 'rgba(139, 41, 66, 0.9)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <span style={{
-            marginLeft: 3,
-            borderLeft: '10px solid white',
-            borderTop: '6px solid transparent',
-            borderBottom: '6px solid transparent'
-          }} />
-        </div>
-      )}
-    </div>
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { transform: scale(0.5); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
+    </div>,
+    document.body
   );
 }
 
 export default function Stories({ initialStories = [] }: StoriesProps) {
   const [storiesData, setStoriesData] = useState<GirlStories[]>(initialStories);
+  const [activeStory, setActiveStory] = useState<{ story: Story; girlName: string } | null>(null);
+  const [mounted, setMounted] = useState(false);
   const locale = useLocale();
   const t = useTranslations('home');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     // Only fetch if no initial data provided
@@ -157,6 +248,16 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
   if (storiesData.length === 0) {
     return null;
   }
+
+  const handleStoryClick = (e: React.MouseEvent, girlStories: GirlStories) => {
+    e.preventDefault();
+    if (girlStories.stories[0]) {
+      setActiveStory({
+        story: girlStories.stories[0],
+        girlName: girlStories.girl_name
+      });
+    }
+  };
 
   return (
     <section style={{
@@ -202,94 +303,139 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
         }}
         className="stories-container">
           {storiesData.map((girlStories, index) => (
-            <Link
+            <div
               key={girlStories.girl_id}
-              href={`/${locale}/profily/${girlStories.girl_slug}#stories`}
-              style={{ textDecoration: 'none' }}
+              onClick={(e) => handleStoryClick(e, girlStories)}
+              className="story-item"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                minWidth: '100px',
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease',
+                animation: `fadeInUp 0.5s ease ${index * 0.1}s both`
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
             >
-              <div
-                className="story-item"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  minWidth: '100px',
-                  cursor: 'pointer',
-                  transition: 'transform 0.3s ease',
-                  animation: `fadeInUp 0.5s ease ${index * 0.1}s both`
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                {/* Story Ring with Animation */}
-                <div className="story-ring" style={{
-                  width: '90px',
-                  height: '90px',
+              {/* Story Ring - Instagram style gradient */}
+              <div className="story-ring" style={{
+                width: '90px',
+                height: '90px',
+                borderRadius: '50%',
+                padding: '3px',
+                background: 'linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)',
+                position: 'relative',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+              }}>
+                {/* Inner circle with photo */}
+                <div style={{
+                  width: '84px',
+                  height: '84px',
                   borderRadius: '50%',
-                  padding: '3px',
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(139, 41, 66, 0.4) 50%, rgba(255, 255, 255, 0.3) 100%)',
-                  backgroundSize: '200% 200%',
-                  position: 'relative',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-                  animation: 'gradientShift 3s ease infinite'
-                }}>
-                  {/* Video circle - click to play */}
-                  {girlStories.stories[0] && (
-                    <VideoCircle
-                      story={girlStories.stories[0]}
-                      girlPhoto={girlStories.girl_photo}
-                      girlName={girlStories.girl_name}
-                    />
-                  )}
-
-                  {/* Story count badge */}
-                  {girlStories.stories.length > 1 && (
-                    <div className="story-badge" style={{
-                      position: 'absolute',
-                      bottom: '-2px',
-                      right: '-2px',
-                      background: 'rgba(139, 41, 66, 0.95)',
-                      color: '#fff',
-                      borderRadius: '50%',
-                      width: '26px',
-                      height: '26px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      border: '2px solid #1f1f23',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-                    }}>
-                      {girlStories.stories.length}
-                    </div>
-                  )}
-                </div>
-
-                {/* Name with glow effect */}
-                <div className="story-name" style={{
-                  marginTop: '12px',
-                  color: '#fff',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  textAlign: 'center',
-                  maxWidth: '100px',
                   overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)'
+                  backgroundColor: '#1a1a1a',
+                  border: '3px solid #1f1f23'
                 }}>
-                  {girlStories.girl_name}
+                  <img
+                    src={girlStories.girl_photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(girlStories.girl_name)}&background=8b2942&color=fff&size=168`}
+                    alt={girlStories.girl_name}
+                    width={84}
+                    height={84}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block'
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(girlStories.girl_name)}&background=8b2942&color=fff&size=168`;
+                    }}
+                  />
                 </div>
+
+                {/* Play indicator */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '50%',
+                  backgroundColor: '#8b2942',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '2px solid #1f1f23',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)'
+                }}>
+                  <span style={{
+                    marginLeft: 2,
+                    width: 0,
+                    height: 0,
+                    borderLeft: '8px solid white',
+                    borderTop: '5px solid transparent',
+                    borderBottom: '5px solid transparent'
+                  }} />
+                </div>
+
+                {/* Story count badge */}
+                {girlStories.stories.length > 1 && (
+                  <div className="story-badge" style={{
+                    position: 'absolute',
+                    top: '-2px',
+                    right: '-2px',
+                    background: '#fff',
+                    color: '#8b2942',
+                    borderRadius: '50%',
+                    width: '22px',
+                    height: '22px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                  }}>
+                    {girlStories.stories.length}
+                  </div>
+                )}
               </div>
-            </Link>
+
+              {/* Name */}
+              <div className="story-name" style={{
+                marginTop: '12px',
+                color: '#fff',
+                fontSize: '14px',
+                fontWeight: '600',
+                textAlign: 'center',
+                maxWidth: '100px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)'
+              }}>
+                {girlStories.girl_name}
+              </div>
+            </div>
           ))}
         </div>
       </div>
+
+      {/* Video Modal */}
+      {mounted && activeStory && (
+        <VideoModal
+          story={activeStory.story}
+          girlName={activeStory.girlName}
+          onClose={() => setActiveStory(null)}
+        />
+      )}
 
       <style jsx>{`
         @keyframes fadeInUp {
@@ -303,32 +449,8 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
           }
         }
 
-        @keyframes gradientShift {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-
         .stories-container::-webkit-scrollbar {
           display: none;
-        }
-
-        .story-circle {
-          width: 84px;
-          height: 84px;
-          background: #1a1a1a;
-          border-radius: 50%;
-        }
-
-        .story-video {
-          width: 84px;
-          height: 84px;
-          object-fit: cover;
-          clip-path: circle(50%);
-          -webkit-clip-path: circle(50%);
         }
 
         @media (max-width: 768px) {
@@ -364,8 +486,8 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
           }
 
           .story-badge {
-            width: 22px !important;
-            height: 22px !important;
+            width: 20px !important;
+            height: 20px !important;
             font-size: 10px !important;
           }
 
@@ -410,10 +532,9 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
           }
 
           .story-badge {
-            width: 20px !important;
-            height: 20px !important;
+            width: 18px !important;
+            height: 18px !important;
             font-size: 9px !important;
-            border: 1.5px solid #1f1f23 !important;
           }
 
           .story-name {

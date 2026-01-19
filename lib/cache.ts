@@ -40,6 +40,19 @@ class MemoryCache {
     }
   }
 
+  // Clear all keys starting with a prefix
+  clearByPrefix(prefix: string): void {
+    const keysToDelete: string[] = [];
+    for (const key of this.cache.keys()) {
+      if (key.startsWith(prefix)) {
+        keysToDelete.push(key);
+      }
+    }
+    for (const key of keysToDelete) {
+      this.cache.delete(key);
+    }
+  }
+
   // Get cache size for monitoring
   size(): number {
     return this.cache.size;

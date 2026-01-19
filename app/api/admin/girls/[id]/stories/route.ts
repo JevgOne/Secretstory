@@ -1,11 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@libsql/client';
 import { put, del } from '@vercel/blob';
+import { cache } from '@/lib/cache';
+import { revalidatePath } from 'next/cache';
 
 const db = createClient({
   url: process.env.TURSO_DATABASE_URL!,
   authToken: process.env.TURSO_AUTH_TOKEN!
 });
+
+// Helper to invalidate all caches for stories
+async function invalidateStoriesCaches(girlSlug?: string) {
+  cache.clearByPrefix('stories-');
+  cache.clearByPrefix('homepage-');
+  if (girlSlug) {
+    cache.clear(`girl-profile-${girlSlug}`);
+  }
+
+  try {
+    revalidatePath('/');
+    revalidatePath('/cs');
+    revalidatePath('/en');
+    if (girlSlug) {
+      revalidatePath(`/cs/profily/${girlSlug}`);
+      revalidatePath(`/en/profily/${girlSlug}`);
+    }
+  } catch (e) {
+    console.error('[CACHE] Revalidation error:', e);
+  }
+}
 
 interface RouteParams {
   params: Promise<{
@@ -164,6 +187,14 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       ]
     });
 
+    // Invalidate caches
+    const slugResult = await db.execute({
+      sql: 'SELECT slug FROM girls WHERE id = ?',
+      args: [girlId]
+    });
+    const girlSlug = slugResult.rows[0]?.slug as string;
+    await invalidateStoriesCaches(girlSlug);
+
     return NextResponse.json({
       success: true,
       story: {
@@ -229,6 +260,14 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       sql: 'DELETE FROM stories WHERE id = ?',
       args: [parseInt(storyId)]
     });
+
+    // Invalidate caches
+    const slugResult = await db.execute({
+      sql: 'SELECT slug FROM girls WHERE id = ?',
+      args: [girlId]
+    });
+    const girlSlug = slugResult.rows[0]?.slug as string;
+    await invalidateStoriesCaches(girlSlug);
 
     return NextResponse.json({
       success: true,
