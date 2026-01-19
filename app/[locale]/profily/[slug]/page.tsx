@@ -635,42 +635,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               )}
             </div>
 
-            {/* Stats Bar - Under thumbnails */}
-            <div className="stats-section gallery-stats">
-              <div className="stats-row">
-                <div className="stat-item">
-                  <div className={`profile-stat-value ${cormorant.className}`}>{profile.age}</div>
-                  <div className="profile-stat-label">{t('girls.age_years')}</div>
-                </div>
-                <div className="stat-divider"></div>
-                <div className="stat-item">
-                  <div className={`profile-stat-value ${cormorant.className}`}>{profile.height}</div>
-                  <div className="profile-stat-label">{t('girls.height_cm')}</div>
-                </div>
-                <div className="stat-divider"></div>
-                <div className="stat-item">
-                  <div className={`profile-stat-value ${cormorant.className}`}>{profile.weight}</div>
-                  <div className="profile-stat-label">{t('girls.weight_kg')}</div>
-                </div>
-                <div className="stat-divider"></div>
-                <div className="stat-item">
-                  <div className={`profile-stat-value ${cormorant.className}`}>{getBreastSize()}</div>
-                  <div className="profile-stat-label">{t('girls.bust')}</div>
-                </div>
-              </div>
-              <div className="languages-row">
-                <span className="lang-label">{t('girls.languages_spoken')}</span>
-                <div className="lang-flags">
-                  {getLanguages().map((lang) => (
-                    <div key={lang.code} className="lang-flag" title={lang.name}>
-                      {lang.flag}
-                      <span>{lang.code.toUpperCase()}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
             {/* Schedule Section */}
             {profile.schedule && profile.schedule.length > 0 && (
             <div className="schedule-section">
@@ -771,6 +735,42 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
           {/* Profile Content - Scrollable */}
           <div className="profile-content">
+            {/* Stats Bar - Top of right column on desktop */}
+            <div className="stats-section">
+              <div className="stats-row">
+                <div className="stat-item">
+                  <div className={`profile-stat-value ${cormorant.className}`}>{profile.age}</div>
+                  <div className="profile-stat-label">{t('girls.age_years')}</div>
+                </div>
+                <div className="stat-divider"></div>
+                <div className="stat-item">
+                  <div className={`profile-stat-value ${cormorant.className}`}>{profile.height}</div>
+                  <div className="profile-stat-label">{t('girls.height_cm')}</div>
+                </div>
+                <div className="stat-divider"></div>
+                <div className="stat-item">
+                  <div className={`profile-stat-value ${cormorant.className}`}>{profile.weight}</div>
+                  <div className="profile-stat-label">{t('girls.weight_kg')}</div>
+                </div>
+                <div className="stat-divider"></div>
+                <div className="stat-item">
+                  <div className={`profile-stat-value ${cormorant.className}`}>{getBreastSize()}</div>
+                  <div className="profile-stat-label">{t('girls.bust')}</div>
+                </div>
+              </div>
+              <div className="languages-row">
+                <span className="lang-label">{t('girls.languages_spoken')}</span>
+                <div className="lang-flags">
+                  {getLanguages().map((lang) => (
+                    <div key={lang.code} className="lang-flag" title={lang.name}>
+                      {lang.flag}
+                      <span>{lang.code.toUpperCase()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             {/* Hashtags */}
             {profile.hashtags && profile.hashtags.length > 0 && (
               <div className="hashtags-section">
@@ -1961,12 +1961,6 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
           border-radius: 16px;
           padding: 1.5rem;
           margin-bottom: 2rem;
-        }
-
-        /* Stats under gallery photo */
-        .gallery-stats {
-          margin-top: 1rem;
-          margin-bottom: 0;
         }
 
         .stats-row {
