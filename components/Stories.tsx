@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 
@@ -24,6 +24,84 @@ interface GirlStories {
 
 interface StoriesProps {
   initialStories?: GirlStories[];
+}
+
+// Story circle component with video fallback
+function StoryCircle({ story, fallbackPhoto }: { story: Story; fallbackPhoto?: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoFailed, setVideoFailed] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleError = () => {
+      console.log('Video failed to load, showing fallback');
+      setVideoFailed(true);
+    };
+
+    const handleCanPlay = () => {
+      video.play().catch(() => {
+        // Autoplay blocked, show fallback
+        setVideoFailed(true);
+      });
+    };
+
+    video.addEventListener('error', handleError);
+    video.addEventListener('canplay', handleCanPlay);
+
+    // Check if video format is supported (Safari doesn't support .mov well)
+    const canPlayMov = video.canPlayType('video/quicktime');
+    const isMov = story.media_url.toLowerCase().endsWith('.mov');
+
+    if (isMov && !canPlayMov) {
+      setVideoFailed(true);
+    }
+
+    return () => {
+      video.removeEventListener('error', handleError);
+      video.removeEventListener('canplay', handleCanPlay);
+    };
+  }, [story.media_url]);
+
+  if (videoFailed || story.media_type === 'image') {
+    // Show image (either story image or fallback profile photo)
+    const imageUrl = story.media_type === 'image' ? story.media_url : (story.thumbnail_url || fallbackPhoto);
+    return (
+      <img
+        src={imageUrl || '/placeholder-story.jpg'}
+        alt=""
+        style={{
+          width: '84px',
+          height: '84px',
+          objectFit: 'cover',
+          display: 'block',
+          borderRadius: '50%'
+        }}
+      />
+    );
+  }
+
+  return (
+    <video
+      ref={videoRef}
+      src={story.media_url}
+      autoPlay
+      muted
+      loop
+      playsInline
+      // @ts-ignore
+      webkit-playsinline="true"
+      preload="auto"
+      style={{
+        width: '84px',
+        height: '84px',
+        objectFit: 'cover',
+        display: 'block'
+      }}
+      onError={() => setVideoFailed(true)}
+    />
+  );
 }
 
 export default function Stories({ initialStories = [] }: StoriesProps) {
@@ -147,7 +225,7 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                   animation: 'gradientShift 3s ease infinite'
                 }}>
-                  {/* Inner circle with video */}
+                  {/* Inner circle with video/image */}
                   <div style={{
                     width: '84px',
                     height: '84px',
@@ -156,22 +234,12 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                     background: '#1a1a1a',
                     position: 'relative'
                   }}>
-                    <video
-                      src={girlStories.stories[0]?.media_url}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      // @ts-ignore
-                      webkit-playsinline="true"
-                      preload="auto"
-                      style={{
-                        width: '84px',
-                        height: '84px',
-                        objectFit: 'cover',
-                        display: 'block'
-                      }}
-                    />
+                    {girlStories.stories[0] && (
+                      <StoryCircle
+                        story={girlStories.stories[0]}
+                        fallbackPhoto={girlStories.girl_photo}
+                      />
+                    )}
                   </div>
 
                   {/* Story count badge */}
