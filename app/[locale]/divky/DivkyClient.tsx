@@ -239,12 +239,13 @@ export default function DivkyClient({ initialGirls, locale }: DivkyClientProps) 
                           <span className={`badge ${badgeClass}`}>{badgeText}</span>
                         )}
                         {girl.thumbnail || girl.primary_photo ? (
-                          <img
+                          <Image
                             src={girl.thumbnail || girl.primary_photo || ''}
                             alt={girl.name}
+                            fill
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                             className="card-image"
-                            loading="lazy"
-                            decoding="async"
+                            style={{ objectFit: 'cover' }}
                           />
                         ) : (
                           <div className="card-placeholder">{tCommon('photo')}</div>

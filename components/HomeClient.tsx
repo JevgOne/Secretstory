@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import { Cormorant, DM_Sans } from 'next/font/google';
@@ -193,14 +194,15 @@ export default function HomeClient({ initialData }: HomeClientProps) {
               <div className="new-girl-card">
                 <div className="new-girl-img">
                   {featuredGirls[currentFeaturedIndex].primary_photo ? (
-                    <img
+                    <Image
                       key={currentFeaturedIndex}
                       src={featuredGirls[currentFeaturedIndex].primary_photo}
                       alt={featuredGirls[currentFeaturedIndex].name}
-                      loading="eager"
-                      decoding="async"
-                      fetchPriority="high"
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, 400px"
                       className="featured-img-animate"
+                      style={{ objectFit: 'cover' }}
                     />
                   ) : (
                     <div className="placeholder">FOTO</div>
@@ -367,12 +369,13 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                       <span className={`badge ${badgeClass}`}>{badgeText}</span>
                     )}
                     {girl.primary_photo || girl.thumbnail ? (
-                      <img
-                        src={girl.thumbnail || girl.primary_photo}
+                      <Image
+                        src={girl.thumbnail || girl.primary_photo || ''}
                         alt={girl.name}
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         className="card-image"
-                        loading="lazy"
-                        decoding="async"
+                        style={{ objectFit: 'cover' }}
                       />
                     ) : (
                       <div className="card-placeholder">FOTO</div>

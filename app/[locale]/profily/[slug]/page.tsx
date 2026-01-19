@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -517,21 +518,24 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               })()}
               {activeGalleryMode === "photo" ? (
                 profile.photos && profile.photos.length > 0 && profile.photos[activeThumb] ? (
-                  <img
-                    src={profile.photos[activeThumb].url}
-                    alt={(() => {
-                      const photo = profile.photos[activeThumb];
-                      // Get locale-specific alt text
-                      if (locale === 'cs' && photo.alt_text_cs) return photo.alt_text_cs;
-                      if (locale === 'en' && photo.alt_text_en) return photo.alt_text_en;
-                      if (locale === 'de' && photo.alt_text_de) return photo.alt_text_de;
-                      if (locale === 'uk' && photo.alt_text_uk) return photo.alt_text_uk;
-                      // Fallback to generic alt_text or default
-                      return photo.alt_text || `${profile.name} - ${t('detail.photo')} ${activeThumb + 1}`;
-                    })()}
-                    className="gallery-image"
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                  />
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4' }}>
+                    <Image
+                      src={profile.photos[activeThumb].url}
+                      alt={(() => {
+                        const photo = profile.photos[activeThumb];
+                        if (locale === 'cs' && photo.alt_text_cs) return photo.alt_text_cs;
+                        if (locale === 'en' && photo.alt_text_en) return photo.alt_text_en;
+                        if (locale === 'de' && photo.alt_text_de) return photo.alt_text_de;
+                        if (locale === 'uk' && photo.alt_text_uk) return photo.alt_text_uk;
+                        return photo.alt_text || `${profile.name} - ${t('detail.photo')} ${activeThumb + 1}`;
+                      })()}
+                      fill
+                      priority={activeThumb === 0}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="gallery-image"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
                 ) : (
                   <div className="gallery-placeholder">{tCommon('no_photos')}</div>
                 )
@@ -945,12 +949,13 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
                             {/* Front Side */}
                             <div className="card-flip-front">
                               {girl.primary_photo || girl.thumbnail ? (
-                                <img
-                                  src={girl.thumbnail || girl.primary_photo}
+                                <Image
+                                  src={girl.thumbnail || girl.primary_photo || ''}
                                   alt={girl.name}
+                                  fill
+                                  sizes="(max-width: 768px) 50vw, 25vw"
                                   className="card-image"
-                                  loading="lazy"
-                                  decoding="async"
+                                  style={{ objectFit: 'cover' }}
                                 />
                               ) : (
                                 <div className="card-placeholder">FOTO</div>
@@ -959,24 +964,26 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
                             {/* Back Side */}
                             <div className="card-flip-back">
-                              <img
-                                src={girl.secondary_photo}
+                              <Image
+                                src={girl.secondary_photo || ''}
                                 alt={`${girl.name} - back view`}
+                                fill
+                                sizes="(max-width: 768px) 50vw, 25vw"
                                 className="card-image"
-                                loading="lazy"
-                                decoding="async"
+                                style={{ objectFit: 'cover' }}
                               />
                             </div>
                           </div>
                         ) : (
                           // No secondary photo - just show primary
                           girl.primary_photo || girl.thumbnail ? (
-                            <img
-                              src={girl.thumbnail || girl.primary_photo}
+                            <Image
+                              src={girl.thumbnail || girl.primary_photo || ''}
                               alt={girl.name}
+                              fill
+                              sizes="(max-width: 768px) 50vw, 25vw"
                               className="card-image"
-                              loading="lazy"
-                              decoding="async"
+                              style={{ objectFit: 'cover' }}
                             />
                           ) : (
                             <div className="card-placeholder">FOTO</div>
@@ -1047,10 +1054,13 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
               {/* Girl Photo Circle */}
               {profile.photos && profile.photos.length > 0 && (
                 <div className="sidebar-photo-circle">
-                  <img
+                  <Image
                     src={profile.photos[0].url}
                     alt={profile.name}
+                    fill
+                    sizes="100px"
                     className="sidebar-photo"
+                    style={{ objectFit: 'cover' }}
                   />
                   {profile.online && (
                     <div className="sidebar-online-dot"></div>
