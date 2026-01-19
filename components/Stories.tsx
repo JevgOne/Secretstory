@@ -26,48 +26,6 @@ interface StoriesProps {
   initialStories?: GirlStories[];
 }
 
-// Story circle component - shows profile photo with play indicator
-function StoryCircle({ girlPhoto, hasVideo }: { girlPhoto?: string; hasVideo: boolean }) {
-  return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <img
-        src={girlPhoto || '/placeholder.jpg'}
-        alt=""
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          display: 'block'
-        }}
-      />
-      {hasVideo && (
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '24px',
-          height: '24px',
-          background: 'rgba(0, 0, 0, 0.6)',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            width: 0,
-            height: 0,
-            borderLeft: '8px solid white',
-            borderTop: '5px solid transparent',
-            borderBottom: '5px solid transparent',
-            marginLeft: '2px'
-          }} />
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function Stories({ initialStories = [] }: StoriesProps) {
   const [storiesData, setStoriesData] = useState<GirlStories[]>(initialStories);
   const locale = useLocale();
@@ -198,10 +156,57 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                     background: '#1a1a1a',
                     position: 'relative'
                   }}>
-                    <StoryCircle
-                      girlPhoto={girlStories.girl_photo}
-                      hasVideo={girlStories.stories[0]?.media_type === 'video'}
-                    />
+                    {girlStories.girl_photo ? (
+                      <img
+                        src={girlStories.girl_photo}
+                        alt={girlStories.girl_name}
+                        style={{
+                          width: '84px',
+                          height: '84px',
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                      />
+                    ) : (
+                      <div style={{
+                        width: '84px',
+                        height: '84px',
+                        background: 'linear-gradient(135deg, #8b2942 0%, #1a1a1a 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontSize: '24px',
+                        fontWeight: 'bold'
+                      }}>
+                        {girlStories.girl_name.charAt(0)}
+                      </div>
+                    )}
+                    {/* Play indicator for video stories */}
+                    {girlStories.stories[0]?.media_type === 'video' && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '28px',
+                        height: '28px',
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <div style={{
+                          width: 0,
+                          height: 0,
+                          borderLeft: '10px solid white',
+                          borderTop: '6px solid transparent',
+                          borderBottom: '6px solid transparent',
+                          marginLeft: '3px'
+                        }} />
+                      </div>
+                    )}
                   </div>
 
                   {/* Story count badge */}
