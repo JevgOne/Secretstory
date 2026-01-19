@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 
@@ -24,6 +24,130 @@ interface GirlStories {
 
 interface StoriesProps {
   initialStories?: GirlStories[];
+}
+
+// Video circle component - plays on click like Telegram
+function VideoCircle({ story, girlPhoto, girlName }: { story: Story; girlPhoto?: string; girlName: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (story.media_type !== 'video') return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      video.pause();
+      setIsPlaying(false);
+    } else {
+      video.play().catch(console.error);
+      setIsPlaying(true);
+    }
+  };
+
+  return (
+    <div
+      onClick={handleClick}
+      style={{
+        width: '84px',
+        height: '84px',
+        borderRadius: '50%',
+        overflow: 'hidden',
+        background: '#1a1a1a',
+        position: 'relative',
+        cursor: 'pointer'
+      }}
+    >
+      {/* Profile photo - shows when not playing */}
+      {girlPhoto && (
+        <img
+          src={girlPhoto}
+          alt={girlName}
+          style={{
+            width: '84px',
+            height: '84px',
+            objectFit: 'cover',
+            display: isPlaying && isLoaded ? 'none' : 'block',
+            position: 'absolute',
+            top: 0,
+            left: 0
+          }}
+        />
+      )}
+
+      {/* Video element - always present for video stories */}
+      {story.media_type === 'video' && (
+        <video
+          ref={videoRef}
+          src={story.media_url}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          onLoadedData={() => setIsLoaded(true)}
+          onEnded={() => setIsPlaying(false)}
+          style={{
+            width: '84px',
+            height: '84px',
+            objectFit: 'cover',
+            display: isPlaying ? 'block' : 'none',
+            position: 'absolute',
+            top: 0,
+            left: 0
+          }}
+        />
+      )}
+
+      {/* Play button overlay - shows when not playing */}
+      {story.media_type === 'video' && !isPlaying && (
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '32px',
+          height: '32px',
+          background: 'rgba(139, 41, 66, 0.9)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+        }}>
+          <div style={{
+            width: 0,
+            height: 0,
+            borderLeft: '12px solid white',
+            borderTop: '7px solid transparent',
+            borderBottom: '7px solid transparent',
+            marginLeft: '3px'
+          }} />
+        </div>
+      )}
+
+      {/* Fallback if no photo */}
+      {!girlPhoto && !isPlaying && (
+        <div style={{
+          width: '84px',
+          height: '84px',
+          background: 'linear-gradient(135deg, #8b2942 0%, #2a1a1f 100%)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontSize: '28px',
+          fontWeight: 'bold'
+        }}>
+          {girlName.charAt(0)}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function Stories({ initialStories = [] }: StoriesProps) {
@@ -147,67 +271,14 @@ export default function Stories({ initialStories = [] }: StoriesProps) {
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                   animation: 'gradientShift 3s ease infinite'
                 }}>
-                  {/* Inner circle with profile photo */}
-                  <div style={{
-                    width: '84px',
-                    height: '84px',
-                    borderRadius: '50%',
-                    overflow: 'hidden',
-                    background: '#1a1a1a',
-                    position: 'relative'
-                  }}>
-                    {girlStories.girl_photo ? (
-                      <img
-                        src={girlStories.girl_photo}
-                        alt={girlStories.girl_name}
-                        style={{
-                          width: '84px',
-                          height: '84px',
-                          objectFit: 'cover',
-                          display: 'block'
-                        }}
-                      />
-                    ) : (
-                      <div style={{
-                        width: '84px',
-                        height: '84px',
-                        background: 'linear-gradient(135deg, #8b2942 0%, #1a1a1a 100%)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        fontSize: '24px',
-                        fontWeight: 'bold'
-                      }}>
-                        {girlStories.girl_name.charAt(0)}
-                      </div>
-                    )}
-                    {/* Play indicator for video stories */}
-                    {girlStories.stories[0]?.media_type === 'video' && (
-                      <div style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '28px',
-                        height: '28px',
-                        background: 'rgba(0, 0, 0, 0.5)',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
-                        <div style={{
-                          width: 0,
-                          height: 0,
-                          borderLeft: '10px solid white',
-                          borderTop: '6px solid transparent',
-                          borderBottom: '6px solid transparent',
-                          marginLeft: '3px'
-                        }} />
-                      </div>
-                    )}
-                  </div>
+                  {/* Video circle - click to play */}
+                  {girlStories.stories[0] && (
+                    <VideoCircle
+                      story={girlStories.stories[0]}
+                      girlPhoto={girlStories.girl_photo}
+                      girlName={girlStories.girl_name}
+                    />
+                  )}
 
                   {/* Story count badge */}
                   {girlStories.stories.length > 1 && (
