@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from 'react';
-import { getServiceName } from '@/lib/services';
+import type { Service } from '@/lib/services';
 
 interface ServicesAccordionProps {
-  basicServices: string[];
-  extraServices: string[];
+  basicServices: Service[];
+  extraServices: Service[];
   locale: string;
   translations: {
     servicesIncluded: string;
@@ -67,14 +67,14 @@ export default function ServicesAccordion({
                 gap: '0.75rem'
               }}>
                 {basicServices.map((service) => (
-                  <div key={service} style={{
+                  <div key={service.id} style={{
                     padding: '0.5rem 0.75rem',
                     background: 'rgba(139, 41, 66, 0.15)',
                     borderRadius: '6px',
                     color: '#e8b4b8',
                     fontSize: '0.9rem'
                   }}>
-                    ✓ {getServiceName(service, locale as 'cs' | 'en' | 'de' | 'uk')}
+                    ✓ {service.translations[locale as keyof typeof service.translations]}
                   </div>
                 ))}
               </div>
@@ -127,14 +127,14 @@ export default function ServicesAccordion({
                 gap: '0.75rem'
               }}>
                 {extraServices.map((service) => (
-                  <div key={service} style={{
+                  <div key={service.id} style={{
                     padding: '0.5rem 0.75rem',
                     background: 'rgba(255, 215, 0, 0.15)',
                     borderRadius: '6px',
                     color: '#ffd700',
                     fontSize: '0.9rem'
                   }}>
-                    + {getServiceName(service, locale as 'cs' | 'en' | 'de' | 'uk')}
+                    + {service.translations[locale as keyof typeof service.translations]}
                   </div>
                 ))}
               </div>
