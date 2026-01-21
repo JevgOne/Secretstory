@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { db } from '@/lib/db';
+import { unstable_cache } from 'next/cache';
 
 interface SEOData {
   meta_title?: string;
@@ -19,24 +20,32 @@ interface SEOData {
 }
 
 /**
- * Fetch SEO metadata from database for a given page path
+ * Fetch SEO metadata from database for a given page path (cached)
  */
-export async function getSEOMetadata(pagePath: string): Promise<SEOData | null> {
-  try {
-    const result = await db.execute({
-      sql: 'SELECT * FROM seo_metadata WHERE page_path = ? LIMIT 1',
-      args: [pagePath]
-    });
+const getCachedSEOMetadata = unstable_cache(
+  async (pagePath: string): Promise<SEOData | null> => {
+    try {
+      const result = await db.execute({
+        sql: 'SELECT * FROM seo_metadata WHERE page_path = ? LIMIT 1',
+        args: [pagePath]
+      });
 
-    if (result.rows.length === 0) {
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      return result.rows[0] as SEOData;
+    } catch (error) {
+      console.error('Error fetching SEO metadata:', error);
       return null;
     }
+  },
+  ['seo-metadata'],
+  { revalidate: 3600, tags: ['seo'] } // Cache for 1 hour
+);
 
-    return result.rows[0] as SEOData;
-  } catch (error) {
-    console.error('Error fetching SEO metadata:', error);
-    return null;
-  }
+export async function getSEOMetadata(pagePath: string): Promise<SEOData | null> {
+  return getCachedSEOMetadata(pagePath);
 }
 
 /**
