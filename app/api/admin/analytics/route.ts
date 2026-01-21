@@ -44,6 +44,9 @@ export async function GET(request: NextRequest) {
         break;
     }
 
+    // For JOIN queries, we need to use table alias (ae.created_at)
+    const joinDateCondition = dateCondition.replace(/date\(created_at\)/g, 'date(ae.created_at)');
+
     // Get click counts by type for current period
     const clicksResult = await db.execute(`
       SELECT
@@ -138,7 +141,7 @@ export async function GET(request: NextRequest) {
         COUNT(*) as views
       FROM analytics_events ae
       JOIN girls g ON ae.girl_id = g.id
-      WHERE ${dateCondition} AND ae.event_type = 'profile_view' AND ae.girl_id IS NOT NULL
+      WHERE ${joinDateCondition} AND ae.event_type = 'profile_view' AND ae.girl_id IS NOT NULL
       GROUP BY ae.girl_id, g.name, g.slug
       ORDER BY views DESC
       LIMIT 10
