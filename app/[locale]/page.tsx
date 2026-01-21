@@ -4,6 +4,9 @@ import { db } from '@/lib/db';
 // ISR - Revalidate every 30 minutes (1800 seconds) for SEO
 export const revalidate = 1800;
 
+// Force static generation for homepage
+export const dynamic = 'force-static';
+
 // Server-side data fetching DIRECTLY from database (no API)
 async function getHomepageData() {
   try {
