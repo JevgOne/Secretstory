@@ -3,6 +3,8 @@ import { Cormorant, DM_Sans } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
 import GoogleAnalyticsWrapper from "@/components/GoogleAnalyticsWrapper";
+import { Suspense } from "react";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 const cormorant = Cormorant({
   variable: "--font-cormorant",
@@ -52,6 +54,10 @@ export default function RootLayout({
       <body className={`${cormorant.variable} ${dmSans.variable} antialiased`}>
         {/* Google Analytics */}
         <GoogleAnalyticsWrapper measurementId="G-W4W24CVL1L" />
+        {/* Custom Analytics Tracker */}
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
         <SessionProvider>
           {children}
         </SessionProvider>

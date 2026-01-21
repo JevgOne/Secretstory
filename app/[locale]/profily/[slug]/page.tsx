@@ -23,6 +23,7 @@ import ServicesAccordion from '@/components/ServicesAccordion';
 import { getHashtagById, getHashtagName } from '@/lib/hashtags';
 import { SERVICES, getServiceName } from '@/lib/services';
 import type { Service } from '@/lib/services';
+import { trackProfileView, trackClick } from '@/lib/analytics';
 
 const cormorant = Cormorant({
   subsets: ['latin', 'latin-ext'],
@@ -235,6 +236,9 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
       if (profileData.success) {
         setProfile(profileData.girl);
+
+        // Track profile view
+        trackProfileView(profileData.girl.id);
 
         // Fetch reviews with actual girl ID
         const reviewsResponse = await fetch(`/api/reviews?status=approved&girl_id=${profileData.girl.id}`).catch(() => null);
@@ -888,15 +892,15 @@ export default function ProfileDetailPage({ params }: { params: Promise<{ locale
 
             {/* CTA */}
             <div className="profile-cta">
-              <a href={`https://wa.me/420734332131?text=Ahoj%20${encodeURIComponent(profile.name)}%2C%20m%C3%A1%C5%A1%20dneska%20%C4%8Das%3F`} className="cta-btn whatsapp">
+              <a href={`https://wa.me/420734332131?text=Ahoj%20${encodeURIComponent(profile.name)}%2C%20m%C3%A1%C5%A1%20dneska%20%C4%8Das%3F`} className="cta-btn whatsapp" onClick={() => trackClick('whatsapp', profile.id)}>
                 <WhatsAppIcon />
                 WhatsApp
               </a>
-              <a href="https://t.me/lovelygirls_prague" className="cta-btn telegram">
+              <a href="https://t.me/lovelygirls_prague" className="cta-btn telegram" onClick={() => trackClick('telegram', profile.id)}>
                 <TelegramIcon />
                 Telegram
               </a>
-              <a href="tel:+420734332131" className="cta-btn phone">
+              <a href="tel:+420734332131" className="cta-btn phone" onClick={() => trackClick('call', profile.id)}>
                 <PhoneIcon size={24} />
                 {t('profile.call')}
               </a>

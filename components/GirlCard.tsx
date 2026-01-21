@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLocale, useTranslations } from 'next-intl';
 import { useLocations } from '@/lib/hooks/useLocations';
+import { trackClick } from '@/lib/analytics';
 
 interface GirlCardProps {
   girl: {
@@ -81,12 +82,14 @@ export default function GirlCard({
   const handleWhatsApp = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    trackClick('whatsapp', girl.id);
     window.open('https://wa.me/420734332131', '_blank');
   };
 
   const handleCall = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    trackClick('call', girl.id);
     window.location.href = 'tel:+420734332131';
   };
 

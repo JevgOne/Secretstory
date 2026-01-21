@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLocale } from 'next-intl';
+import { trackClick } from '@/lib/analytics';
 
 interface BottomCTAProps {
   translations: {
@@ -77,6 +78,7 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
     if ('vibrate' in navigator) {
       navigator.vibrate(10);
     }
+    trackClick('whatsapp');
     window.open('https://wa.me/420734332131', '_blank');
   };
 
@@ -85,6 +87,7 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
     if ('vibrate' in navigator) {
       navigator.vibrate(10);
     }
+    trackClick('telegram');
     window.open('https://t.me/+420734332131', '_blank');
   };
 
@@ -93,6 +96,7 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
     if ('vibrate' in navigator) {
       navigator.vibrate(10);
     }
+    trackClick('sms');
     window.location.href = 'sms:+420734332131';
   };
 
@@ -101,6 +105,7 @@ export default function BottomCTA({ translations }: BottomCTAProps) {
     if ('vibrate' in navigator) {
       navigator.vibrate(10);
     }
+    trackClick('call');
     window.location.href = 'tel:+420734332131';
   };
 
