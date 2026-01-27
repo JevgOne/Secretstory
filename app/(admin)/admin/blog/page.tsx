@@ -11,8 +11,9 @@ interface BlogPost {
   slug: string;
   category: string;
   locale: string;
-  published: boolean;
-  featured: boolean;
+  is_published: boolean;
+  is_featured: boolean;
+  scheduled_for?: string | null;
   girl_id?: number;
   girl_name?: string;
   created_at: string;
@@ -75,15 +76,40 @@ export default function AdminBlogPage() {
     }
   };
 
-  const getPublishedBadge = (published: boolean) => {
-    const styles = published
-      ? { background: 'rgba(34, 197, 94, 0.2)', color: '#22c55e' }
-      : { background: 'rgba(107, 114, 128, 0.2)', color: '#6b7280' };
+  const getPublishedBadge = (post: BlogPost) => {
+    let styles, text;
+
+    if (post.scheduled_for) {
+      // Scheduled
+      styles = { background: 'rgba(251, 191, 36, 0.2)', color: '#fbbf24' };
+      text = 'Naplánováno';
+    } else if (post.is_published) {
+      // Published
+      styles = { background: 'rgba(34, 197, 94, 0.2)', color: '#22c55e' };
+      text = 'Publikováno';
+    } else {
+      // Draft
+      styles = { background: 'rgba(107, 114, 128, 0.2)', color: '#6b7280' };
+      text = 'Koncept';
+    }
 
     return (
-      <span style={{ padding: '4px 12px', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '500', ...styles }}>
-        {published ? 'Publikováno' : 'Koncept'}
-      </span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <span style={{ padding: '4px 12px', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '500', ...styles }}>
+          {text}
+        </span>
+        {post.scheduled_for && (
+          <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+            {new Date(post.scheduled_for).toLocaleString('cs-CZ', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </span>
+        )}
+      </div>
     );
   };
 
@@ -125,9 +151,14 @@ export default function AdminBlogPage() {
           <div>
             <p className="admin-subtitle">Vytvářejte a spravujte blogové články</p>
           </div>
-          <Link href="/admin/blog/new" className="btn btn-primary">
-            + Vytvořit nový článek
-          </Link>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <Link href="/admin/blog/generate" className="btn btn-ai">
+              🤖 AI Generátor (30 článků)
+            </Link>
+            <Link href="/admin/blog/new" className="btn btn-primary">
+              + Vytvořit nový článek
+            </Link>
+          </div>
         </div>
 
         <div className="search-bar">
@@ -169,6 +200,7 @@ export default function AdminBlogPage() {
               <option value="all">Všechny</option>
               <option value="true">Publikované</option>
               <option value="false">Koncepty</option>
+              <option value="scheduled">Naplánované</option>
             </select>
           </div>
         </div>
@@ -196,7 +228,7 @@ export default function AdminBlogPage() {
                     <td>{post.id}</td>
                     <td>
                       <div className="post-title">
-                        {post.featured && <span className="featured-badge">★</span>}
+                        {post.is_featured && <span className="featured-badge">★</span>}
                         <strong>{post.title}</strong>
                         <div className="slug">/{post.slug}</div>
                       </div>
@@ -214,7 +246,7 @@ export default function AdminBlogPage() {
                         <span style={{ fontSize: '0.9rem', color: 'var(--gray)' }}>-</span>
                       )}
                     </td>
-                    <td>{getPublishedBadge(post.published)}</td>
+                    <td>{getPublishedBadge(post)}</td>
                     <td>{new Date(post.created_at).toLocaleDateString('cs-CZ')}</td>
                     <td>
                       <div style={{ display: 'flex', gap: '8px' }}>
@@ -334,6 +366,17 @@ export default function AdminBlogPage() {
 
           .btn-primary:hover {
             border-color: #3d3d41;
+            transform: translateY(-2px);
+          }
+
+          .btn-ai {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+          }
+
+          .btn-ai:hover {
+            opacity: 0.9;
             transform: translateY(-2px);
           }
 

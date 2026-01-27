@@ -19,7 +19,9 @@ export default function EditBlogPostPage({ params }: PageProps) {
   const [postId, setPostId] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
+  const [translating, setTranslating] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [girls, setGirls] = useState<Girl[]>([]);
 
   const [formData, setFormData] = useState({
@@ -38,7 +40,8 @@ export default function EditBlogPostPage({ params }: PageProps) {
     og_title: '',
     og_description: '',
     og_image: '',
-    published: false,
+    publishMode: 'draft', // 'draft', 'now', 'scheduled'
+    scheduledFor: '',
     featured: false
   });
 
@@ -55,6 +58,19 @@ export default function EditBlogPostPage({ params }: PageProps) {
 
         if (postData.success && postData.post) {
           const post = postData.post;
+
+          // Determine publish mode from existing data
+          let publishMode = 'draft';
+          let scheduledFor = '';
+
+          if (post.scheduled_for) {
+            publishMode = 'scheduled';
+            // Convert ISO datetime to datetime-local format
+            scheduledFor = new Date(post.scheduled_for).toISOString().slice(0, 16);
+          } else if (post.is_published) {
+            publishMode = 'now';
+          }
+
           setFormData({
             title: post.title || '',
             slug: post.slug || '',
@@ -71,8 +87,9 @@ export default function EditBlogPostPage({ params }: PageProps) {
             og_title: post.og_title || '',
             og_description: post.og_description || '',
             og_image: post.og_image || '',
-            published: post.published || false,
-            featured: post.featured || false
+            publishMode,
+            scheduledFor,
+            featured: post.is_featured || false
           });
         } else {
           setError('Článek nenalezen');
@@ -113,9 +130,41 @@ export default function EditBlogPostPage({ params }: PageProps) {
     });
   };
 
+  const handleAutoTranslate = async () => {
+    if (!confirm('Opravdu chcete automaticky přeložit tento článek do všech 4 jazyků? Tato akce může trvat 1-2 minuty.')) {
+      return;
+    }
+
+    setTranslating(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const response = await fetch('/api/admin/blog/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId: parseInt(postId) })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess(`✓ Úspěšně přeloženo do ${data.translated} jazyků! Překlady jsou přiřazené copywriterům ke kontrole.`);
+      } else {
+        setError(data.error || 'Chyba při překladu');
+      }
+    } catch (err) {
+      console.error('Translation error:', err);
+      setError('Chyba při překladu článku');
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     // Validation
     if (!formData.title.trim()) {
@@ -147,7 +196,9 @@ export default function EditBlogPostPage({ params }: PageProps) {
         body: JSON.stringify({
           ...formData,
           girl_id: formData.girl_id ? parseInt(formData.girl_id) : null,
-          tags: formData.tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
+          tags: formData.tags.split(',').map(t => t.trim()).filter(t => t.length > 0),
+          published: formData.publishMode === 'now',
+          scheduled_for: formData.publishMode === 'scheduled' ? formData.scheduledFor : null
         })
       });
 
@@ -196,6 +247,12 @@ export default function EditBlogPostPage({ params }: PageProps) {
         {error && (
           <div className="error-banner">
             {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="success-banner">
+            {success}
           </div>
         )}
 
@@ -401,30 +458,77 @@ export default function EditBlogPostPage({ params }: PageProps) {
           <div className="form-section">
             <h2 className="section-title">Nastavení publikace</h2>
 
-            <div className="form-grid">
-              <div className="form-group">
-                <label className="checkbox-label">
+            <div className="form-group">
+              <label>Režim publikace</label>
+              <div className="radio-group">
+                <label className="radio-label">
                   <input
-                    type="checkbox"
-                    checked={formData.published}
-                    onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                    type="radio"
+                    name="publishMode"
+                    value="draft"
+                    checked={formData.publishMode === 'draft'}
+                    onChange={(e) => setFormData({ ...formData, publishMode: e.target.value })}
                   />
-                  <span>Publikovat článek</span>
+                  <div>
+                    <strong>Uložit jako koncept</strong>
+                    <small>Článek nebude viditelný na webu</small>
+                  </div>
                 </label>
-                <small>Zaškrtněte pro zveřejnění článku</small>
+
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="publishMode"
+                    value="now"
+                    checked={formData.publishMode === 'now'}
+                    onChange={(e) => setFormData({ ...formData, publishMode: e.target.value })}
+                  />
+                  <div>
+                    <strong>Publikovat okamžitě</strong>
+                    <small>Článek bude hned viditelný</small>
+                  </div>
+                </label>
+
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="publishMode"
+                    value="scheduled"
+                    checked={formData.publishMode === 'scheduled'}
+                    onChange={(e) => setFormData({ ...formData, publishMode: e.target.value })}
+                  />
+                  <div>
+                    <strong>Naplánovat publikaci</strong>
+                    <small>Článek bude automaticky publikován v nastavený čas</small>
+                  </div>
+                </label>
               </div>
 
-              <div className="form-group">
-                <label className="checkbox-label">
+              {formData.publishMode === 'scheduled' && (
+                <div className="scheduled-datetime-picker">
+                  <label>Datum a čas publikace *</label>
                   <input
-                    type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                    type="datetime-local"
+                    value={formData.scheduledFor}
+                    onChange={(e) => setFormData({ ...formData, scheduledFor: e.target.value })}
+                    required={formData.publishMode === 'scheduled'}
+                    min={new Date().toISOString().slice(0, 16)}
                   />
-                  <span>Zvýraznit článek</span>
-                </label>
-                <small>Zvýrazněné články se zobrazí na hlavní stránce blogu</small>
-              </div>
+                  <small>Článek bude automaticky publikován v tento čas (časová zóna: místní)</small>
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.featured}
+                  onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                />
+                <span>Zvýraznit článek</span>
+              </label>
+              <small>Zvýrazněné články se zobrazí na hlavní stránce blogu</small>
             </div>
           </div>
 
@@ -432,7 +536,15 @@ export default function EditBlogPostPage({ params }: PageProps) {
             <Link href="/admin/blog" className="btn btn-secondary">
               Zrušit
             </Link>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+            <button
+              type="button"
+              className="btn btn-translate"
+              onClick={handleAutoTranslate}
+              disabled={loading || translating}
+            >
+              {translating ? '🔄 Překládám...' : '🌍 Auto-Translate (CS→EN→DE→UK)'}
+            </button>
+            <button type="submit" className="btn btn-primary" disabled={loading || translating}>
               {loading ? 'Ukládání...' : 'Uložit změny'}
             </button>
           </div>
@@ -498,10 +610,34 @@ export default function EditBlogPostPage({ params }: PageProps) {
             background: rgba(255, 255, 255, 0.15);
           }
 
+          .btn-translate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+          }
+
+          .btn-translate:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: translateY(-2px);
+          }
+
+          .btn-translate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+
           .error-banner {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
             color: #ef4444;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+          }
+
+          .success-banner {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 2rem;
@@ -595,6 +731,90 @@ export default function EditBlogPostPage({ params }: PageProps) {
           .checkbox-label input[type="checkbox"] {
             width: auto;
             cursor: pointer;
+          }
+
+          .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 0.5rem;
+          }
+
+          .radio-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+          }
+
+          .radio-label:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+          }
+
+          .radio-label input[type="radio"] {
+            margin-top: 0.25rem;
+            cursor: pointer;
+            width: auto;
+          }
+
+          .radio-label input[type="radio"]:checked + div {
+            color: var(--accent);
+          }
+
+          .radio-label strong {
+            display: block;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+          }
+
+          .radio-label small {
+            display: block;
+            color: var(--gray);
+            font-size: 0.85rem;
+          }
+
+          .scheduled-datetime-picker {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+          }
+
+          .scheduled-datetime-picker label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+          }
+
+          .scheduled-datetime-picker input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--white);
+            font-size: 0.95rem;
+          }
+
+          .scheduled-datetime-picker input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+          }
+
+          .scheduled-datetime-picker small {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
           }
 
           .form-actions {

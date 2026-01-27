@@ -94,11 +94,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Disable body size limit for sendBeacon
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '1kb',
-    },
-  },
-};
+// Next.js App Router config
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';

@@ -79,17 +79,55 @@ export async function PATCH(
     const updates: string[] = [];
     const args: any[] = [];
 
-    // Build dynamic update query
+    // Handle publication mode logic
+    // published and scheduled_for from frontend determine the actual database values
+    if (body.published !== undefined || body.scheduled_for !== undefined) {
+      if (body.scheduled_for) {
+        // Scheduled mode: set scheduled_for, keep as draft
+        updates.push('scheduled_for = ?');
+        args.push(body.scheduled_for);
+        updates.push('is_published = ?');
+        args.push(0);
+        updates.push('published_at = ?');
+        args.push(null);
+      } else if (body.published) {
+        // Publish now mode: publish immediately, clear schedule
+        updates.push('is_published = ?');
+        args.push(1);
+        updates.push('scheduled_for = ?');
+        args.push(null);
+
+        // Set published_at if not already set
+        const currentPost = await db.execute({
+          sql: 'SELECT published_at FROM blog_posts WHERE id = ?',
+          args: [parseInt(id)]
+        });
+        if (currentPost.rows.length > 0 && !currentPost.rows[0].published_at) {
+          updates.push('published_at = ?');
+          args.push(new Date().toISOString());
+        }
+      } else {
+        // Draft mode: unpublish and clear schedule
+        updates.push('is_published = ?');
+        args.push(0);
+        updates.push('scheduled_for = ?');
+        args.push(null);
+        updates.push('published_at = ?');
+        args.push(null);
+      }
+    }
+
+    // Build dynamic update query for other fields
     const allowedFields = [
       'title', 'excerpt', 'content', 'category', 'featured_image', 'girl_id',
-      'author', 'read_time', 'is_featured', 'is_published', 'published_at',
+      'author', 'read_time', 'is_featured',
       'meta_title', 'meta_description', 'meta_keywords', 'og_title', 'og_description', 'og_image', 'locale'
     ];
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
         updates.push(`${field} = ?`);
-        if (field === 'is_featured' || field === 'is_published') {
+        if (field === 'is_featured') {
           args.push(body[field] ? 1 : 0);
         } else {
           args.push(body[field]);
@@ -108,19 +146,6 @@ export async function PATCH(
 
       updates.push('slug = ?');
       args.push(newSlug);
-    }
-
-    // If publishing status changed to published and no published_at, set it
-    if (body.is_published === true || body.is_published === 1) {
-      const currentPost = await db.execute({
-        sql: 'SELECT published_at FROM blog_posts WHERE id = ?',
-        args: [parseInt(id)]
-      });
-
-      if (currentPost.rows.length > 0 && !currentPost.rows[0].published_at) {
-        updates.push('published_at = ?');
-        args.push(new Date().toISOString());
-      }
     }
 
     if (updates.length > 0) {

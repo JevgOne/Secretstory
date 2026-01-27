@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { publishScheduledPosts } from '@/lib/blog-scheduler';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -7,6 +8,9 @@ export const revalidate = 0;
 // GET /api/blog - Get published blog posts (public)
 export async function GET(request: NextRequest) {
   try {
+    // Auto-publish scheduled posts (passive scheduling)
+    await publishScheduledPosts();
+
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
     const locale = searchParams.get('locale');

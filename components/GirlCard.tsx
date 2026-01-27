@@ -245,7 +245,7 @@ export default function GirlCard({
           display: flex;
           justify-content: space-between;
           align-items: baseline;
-          margin-bottom: 0.75rem;
+          margin-bottom: 0.5rem;
         }
 
         .girl-card-name {
@@ -277,7 +277,7 @@ export default function GirlCard({
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 0.5rem;
-          margin-bottom: 0.75rem;
+          margin-bottom: 0.5rem;
         }
 
         .girl-card-stat {
@@ -302,7 +302,7 @@ export default function GirlCard({
         .girl-card-languages {
           font-size: 0.75rem;
           color: var(--gray);
-          margin-bottom: 0.75rem;
+          margin-bottom: 0;
           line-height: 1.4;
         }
 
@@ -326,9 +326,23 @@ export default function GirlCard({
         }
 
         @media (max-width: 480px) {
+          .girl-card-header {
+            margin-bottom: 0.4rem;
+          }
+
+          .girl-card-stats {
+            margin-bottom: 0.4rem;
+          }
+
+          .girl-card-languages {
+            font-size: 0.7rem;
+            line-height: 1.3;
+          }
+
           .girl-card-location {
             font-size: 0.9rem;
             gap: 6px;
+            margin-top: 0.4rem;
           }
 
           .girl-card-location svg {

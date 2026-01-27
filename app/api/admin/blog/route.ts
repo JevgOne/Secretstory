@@ -19,8 +19,9 @@ export async function POST(request: NextRequest) {
       author,
       read_time,
       is_featured,
-      is_published,
+      published, // Changed from is_published for consistency with frontend
       published_at,
+      scheduled_for,
       meta_title,
       meta_description,
       meta_keywords,
@@ -60,14 +61,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Determine publication status
+    // If scheduled_for is set, keep as draft (is_published = 0) until scheduled time
+    const is_published = scheduled_for ? 0 : (published ? 1 : 0);
+    const final_published_at = published && !scheduled_for ? new Date().toISOString() : null;
+
     // Insert new blog post
     const result = await db.execute({
       sql: `
         INSERT INTO blog_posts (
           slug, title, excerpt, content, category, featured_image, girl_id,
-          author, read_time, is_featured, is_published, published_at,
+          author, read_time, is_featured, is_published, published_at, scheduled_for,
           meta_title, meta_description, meta_keywords, og_title, og_description, og_image, locale
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         slug,
@@ -80,8 +86,9 @@ export async function POST(request: NextRequest) {
         author || 'LovelyGirls Team',
         read_time || 5,
         is_featured ? 1 : 0,
-        is_published ? 1 : 0,
-        published_at || (is_published ? new Date().toISOString() : null),
+        is_published,
+        final_published_at,
+        scheduled_for || null,
         meta_title || title,
         meta_description || excerpt || null,
         meta_keywords || null,
@@ -156,7 +163,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
     const locale = searchParams.get('locale');
-    const is_published = searchParams.get('is_published');
+    const published = searchParams.get('published');
 
     let sql = `
       SELECT
@@ -181,9 +188,17 @@ export async function GET(request: NextRequest) {
       args.push(locale);
     }
 
-    if (is_published !== null && is_published !== undefined) {
-      sql += ' AND p.is_published = ?';
-      args.push(is_published === 'true' || is_published === '1' ? 1 : 0);
+    if (published !== null && published !== undefined && published !== 'all') {
+      if (published === 'scheduled') {
+        // Filter for scheduled posts only
+        sql += ' AND p.scheduled_for IS NOT NULL';
+      } else {
+        // Filter for published or draft
+        sql += ' AND p.is_published = ?';
+        args.push(published === 'true' || published === '1' ? 1 : 0);
+        // Ensure we only get non-scheduled posts
+        sql += ' AND p.scheduled_for IS NULL';
+      }
     }
 
     sql += ' GROUP BY p.id ORDER BY p.created_at DESC';

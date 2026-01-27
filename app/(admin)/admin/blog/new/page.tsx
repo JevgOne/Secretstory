@@ -32,7 +32,8 @@ export default function NewBlogPostPage() {
     og_title: '',
     og_description: '',
     og_image: '',
-    published: false,
+    publishMode: 'draft', // 'draft', 'now', 'scheduled'
+    scheduledFor: '',
     featured: false
   });
 
@@ -104,8 +105,22 @@ export default function NewBlogPostPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          title: formData.title,
+          excerpt: formData.excerpt,
+          content: formData.content,
+          category: formData.category,
+          featured_image: formData.featured_image,
           girl_id: formData.girl_id ? parseInt(formData.girl_id) : null,
+          locale: formData.locale,
+          meta_title: formData.meta_title,
+          meta_description: formData.meta_description,
+          meta_keywords: formData.meta_keywords,
+          og_title: formData.og_title,
+          og_description: formData.og_description,
+          og_image: formData.og_image,
+          is_featured: formData.featured ? 1 : 0,
+          published: formData.publishMode === 'now',
+          scheduled_for: formData.publishMode === 'scheduled' ? formData.scheduledFor : null,
           tags: formData.tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
         })
       });
@@ -347,30 +362,77 @@ export default function NewBlogPostPage() {
           <div className="form-section">
             <h2 className="section-title">Nastavení publikace</h2>
 
-            <div className="form-grid">
-              <div className="form-group">
-                <label className="checkbox-label">
+            <div className="form-group">
+              <label>Režim publikace</label>
+              <div className="radio-group">
+                <label className="radio-label">
                   <input
-                    type="checkbox"
-                    checked={formData.published}
-                    onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                    type="radio"
+                    name="publishMode"
+                    value="draft"
+                    checked={formData.publishMode === 'draft'}
+                    onChange={(e) => setFormData({ ...formData, publishMode: e.target.value })}
                   />
-                  <span>Publikovat článek</span>
+                  <div>
+                    <strong>Uložit jako koncept</strong>
+                    <small>Článek nebude viditelný na webu</small>
+                  </div>
                 </label>
-                <small>Zaškrtněte pro okamžité zveřejnění článku</small>
+
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="publishMode"
+                    value="now"
+                    checked={formData.publishMode === 'now'}
+                    onChange={(e) => setFormData({ ...formData, publishMode: e.target.value })}
+                  />
+                  <div>
+                    <strong>Publikovat okamžitě</strong>
+                    <small>Článek bude hned viditelný</small>
+                  </div>
+                </label>
+
+                <label className="radio-label">
+                  <input
+                    type="radio"
+                    name="publishMode"
+                    value="scheduled"
+                    checked={formData.publishMode === 'scheduled'}
+                    onChange={(e) => setFormData({ ...formData, publishMode: e.target.value })}
+                  />
+                  <div>
+                    <strong>Naplánovat publikaci</strong>
+                    <small>Článek bude automaticky publikován v nastavený čas</small>
+                  </div>
+                </label>
               </div>
 
-              <div className="form-group">
-                <label className="checkbox-label">
+              {formData.publishMode === 'scheduled' && (
+                <div className="scheduled-datetime-picker">
+                  <label>Datum a čas publikace *</label>
                   <input
-                    type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                    type="datetime-local"
+                    value={formData.scheduledFor}
+                    onChange={(e) => setFormData({ ...formData, scheduledFor: e.target.value })}
+                    required={formData.publishMode === 'scheduled'}
+                    min={new Date().toISOString().slice(0, 16)}
                   />
-                  <span>Zvýraznit článek</span>
-                </label>
-                <small>Zvýrazněné články se zobrazí na hlavní stránce blogu</small>
-              </div>
+                  <small>Článek bude automaticky publikován v tento čas (časová zóna: místní)</small>
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.featured}
+                  onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                />
+                <span>Zvýraznit článek</span>
+              </label>
+              <small>Zvýrazněné články se zobrazí na hlavní stránce blogu</small>
             </div>
           </div>
 
@@ -378,16 +440,11 @@ export default function NewBlogPostPage() {
             <Link href="/admin/blog" className="btn btn-secondary">
               Zrušit
             </Link>
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={() => setFormData({ ...formData, published: false })}
-              disabled={loading}
-            >
-              Uložit jako koncept
-            </button>
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Vytváření...' : formData.published ? 'Publikovat článek' : 'Vytvořit článek'}
+              {loading ? 'Vytváření...' :
+               formData.publishMode === 'now' ? 'Publikovat článek' :
+               formData.publishMode === 'scheduled' ? 'Naplánovat článek' :
+               'Uložit koncept'}
             </button>
           </div>
         </form>
@@ -564,6 +621,90 @@ export default function NewBlogPostPage() {
           .checkbox-label input[type="checkbox"] {
             width: auto;
             cursor: pointer;
+          }
+
+          .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 0.5rem;
+          }
+
+          .radio-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+          }
+
+          .radio-label:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+          }
+
+          .radio-label input[type="radio"] {
+            margin-top: 0.25rem;
+            cursor: pointer;
+            width: auto;
+          }
+
+          .radio-label input[type="radio"]:checked + div {
+            color: var(--accent);
+          }
+
+          .radio-label strong {
+            display: block;
+            color: var(--white);
+            margin-bottom: 0.25rem;
+          }
+
+          .radio-label small {
+            display: block;
+            color: var(--gray);
+            font-size: 0.85rem;
+          }
+
+          .scheduled-datetime-picker {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+          }
+
+          .scheduled-datetime-picker label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+          }
+
+          .scheduled-datetime-picker input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--white);
+            font-size: 0.95rem;
+          }
+
+          .scheduled-datetime-picker input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+          }
+
+          .scheduled-datetime-picker small {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
           }
 
           .form-actions {
