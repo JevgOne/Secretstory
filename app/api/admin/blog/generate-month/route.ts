@@ -46,10 +46,10 @@ export async function POST(request: NextRequest) {
 
     // Map week_type to category
     const categoryMap: Record<number, string> = {
-      1: 'pruvodce-pro-klienty',
-      2: 'lifestyle-praha',
-      3: 'lokalni-seo',
-      4: 'duvera-kvalita'
+      1: 'pribehy-spolecnic',
+      2: 'rady-a-tipy',
+      3: 'novinky',
+      4: 'pribehy-spolecnic'
     };
 
     // Process each article

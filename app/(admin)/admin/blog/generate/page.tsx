@@ -146,10 +146,10 @@ export default function GenerateBlogPostsPage() {
                   </li>
                   <li>✓ Rotace kategorií:
                     <ul style={{ marginLeft: '1rem', marginTop: '0.5rem' }}>
-                      <li><strong>Týden 1:</strong> Průvodce pro klienty</li>
-                      <li><strong>Týden 2:</strong> Lifestyle Praha</li>
-                      <li><strong>Týden 3:</strong> Lokální SEO</li>
-                      <li><strong>Týden 4:</strong> Důvěra & Kvalita</li>
+                      <li><strong>Týden 1:</strong> Příběhy společnic</li>
+                      <li><strong>Týden 2:</strong> Rady a tipy</li>
+                      <li><strong>Týden 3:</strong> Novinky</li>
+                      <li><strong>Týden 4:</strong> Příběhy společnic</li>
                     </ul>
                   </li>
                   <li>✓ 600-800 slov, SEO optimalizace</li>

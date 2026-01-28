@@ -29,32 +29,31 @@ export interface GeneratedBlogPost {
 
 // Map week type to category
 const WEEK_CATEGORIES = {
-  1: 'pruvodce-pro-klienty',
-  2: 'lifestyle-praha',
-  3: 'lokalni-seo',
-  4: 'duvera-kvalita'
+  1: 'pribehy-spolecnic',
+  2: 'rady-a-tipy',
+  3: 'novinky',
+  4: 'pribehy-spolecnic' // Rotace zpět
 } as const;
 
 const BLOG_WRITER_SYSTEM_PROMPT = `Jsi blog writer pro LovelyGirls.cz - luxusní escort agenturu v Praze.
 
 ## TVŮJ ÚKOL
-Napiš SEO článek. Střídej 4 kategorie podle týdne:
+Napiš SEO článek. Střídej 3 kategorie podle týdne:
 
-**Týden 1: PRŮVODCE PRO KLIENTY**
-- Témata: první návštěva, etiketa, jak vybrat společnici, co očekávat
-- Keywords: "escort praha", "společnice praha", "escort etiketa"
+**Týden 1 & 4: PŘÍBĚHY SPOLEČNIC**
+- Témata: zážitky společnic, den v životě, zajímavá setkání, motivace proč tuto práci dělají
+- Keywords: "escort příběhy", "společnice praha", "zážitky escort"
+- Tón: osobní, autentický, elegantní (NIKDY vulgární)
 
-**Týden 2: LIFESTYLE PRAHA**
-- Témata: kam vzít společnici, restaurace, bary, tipy pro gentlemany
-- Keywords: "romantický večer praha", "luxusní restaurace praha"
+**Týden 2: RADY A TIPY**
+- Témata: jak si vybrat společnici, etiketa, první návštěva, kam vzít společnici
+- Keywords: "escort praha tipy", "jak vybrat escort", "escort etiketa"
+- Tón: informativní, přátelský, profesionální
 
-**Týden 3: LOKÁLNÍ SEO**
-- Témata: Praha 2, Vinohrady, doprava, diskrétní lokace
-- Keywords: "escort praha 2", "escort vinohrady", "společnice centrum praha"
-
-**Týden 4: DŮVĚRA & KVALITA**
-- Témata: ověřené profily, recenze, proč agentura vs inzeráty, bezpečnost
-- Keywords: "ověřená escort agentura praha", "bezpečné escort služby"
+**Týden 3: NOVINKY**
+- Témata: nové společnice, akce, změny v nabídce, trendy v escort světě
+- Keywords: "escort praha novinky", "nové společnice praha"
+- Tón: aktuální, zajímavý, informativní
 
 ## JAK PSÁT
 
@@ -174,24 +173,24 @@ export async function generateBlogIdeasForMonth(): Promise<BlogPostIdea[]> {
 
   const categoryInfo = {
     1: {
-      category: 'pruvodce-pro-klienty' as const,
-      topics: ['první návštěva', 'etiketa', 'jak vybrat společnici', 'co očekávat'],
-      keywords: ['escort praha', 'společnice praha', 'escort etiketa']
+      category: 'pribehy-spolecnic',
+      topics: ['zážitky společnic', 'den v životě', 'zajímavá setkání'],
+      keywords: ['escort příběhy', 'společnice praha', 'zážitky escort']
     },
     2: {
-      category: 'lifestyle-praha' as const,
-      topics: ['kam vzít společnici', 'restaurace', 'bary', 'tipy pro gentlemany'],
-      keywords: ['romantický večer praha', 'luxusní restaurace praha']
+      category: 'rady-a-tipy',
+      topics: ['jak vybrat společnici', 'etiketa', 'první návštěva'],
+      keywords: ['escort praha tipy', 'jak vybrat escort', 'escort etiketa']
     },
     3: {
-      category: 'lokalni-seo' as const,
-      topics: ['Praha 2', 'Vinohrady', 'doprava', 'diskrétní lokace'],
-      keywords: ['escort praha 2', 'escort vinohrady', 'společnice centrum praha']
+      category: 'novinky',
+      topics: ['nové společnice', 'akce', 'trendy'],
+      keywords: ['escort praha novinky', 'nové společnice praha']
     },
     4: {
-      category: 'duvera-kvalita' as const,
-      topics: ['ověřené profily', 'recenze', 'proč agentura vs inzeráty', 'bezpečnost'],
-      keywords: ['ověřená escort agentura praha', 'bezpečné escort služby']
+      category: 'pribehy-spolecnic',
+      topics: ['motivace', 'příběhy z praxe', 'zkušenosti'],
+      keywords: ['escort příběhy', 'společnice zážitky']
     }
   };
 
