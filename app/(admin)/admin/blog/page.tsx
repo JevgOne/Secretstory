@@ -153,7 +153,7 @@ export default function AdminBlogPage() {
           </div>
           <div style={{ display: 'flex', gap: '1rem' }}>
             <Link href="/admin/blog/generate" className="btn btn-ai">
-              🤖 AI Generátor (4 články/měsíc)
+              🤖 AI Generátor (16 článků)
             </Link>
             <Link href="/admin/blog/new" className="btn btn-primary">
               + Vytvořit nový článek

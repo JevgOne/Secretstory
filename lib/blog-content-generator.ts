@@ -9,10 +9,10 @@ function getAnthropicClient() {
 
 export interface BlogPostIdea {
   title: string;
-  category: 'pruvodce-pro-klienty' | 'lifestyle-praha' | 'lokalni-seo' | 'duvera-kvalita';
+  category: string; // Any category including legacy ones
   excerpt: string;
   keywords: string[];
-  week_type: number;
+  week_type?: number; // Optional for backward compatibility
 }
 
 export interface GeneratedBlogPost {
@@ -211,6 +211,7 @@ export async function generateBlogIdeasForMonth(): Promise<BlogPostIdea[]> {
 
 /**
  * Generate full blog post content from an idea
+ * Supports both new weekly format and legacy format with direct idea
  */
 export async function generateBlogPostContent(idea: BlogPostIdea): Promise<{
   title: string;
@@ -221,17 +222,86 @@ export async function generateBlogPostContent(idea: BlogPostIdea): Promise<{
   meta_keywords: string;
   read_time: number;
 }> {
-  const article = await generateWeeklyBlogPost(idea.week_type);
+  // If week_type is provided, use the new weekly generator
+  if (idea.week_type !== undefined) {
+    const article = await generateWeeklyBlogPost(idea.week_type);
+    return {
+      title: article.title,
+      excerpt: article.excerpt,
+      content: article.content,
+      meta_title: article.meta_title,
+      meta_description: article.meta_description,
+      meta_keywords: article.keywords.join(', '),
+      read_time: article.reading_time
+    };
+  }
 
-  return {
-    title: article.title,
-    excerpt: article.excerpt,
-    content: article.content,
-    meta_title: article.meta_title,
-    meta_description: article.meta_description,
-    meta_keywords: article.keywords.join(', '),
-    read_time: article.reading_time
-  };
+  // Legacy mode: generate content directly from the idea
+  const prompt = `Napiš blogový článek v češtině na toto téma:
+
+NÁZEV: ${idea.title}
+KATEGORIE: ${idea.category}
+POPIS: ${idea.excerpt}
+KLÍČOVÁ SLOVA: ${idea.keywords.join(', ')}
+
+Pravidla:
+- Délka: 600-800 slov
+- Elegantní, sofistikovaný tón jako lifestyle magazín
+- NIKDY vulgární nebo explicitní
+- HTML formátování: <h1>, <h2>, <p>, <strong>, <em>
+- H1 s keywordem jako první element
+- 3-4 sekce s H2
+- Závěr s CTA odkazem na /cs/divky nebo /cs/kontakt
+- SEO: keyword v H1, prvním odstavci, 2-3x v textu
+
+Odpověz POUZE validním JSON objektem:
+{
+  "title": "Finální titulek článku",
+  "excerpt": "Popis 150-200 znaků",
+  "content": "<h1>...</h1><p>...</p>...",
+  "meta_title": "SEO title do 60 znaků",
+  "meta_description": "Meta popis do 155 znaků",
+  "keywords": ["kw1", "kw2"],
+  "reading_time": 3
+}`;
+
+  try {
+    const anthropic = getAnthropicClient();
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4000,
+      temperature: 0.7,
+      system: 'Jsi copywriter pro luxusní escort agenturu LovelyGirls.cz v Praze. Píšeš elegantní, SEO-optimalizované články.',
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    const content = message.content[0];
+    if (content.type !== 'text') {
+      throw new Error('Unexpected response type');
+    }
+
+    let jsonText = content.text.trim();
+    if (jsonText.startsWith('```json')) jsonText = jsonText.slice(7);
+    else if (jsonText.startsWith('```')) jsonText = jsonText.slice(3);
+    if (jsonText.endsWith('```')) jsonText = jsonText.slice(0, -3);
+    jsonText = jsonText.trim();
+
+    const article = JSON.parse(jsonText);
+
+    return {
+      title: article.title || idea.title,
+      excerpt: article.excerpt || idea.excerpt,
+      content: article.content || '',
+      meta_title: article.meta_title || article.title,
+      meta_description: article.meta_description || article.excerpt,
+      meta_keywords: article.keywords?.join(', ') || idea.keywords.join(', '),
+      read_time: article.reading_time || 3
+    };
+
+  } catch (error) {
+    console.error('[Blog Generator] Error generating legacy content:', error);
+    throw new Error('Failed to generate blog content');
+  }
 }
 
 /**
