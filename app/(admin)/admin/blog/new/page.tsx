@@ -19,7 +19,7 @@ export default function NewBlogPostPage() {
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
-    category: 'sex-prace',
+    category: 'rady-a-tipy',
     excerpt: '',
     content: '',
     featured_image: '',
@@ -195,8 +195,7 @@ export default function NewBlogPostPage() {
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   required
                 >
-                  <option value="sex-prace">Sex práce</option>
-                  <option value="pribehy-z-bordelu">Příběhy z bordelu</option>
+                  <option value="pribehy-spolecnic">Příběhy společnic</option>
                   <option value="rady-a-tipy">Rady a tipy</option>
                   <option value="novinky">Novinky</option>
                   <option value="ostatni">Ostatní</option>

@@ -77,11 +77,11 @@ export default async function BlogPage({ params }: Props) {
 
   // Separate posts by category
   const stories = allPosts.filter((post: any) =>
-    post.category === 'pribehy-z-bordelu' || post.category === 'erotic_story' || post.category === 'girl_spotlight' || post.category === 'prague_tips'
+    post.category === 'pribehy-spolecnic' || post.category === 'pribehy-z-bordelu' || post.category === 'erotic_story' || post.category === 'girl_spotlight'
   );
 
   const guides = allPosts.filter((post: any) =>
-    post.category === 'rady-a-tipy' || post.category === 'novinky' || post.category === 'guide' || post.category === 'etiquette'
+    post.category === 'rady-a-tipy' || post.category === 'novinky' || post.category === 'guide' || post.category === 'etiquette' || post.category === 'ostatni'
   );
 
   return <BlogContent
