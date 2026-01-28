@@ -295,6 +295,11 @@ export default function EditBlogPostPage({ params }: PageProps) {
                   <option value="rady-a-tipy">Rady a tipy</option>
                   <option value="novinky">Novinky</option>
                   <option value="ostatni">Ostatní</option>
+                  {/* Legacy categories for old articles */}
+                  <option value="duvera-kvalita">Důvěra & Kvalita (starý)</option>
+                  <option value="pruvodce-pro-klienty">Průvodce pro klienty (starý)</option>
+                  <option value="lifestyle-praha">Lifestyle Praha (starý)</option>
+                  <option value="lokalni-seo">Lokální SEO (starý)</option>
                 </select>
               </div>
 
