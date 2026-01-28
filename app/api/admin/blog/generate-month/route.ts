@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
-import { generateBlogIdeasForMonth, generateBlogPostContent } from '@/lib/blog-content-generator';
+import { generateMonthlyBlogPosts } from '@/lib/blog-content-generator';
 import { db } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -8,7 +8,13 @@ export const maxDuration = 300; // 5 minutes for AI generation
 
 /**
  * POST /api/admin/blog/generate-month
- * Generate 30 blog posts for the month with AI
+ * Generate 4 blog posts for the month with AI (1 per week, rotating categories)
+ *
+ * Categories rotate:
+ * Week 1: Průvodce pro klienty
+ * Week 2: Lifestyle Praha
+ * Week 3: Lokální SEO
+ * Week 4: Důvěra & Kvalita
  */
 export async function POST(request: NextRequest) {
   const user = await requireAuth(['admin'], request);
@@ -18,39 +24,41 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { locale = 'cs', startDate } = body;
 
-    console.log('[Blog Generator] Starting month generation...');
+    console.log('[Blog Generator] Starting monthly generation (4 articles)...');
 
-    // Step 1: Generate ideas
-    const ideas = await generateBlogIdeasForMonth();
-    console.log(`[Blog Generator] Generated ${ideas.length} ideas`);
+    // Get existing titles to avoid duplicates
+    const existingPosts = await db.execute({
+      sql: 'SELECT title FROM blog_posts WHERE locale = ? ORDER BY created_at DESC LIMIT 50',
+      args: [locale]
+    });
+    const existingTitles = existingPosts.rows.map(r => r.title as string);
+
+    // Generate 4 articles (one per week)
+    const articles = await generateMonthlyBlogPosts(existingTitles);
+    console.log(`[Blog Generator] Generated ${articles.length} articles`);
 
     const createdPosts: any[] = [];
     const errors: any[] = [];
 
-    // Step 2: Generate content for each idea
-    for (let i = 0; i < ideas.length; i++) {
-      const idea = ideas[i];
+    // Save each article to database
+    for (let i = 0; i < articles.length; i++) {
+      const article = articles[i];
 
       try {
-        console.log(`[Blog Generator] Generating content ${i + 1}/${ideas.length}: ${idea.title}`);
-
-        // Generate full content
-        const content = await generateBlogPostContent(idea);
-
-        // Generate slug
-        const slug = content.title
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, '');
-
-        // Calculate scheduled date (spread across month)
+        // Calculate scheduled date (one per week)
         const scheduleDate = new Date(startDate || Date.now());
-        scheduleDate.setDate(scheduleDate.getDate() + i);
-        scheduleDate.setHours(10, 0, 0, 0); // 10:00 AM each day
+        scheduleDate.setDate(scheduleDate.getDate() + (i * 7)); // Every 7 days
+        scheduleDate.setHours(10, 0, 0, 0); // 10:00 AM
 
-        // Insert into database as DRAFT with review_status = 'draft'
+        // Map week_type to category
+        const categoryMap: Record<number, string> = {
+          1: 'pruvodce-pro-klienty',
+          2: 'lifestyle-praha',
+          3: 'lokalni-seo',
+          4: 'duvera-kvalita'
+        };
+
+        // Insert into database as DRAFT
         const result = await db.execute({
           sql: `
             INSERT INTO blog_posts (
@@ -62,20 +70,20 @@ export async function POST(request: NextRequest) {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `,
           args: [
-            slug,
-            content.title,
-            content.excerpt,
-            content.content,
-            idea.category,
+            article.slug,
+            article.title,
+            article.excerpt,
+            article.content,
+            categoryMap[article.week_type] || 'ostatni',
             'AI Generator',
-            content.read_time,
+            article.reading_time,
             0, // not featured
             0, // not published yet
             scheduleDate.toISOString(),
             locale,
-            content.meta_title,
-            content.meta_description,
-            content.meta_keywords,
+            article.meta_title,
+            article.meta_description,
+            article.keywords.join(', '),
             'draft' // needs review before publishing
           ]
         });
@@ -84,24 +92,22 @@ export async function POST(request: NextRequest) {
 
         createdPosts.push({
           id: postId,
-          title: content.title,
-          slug: slug,
+          title: article.title,
+          slug: article.slug,
           scheduled_for: scheduleDate.toISOString(),
-          category: idea.category
+          category: categoryMap[article.week_type],
+          week_type: article.week_type
         });
 
-        console.log(`[Blog Generator] ✓ Created post #${postId}: ${content.title}`);
+        console.log(`[Blog Generator] ✓ Saved post #${postId}: ${article.title}`);
 
       } catch (error) {
-        console.error(`[Blog Generator] ✗ Failed to generate ${idea.title}:`, error);
+        console.error(`[Blog Generator] ✗ Failed to save ${article.title}:`, error);
         errors.push({
-          title: idea.title,
+          title: article.title,
           error: error instanceof Error ? error.message : 'Unknown error'
         });
       }
-
-      // Small delay to avoid rate limits
-      await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     console.log(`[Blog Generator] Completed! Created ${createdPosts.length} posts, ${errors.length} errors`);
@@ -112,7 +118,7 @@ export async function POST(request: NextRequest) {
       errors: errors.length,
       posts: createdPosts,
       errorDetails: errors,
-      message: `Successfully generated ${createdPosts.length} blog posts for the month!`
+      message: `Vygenerováno ${createdPosts.length} článků na měsíc (1 týdně)`
     });
 
   } catch (error) {

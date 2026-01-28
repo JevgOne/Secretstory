@@ -17,7 +17,7 @@ export default function GenerateBlogPostsPage() {
   });
 
   const handleGenerate = async () => {
-    if (!confirm('Opravdu chcete vygenerovat 30 článků? Tento proces může trvat 5-10 minut.')) {
+    if (!confirm('Opravdu chcete vygenerovat 4 články na měsíc (1 týdně)?')) {
       return;
     }
 
@@ -57,7 +57,7 @@ export default function GenerateBlogPostsPage() {
         <div className="admin-header">
           <div>
             <h1 className="admin-title">Vygenerovat články na měsíc</h1>
-            <p className="admin-subtitle">AI automaticky vytvoří 30 článků s naplánovaným zveřejněním</p>
+            <p className="admin-subtitle">AI automaticky vytvoří 4 články (1 týdně) s rotací kategorií</p>
           </div>
           <Link href="/admin/blog" className="btn btn-secondary">
             ← Zpět na blog
@@ -135,22 +135,29 @@ export default function GenerateBlogPostsPage() {
               <div className="info-box">
                 <h4>ℹ️ Jak to funguje:</h4>
                 <ul>
-                  <li>✓ AI vygeneruje 30 unikátních článků (1 na den)</li>
-                  <li>✓ Pokrývá všechny kategorie (sex práce, příběhy, rady, novinky)</li>
-                  <li>✓ Každý článek má 800-1200 slov</li>
-                  <li>✓ SEO-optimalizovaný obsah s meta daty</li>
-                  <li>✓ Články jsou naplánované na každý den v měsíci (10:00)</li>
-                  <li>⚠️ Všechny články budou ve statusu "DRAFT" - před publikací je musíš zkontrolovat!</li>
+                  <li>✓ AI vygeneruje 4 články (1 týdně)</li>
+                  <li>✓ Rotace kategorií:
+                    <ul style={{ marginLeft: '1rem', marginTop: '0.5rem' }}>
+                      <li><strong>Týden 1:</strong> Průvodce pro klienty</li>
+                      <li><strong>Týden 2:</strong> Lifestyle Praha</li>
+                      <li><strong>Týden 3:</strong> Lokální SEO</li>
+                      <li><strong>Týden 4:</strong> Důvěra & Kvalita</li>
+                    </ul>
+                  </li>
+                  <li>✓ Každý článek má 600-800 slov</li>
+                  <li>✓ SEO-optimalizovaný obsah (keywords, meta)</li>
+                  <li>✓ Elegantní tón jako lifestyle magazín</li>
+                  <li>⚠️ Články jsou DRAFT - zkontroluj před publikací!</li>
                 </ul>
               </div>
 
               <div className="warning-box">
                 <h4>⚠️ Upozornění:</h4>
                 <ul>
-                  <li>Generování trvá 5-10 minut</li>
-                  <li>Využívá OpenAI API (může vzniknout náklad ~$5-10)</li>
-                  <li>Po vygenerování MUSÍŠ články zkontrolovat a upravit před publikací</li>
-                  <li>Články jsou automaticky přiřazeny copywriterům pro review</li>
+                  <li>Generování trvá cca 1-2 minuty</li>
+                  <li>Využívá Anthropic Claude API</li>
+                  <li>Články vyhnou se duplicitám (kontrola existujících)</li>
+                  <li>Naplánované na každý týden v 10:00</li>
                 </ul>
               </div>
 
@@ -162,10 +169,10 @@ export default function GenerateBlogPostsPage() {
                 {loading ? (
                   <>
                     <span className="spinner"></span>
-                    Generuji články... ({result?.created || 0}/30)
+                    Generuji články... ({result?.created || 0}/4)
                   </>
                 ) : (
-                  '🤖 Vygenerovat 30 článků'
+                  '🤖 Vygenerovat 4 články na měsíc'
                 )}
               </button>
             </div>
