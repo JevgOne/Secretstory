@@ -207,7 +207,7 @@ export default function EditBlogPostPage({ params }: PageProps) {
       if (data.success) {
         router.push('/admin/blog');
       } else {
-        setError(data.error || 'Chyba při aktualizaci článku');
+        setError(data.error + (data.details ? `: ${data.details}` : '') || 'Chyba při aktualizaci článku');
       }
     } catch (err) {
       console.error('Error updating post:', err);

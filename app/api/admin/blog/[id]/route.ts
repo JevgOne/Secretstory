@@ -206,10 +206,14 @@ export async function PATCH(
       success: true,
       message: 'Blog post updated successfully'
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Update blog post error:', error);
     return NextResponse.json(
-      { error: 'Failed to update blog post' },
+      {
+        error: 'Failed to update blog post',
+        details: error?.message || 'Unknown error',
+        code: error?.code
+      },
       { status: 500 }
     );
   }
