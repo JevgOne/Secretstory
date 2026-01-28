@@ -122,7 +122,7 @@ Napiš nový unikátní článek pro tento týden. Vymysli originální téma kt
   try {
     const anthropic = getAnthropicClient();
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 4000,
       temperature: 0.7,
       system: BLOG_WRITER_SYSTEM_PROMPT,
@@ -268,7 +268,7 @@ Odpověz POUZE validním JSON objektem:
   try {
     const anthropic = getAnthropicClient();
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 4000,
       temperature: 0.7,
       system: 'Jsi copywriter pro luxusní escort agenturu LovelyGirls.cz v Praze. Píšeš elegantní, SEO-optimalizované články.',
