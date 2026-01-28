@@ -100,6 +100,34 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // NO CACHE for admin pages
+      {
+        source: '/admin/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+        ],
+      },
+      // NO CACHE for admin API
+      {
+        source: '/api/admin/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate',
+          },
+        ],
+      },
       // Cache API responses for 60 seconds
       {
         source: '/api/girls',
