@@ -1,9 +1,35 @@
+import { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
+import { generatePageMetadata } from '@/lib/seo-metadata';
 import DiscountsClient from './DiscountsClient';
 
 // ISR - Revalidate every 1 hour
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const pagePath = `/${locale}/discounts`;
+
+  const metadata = await generatePageMetadata(pagePath);
+
+  return {
+    ...metadata,
+    alternates: {
+      ...metadata.alternates,
+      languages: {
+        cs: 'https://www.lovelygirls.cz/cs/discounts',
+        en: 'https://www.lovelygirls.cz/en/discounts',
+        de: 'https://www.lovelygirls.cz/de/discounts',
+        uk: 'https://www.lovelygirls.cz/uk/discounts',
+      },
+    },
+  };
+}
 
 interface Discount {
   id: number;
@@ -148,12 +174,39 @@ export default async function DiscountsPage({
   };
 
   return (
-    <DiscountsClient
-      locale={locale}
-      discounts={discounts}
-      featuredDiscount={featuredDiscount}
-      loyaltySteps={loyaltyTiers}
-      schemaData={schemaData}
-    />
+    <>
+      {/* SEO: Server-rendered discount content for crawlers */}
+      <div className="sr-only" aria-hidden="false">
+        <h1>Slevy a Akce - LovelyGirls Prague</h1>
+        <p>Aktuální slevy a speciální nabídky</p>
+        {discounts.length > 0 && (
+          <ul>
+            {discounts.map((discount) => (
+              <li key={discount.id}>
+                <strong>{discount.icon} {discount.name}</strong>: {discount.description}
+              </li>
+            ))}
+          </ul>
+        )}
+        {loyaltyTiers.length > 0 && (
+          <div>
+            <h2>Věrnostní program</h2>
+            {loyaltyTiers.map((tier) => (
+              <p key={tier.id}>
+                {tier.visits_required}+ návštěv: {tier.title} — {tier.description}
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <DiscountsClient
+        locale={locale}
+        discounts={discounts}
+        featuredDiscount={featuredDiscount}
+        loyaltySteps={loyaltyTiers}
+        schemaData={schemaData}
+      />
+    </>
   );
 }

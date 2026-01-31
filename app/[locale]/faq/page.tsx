@@ -1,9 +1,35 @@
+import { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
+import { generatePageMetadata } from '@/lib/seo-metadata';
 import FAQClient from './FAQClient';
 
 // ISR - Revalidate every 1 hour
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const pagePath = `/${locale}/faq`;
+
+  const metadata = await generatePageMetadata(pagePath);
+
+  return {
+    ...metadata,
+    alternates: {
+      ...metadata.alternates,
+      languages: {
+        cs: 'https://www.lovelygirls.cz/cs/faq',
+        en: 'https://www.lovelygirls.cz/en/faq',
+        de: 'https://www.lovelygirls.cz/de/faq',
+        uk: 'https://www.lovelygirls.cz/uk/faq',
+      },
+    },
+  };
+}
 
 interface FAQItem {
   question: string;
@@ -108,10 +134,24 @@ export default async function FAQPage({
   };
 
   return (
-    <FAQClient
-      locale={locale}
-      faqs={faqs}
-      schemaData={schemaData}
-    />
+    <>
+      {/* SEO: Server-rendered FAQ content for crawlers */}
+      <div className="sr-only" aria-hidden="false">
+        <h1>FAQ - LovelyGirls Prague</h1>
+        <p>Často kladené otázky o escort službách v Praze</p>
+        {faqs.map((faq, i) => (
+          <div key={i}>
+            <h3>{faq.question}</h3>
+            <p>{faq.answer}</p>
+          </div>
+        ))}
+      </div>
+
+      <FAQClient
+        locale={locale}
+        faqs={faqs}
+        schemaData={schemaData}
+      />
+    </>
   );
 }

@@ -3,10 +3,14 @@ import { NextRequest } from 'next/server';
 import { locales, defaultLocale } from './i18n';
 
 // Create next-intl middleware
+// localePrefix: 'always' ensures every locale (including default 'cs') keeps its
+// URL prefix. This is critical for SEO — with 'as-needed', /cs was stripped to /
+// and then re-negotiated via Accept-Language, causing Googlebot to land on /en.
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
-  localePrefix: 'as-needed'
+  localePrefix: 'always',
+  localeDetection: true,
 });
 
 export default function middleware(request: NextRequest) {
