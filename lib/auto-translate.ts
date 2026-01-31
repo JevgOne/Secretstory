@@ -169,10 +169,10 @@ Please respond ONLY with a JSON object in this exact format:
   try {
     const anthropic = getAnthropicClient();
     const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 8000,
+      model: 'claude-3-haiku-20240307',
+      max_tokens: 4096,
       temperature: 0.7,
-      system: 'You are a professional translator. Always respond with valid JSON only, no additional text.',
+      system: 'You are a professional translator. CRITICAL RULES: 1) Always respond with valid JSON only using DOUBLE QUOTES for all keys and string values. 2) Inside text content, use apostrophes (not quotes) or escape quotes as \\". 3) Properly escape all special characters (\\n, \\t, etc). 4) No text outside JSON.',
       messages: [
         {
           role: 'user',
@@ -186,7 +186,16 @@ Please respond ONLY with a JSON object in this exact format:
       throw new Error('Unexpected response type');
     }
 
-    const translated = JSON.parse(responseContent.text);
+    // Fix common JSON issues before parsing
+    let jsonText = responseContent.text;
+    // Remove any text before first { and after last }
+    const firstBrace = jsonText.indexOf('{');
+    const lastBrace = jsonText.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1) {
+      jsonText = jsonText.substring(firstBrace, lastBrace + 1);
+    }
+
+    const translated = JSON.parse(jsonText);
 
     return {
       title: translated.title || content.title,
