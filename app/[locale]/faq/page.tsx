@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
 import { generatePageMetadata } from '@/lib/seo-metadata';
 import FAQClient from './FAQClient';
+import { BreadcrumbListSchema, FAQPageSchema } from '@/components/JsonLd';
 
 // ISR - Revalidate every 1 hour
 export const revalidate = 3600;
@@ -135,6 +136,14 @@ export default async function FAQPage({
 
   return (
     <>
+      {faqs.length > 0 && (
+        <FAQPageSchema faqs={faqs.map(faq => ({ question: faq.question, answer: faq.answer }))} />
+      )}
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: 'FAQ', url: `https://www.lovelygirls.cz/${locale}/faq` }
+      ]} />
+
       {/* SEO: Server-rendered FAQ content for crawlers */}
       <div className="sr-only" aria-hidden="false">
         <h1>FAQ - LovelyGirls Prague</h1>

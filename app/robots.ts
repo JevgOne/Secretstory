@@ -45,6 +45,20 @@ export default function robots(): MetadataRoute.Robots {
         ],
         crawlDelay: 1,
       },
+      // Seznam (Czech search engine)
+      {
+        userAgent: 'SeznamBot',
+        allow: '/',
+        disallow: [
+          '/admin/',
+          '/*/join',
+          '/cs/join',
+          '/en/join',
+          '/de/join',
+          '/uk/join',
+        ],
+        crawlDelay: 0,
+      },
       // Social media bots - allow for link previews
       {
         userAgent: ['facebookexternalhit', 'Twitterbot', 'LinkedInBot', 'WhatsApp'],

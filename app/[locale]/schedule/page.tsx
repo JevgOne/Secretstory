@@ -1,6 +1,9 @@
+import { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
+import { generatePageMetadata } from '@/lib/seo-metadata';
 import ScheduleClient from './ScheduleClient';
+import { BreadcrumbListSchema } from '@/components/JsonLd';
 
 // ISR - Revalidate every second for real-time updates
 export const revalidate = 1;
@@ -28,6 +31,30 @@ interface Girl {
 interface ScheduleData {
   girls: Girl[];
   currentTime: string;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const pagePath = `/${locale}/schedule`;
+
+  const metadata = await generatePageMetadata(pagePath);
+
+  return {
+    ...metadata,
+    alternates: {
+      ...metadata.alternates,
+      languages: {
+        cs: 'https://www.lovelygirls.cz/cs/schedule',
+        en: 'https://www.lovelygirls.cz/en/schedule',
+        de: 'https://www.lovelygirls.cz/de/schedule',
+        uk: 'https://www.lovelygirls.cz/uk/schedule',
+      },
+    },
+  };
 }
 
 // Server-side data fetching - directly from database
@@ -233,11 +260,17 @@ export default async function SchedulePage({
   };
 
   return (
-    <ScheduleClient
-      locale={locale}
-      initialGirls={girls}
-      initialCurrentTime={currentTime}
-      schemaData={schemaData}
-    />
+    <>
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: 'Rozvrh', url: `https://www.lovelygirls.cz/${locale}/schedule` }
+      ]} />
+      <ScheduleClient
+        locale={locale}
+        initialGirls={girls}
+        initialCurrentTime={currentTime}
+        schemaData={schemaData}
+      />
+    </>
   );
 }

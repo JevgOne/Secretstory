@@ -4,6 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { Metadata } from 'next';
 import BlogArticleContent from './BlogArticleContent';
+import { ArticleSchema, BreadcrumbListSchema } from '@/components/JsonLd';
 
 // ISR: Revalidate every 6 hours (21600 seconds)
 export const revalidate = 21600;
@@ -76,11 +77,31 @@ export default async function BlogArticlePage({ params }: Props) {
     notFound();
   }
 
-  return <BlogArticleContent
-    locale={locale}
-    post={post}
-    relatedPosts={relatedPosts}
-  />;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.lovelygirls.cz';
+
+  return (
+    <>
+      <ArticleSchema
+        title={post.title}
+        description={post.meta_description || post.excerpt || ''}
+        author={post.author || 'LovelyGirls'}
+        datePublished={post.published_at || post.created_at}
+        dateModified={post.updated_at}
+        image={post.og_image}
+        url={`${baseUrl}/${locale}/blog/${slug}`}
+      />
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `${baseUrl}/${locale}` },
+        { name: 'Blog', url: `${baseUrl}/${locale}/blog` },
+        { name: post.title, url: `${baseUrl}/${locale}/blog/${slug}` }
+      ]} />
+      <BlogArticleContent
+        locale={locale}
+        post={post}
+        relatedPosts={relatedPosts}
+      />
+    </>
+  );
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -93,7 +114,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = 'https://www.lovelygirls.cz';
 
   return {
     title: post.meta_title || `${post.title} | LovelyGirls Blog`,
@@ -106,6 +127,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.published_at || post.created_at,
       modifiedTime: post.updated_at,
       authors: [post.author],
+      siteName: 'LovelyGirls Prague',
       images: post.og_image ? [
         {
           url: post.og_image,
@@ -113,14 +135,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           height: 630,
           alt: post.title,
         }
-      ] : [],
+      ] : [
+        {
+          url: `${baseUrl}/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        }
+      ],
       url: `${baseUrl}/${locale}/blog/${slug}`,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: 'summary_large_image' as const,
       title: post.meta_title || post.title,
       description: post.meta_description || post.excerpt,
-      images: post.og_image ? [post.og_image] : [],
+      images: post.og_image ? [post.og_image] : [`${baseUrl}/og-image.jpg`],
+    },
+    alternates: {
+      canonical: `${baseUrl}/${locale}/blog/${slug}`,
+      languages: {
+        'cs': `${baseUrl}/cs/blog/${slug}`,
+        'en': `${baseUrl}/en/blog/${slug}`,
+        'de': `${baseUrl}/de/blog/${slug}`,
+        'uk': `${baseUrl}/uk/blog/${slug}`
+      }
     },
     robots: {
       index: true,

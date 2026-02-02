@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
 import { generatePageMetadata } from '@/lib/seo-metadata';
 import DiscountsClient from './DiscountsClient';
+import { BreadcrumbListSchema } from '@/components/JsonLd';
 
 // ISR - Revalidate every 1 hour
 export const revalidate = 3600;
@@ -175,6 +176,11 @@ export default async function DiscountsPage({
 
   return (
     <>
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: 'Slevy', url: `https://www.lovelygirls.cz/${locale}/discounts` }
+      ]} />
+
       {/* SEO: Server-rendered discount content for crawlers */}
       <div className="sr-only" aria-hidden="false">
         <h1>Slevy a Akce - LovelyGirls Prague</h1>

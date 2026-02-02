@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { getLandingPage, LANDING_PAGES } from '@/lib/landing-pages-data';
+import { BreadcrumbListSchema } from '@/components/JsonLd';
 import styles from './landing.module.css';
 
 // ISR - Revalidate every 30 minutes
@@ -36,6 +37,12 @@ export async function generateMetadata({
     description: page.metaDescription,
     alternates: {
       canonical: canonicalUrl,
+      languages: {
+        'cs': `https://www.lovelygirls.cz/cs/landing/${page.slug}`,
+        'en': `https://www.lovelygirls.cz/en/landing/${page.slug}`,
+        'de': `https://www.lovelygirls.cz/de/landing/${page.slug}`,
+        'uk': `https://www.lovelygirls.cz/uk/landing/${page.slug}`,
+      },
     },
     openGraph: {
       title: page.title,
@@ -186,6 +193,10 @@ export default async function LandingPage({
   return (
     <>
       {/* Schema.org JSON-LD */}
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: page.h1, url: `https://www.lovelygirls.cz/${locale}/landing/${slug}` }
+      ]} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
@@ -194,6 +205,10 @@ export default async function LandingPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
       />
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: page.h1, url: `https://www.lovelygirls.cz/${locale}/landing/${slug}` }
+      ]} />
 
       <main className={styles.landingPage}>
         {/* Hero Section */}

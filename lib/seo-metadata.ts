@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { unstable_cache } from 'next/cache';
+import { getHashtagById, getHashtagName } from '@/lib/hashtags';
+import { getServiceById, getServiceName } from '@/lib/services';
 
 interface SEOData {
   meta_title?: string;
@@ -74,12 +76,45 @@ export async function generatePageMetadata(pagePath: string): Promise<Metadata> 
     }
     // Check if it's a hashtag page
     else if (pagePath.includes('/hashtag/')) {
-      const hashtag = pagePath.split('/hashtag/')[1];
-      const readableHashtag = hashtag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-      fallbackTitle = `${readableHashtag} | ${defaults.title}`;
-      fallbackDescription = `Najděte ${readableHashtag.toLowerCase()} v Praze. ${defaults.description}`;
+      const hashtagId = pagePath.split('/hashtag/')[1];
+      const hashtag = getHashtagById(hashtagId);
+      if (hashtag) {
+        const hashtagDisplayName = getHashtagName(hashtagId, locale);
+        const capitalizedName = hashtagDisplayName.replace(/\b\w/g, l => l.toUpperCase());
+        const fallbacks = getHashtagFallback(locale, capitalizedName);
+        fallbackTitle = fallbacks.title;
+        fallbackDescription = fallbacks.description;
+        fallbackKeywords = `${hashtagDisplayName}, ${fallbackKeywords}`;
+      } else {
+        const readableHashtag = hashtagId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        fallbackTitle = `${readableHashtag} | ${defaults.title}`;
+        fallbackDescription = `Najděte ${readableHashtag.toLowerCase()} v Praze. ${defaults.description}`;
+      }
     }
-    // Check if it's a service page
+    // Check if it's a divky page
+    else if (pagePath.endsWith('/divky')) {
+      const divkyFallbacks = getDivkyFallback(locale);
+      fallbackTitle = divkyFallbacks.title;
+      fallbackDescription = divkyFallbacks.description;
+      fallbackKeywords = divkyFallbacks.keywords;
+    }
+    // Check if it's a praktiky/service page
+    else if (pagePath.includes('/praktiky/')) {
+      const serviceId = pagePath.split('/praktiky/')[1];
+      const service = getServiceById(serviceId);
+      if (service) {
+        const serviceDisplayName = getServiceName(serviceId, locale);
+        const fallbacks = getPraktikyFallback(locale, serviceDisplayName);
+        fallbackTitle = fallbacks.title;
+        fallbackDescription = fallbacks.description;
+        fallbackKeywords = `${serviceDisplayName}, escort praha, ${fallbackKeywords}`;
+      } else {
+        const readableService = serviceId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        fallbackTitle = `${readableService} | ${defaults.title}`;
+        fallbackDescription = `Profesionální ${readableService.toLowerCase()} v Praze. ${defaults.description}`;
+      }
+    }
+    // Check if it's a sluzby page
     else if (pagePath.includes('/sluzby/')) {
       const service = pagePath.split('/sluzby/')[1];
       const readableService = service.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -182,4 +217,83 @@ export function getDefaultSEO(locale: string) {
   };
 
   return defaults[locale] || defaults.cs;
+}
+
+/**
+ * Locale-specific fallback titles for /divky page
+ */
+function getDivkyFallback(locale: string): { title: string; description: string; keywords: string } {
+  const fallbacks: Record<string, { title: string; description: string; keywords: string }> = {
+    cs: {
+      title: 'Escort dívky Praha – ověřené společnice | LovelyGirls',
+      description: 'Prohlédněte si profily ověřených escort dívek v Praze. Luxusní společnice, diskrétní služby, rychlá rezervace přes WhatsApp.',
+      keywords: 'escort dívky praha, společnice praha, escort služby, ověřené profily, luxusní escort praha'
+    },
+    en: {
+      title: 'Escort Girls Prague – Verified Companions | LovelyGirls',
+      description: 'Browse verified escort girl profiles in Prague. Luxury companions, discreet services, fast booking via WhatsApp.',
+      keywords: 'escort girls prague, companions prague, escort services, verified profiles, luxury escort prague'
+    },
+    de: {
+      title: 'Escort Mädchen Prag – Verifizierte Begleiterinnen | LovelyGirls',
+      description: 'Durchsuchen Sie verifizierte Escort-Profile in Prag. Luxus-Begleiterinnen, diskrete Dienste, schnelle Buchung.',
+      keywords: 'escort mädchen prag, begleiterinnen prag, escort-services, verifizierte profile'
+    },
+    uk: {
+      title: 'Ескорт дівчата Прага – перевірені супутниці | LovelyGirls',
+      description: 'Переглядайте профілі перевірених ескорт дівчат у Празі. Розкішні супутниці, дискретні послуги.',
+      keywords: 'ескорт дівчата прага, супутниці прага, ескорт послуги, перевірені профілі'
+    }
+  };
+  return fallbacks[locale] || fallbacks.cs;
+}
+
+/**
+ * Locale-specific fallback titles for /hashtag/[slug] pages
+ */
+function getHashtagFallback(locale: string, hashtagName: string): { title: string; description: string } {
+  const templates: Record<string, { title: string; description: string }> = {
+    cs: {
+      title: `${hashtagName} – escort společnice Praha | LovelyGirls`,
+      description: `${hashtagName} v Praze. Ověřené escort dívky, luxusní služby, diskrétní setkání. Rezervujte přes WhatsApp.`
+    },
+    en: {
+      title: `${hashtagName} – Escort Companions Prague | LovelyGirls`,
+      description: `${hashtagName} in Prague. Verified escort girls, luxury services, discreet meetings. Book via WhatsApp.`
+    },
+    de: {
+      title: `${hashtagName} – Escort Begleiterinnen Prag | LovelyGirls`,
+      description: `${hashtagName} in Prag. Verifizierte Escort-Mädchen, Luxus-Services, diskrete Treffen.`
+    },
+    uk: {
+      title: `${hashtagName} – ескорт супутниці Прага | LovelyGirls`,
+      description: `${hashtagName} у Празі. Перевірені ескорт дівчата, розкішні послуги, дискретні зустрічі.`
+    }
+  };
+  return templates[locale] || templates.cs;
+}
+
+/**
+ * Locale-specific fallback titles for /praktiky/[slug] pages
+ */
+function getPraktikyFallback(locale: string, serviceName: string): { title: string; description: string } {
+  const templates: Record<string, { title: string; description: string }> = {
+    cs: {
+      title: `${serviceName} Praha – escort společnice | LovelyGirls`,
+      description: `${serviceName} – escort dívky nabízející tuto službu v Praze. Ověřené profily, diskrétní setkání, rezervace přes WhatsApp.`
+    },
+    en: {
+      title: `${serviceName} Prague – Escort Companions | LovelyGirls`,
+      description: `${serviceName} – escort girls offering this service in Prague. Verified profiles, discreet meetings, book via WhatsApp.`
+    },
+    de: {
+      title: `${serviceName} Prag – Escort Begleiterinnen | LovelyGirls`,
+      description: `${serviceName} – Escort-Mädchen, die diesen Service in Prag anbieten. Verifizierte Profile, diskrete Treffen.`
+    },
+    uk: {
+      title: `${serviceName} Прага – ескорт супутниці | LovelyGirls`,
+      description: `${serviceName} – ескорт дівчата, які пропонують цю послугу в Празі. Перевірені профілі, дискретні зустрічі.`
+    }
+  };
+  return templates[locale] || templates.cs;
 }

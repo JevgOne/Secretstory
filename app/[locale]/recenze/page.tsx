@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { generatePageMetadata } from '@/lib/seo-metadata';
 import { db } from '@/lib/db';
 import RecenzeClient from './RecenzeClient';
+import { AggregateRatingSchema, BreadcrumbListSchema } from '@/components/JsonLd';
 
 // ISR - Revalidate every 1 hour
 export const revalidate = 3600;
@@ -65,8 +66,22 @@ export default async function RecenzePage({
   const t = await getTranslations({ locale, namespace: 'home' });
   const reviews = await getInitialReviews();
 
+  // Calculate aggregate rating
+  const avgRating = reviews.length > 0
+    ? reviews.reduce((sum: number, r: any) => sum + (r.rating || 0), 0) / reviews.length
+    : 4.8;
+
   return (
     <>
+      <AggregateRatingSchema
+        ratingValue={avgRating}
+        reviewCount={reviews.length || 1}
+      />
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: 'Recenze', url: `https://www.lovelygirls.cz/${locale}/recenze` }
+      ]} />
+
       {/* SEO: Server-rendered review content for crawlers */}
       <div className="sr-only" aria-hidden="false">
         <h1>{t('reviews_title')}</h1>

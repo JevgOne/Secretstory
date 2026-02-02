@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { generatePageMetadata } from '@/lib/seo-metadata';
 import { SERVICES, SERVICE_CATEGORIES } from '@/lib/services-data';
 import SluzbyClient from './SluzbyClient';
+import { ServiceSchema, BreadcrumbListSchema } from '@/components/JsonLd';
 
 // ISR - Revalidate every 1 hour
 export const revalidate = 3600;
@@ -50,6 +51,16 @@ export default async function SluzbyPage({
 
   return (
     <>
+      <ServiceSchema
+        name="Escort služby Praha"
+        description="Kompletní nabídka escort služeb v Praze. Erotické masáže, VIP doprovod, diskrétní setkání."
+        url={`https://www.lovelygirls.cz/${locale}/sluzby`}
+      />
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: 'Služby', url: `https://www.lovelygirls.cz/${locale}/sluzby` }
+      ]} />
+
       {/* SEO: Server-rendered content for crawlers */}
       <div className="sr-only" aria-hidden="false">
         <h1>{t('page_title')}</h1>

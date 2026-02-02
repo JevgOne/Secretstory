@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { generatePageMetadata } from '@/lib/seo-metadata';
 import SoukromiClient from './SoukromiClient';
+import { BreadcrumbListSchema } from '@/components/JsonLd';
 
 // ISR - Revalidate every 1 hour
 export const revalidate = 3600;
@@ -29,9 +30,20 @@ export async function generateMetadata({
   };
 }
 
-export default async function SoukromiPage() {
+export default async function SoukromiPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
   return (
     <>
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: 'Ochrana osobních údajů', url: `https://www.lovelygirls.cz/${locale}/soukromi` }
+      ]} />
+
       {/* SEO: Server-rendered legal content for crawlers */}
       <div className="sr-only" aria-hidden="false">
         <h1>Ochrana osobních údajů</h1>

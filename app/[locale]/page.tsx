@@ -1,5 +1,6 @@
 import HomeClient from '@/components/HomeClient';
 import { db } from '@/lib/db';
+import { LocalBusinessSchema, WebSiteSchema, OrganizationSchema } from '@/components/JsonLd';
 
 // ISR - Revalidate every 30 minutes (1800 seconds) for SEO
 export const revalidate = 1800;
@@ -248,5 +249,23 @@ async function getHomepageData() {
 
 export default async function HomePage() {
   const initialData = await getHomepageData();
-  return <HomeClient initialData={initialData} />;
+  return (
+    <>
+      <LocalBusinessSchema
+        name="LovelyGirls Prague"
+        description="Premium escort services and erotic massage in Prague. Verified profiles, professional companions, discreet service 24/7."
+        telephone="+420734332131"
+        address={{
+          streetAddress: 'Praha 2',
+          addressLocality: 'Prague',
+          postalCode: '120 00',
+          addressCountry: 'CZ',
+        }}
+        geo={{ latitude: 50.0755, longitude: 14.4378 }}
+      />
+      <WebSiteSchema />
+      <OrganizationSchema />
+      <HomeClient initialData={initialData} />
+    </>
+  );
 }

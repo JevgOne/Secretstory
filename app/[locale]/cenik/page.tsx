@@ -1,6 +1,9 @@
+import { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/cache';
+import { generatePageMetadata } from '@/lib/seo-metadata';
 import PricingClient from './PricingClient';
+import { BreadcrumbListSchema, ServiceSchema } from '@/components/JsonLd';
 
 // ISR - Revalidate every 1 hour
 export const revalidate = 3600;
@@ -23,6 +26,30 @@ interface PricingExtra {
 interface PricingData {
   plans: PricingPlan[];
   extras: PricingExtra[];
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const pagePath = `/${locale}/cenik`;
+
+  const metadata = await generatePageMetadata(pagePath);
+
+  return {
+    ...metadata,
+    alternates: {
+      ...metadata.alternates,
+      languages: {
+        cs: 'https://www.lovelygirls.cz/cs/cenik',
+        en: 'https://www.lovelygirls.cz/en/cenik',
+        de: 'https://www.lovelygirls.cz/de/cenik',
+        uk: 'https://www.lovelygirls.cz/uk/cenik',
+      },
+    },
+  };
 }
 
 // Server-side data fetching - directly from database
@@ -146,11 +173,22 @@ export default async function PricingPage({
   };
 
   return (
-    <PricingClient
-      locale={locale}
-      plans={plans}
-      extras={extras}
-      schemaData={schemaData}
-    />
+    <>
+      <ServiceSchema
+        name="Escort služby a ceník - LovelyGirls Prague"
+        description="Ceník escort služeb a erotických masáží v Praze. Quick Relax, Classic Experience, Premium Pleasure."
+        url={`https://www.lovelygirls.cz/${locale}/cenik`}
+      />
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: 'Ceník', url: `https://www.lovelygirls.cz/${locale}/cenik` }
+      ]} />
+      <PricingClient
+        locale={locale}
+        plans={plans}
+        extras={extras}
+        schemaData={schemaData}
+      />
+    </>
   );
 }

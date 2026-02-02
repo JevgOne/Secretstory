@@ -4,6 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MobileMenu from '@/components/MobileMenu';
 import BlogContent from './BlogContent';
+import { CollectionPageSchema, BreadcrumbListSchema } from '@/components/JsonLd';
 
 // Force dynamic rendering to avoid build timeout
 export const dynamic = 'force-dynamic';
@@ -84,19 +85,58 @@ export default async function BlogPage({ params }: Props) {
     post.category === 'rady-a-tipy' || post.category === 'novinky' || post.category === 'guide' || post.category === 'etiquette' || post.category === 'ostatni'
   );
 
-  return <BlogContent
-    locale={locale}
-    initialStories={stories}
-    initialGuides={guides}
-    featuredPost={featuredPost}
-  />;
+  return (
+    <>
+      <CollectionPageSchema
+        name="Blog - LovelyGirls Prague"
+        description="Erotic stories, guides, and tips for escort experiences in Prague."
+        url={`https://www.lovelygirls.cz/${locale}/blog`}
+        numberOfItems={allPosts.length}
+      />
+      <BreadcrumbListSchema items={[
+        { name: 'Home', url: `https://www.lovelygirls.cz/${locale}` },
+        { name: 'Blog', url: `https://www.lovelygirls.cz/${locale}/blog` }
+      ]} />
+      <BlogContent
+        locale={locale}
+        initialStories={stories}
+        initialGuides={guides}
+        featuredPost={featuredPost}
+      />
+    </>
+  );
 }
 
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
+  const canonicalUrl = `https://www.lovelygirls.cz/${locale}/blog`;
+
   return {
     title: 'Blog | LovelyGirls Prague',
     description: 'Erotic stories, guides, and tips for escort experiences in Prague.',
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        'cs': 'https://www.lovelygirls.cz/cs/blog',
+        'en': 'https://www.lovelygirls.cz/en/blog',
+        'de': 'https://www.lovelygirls.cz/de/blog',
+        'uk': 'https://www.lovelygirls.cz/uk/blog',
+      }
+    },
+    openGraph: {
+      title: 'Blog | LovelyGirls Prague',
+      description: 'Erotic stories, guides, and tips for escort experiences in Prague.',
+      url: canonicalUrl,
+      siteName: 'LovelyGirls Prague',
+      type: 'website',
+      images: [{ url: 'https://www.lovelygirls.cz/og-image.jpg', width: 1200, height: 630, alt: 'LovelyGirls Blog' }]
+    },
+    twitter: {
+      card: 'summary_large_image' as const,
+      title: 'Blog | LovelyGirls Prague',
+      description: 'Erotic stories, guides, and tips for escort experiences in Prague.',
+      images: ['https://www.lovelygirls.cz/og-image.jpg']
+    },
     robots: {
       index: true,
       follow: true,

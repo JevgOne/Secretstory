@@ -399,6 +399,66 @@ export function ServiceSchema({
   );
 }
 
+interface ArticleSchemaProps {
+  title: string;
+  description: string;
+  author: string;
+  datePublished: string;
+  dateModified?: string;
+  image?: string;
+  url: string;
+}
+
+export function ArticleSchema({
+  title,
+  description,
+  author,
+  datePublished,
+  dateModified,
+  image,
+  url
+}: ArticleSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    author: {
+      '@type': 'Person',
+      name: author
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'LovelyGirls Prague',
+      url: 'https://www.lovelygirls.cz',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.lovelygirls.cz/logo.png'
+      }
+    },
+    datePublished,
+    ...(dateModified && { dateModified }),
+    ...(image && {
+      image: {
+        '@type': 'ImageObject',
+        url: image
+      }
+    }),
+    url,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url
+    }
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 interface CollectionPageSchemaProps {
   name: string;
   description: string;
