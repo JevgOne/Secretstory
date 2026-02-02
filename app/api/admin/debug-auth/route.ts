@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
-export const runtime = 'nodejs';
-
 // Debug endpoint to check auth status
 export async function GET(request: NextRequest) {
   try {
-    // Check cookies
-    const cookies = request.cookies.getAll().map(c => c.name);
+    // Check ALL cookies
+    const cookies = request.cookies.getAll().map(c => ({
+      name: c.name,
+      valueLength: c.value.length,
+    }));
     
     // Try auth()
     let session = null;
@@ -20,7 +21,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       timestamp: new Date().toISOString(),
-      cookies: cookies,
+      cookies,
+      cookieNames: cookies.map(c => c.name),
       hasSession: !!session,
       sessionUser: session?.user ? {
         email: session.user.email,
