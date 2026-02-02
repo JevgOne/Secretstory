@@ -5445,23 +5445,20 @@ footer {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    /* Schedule buttons - stack or icon-only */
-    .schedules-btn-label {
-        display: none;
-    }
-
+    /* Schedule buttons - full width stacked */
     .schedules-btn {
         padding: 10px 12px;
-        flex: 0;
-    }
-
-    /* But keep primary button label */
-    .schedules-btn-primary .schedules-btn-label {
-        display: inline;
-    }
-
-    .schedules-btn-primary {
         flex: 1;
+        min-width: 0;
+    }
+
+    .schedules-btn-label {
+        display: inline;
+        font-size: 0.75rem;
+    }
+
+    .schedules-action-btns {
+        flex-direction: column;
     }
 
     /* Schedule row - stack vertically */
