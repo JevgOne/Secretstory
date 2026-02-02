@@ -1,8 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
-import { generateMonthlyBlogPosts, GeneratedBlogPost } from '@/lib/blog-content-generator';
+import { generateBlogIdeasForMonth, generateBlogPostContent, BlogPostIdea } from '@/lib/blog-content-generator';
 import { translateToAllLanguages } from '@/lib/auto-translate';
 import { db } from '@/lib/db';
+
+// Week type rotation for monthly articles
+const WEEK_TYPES = [1, 2, 3, 4] as const;
+
+// Wrapper: generate 4 articles for the month (one per week)
+async function generateMonthlyBlogPosts(existingTitles: string[]) {
+  const ideas = await generateBlogIdeasForMonth();
+
+  // Filter out ideas with titles that already exist
+  const freshIdeas = ideas.filter(
+    (idea) => !existingTitles.some((t) => t.toLowerCase() === idea.title.toLowerCase())
+  );
+
+  // Pick 4 ideas (one per week type)
+  const selected = freshIdeas.slice(0, 4);
+
+  const articles = [];
+  for (let i = 0; i < selected.length; i++) {
+    const idea = selected[i];
+    const content = await generateBlogPostContent(idea);
+    articles.push({
+      ...content,
+      keywords: idea.keywords,
+      reading_time: content.read_time,
+      week_type: WEEK_TYPES[i % 4],
+    });
+  }
+
+  return articles;
+}
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // 5 minutes for AI generation
