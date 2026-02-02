@@ -5210,6 +5210,284 @@ footer {
     }
 }
 
+/* ========================================
+   ADMIN PANEL - MOBILE OPTIMIZATION
+   ======================================== */
+
+/* Admin header actions container */
+.admin-header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Mobile hamburger menu - hidden on desktop */
+.admin-show-mobile {
+    display: none !important;
+}
+
+/* Admin mobile dropdown menu */
+.admin-mobile-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #2d2d31;
+    border: 1px solid #3d3d41;
+    border-radius: 12px;
+    padding: 8px;
+    min-width: 200px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-mobile-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+}
+
+.admin-mobile-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Schedules page header */
+.schedules-header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.schedules-action-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.schedules-btn {
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.schedules-btn-green {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+}
+
+.schedules-btn-red {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+.schedules-btn-primary {
+    background: linear-gradient(135deg, #8b2942 0%, #5c1c2e 100%);
+    border: none;
+    color: white;
+}
+
+/* Modal responsive grid */
+.modal-grid-4col {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+/* Schedule row items */
+.schedule-row-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: #1a1418;
+    border-radius: 10px;
+}
+
+.schedule-row-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.schedule-row-day {
+    min-width: 90px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.schedule-row-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #ccc;
+}
+
+/* Mobile responsive - 768px */
+@media (max-width: 768px) {
+    /* Hide items on mobile header */
+    .admin-hide-mobile {
+        display: none !important;
+    }
+
+    /* Show hamburger menu */
+    .admin-show-mobile {
+        display: flex !important;
+    }
+
+    /* Header adjustments */
+    .app-header.admin {
+        gap: 8px;
+    }
+
+    .app-header-left {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .app-header-title {
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .admin-back-btn {
+        padding: 8px 10px !important;
+        margin-right: 8px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .admin-header-actions {
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .admin-notif-btn {
+        padding: 8px 10px !important;
+    }
+
+    /* Notification dropdown - full width on mobile */
+    .admin-notif-dropdown {
+        position: fixed !important;
+        top: auto !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        border-radius: 16px 16px 0 0 !important;
+        min-width: unset !important;
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    /* Schedules header - stack vertically */
+    .schedules-header-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .schedules-action-btns {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .schedules-btn {
+        padding: 10px 14px;
+        font-size: 0.8rem;
+        flex: 1;
+        min-width: 0;
+        justify-content: center;
+    }
+
+    /* Modal grid - 3 columns on tablet */
+    .modal-grid-4col {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Schedule row - stack on smaller screens */
+    .schedule-row-info {
+        gap: 8px;
+    }
+
+    .schedule-row-day {
+        min-width: 70px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Extra small screens - 480px */
+@media (max-width: 480px) {
+    /* Modal grid - 2 columns on small mobile */
+    .modal-grid-4col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Schedule buttons - stack or icon-only */
+    .schedules-btn-label {
+        display: none;
+    }
+
+    .schedules-btn {
+        padding: 10px 12px;
+        flex: 0;
+    }
+
+    /* But keep primary button label */
+    .schedules-btn-primary .schedules-btn-label {
+        display: inline;
+    }
+
+    .schedules-btn-primary {
+        flex: 1;
+    }
+
+    /* Schedule row - stack vertically */
+    .schedule-row-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px 12px;
+    }
+
+    .schedule-row-item button {
+        align-self: flex-end;
+    }
+
+    .schedule-row-info {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    /* Dashboard period selector - scrollable */
+    .admin-period-selector {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
 /* MANAGER CALENDAR STYLES */
 .gcal-app {
     height: 100vh;

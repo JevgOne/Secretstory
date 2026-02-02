@@ -251,12 +251,7 @@ export default function SchedulesPage() {
       <main className="app-content">
 
         {/* HEADER ACTIONS */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '20px'
-        }}>
+        <div className="schedules-header-actions">
           <div>
             <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '4px' }}>
               Pracovní doba dívek
@@ -265,77 +260,41 @@ export default function SchedulesPage() {
               Definujte, kdy jsou dívky k dispozici pro rezervace
             </p>
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div className="schedules-action-btns">
             <button
               type="button"
               onClick={handleReassignColors}
-              style={{
-                padding: '12px 20px',
-                background: 'rgba(34, 197, 94, 0.1)',
-                border: '1px solid rgba(34, 197, 94, 0.3)',
-                borderRadius: '12px',
-                color: '#22c55e',
-                fontSize: '0.9rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
+              className="schedules-btn schedules-btn-green"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M12 6v6l4 2"/>
               </svg>
-              Opravit barvy
+              <span className="schedules-btn-label">Opravit barvy</span>
             </button>
             {schedules.length > 0 && (
               <button
                 type="button"
                 onClick={handleDeleteAllSchedules}
-                style={{
-                  padding: '12px 20px',
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  border: '1px solid rgba(239, 68, 68, 0.3)',
-                  borderRadius: '12px',
-                  color: '#ef4444',
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
+                className="schedules-btn schedules-btn-red"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="3 6 5 6 21 6"/>
                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                 </svg>
-                Smazat vše
+                <span className="schedules-btn-label">Smazat vše</span>
               </button>
             )}
             <button
               type="button"
               onClick={() => setShowAddModal(true)}
-              style={{
-                padding: '12px 20px',
-                background: 'linear-gradient(135deg, #8b2942 0%, #5c1c2e 100%)',
-                border: 'none',
-                borderRadius: '12px',
-                color: 'white',
-                fontSize: '0.9rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
+              className="schedules-btn schedules-btn-primary"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="12" y1="5" x2="12" y2="19"/>
                 <line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
-              Přidat rozvrh
+              <span className="schedules-btn-label">Přidat rozvrh</span>
             </button>
           </div>
         </div>
@@ -492,29 +451,12 @@ export default function SchedulesPage() {
               {/* Schedules */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {girlSchedule.schedules.map((schedule) => (
-                  <div key={schedule.id} style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '12px 14px',
-                    background: '#1a1418',
-                    borderRadius: '10px'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      <div style={{
-                        minWidth: '90px',
-                        fontSize: '0.9rem',
-                        fontWeight: '600'
-                      }}>
+                  <div key={schedule.id} className="schedule-row-item">
+                    <div className="schedule-row-info">
+                      <div className="schedule-row-day">
                         {DAYS[schedule.day_of_week]}
                       </div>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        fontSize: '0.85rem',
-                        color: '#ccc'
-                      }}>
+                      <div className="schedule-row-time">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9a8a8e" strokeWidth="2">
                           <circle cx="12" cy="12" r="10"/>
                           <polyline points="12 6 12 12 16 14"/>
@@ -531,7 +473,8 @@ export default function SchedulesPage() {
                         borderRadius: '8px',
                         color: '#ef4444',
                         fontSize: '0.8rem',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        flexShrink: 0
                       }}
                     >
                       Smazat
@@ -561,10 +504,7 @@ export default function SchedulesPage() {
               {/* Girl Selection - Compact */}
               <div className="form-group">
                 <label className="form-label">Vyberte dívku</label>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(4, 1fr)',
-                  gap: '8px',
+                <div className="modal-grid-4col" style={{
                   marginTop: '8px'
                 }}>
                   {girls.map(girl => (
@@ -646,10 +586,7 @@ export default function SchedulesPage() {
                     </span>
                   )}
                 </label>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(4, 1fr)',
-                  gap: '8px',
+                <div className="modal-grid-4col" style={{
                   marginTop: '8px'
                 }}>
                   {DAYS.map((day, index) => {

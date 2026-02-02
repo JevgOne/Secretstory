@@ -227,9 +227,19 @@ export default function AdminDashboardPage() {
         <style jsx global>{`
           @media (max-width: 768px) {
             .stats-grid { grid-template-columns: 1fr !important; }
-            .quick-actions { grid-template-columns: 1fr !important; }
+            .quick-actions { grid-template-columns: repeat(2, 1fr) !important; }
             .admin-grid { grid-template-columns: repeat(2, 1fr) !important; }
             .content-grid { grid-template-columns: 1fr !important; }
+            .dashboard-hero h1 { font-size: 1.5rem !important; }
+            .dashboard-period-btns { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
+            .dashboard-stats-big { padding: 20px !important; }
+            .dashboard-stats-big .stats-value { font-size: 2rem !important; }
+          }
+
+          @media (max-width: 480px) {
+            .quick-actions { grid-template-columns: 1fr !important; }
+            .admin-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            .admin-grid > div { padding: 14px !important; }
           }
 
           @media (min-width: 769px) and (max-width: 1024px) {
@@ -240,7 +250,7 @@ export default function AdminDashboardPage() {
         `}</style>
 
         {/* Header */}
-        <div style={{ marginBottom: '32px' }}>
+        <div className="dashboard-hero" style={{ marginBottom: '32px' }}>
           <h1 style={{
             fontSize: '2rem',
             fontWeight: '700',
@@ -259,7 +269,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Period Selector */}
-        <div style={{ marginBottom: '24px', display: 'flex', gap: '8px' }}>
+        <div className="dashboard-period-btns" style={{ marginBottom: '24px', display: 'flex', gap: '8px' }}>
           {(['day', 'week', 'month', 'year'] as PeriodType[]).map(period => (
             <button
               key={period}
@@ -295,7 +305,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Stats Card */}
-        <div style={{
+        <div className="dashboard-stats-big" style={{
           background: '#1f1f23',
           border: '1px solid #2d2d31',
           borderRadius: '12px',
@@ -315,7 +325,7 @@ export default function AdminDashboardPage() {
             {selectedPeriod === 'month' && t('common.month')}
             {selectedPeriod === 'year' && t('common.year')}
           </div>
-          <div style={{
+          <div className="stats-value" style={{
             fontSize: '3rem',
             fontWeight: '700',
             color: '#fff',
