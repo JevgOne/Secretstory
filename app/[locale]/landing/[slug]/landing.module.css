@@ -1,0 +1,464 @@
+.landingPage {
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero */
+.hero {
+  padding: 60px 0 40px;
+  background: linear-gradient(180deg, rgba(139, 41, 66, 0.15) 0%, transparent 100%);
+}
+
+.h1 {
+  font-family: var(--font-cormorant), 'Cormorant', serif;
+  font-size: 2.8rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.lead {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 800px;
+}
+
+/* Sections */
+.section {
+  padding: 50px 0;
+}
+
+.h2 {
+  font-family: var(--font-cormorant), 'Cormorant', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+}
+
+/* Benefits */
+.benefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.benefitIcon {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Girls Grid */
+.girlsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.girlCard {
+  display: block;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.girlCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(212, 160, 84, 0.3);
+}
+
+.girlImage {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: linear-gradient(135deg, #2a1f23 0%, #1a1216 100%);
+  overflow: hidden;
+}
+
+.girlImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.girlPlaceholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badgeNew {
+  background: var(--wine);
+  color: white;
+}
+
+.onlineDot {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+}
+
+.girlInfo {
+  padding: 12px 14px;
+}
+
+.girlName {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.girlStats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+.girlsCta {
+  text-align: center;
+}
+
+/* Buttons */
+.btnOutline {
+  display: inline-block;
+  padding: 12px 32px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 8px;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btnOutline:hover {
+  background: var(--accent);
+  color: var(--black);
+}
+
+/* Content */
+.text {
+  font-size: 1rem;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 800px;
+}
+
+.text a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.text a:hover {
+  color: #e8b76a;
+}
+
+.text strong {
+  color: var(--white);
+  font-weight: 500;
+}
+
+/* Steps */
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.step {
+  text-align: center;
+  padding: 24px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.stepNumber {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 auto 12px;
+}
+
+.stepTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.stepText {
+  font-size: 0.9rem;
+  color: var(--gray);
+  line-height: 1.5;
+}
+
+/* CTA */
+.cta {
+  background: linear-gradient(135deg, rgba(139, 41, 66, 0.2) 0%, rgba(92, 28, 46, 0.15) 100%);
+  text-align: center;
+  padding: 60px 0;
+}
+
+.ctaTitle {
+  font-family: var(--font-cormorant), 'Cormorant', serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+
+.ctaSubtitle {
+  font-size: 1.1rem;
+  color: var(--gray);
+  margin-bottom: 2rem;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s;
+  min-height: 50px;
+}
+
+.btn svg {
+  flex-shrink: 0;
+}
+
+.btnWhatsapp {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: white;
+}
+
+.btnWhatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+.btnTelegram {
+  background: linear-gradient(135deg, #0088cc, #229ED9);
+  color: white;
+}
+
+.btnTelegram:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3);
+}
+
+.btnCall {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.btnCall:hover {
+  background: rgba(59, 130, 246, 0.25);
+  transform: translateY(-2px);
+}
+
+/* FAQ */
+.faqSection {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 800px;
+}
+
+.faqItem {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.faqQuestion {
+  padding: 18px 20px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--white);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.faqQuestion::after {
+  content: '+';
+  font-size: 1.5rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-left: 16px;
+  transition: transform 0.3s;
+}
+
+.faqItem[open] .faqQuestion::after {
+  transform: rotate(45deg);
+}
+
+.faqQuestion::-webkit-details-marker {
+  display: none;
+}
+
+.faqAnswer {
+  padding: 0 20px 18px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Internal Links */
+.internalLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.internalLink {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.internalLink:hover {
+  color: #e8b76a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .h1 {
+    font-size: 2rem;
+  }
+
+  .h2 {
+    font-size: 1.6rem;
+  }
+
+  .girlsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .stepsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .ctaTitle {
+    font-size: 1.6rem;
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 40px 0 30px;
+  }
+
+  .h1 {
+    font-size: 1.6rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+
+  .section {
+    padding: 35px 0;
+  }
+
+  .stepsGrid {
+    grid-template-columns: 1fr;
+  }
+}

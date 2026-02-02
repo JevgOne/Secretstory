@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { db } from '@/lib/db'
+import { LANDING_PAGES } from '@/lib/landing-pages-data'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.lovelygirls.cz'
@@ -122,5 +123,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   )
 
-  return [...staticUrls, ...girlUrls, ...serviceUrls, ...blogUrls, ...hashtagUrls, ...praktikyUrls]
+  // Landing pages (SEO)
+  const landingUrls: MetadataRoute.Sitemap = LANDING_PAGES.map(page => ({
+    url: `${baseUrl}/${page.locale}/landing/${page.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }))
+
+  return [...staticUrls, ...girlUrls, ...serviceUrls, ...blogUrls, ...hashtagUrls, ...praktikyUrls, ...landingUrls]
 }
