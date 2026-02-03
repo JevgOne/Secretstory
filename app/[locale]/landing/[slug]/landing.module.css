@@ -66,7 +66,7 @@
 }
 
 .benefitIcon {
-  color: var(--accent);
+  color: var(--wine-light);
   font-weight: 700;
   font-size: 1.2rem;
   flex-shrink: 0;
@@ -94,7 +94,7 @@
 .girlCard:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  border-color: rgba(212, 160, 84, 0.3);
+  border-color: rgba(139, 41, 66, 0.4);
 }
 
 .girlImage {
@@ -175,8 +175,8 @@
 .btnOutline {
   display: inline-block;
   padding: 12px 32px;
-  border: 1px solid var(--accent);
-  color: var(--accent);
+  border: 1px solid var(--wine-light);
+  color: var(--wine-light);
   border-radius: 8px;
   font-size: 1rem;
   text-decoration: none;
@@ -184,8 +184,8 @@
 }
 
 .btnOutline:hover {
-  background: var(--accent);
-  color: var(--black);
+  background: var(--wine-light);
+  color: white;
 }
 
 /* Content */
@@ -197,13 +197,13 @@
 }
 
 .text a {
-  color: var(--accent);
+  color: var(--wine-light);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 .text a:hover {
-  color: #e8b76a;
+  color: #c44d6a;
 }
 
 .text strong {
@@ -363,7 +363,7 @@
 .faqQuestion::after {
   content: '+';
   font-size: 1.5rem;
-  color: var(--accent);
+  color: var(--wine-light);
   flex-shrink: 0;
   margin-left: 16px;
   transition: transform 0.3s;
@@ -394,7 +394,7 @@
 }
 
 .internalLink {
-  color: var(--accent);
+  color: var(--wine-light);
   text-decoration: underline;
   text-underline-offset: 3px;
   font-size: 0.95rem;
@@ -402,7 +402,7 @@
 }
 
 .internalLink:hover {
-  color: #e8b76a;
+  color: #c44d6a;
 }
 
 /* Responsive */
